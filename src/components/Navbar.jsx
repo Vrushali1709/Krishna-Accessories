@@ -26,13 +26,29 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
   const notifRef = useRef(null);
   const userMenuRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const catTimeoutRef = useRef(null);
+
+  const handleCatMouseEnter = () => {
+    if (catTimeoutRef.current) clearTimeout(catTimeoutRef.current);
+    setCategoriesOpen(true);
+  };
+
+  const handleCatMouseLeave = () => {
+    catTimeoutRef.current = setTimeout(() => {
+      setCategoriesOpen(false);
+    }, 150);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 15);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (catTimeoutRef.current) clearTimeout(catTimeoutRef.current);
+    };
   }, []);
 
   const refreshState = () => {
@@ -156,13 +172,18 @@ export default function Navbar() {
               Home
             </Link>
 
-            {/* Collections Dropdown Flyout */}
-            <div className="relative" ref={dropdownRef}>
+            {/* Collections Dropdown Flyout (Hover + Click) */}
+            <div
+              className="relative"
+              ref={dropdownRef}
+              onMouseEnter={handleCatMouseEnter}
+              onMouseLeave={handleCatMouseLeave}
+            >
               <button
                 type="button"
                 onClick={() => setCategoriesOpen(!categoriesOpen)}
                 className={`flex items-center gap-1 py-1.5 transition-colors uppercase ${location.pathname === '/shop' && !location.search
-                  ? 'text-gray-950'
+                  ? 'text-gray-950 font-bold'
                   : 'hover:text-gray-950'
                   }`}
               >
@@ -174,29 +195,35 @@ export default function Navbar() {
               </button>
 
               {categoriesOpen && (
-                <div className="absolute left-0 top-full mt-2 w-76 rounded-xl border border-gray-200 bg-white p-3 shadow-xl z-50 animate-fade-in">
-                  <div className="px-2.5 py-1 border-b border-gray-100 mb-2 flex justify-between items-center">
-                    <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400">Departments</span>
-                    <Link
-                      to="/shop"
-                      onClick={() => setCategoriesOpen(false)}
-                      className="text-[9.5px] font-bold text-gray-900 hover:underline"
-                    >
-                      View All &rarr;
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1">
-                    {defaultCategories.slice(0, 10).map((cat) => (
+                <div
+                  onMouseEnter={handleCatMouseEnter}
+                  onMouseLeave={handleCatMouseLeave}
+                  className="absolute left-0 top-full pt-1.5 w-80 z-50 animate-fade-in"
+                >
+                  <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+                    <div className="px-2.5 py-1 border-b border-gray-100 mb-2 flex justify-between items-center">
+                      <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400">Departments</span>
                       <Link
-                        key={cat}
-                        to={`/shop?category=${encodeURIComponent(cat)}`}
+                        to="/shop"
                         onClick={() => setCategoriesOpen(false)}
-                        className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs normal-case text-gray-700 transition hover:bg-gray-100 hover:text-black font-medium"
+                        className="text-[9.5px] font-bold text-gray-900 hover:underline"
                       >
-                        <span className="truncate">{cat}</span>
-                        <span className="text-[9.5px] text-gray-400">&rarr;</span>
+                        View All &rarr;
                       </Link>
-                    ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-1">
+                      {defaultCategories.slice(0, 10).map((cat) => (
+                        <Link
+                          key={cat}
+                          to={`/shop?category=${encodeURIComponent(cat)}`}
+                          onClick={() => setCategoriesOpen(false)}
+                          className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs normal-case text-gray-700 transition hover:bg-gray-100 hover:text-black font-medium"
+                        >
+                          <span className="truncate">{cat}</span>
+                          <span className="text-[9.5px] text-gray-400">&rarr;</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
