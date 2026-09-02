@@ -168,41 +168,33 @@ export default function Home() {
 
             {/* Right Column: Full Clear Bright Luxury Image */}
             <div className="lg:col-span-7 relative animate-fade-in w-full">
-              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gray-200 bg-white p-2 sm:p-2.5 shadow-xl group">
-                <img
-                  src="/images/hero-luxury-bright.jpg"
-                  alt="Curated Luxury Collection"
-                  className="w-full h-auto object-cover rounded-xl sm:rounded-2xl transition-transform duration-700 group-hover:scale-[1.01]"
-                />
-
-                {/* Floating Heritage Badge (Desktop: Floating bottom-left, Mobile: Neatly placed below image) */}
-                <div className="hidden sm:flex absolute bottom-4 left-4 items-center gap-2.5 rounded-2xl bg-white/95 backdrop-blur-md px-4 py-2 shadow-lg border border-gray-200/80">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-50 text-amber-600 text-xs font-bold shrink-0">
-                    ★
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-[10.5px] font-bold uppercase tracking-wider text-gray-900 truncate">
-                      Curated Heritage Showcase
-                    </p>
-                    <p className="text-[9.5px] text-gray-500 truncate">
-                      Swiss Timepieces &bull; Handcrafted Leather &bull; Curated Goods
-                    </p>
-                  </div>
+              <div className="rounded-2xl sm:rounded-3xl border border-gray-200 bg-white p-2 sm:p-2.5 shadow-xl group">
+                <div className="overflow-hidden rounded-xl sm:rounded-2xl">
+                  <img
+                    src="/images/hero-luxury-bright.jpg"
+                    alt="Curated Luxury Collection"
+                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.01]"
+                  />
                 </div>
 
-                {/* Mobile Heritage Caption (Below Image) */}
-                <div className="sm:hidden mt-2 flex items-center gap-2 rounded-xl bg-[#FAF9F6] border border-gray-200/80 px-2.5 py-1.5">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold shrink-0">
-                    ★
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-[9.5px] font-bold uppercase tracking-wider text-gray-900 truncate">
-                      Curated Heritage Showcase
-                    </p>
-                    <p className="text-[8.5px] text-gray-500 truncate">
-                      Swiss Timepieces &bull; Handcrafted Leather &bull; Curated Goods
-                    </p>
+                {/* Curated Heritage Caption Bar (Positioned below the image so image is 100% visible and unobstructed) */}
+                <div className="mt-2 sm:mt-2.5 flex items-center justify-between gap-2.5 sm:gap-4 rounded-xl bg-[#FAF9F6] border border-gray-200/80 px-3 sm:px-4 py-2 sm:py-2.5">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-amber-50 border border-amber-200/60 text-amber-600 text-xs font-bold shrink-0">
+                      ★
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] sm:text-[11.5px] font-bold uppercase tracking-wider text-gray-900 truncate">
+                        Curated Heritage Showcase
+                      </p>
+                      <p className="text-[9px] sm:text-[10px] text-gray-500 truncate">
+                        Swiss Timepieces &bull; Handcrafted Leather &bull; Curated Goods
+                      </p>
+                    </div>
                   </div>
+                  <span className="hidden sm:inline-flex text-[9.5px] font-bold text-[#B89758] uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 shrink-0">
+                    100% Authentic
+                  </span>
                 </div>
               </div>
             </div>
