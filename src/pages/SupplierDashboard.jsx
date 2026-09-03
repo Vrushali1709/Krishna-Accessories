@@ -1,12 +1,15 @@
 // src/pages/SupplierDashboard.jsx
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
+import { getCurrentUser, logout } from '../utils/auth';
 
 export default function SupplierDashboard() {
+  const navigate = useNavigate();
+  const currentUser = getCurrentUser();
   const suppliers = getSuppliers();
   const [activeSupplierName, setActiveSupplierName] = useState(suppliers[0]?.name || 'Apex Timepieces Ltd.');
   const [activeTab, setActiveTab] = useState('overview');
@@ -201,20 +204,41 @@ export default function SupplierDashboard() {
               </h1>
             </div>
 
-            {/* Supplier Switcher Dropdown */}
-            <div className="flex items-center gap-2.5">
-              <label className="text-xs text-gray-500 whitespace-nowrap font-bold">Active Vendor:</label>
-              <select
-                value={activeSupplierName}
-                onChange={(e) => setActiveSupplierName(e.target.value)}
-                className="rounded-xl border border-gray-200 bg-[#F4F4F6] px-3.5 py-2 text-xs font-bold text-gray-900 outline-none focus:border-gray-400 cursor-pointer"
-              >
-                {suppliers.map(s => (
-                  <option key={s.id} value={s.name}>
-                    {s.name} ({s.category})
-                  </option>
-                ))}
-              </select>
+            {/* Supplier Switcher Dropdown & Logout */}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-gray-500 whitespace-nowrap font-bold">Active Vendor:</label>
+                <select
+                  value={activeSupplierName}
+                  onChange={(e) => setActiveSupplierName(e.target.value)}
+                  className="rounded-xl border border-gray-200 bg-[#F4F4F6] px-3.5 py-2 text-xs font-bold text-gray-900 outline-none focus:border-gray-400 cursor-pointer"
+                >
+                  {suppliers.map(s => (
+                    <option key={s.id} value={s.name}>
+                      {s.name} ({s.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2 pl-2 border-l border-gray-200">
+                <div className="hidden sm:block text-right">
+                  <span className="text-[11px] font-bold text-gray-900 block">{currentUser?.email || 'supplier@krishna.com'}</span>
+                  <span className="text-[10px] text-emerald-600 font-semibold uppercase">Authorized Vendor</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    navigate('/login');
+                  }}
+                  className="rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 px-3.5 py-2 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs"
+                  title="Sign Out of Vendor Portal"
+                >
+                  <span>Sign Out</span>
+                  <span>🚪</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
