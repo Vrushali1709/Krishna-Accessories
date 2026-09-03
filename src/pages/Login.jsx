@@ -1,17 +1,15 @@
 // src/pages/Login.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { setCurrentUser } from '../utils/auth';
-import { getSuppliers } from '../utils/orderStore';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [otpSent, setOtpSent] = useState(false);
@@ -20,10 +18,6 @@ export default function Login() {
   const [forgotSuccess, setForgotSuccess] = useState('');
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const redirectMessage = location.state?.message || '';
-  const returnPath = location.state?.from?.pathname;
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -31,11 +25,6 @@ export default function Login() {
 
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
-
-    if (!cleanEmail || !cleanPassword) {
-      setError('Please enter both your Email ID and Password.');
-      return;
-    }
 
     // 1. Admin Authentication Check
     if (cleanEmail === 'admin@krishna.com' || cleanEmail === 'admin') {
@@ -46,30 +35,27 @@ export default function Login() {
           name: 'Super Administrator',
           phone: '+91 98765 00001'
         });
-        navigate(returnPath || '/admin', { replace: true });
+        navigate('/admin');
         return;
       } else {
-        setError('Incorrect password for Administrator.');
+        setError('Invalid password for Administrator (Hint: admin123).');
         return;
       }
     }
 
     // 2. Supplier Authentication Check
-    const suppliers = getSuppliers();
-    const matchedSupplier = suppliers.find(s => s.email?.toLowerCase() === cleanEmail);
-
-    if (cleanEmail === 'supplier@krishna.com' || cleanEmail === 'supplier' || matchedSupplier) {
-      if (cleanPassword === 'supplier123' || cleanPassword === matchedSupplier?.password) {
+    if (cleanEmail === 'supplier@krishna.com' || cleanEmail === 'supplier') {
+      if (cleanPassword === 'supplier123') {
         setCurrentUser({
-          email: matchedSupplier?.email || 'supplier@krishna.com',
+          email: 'supplier@krishna.com',
           role: 'supplier',
-          name: matchedSupplier?.name || 'Apex Timepieces Ltd.',
-          phone: matchedSupplier?.phone || '+91 98765 43210'
+          name: 'Apex Timepieces Ltd.',
+          phone: '+91 98765 43210'
         });
-        navigate(returnPath || '/supplier', { replace: true });
+        navigate('/supplier');
         return;
       } else {
-        setError('Incorrect password for Supplier. Please enter valid credentials.');
+        setError('Invalid password for Supplier (Hint: supplier123).');
         return;
       }
     }
@@ -82,9 +68,24 @@ export default function Login() {
         name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
         phone: '+91 98765 12345'
       });
-      navigate(returnPath || '/account', { replace: true });
+      navigate('/account');
     } else {
-      setError('Invalid email or password. Please try again.');
+      setError('Please provide your email and password.');
+    }
+  };
+
+  const handleQuickLogin = (role) => {
+    setError('');
+
+    if (role === 'admin') {
+      setEmail('admin@krishna.com');
+      setPassword('admin123');
+    } else if (role === 'supplier') {
+      setEmail('supplier@krishna.com');
+      setPassword('supplier123');
+    } else {
+      setEmail('rahul.patel@example.com');
+      setPassword('customer123');
     }
   };
 
@@ -123,42 +124,30 @@ export default function Login() {
               K
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Account Authentication
+              Client Authentication
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-950 mt-1">Sign In to Your Account</h2>
             <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
-              Enter your registered ID and password to access your dashboard
+              Access your saved bag, order timeline tracking, and address book
             </p>
           </div>
 
-          {/* Security alert if redirected from Protected Route */}
-          {redirectMessage && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-2xs">
-              <span className="text-base">🔒</span>
-              <div>
-                <strong className="font-bold block text-amber-950">Login Required</strong>
-                <span>{redirectMessage}</span>
-              </div>
-            </div>
-          )}
-
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center animate-shake">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
+          <form onSubmit={handleLogin} className="space-y-3.5">
             <div>
-              <label className="text-xs font-semibold text-gray-700 mb-1 block">Email ID / Username</label>
+              <label className="text-xs font-semibold text-gray-700 mb-1 block">Email Address</label>
               <input
                 type="text"
                 required
-                autoComplete="off"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. supplier@krishna.com"
-                className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white transition"
+                placeholder="name@domain.com"
+                className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
               />
             </div>
 
@@ -173,36 +162,56 @@ export default function Login() {
                   Forgot?
                 </button>
               </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white pr-10 transition"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 text-xs"
-                >
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
-                </button>
-              </div>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+              />
             </div>
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black"
             >
               <span>Sign In</span>
               <ArrowRightIcon className="w-3.5 h-3.5" />
             </button>
           </form>
 
-          <div className="text-center text-xs text-gray-500 pt-2 border-t border-gray-100">
+          {/* Quick Access Account Selector */}
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
+              Demo Access
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('customer')}
+                className="rounded-full border border-gray-200 bg-[#F4F4F6] py-1.5 px-1 text-[11px] sm:text-xs font-semibold text-gray-800 hover:bg-gray-200 transition truncate"
+              >
+                Customer Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('supplier')}
+                className="rounded-full border border-blue-200 bg-blue-50 py-1.5 px-1 text-[11px] sm:text-xs font-bold text-blue-700 hover:bg-blue-100 transition truncate"
+              >
+                Supplier Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('admin')}
+                className="rounded-full border border-gray-300 bg-gray-100 py-1.5 px-1 text-[11px] sm:text-xs font-bold text-gray-950 hover:bg-gray-200 transition truncate"
+              >
+                Admin Demo
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center text-xs text-gray-500">
             Don't have an account?{' '}
             <Link to="/register" className="font-bold text-gray-950 hover:underline">
               Create Account
@@ -243,21 +252,30 @@ export default function Login() {
                     required
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
-                    placeholder="registered@krishna.com"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    placeholder="user@example.com"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-3.5 py-2 outline-none focus:border-gray-400"
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition"
-                >
-                  Send OTP Code
-                </button>
+                <div className="pt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setForgotModalOpen(false)}
+                    className="flex-1 rounded-full border border-gray-200 bg-gray-100 py-2.5 font-bold text-gray-700 hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 rounded-full bg-[#111827] py-2.5 font-bold uppercase tracking-wider text-white hover:bg-black"
+                  >
+                    Send OTP &rarr;
+                  </button>
+                </div>
               </form>
             ) : (
               <form onSubmit={handleResetPassword} className="space-y-3.5 text-xs">
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">6-Digit OTP Code</label>
+                  <label className="font-semibold text-gray-700 block mb-1">Enter 6-Digit OTP Code</label>
                   <input
                     type="text"
                     required
@@ -265,7 +283,7 @@ export default function Login() {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value)}
                     placeholder="123456"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white tracking-widest text-center font-bold"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-3.5 py-2 font-mono text-center tracking-widest text-base font-bold outline-none"
                   />
                 </div>
                 <div>
@@ -275,18 +293,28 @@ export default function Login() {
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new strong password"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    placeholder="••••••••"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-3.5 py-2 outline-none"
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition"
-                >
-                  Save New Password & Sign In
-                </button>
+                <div className="pt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOtpSent(false)}
+                    className="flex-1 rounded-full border border-gray-200 bg-gray-100 py-2.5 font-bold text-gray-700 hover:bg-gray-200"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 rounded-full bg-[#111827] py-2.5 font-bold uppercase tracking-wider text-white hover:bg-black"
+                  >
+                    Confirm Reset
+                  </button>
+                </div>
               </form>
             )}
+
           </div>
         </div>
       )}
