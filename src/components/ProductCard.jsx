@@ -1,12 +1,13 @@
 // src/components/ProductCard.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { isInWishlist, toggleWishlist } from '../utils/productStore';
 
 export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [justAdded, setJustAdded] = useState(false);
   const [inWish, setInWish] = useState(() => isInWishlist(product.id));
 
@@ -24,9 +25,21 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
       : 0
   );
 
-  const requireLogin = () => {
+  const requireLogin = (action = 'continue') => {
     if (!getCurrentUser()) {
-      navigate('/login');
+      const message = action === 'bag'
+        ? 'Please sign in to add items to your shopping bag.'
+        : action === 'wishlist'
+        ? 'Please sign in to save items to your wishlist.'
+        : 'Please sign in to complete your purchase.';
+
+      navigate('/login', {
+        state: {
+          from: location.pathname + (location.search || ''),
+          message,
+          requiredRole: 'customer'
+        }
+      });
       return false;
     }
     return true;
@@ -35,7 +48,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const handleQuickAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!requireLogin()) return;
+    if (!requireLogin('bag')) return;
     if (onAddToCart) {
       onAddToCart(product);
     } else {
@@ -48,7 +61,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const handleBuyNowClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!requireLogin()) return;
+    if (!requireLogin('buy')) return;
     if (onBuyNow) {
       onBuyNow(product);
     } else {
@@ -60,7 +73,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const handleWishlistToggle = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!requireLogin()) return;
+    if (!requireLogin('wishlist')) return;
     const active = toggleWishlist(product);
     setInWish(active);
   };

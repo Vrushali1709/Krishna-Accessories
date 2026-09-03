@@ -1,6 +1,6 @@
 // src/pages/Register.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { setCurrentUser } from '../utils/auth';
@@ -17,6 +17,11 @@ export default function Register() {
   const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const returnPath = typeof location.state?.from === 'string'
+    ? location.state.from
+    : (location.state?.from?.pathname ? `${location.state.from.pathname}${location.state.from.search || ''}` : null);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -47,8 +52,8 @@ export default function Register() {
       setSuccess('Supplier registered! Directing to vendor portal...');
       setTimeout(() => navigate('/supplier'), 1200);
     } else {
-      setSuccess('Account created successfully! Directing to account dashboard...');
-      setTimeout(() => navigate('/account'), 1200);
+      setSuccess('Account created successfully! Directing you back...');
+      setTimeout(() => navigate(returnPath || '/account'), 1200);
     }
   };
 

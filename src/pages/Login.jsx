@@ -16,7 +16,10 @@ export default function Login() {
     if (location.state?.requiredRole === 'admin' || location.pathname.includes('admin')) {
       return 'admin';
     }
-    return 'supplier';
+    if (location.state?.requiredRole === 'supplier' || location.pathname.includes('supplier')) {
+      return 'supplier';
+    }
+    return 'customer';
   });
 
   const [email, setEmail] = useState('');
@@ -30,7 +33,9 @@ export default function Login() {
   const [forgotSuccess, setForgotSuccess] = useState('');
 
   const redirectMessage = location.state?.message || '';
-  const returnPath = location.state?.from?.pathname;
+  const returnPath = typeof location.state?.from === 'string'
+    ? location.state.from
+    : (location.state?.from?.pathname ? `${location.state.from.pathname}${location.state.from.search || ''}` : null);
 
   useEffect(() => {
     if (location.state?.requiredRole) {
@@ -271,7 +276,7 @@ export default function Login() {
 
           <div className="text-center text-xs text-gray-500">
             Don't have an account?{' '}
-            <Link to="/register" className="font-bold text-gray-950 hover:underline">
+            <Link to="/register" state={location.state} className="font-bold text-gray-950 hover:underline">
               Create Account
             </Link>
           </div>

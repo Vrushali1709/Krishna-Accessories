@@ -9,11 +9,20 @@ export default function ProtectedRoute({ children, roleRequired }) {
 
   // 1. If not logged in at all, redirect to /login
   if (!user) {
-    const message = roleRequired === 'admin'
-      ? 'Admin ID and Password required to access Admin Management.'
-      : roleRequired === 'supplier'
-      ? 'Supplier ID and Password required to access Vendor Partner Portal.'
-      : 'Please sign in with your credentials to access this page.';
+    let message = 'Please sign in with your credentials to access this page.';
+    if (roleRequired === 'admin') {
+      message = 'Admin ID and Password required to access Admin Management.';
+    } else if (roleRequired === 'supplier') {
+      message = 'Supplier ID and Password required to access Vendor Partner Portal.';
+    } else if (location.pathname === '/wishlist') {
+      message = 'Please sign in to access and manage your Wishlist.';
+    } else if (location.pathname === '/cart') {
+      message = 'Please sign in to view and access your Shopping Bag.';
+    } else if (location.pathname === '/checkout') {
+      message = 'Please sign in to proceed with Checkout.';
+    } else if (location.pathname === '/account') {
+      message = 'Please sign in to access your Account & Orders.';
+    }
 
     return (
       <Navigate
@@ -21,7 +30,7 @@ export default function ProtectedRoute({ children, roleRequired }) {
         state={{
           from: location,
           message,
-          requiredRole: roleRequired
+          requiredRole: roleRequired || 'customer'
         }}
         replace
       />

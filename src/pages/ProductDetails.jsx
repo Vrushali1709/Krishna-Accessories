@@ -1,6 +1,6 @@
 // src/pages/ProductDetails.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
@@ -12,6 +12,7 @@ import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon } from '../com
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [product, setProduct] = useState(() => getProductById(id));
   const [reviews, setReviews] = useState(() => getProductReviews(id));
@@ -76,29 +77,41 @@ export default function ProductDetails() {
   const discount = product.discount || (product.oldPrice && product.oldPrice > product.price ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0);
   const savings = product.oldPrice && product.oldPrice > product.price ? product.oldPrice - product.price : 0;
 
-  const requireLogin = () => {
+  const requireLogin = (action = 'continue') => {
     if (!getCurrentUser()) {
-      navigate('/login');
+      const message = action === 'bag'
+        ? 'Please sign in to add items to your shopping bag.'
+        : action === 'wishlist'
+        ? 'Please sign in to save items to your wishlist.'
+        : 'Please sign in to complete your purchase.';
+
+      navigate('/login', {
+        state: {
+          from: location.pathname + (location.search || ''),
+          message,
+          requiredRole: 'customer'
+        }
+      });
       return false;
     }
     return true;
   };
 
   const handleAddToCart = () => {
-    if (!requireLogin()) return;
+    if (!requireLogin('bag')) return;
     addToCart(product, quantity, selectedColor, selectedVariant);
     setToastMessage(`✓ Added ${quantity} × "${product.name}" to your bag`);
     setTimeout(() => setToastMessage(''), 3000);
   };
 
   const handleBuyNow = () => {
-    if (!requireLogin()) return;
+    if (!requireLogin('buy')) return;
     addToCart(product, quantity, selectedColor, selectedVariant);
     navigate('/checkout');
   };
 
   const handleWishlistToggle = () => {
-    if (!requireLogin()) return;
+    if (!requireLogin('wishlist')) return;
     const active = toggleWishlist(product);
     setInWish(active);
   };
