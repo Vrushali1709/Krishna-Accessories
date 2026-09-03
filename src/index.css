@@ -154,3 +154,22 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+@keyframes pulseRadar {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(184, 151, 88, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(184, 151, 88, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(184, 151, 88, 0);
+  }
+}
+
+.animate-radar {
+  animation: pulseRadar 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
