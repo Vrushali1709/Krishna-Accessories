@@ -60,14 +60,28 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
   return cart;
 }
 
-export function updateCartQuantity(id, color = '', quantity = 1, variant = '') {
+export function updateCartQuantity(id, color = '', variantOrQty = 1, maybeQty = 1) {
   const cart = getCart();
+  let variant = '';
+  let quantity = 1;
+
+  if (typeof variantOrQty === 'number') {
+    quantity = variantOrQty;
+    variant = typeof maybeQty === 'string' ? maybeQty : '';
+  } else {
+    variant = variantOrQty || '';
+    quantity = typeof maybeQty === 'number' ? maybeQty : 1;
+  }
+
+  if (quantity <= 0) {
+    return removeFromCart(id, color, variant);
+  }
 
   const item = cart.find(
     (product) =>
-      product.id === id &&
-      product.color === color &&
-      (variant ? product.variant === variant : true)
+      String(product.id) === String(id) &&
+      (color ? (product.color || product.selectedColor || '') === color : true) &&
+      (variant ? (product.variant || product.selectedVariant || '') === variant : true)
   );
 
   if (item) {
@@ -83,7 +97,11 @@ export function removeFromCart(id, color = '', variant = '') {
 
   const updatedCart = cart.filter(
     (item) =>
-      !(item.id === id && item.color === color && (variant ? item.variant === variant : true))
+      !(
+        String(item.id) === String(id) &&
+        (color ? (item.color || item.selectedColor || '') === color : true) &&
+        (variant ? (item.variant || item.selectedVariant || '') === variant : true)
+      )
   );
 
   saveCart(updatedCart);

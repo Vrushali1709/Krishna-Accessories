@@ -13,7 +13,7 @@ import {
   getAppliedCoupon,
   FREE_SHIPPING_THRESHOLD
 } from '../utils/cart';
-import { ShieldCheckIcon, TruckIcon, TagIcon, ArrowRightIcon, BagIcon } from '../components/Icons';
+import { ShieldCheckIcon, TruckIcon, TagIcon, ArrowRightIcon, BagIcon, TrashIcon } from '../components/Icons';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -35,11 +35,15 @@ export default function Cart() {
   const { cart, subtotal, discount, coupon, shipping, total } = cartSummary;
 
   const handleQuantityChange = (item, newQty) => {
-    updateCartQuantity(item.id, item.selectedColor, item.selectedVariant, newQty);
+    if (newQty <= 0) {
+      handleRemove(item);
+      return;
+    }
+    updateCartQuantity(item.id, item.color || item.selectedColor || '', item.variant || item.selectedVariant || '', newQty);
   };
 
   const handleRemove = (item) => {
-    removeFromCart(item.id, item.selectedColor, item.selectedVariant);
+    removeFromCart(item.id, item.color || item.selectedColor || '', item.variant || item.selectedVariant || '');
   };
 
   const handleApplyCoupon = (e) => {
@@ -133,74 +137,82 @@ export default function Cart() {
 
               {/* Items Card List */}
               <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs divide-y divide-gray-100">
-                {cart.map((item, idx) => (
-                  <div key={`${item.id}-${item.selectedColor}-${item.selectedVariant}`} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                {cart.map((item, idx) => {
+                  const itemColor = item.color || item.selectedColor;
+                  const itemVariant = item.variant || item.selectedVariant;
+                  return (
+                    <div key={`${item.id}-${itemColor || ''}-${itemVariant || ''}-${idx}`} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 
-                    {/* Item Details */}
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Link to={`/product/${item.id}`} className="aspect-square h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F4F4F6] p-1.5 border border-gray-200/80 flex items-center justify-center">
-                        <img src={item.image} alt={item.name} className="h-full w-full object-contain mix-blend-multiply transition-transform hover:scale-105" />
-                      </Link>
-
-                      <div className="min-w-0 pr-1">
-                        <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 truncate block">
-                          {item.brand}
-                        </span>
-                        <Link to={`/product/${item.id}`} className="font-semibold text-xs text-gray-950 hover:underline block truncate max-w-[200px] sm:max-w-xs">
-                          {item.name}
+                      {/* Item Details */}
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Link to={`/product/${item.id}`} className="aspect-square h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F4F4F6] p-1.5 border border-gray-200/80 flex items-center justify-center">
+                          <img src={item.image} alt={item.name} className="h-full w-full object-contain mix-blend-multiply transition-transform hover:scale-105" />
                         </Link>
 
-                        {(item.selectedColor || item.selectedVariant) && (
-                          <p className="text-[10.5px] text-gray-500 mt-0.2 truncate">
-                            {item.selectedColor && <span>Color: {item.selectedColor} </span>}
-                            {item.selectedVariant && <span>&bull; Size: {item.selectedVariant}</span>}
-                          </p>
-                        )}
+                        <div className="min-w-0 pr-1">
+                          <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 truncate block">
+                            {item.brand}
+                          </span>
+                          <Link to={`/product/${item.id}`} className="font-semibold text-xs text-gray-950 hover:underline block truncate max-w-[200px] sm:max-w-xs">
+                            {item.name}
+                          </Link>
 
-                        <span className="text-xs font-bold text-gray-950 mt-0.5 block">
-                          ₹{Number(item.price).toLocaleString('en-IN')}
-                        </span>
+                          {(itemColor || itemVariant) && (
+                            <p className="text-[10.5px] text-gray-500 mt-0.5 truncate">
+                              {itemColor && <span>Color: <strong className="text-gray-700">{itemColor}</strong> </span>}
+                              {itemVariant && <span>&bull; Size: <strong className="text-gray-700">{itemVariant}</strong></span>}
+                            </p>
+                          )}
+
+                          <span className="text-xs font-bold text-gray-950 mt-0.5 block">
+                            ₹{Number(item.price).toLocaleString('en-IN')}
+                          </span>
+                        </div>
                       </div>
+
+                      {/* Quantity Stepper & Subtotal */}
+                      <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-5 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-50 shrink-0">
+                        <div className="flex items-center rounded-full border border-gray-200 bg-[#F4F4F6]">
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(item, item.quantity - 1)}
+                            className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
+                            title="Decrease quantity"
+                          >
+                            −
+                          </button>
+                          <span className="w-6 text-center text-xs font-semibold text-gray-900">
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(item, item.quantity + 1)}
+                            className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
+                            title="Increase quantity"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <div className="text-right min-w-[85px]">
+                          <span className="text-xs font-bold text-gray-950 block">
+                            ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemove(item)}
+                            className="inline-flex items-center gap-1 text-[11px] font-medium text-rose-500 hover:text-rose-700 hover:underline transition mt-0.5"
+                            title="Remove from bag"
+                          >
+                            <TrashIcon className="w-3 h-3 text-rose-500" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+                      </div>
+
                     </div>
-
-                    {/* Quantity Stepper & Subtotal */}
-                    <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-5 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-50 shrink-0">
-                      <div className="flex items-center rounded-full border border-gray-200 bg-[#F4F4F6]">
-                        <button
-                          type="button"
-                          onClick={() => handleQuantityChange(item, item.quantity - 1)}
-                          className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
-                        >
-                          −
-                        </button>
-                        <span className="w-6 text-center text-xs font-semibold text-gray-900">
-                          {item.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleQuantityChange(item, item.quantity + 1)}
-                          className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <div className="text-right min-w-[80px]">
-                        <span className="text-xs font-bold text-gray-950 block">
-                          ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleRemove(item)}
-                          className="text-[10px] text-gray-400 hover:text-red-600 transition font-semibold"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
             </div>
