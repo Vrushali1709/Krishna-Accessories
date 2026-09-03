@@ -1032,7 +1032,7 @@ export default function Home() {
         <div className="relative min-h-[260px] overflow-hidden rounded-3xl bg-[#171717] sm:min-h-[320px]">
 
           <img
-            src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1400"
+            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400"
             alt="Luxury lifestyle collection"
             className="absolute inset-0 h-full w-full object-cover opacity-70"
             loading="lazy"
