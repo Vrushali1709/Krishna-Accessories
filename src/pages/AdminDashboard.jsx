@@ -20,6 +20,7 @@ import {
   requestReturn,
   processReturnStatus,
   getSuppliers,
+  addSupplier,
   approveSupplier,
   toggleSupplierStatus,
   getUsers,
@@ -150,6 +151,16 @@ export default function AdminDashboard() {
 
   const [roleModalOpen, setRoleModalOpen] = useState(false);
   const [roleForm, setRoleForm] = useState({ name: '', description: '', membersCount: '1' });
+
+  // Add Vendor / Supplier Modal State
+  const [supplierModalOpen, setSupplierModalOpen] = useState(false);
+  const [supplierForm, setSupplierForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    category: 'Fitness',
+    address: 'Gujarat, India'
+  });
 
   const [newNotificationText, setNewNotificationText] = useState('');
   const [newNotificationTitle, setNewNotificationTitle] = useState('');
@@ -573,6 +584,30 @@ export default function AdminDashboard() {
     setRoleModalOpen(false);
     setRoleForm({ name: '', description: '', membersCount: '1' });
     showToast('New governance role registered!');
+  };
+
+  // Add Supplier / Vendor Submit
+  const handleAddSupplierSubmit = (e) => {
+    e.preventDefault();
+    if (!supplierForm.name.trim() || !supplierForm.email.trim()) return;
+    addSupplier({
+      name: supplierForm.name.trim(),
+      email: supplierForm.email.trim().toLowerCase(),
+      phone: supplierForm.phone.trim() || '+91 98765 00000',
+      category: supplierForm.category || 'Fitness',
+      address: supplierForm.address || 'Gujarat, India',
+      status: 'Active'
+    });
+    setSuppliers(getSuppliers());
+    setSupplierModalOpen(false);
+    setSupplierForm({
+      name: '',
+      email: '',
+      phone: '',
+      category: 'Fitness',
+      address: 'Gujarat, India'
+    });
+    showToast('New Vendor Partner onboarded successfully!');
   };
 
   // Category & Brand Form Submit
@@ -2419,6 +2454,12 @@ export default function AdminDashboard() {
                       </h1>
                       <p className="text-xs text-slate-500">Approve vendor credentials, verify GSTIN, and monitor supplier fulfillment.</p>
                     </div>
+                    <button
+                      onClick={() => setSupplierModalOpen(true)}
+                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs cursor-pointer"
+                    >
+                      + Add New Vendor
+                    </button>
                   </div>
 
                   <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
@@ -3789,6 +3830,85 @@ export default function AdminDashboard() {
                     : adminReturnDecision === 'Return Approved'
                     ? 'Authorize Reverse Pickup'
                     : 'Decline Return'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 8. Add Supplier / Vendor Modal */}
+      {supplierModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div>
+                <h3 className="text-sm font-bold text-slate-950">Onboard New Vendor Partner</h3>
+                <p className="text-[11px] text-slate-500">Add a new supplier company for product fulfillment</p>
+              </div>
+              <button onClick={() => setSupplierModalOpen(false)} className="text-slate-400 font-bold hover:text-black cursor-pointer">✕</button>
+            </div>
+            <form onSubmit={handleAddSupplierSubmit} className="space-y-3">
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Company / Vendor Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. FitPro Gear Ltd. (or Garmin Sports)"
+                  value={supplierForm.name}
+                  onChange={e => setSupplierForm({ ...supplierForm, name: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Department / Category</label>
+                  <select
+                    value={supplierForm.category}
+                    onChange={e => setSupplierForm({ ...supplierForm, category: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold cursor-pointer"
+                  >
+                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">Phone Number</label>
+                  <input
+                    type="text"
+                    placeholder="+91 98765 43210"
+                    value={supplierForm.phone}
+                    onChange={e => setSupplierForm({ ...supplierForm, phone: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Business Email Address *</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="vendor@company.com"
+                  value={supplierForm.email}
+                  onChange={e => setSupplierForm({ ...supplierForm, email: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                />
+              </div>
+              <div>
+                <label className="font-bold text-slate-700 block mb-1">Registered Business Address</label>
+                <input
+                  type="text"
+                  placeholder="City, State, India"
+                  value={supplierForm.address}
+                  onChange={e => setSupplierForm({ ...supplierForm, address: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                />
+              </div>
+              <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
+                <button type="button" onClick={() => setSupplierModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold hover:bg-slate-200 cursor-pointer">
+                  Cancel
+                </button>
+                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold hover:bg-black cursor-pointer shadow-xs">
+                  Add Vendor
                 </button>
               </div>
             </form>
