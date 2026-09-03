@@ -35,11 +35,11 @@ export default function Cart() {
   const { cart, subtotal, discount, coupon, shipping, total } = cartSummary;
 
   const handleQuantityChange = (item, newQty) => {
-    updateCartQuantity(item.id, item.selectedColor, item.selectedVariant, newQty);
+    updateCartQuantity(item.id, item.color || item.selectedColor || '', newQty, item.variant || item.selectedVariant || '');
   };
 
   const handleRemove = (item) => {
-    removeFromCart(item.id, item.selectedColor, item.selectedVariant);
+    removeFromCart(item.id, item.color || item.selectedColor || '', item.variant || item.selectedVariant || '');
   };
 
   const handleApplyCoupon = (e) => {
@@ -47,9 +47,9 @@ export default function Cart() {
     setCouponMsg(null);
     if (!couponCodeInput.trim()) return;
 
-    const res = applyCoupon(couponCodeInput.trim(), subtotal);
+    const res = applyCoupon(couponCodeInput.trim());
     if (res.success) {
-      setCouponMsg({ type: 'success', text: `✓ ${res.message} (₹${res.discount.toLocaleString('en-IN')} off)` });
+      setCouponMsg({ type: 'success', text: `✓ ${res.message}` });
       setCouponCodeInput('');
     } else {
       setCouponMsg({ type: 'error', text: res.message });
@@ -134,7 +134,7 @@ export default function Cart() {
               {/* Items Card List */}
               <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs divide-y divide-gray-100">
                 {cart.map((item, idx) => (
-                  <div key={`${item.id}-${item.selectedColor}-${item.selectedVariant}`} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div key={`${item.id}-${item.color || item.selectedColor || ''}-${item.variant || item.selectedVariant || ''}-${idx}`} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 
                     {/* Item Details */}
                     <div className="flex items-center gap-3 min-w-0">
@@ -150,10 +150,10 @@ export default function Cart() {
                           {item.name}
                         </Link>
 
-                        {(item.selectedColor || item.selectedVariant) && (
+                        {(item.color || item.variant || item.selectedColor || item.selectedVariant) && (
                           <p className="text-[10.5px] text-gray-500 mt-0.2 truncate">
-                            {item.selectedColor && <span>Color: {item.selectedColor} </span>}
-                            {item.selectedVariant && <span>&bull; Size: {item.selectedVariant}</span>}
+                            {(item.color || item.selectedColor) && <span>Color: {item.color || item.selectedColor} </span>}
+                            {(item.variant || item.selectedVariant) && <span>&bull; Size: {item.variant || item.selectedVariant}</span>}
                           </p>
                         )}
 
@@ -169,7 +169,7 @@ export default function Cart() {
                         <button
                           type="button"
                           onClick={() => handleQuantityChange(item, item.quantity - 1)}
-                          className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
+                          className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition cursor-pointer"
                         >
                           −
                         </button>
@@ -179,7 +179,7 @@ export default function Cart() {
                         <button
                           type="button"
                           onClick={() => handleQuantityChange(item, item.quantity + 1)}
-                          className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
+                          className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition cursor-pointer"
                         >
                           +
                         </button>
@@ -192,7 +192,7 @@ export default function Cart() {
                         <button
                           type="button"
                           onClick={() => handleRemove(item)}
-                          className="text-[10px] text-gray-400 hover:text-red-600 transition font-semibold"
+                          className="text-[10px] text-gray-400 hover:text-red-600 transition font-semibold cursor-pointer"
                         >
                           Remove
                         </button>
@@ -218,12 +218,12 @@ export default function Cart() {
                   <div className="flex items-center justify-between rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs text-emerald-800 font-semibold gap-2">
                     <div className="flex items-center gap-1.5 truncate">
                       <TagIcon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span className="truncate">{coupon} Applied (10% Off)</span>
+                      <span className="truncate">{coupon.code || coupon} Applied ({coupon.discountPercent ? `${coupon.discountPercent}% Off` : coupon.discountAmount ? `₹${coupon.discountAmount} Off` : 'Promo Applied'})</span>
                     </div>
                     <button
                       type="button"
                       onClick={handleRemoveCoupon}
-                      className="text-[11px] text-emerald-900 hover:underline font-bold shrink-0"
+                      className="text-[11px] text-emerald-900 hover:underline font-bold shrink-0 cursor-pointer"
                     >
                       Remove
                     </button>
@@ -239,7 +239,7 @@ export default function Cart() {
                     />
                     <button
                       type="submit"
-                      className="rounded-full bg-[#111827] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition shrink-0"
+                      className="rounded-full bg-[#111827] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition shrink-0 cursor-pointer"
                     >
                       Apply
                     </button>
@@ -272,7 +272,7 @@ export default function Cart() {
 
                   {discount > 0 && (
                     <div className="flex justify-between text-emerald-700 font-semibold">
-                      <span>Discount ({coupon})</span>
+                      <span>Discount ({coupon?.code || coupon})</span>
                       <span>−₹{discount.toLocaleString('en-IN')}</span>
                     </div>
                   )}

@@ -355,7 +355,7 @@ export default function Checkout() {
 
                 {discount > 0 && (
                   <div className="flex justify-between text-emerald-700 font-semibold">
-                    <span>Discount ({coupon})</span>
+                    <span>Discount ({typeof coupon === 'object' ? coupon?.code : coupon})</span>
                     <span>−₹{discount.toLocaleString('en-IN')}</span>
                   </div>
                 )}
