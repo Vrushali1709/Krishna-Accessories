@@ -1,6 +1,6 @@
 // src/pages/Login.jsx
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { setCurrentUser } from '../utils/auth';
@@ -18,10 +18,6 @@ export default function Login() {
   const [forgotSuccess, setForgotSuccess] = useState('');
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const redirectMessage = location.state?.message || '';
-  const returnPath = location.state?.from?.pathname;
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -39,7 +35,7 @@ export default function Login() {
           name: 'Super Administrator',
           phone: '+91 98765 00001'
         });
-        navigate(returnPath || '/admin', { replace: true });
+        navigate('/admin');
         return;
       } else {
         setError('Invalid password for Administrator (Hint: admin123).');
@@ -56,7 +52,7 @@ export default function Login() {
           name: 'Apex Timepieces Ltd.',
           phone: '+91 98765 43210'
         });
-        navigate(returnPath || '/supplier', { replace: true });
+        navigate('/supplier');
         return;
       } else {
         setError('Invalid password for Supplier (Hint: supplier123).');
@@ -72,7 +68,7 @@ export default function Login() {
         name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
         phone: '+91 98765 12345'
       });
-      navigate(returnPath || '/account', { replace: true });
+      navigate('/account');
     } else {
       setError('Please provide your email and password.');
     }
@@ -135,16 +131,6 @@ export default function Login() {
               Access your saved bag, order timeline tracking, and address book
             </p>
           </div>
-
-          {redirectMessage && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-xs">
-              <span className="text-base">🔒</span>
-              <div>
-                <strong className="font-bold block text-amber-950">Authentication Required</strong>
-                <span>{redirectMessage}</span>
-              </div>
-            </div>
-          )}
 
           {error && (
             <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center">
