@@ -19,6 +19,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import SupplierDashboard from './pages/SupplierDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
 export default function App() {
@@ -42,8 +43,22 @@ export default function App() {
         <Route path="/terms" element={<TermsConditions />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/supplier" element={<SupplierDashboard />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute roleRequired="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supplier"
+          element={
+            <ProtectedRoute roleRequired="supplier">
+              <SupplierDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

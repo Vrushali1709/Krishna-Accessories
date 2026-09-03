@@ -1,5 +1,5 @@
 // src/pages/Login.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -13,9 +13,6 @@ export default function Login() {
 
   // Determine initial selected role from location state or default
   const [selectedRole, setSelectedRole] = useState(() => {
-    if (location.state?.requiredRole === 'supplier' || location.pathname.includes('supplier')) {
-      return 'supplier';
-    }
     if (location.state?.requiredRole === 'admin' || location.pathname.includes('admin')) {
       return 'admin';
     }
@@ -34,6 +31,15 @@ export default function Login() {
 
   const redirectMessage = location.state?.message || '';
   const returnPath = location.state?.from?.pathname;
+
+  useEffect(() => {
+    if (location.state?.requiredRole) {
+      setSelectedRole(location.state.requiredRole);
+      setEmail('');
+      setPassword('');
+      setError('');
+    }
+  }, [location.state]);
 
   // When a demo role button is clicked, select that role, CLEAR the inputs, and do NOT auto-fill
   const handleSelectRole = (role) => {
