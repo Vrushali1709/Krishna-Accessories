@@ -5,6 +5,35 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
+import {
+  Building2,
+  Package,
+  Boxes,
+  Truck,
+  Wallet,
+  AlertTriangle,
+  CheckCircle2,
+  TrendingUp,
+  Plus,
+  Trash2,
+  Edit3,
+  ExternalLink,
+  ChevronRight,
+  Clock,
+  ArrowUpRight,
+  Sparkles,
+  RefreshCw,
+  Search,
+  X,
+  Layers,
+  Filter,
+  ShieldCheck,
+  BarChart3,
+  ArrowRight,
+  Coins,
+  Info,
+  ChevronDown
+} from 'lucide-react';
 
 export default function SupplierDashboard() {
   const suppliers = getSuppliers();
@@ -20,6 +49,9 @@ export default function SupplierDashboard() {
   const [selectedOrderToUpdate, setSelectedOrderToUpdate] = useState(null);
   const [courierInput, setCourierInput] = useState('BlueDart Express');
   const [awbInput, setAwbInput] = useState('');
+
+  // Search filter for products table
+  const [productSearch, setProductSearch] = useState('');
 
   // Product Form state
   const [form, setForm] = useState({
@@ -67,6 +99,18 @@ export default function SupplierDashboard() {
       o.items && o.items.some(item => !item.supplier || item.supplier.toLowerCase() === activeSupplierName.toLowerCase())
     );
   }, [allOrders, activeSupplierName]);
+
+  // Filtered products with search
+  const filteredProducts = useMemo(() => {
+    if (!productSearch.trim()) return supplierProducts;
+    const q = productSearch.toLowerCase();
+    return supplierProducts.filter(p =>
+      p.name?.toLowerCase().includes(q) ||
+      p.sku?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q) ||
+      p.brand?.toLowerCase().includes(q)
+    );
+  }, [supplierProducts, productSearch]);
 
   // Calculate Metrics
   const totalStockUnits = supplierProducts.reduce((sum, p) => sum + Number(p.stock || 0), 0);
@@ -182,99 +226,151 @@ export default function SupplierDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+    <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
       <Navbar />
 
       {/* Supplier Top Header */}
-      <section className="border-b border-gray-200 bg-white py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="border-b border-zinc-200/80 bg-white sticky top-0 z-30 shadow-xs">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-gray-100 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-800 border border-gray-200">
-                  Verified Vendor Portal
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 border border-emerald-200/60">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Verified Supplier
                 </span>
-                <span className="text-xs text-gray-500">Fulfillment & Inventory Console</span>
+                <span className="text-xs text-zinc-400 font-medium tracking-wide">Fulfillment & Inventory Console</span>
               </div>
-              <h1 className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950 flex items-center gap-2">
-                <span>🏢</span> {activeSupplierName}
+              <h1 className="mt-1.5 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+                  <Building2 className="h-4 w-4 text-white" />
+                </div>
+                <span>{activeSupplierName}</span>
               </h1>
             </div>
 
             {/* Supplier Switcher Dropdown */}
-            <div className="flex items-center gap-2.5">
-              <label className="text-xs text-gray-500 whitespace-nowrap font-bold">Active Vendor:</label>
-              <select
-                value={activeSupplierName}
-                onChange={(e) => setActiveSupplierName(e.target.value)}
-                className="rounded-xl border border-gray-200 bg-[#F4F4F6] px-3.5 py-2 text-xs font-bold text-gray-900 outline-none focus:border-gray-400 cursor-pointer"
-              >
-                {suppliers.map(s => (
-                  <option key={s.id} value={s.name}>
-                    {s.name} ({s.category})
-                  </option>
-                ))}
-              </select>
+            <div className="flex items-center gap-3">
+              <label className="text-xs text-zinc-500 whitespace-nowrap font-medium">Switch Vendor Account:</label>
+              <div className="relative">
+                <select
+                  value={activeSupplierName}
+                  onChange={(e) => setActiveSupplierName(e.target.value)}
+                  className="appearance-none rounded-xl border border-zinc-200 bg-zinc-50/80 hover:bg-zinc-100/70 pl-3.5 pr-8 py-2 text-xs font-semibold text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-400 cursor-pointer transition shadow-2xs"
+                >
+                  {suppliers.map(s => (
+                    <option key={s.id} value={s.name}>
+                      {s.name} ({s.category})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
 
         {/* KPI Stat Cards */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mb-8">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Active Catalog</span>
-            <p className="mt-1.5 text-xl font-bold text-gray-950">{supplierProducts.length} Items</p>
-            <span className="text-[10px] text-emerald-700 font-bold mt-0.5 block">Live in Customer Shop</span>
+          {/* KPI 1: Active Catalog */}
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Active Catalog</span>
+              <div className="h-7 w-7 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700 group-hover:bg-zinc-900 group-hover:text-white transition">
+                <Package className="h-3.5 w-3.5" />
+              </div>
+            </div>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{supplierProducts.length}</p>
+            <div className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              Live in Storefront Catalog
+            </div>
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Stock Units</span>
-            <p className="mt-1.5 text-xl font-bold text-gray-950">{totalStockUnits}</p>
-            <span className="text-[10px] text-gray-500 mt-0.5 block">
+          {/* KPI 2: Total Stock Units */}
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Total Stock Units</span>
+              <div className="h-7 w-7 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700 group-hover:bg-zinc-900 group-hover:text-white transition">
+                <Boxes className="h-3.5 w-3.5" />
+              </div>
+            </div>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{totalStockUnits.toLocaleString()}</p>
+            <div className="mt-2 text-[11px]">
               {lowStockItems.length > 0 ? (
-                <strong className="text-amber-600 font-bold">⚠️ {lowStockItems.length} items low stock</strong>
-              ) : 'Healthy inventory levels'}
-            </span>
+                <span className="inline-flex items-center gap-1 font-semibold text-amber-700">
+                  <AlertTriangle className="h-3 w-3" />
+                  {lowStockItems.length} items low on stock
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 font-semibold text-zinc-600">
+                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                  Optimal inventory depth
+                </span>
+              )}
+            </div>
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Pending Orders</span>
-            <p className="mt-1.5 text-xl font-bold text-amber-600">{pendingOrdersCount}</p>
-            <span className="text-[10px] text-gray-500 mt-0.5 block">Requires packing & dispatch</span>
+          {/* KPI 3: Pending Orders */}
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Pending Dispatch</span>
+              <div className="h-7 w-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-700 transition">
+                <Truck className="h-3.5 w-3.5" />
+              </div>
+            </div>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-amber-600 font-mono">{pendingOrdersCount}</p>
+            <span className="mt-2 text-[11px] text-zinc-600 font-medium block">Awaiting packaging & courier</span>
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Net Earnings (95%)</span>
-            <p className="mt-1.5 text-xl font-bold text-gray-950">₹{netEarnings.toLocaleString('en-IN')}</p>
-            <span className="text-[10px] text-gray-400 mt-0.5 block">Gross: ₹{totalRevenue.toLocaleString('en-IN')}</span>
+          {/* KPI 4: Net Supplier Payout */}
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Net Earnings (95%)</span>
+              <div className="h-7 w-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700 transition">
+                <Wallet className="h-3.5 w-3.5" />
+              </div>
+            </div>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">₹{netEarnings.toLocaleString('en-IN')}</p>
+            <span className="mt-2 text-[11px] text-zinc-600 block">Gross volume: ₹{totalRevenue.toLocaleString('en-IN')}</span>
           </div>
 
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex border-b border-gray-200 gap-2 mb-8 overflow-x-auto">
+        {/* Tab Navigation Pill Bar */}
+        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-zinc-200/60 border border-zinc-200 max-w-fit overflow-x-auto">
           {[
-            { id: 'overview', label: '📊 Dashboard Overview' },
-            { id: 'products', label: `📦 My Products (${supplierProducts.length})` },
-            { id: 'inventory', label: '📋 Inventory & Stock' },
-            { id: 'orders', label: `🚚 Order Fulfillment (${supplierOrders.length})` },
-            { id: 'earnings', label: '💰 Payouts & Earnings' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`pb-3 text-xs sm:text-sm font-bold tracking-wide transition border-b-2 whitespace-nowrap px-2 ${activeTab === tab.id
-                ? 'border-[#111827] text-gray-950'
-                : 'border-transparent text-gray-500 hover:text-black'
-                }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+            { id: 'overview', label: 'Dashboard Overview', icon: BarChart3, count: null },
+            { id: 'products', label: 'My Products', icon: Package, count: supplierProducts.length },
+            { id: 'inventory', label: 'Stock Control', icon: Boxes, count: null },
+            { id: 'orders', label: 'Order Fulfillment', icon: Truck, count: supplierOrders.length },
+            { id: 'earnings', label: 'Payouts & Earnings', icon: Wallet, count: null }
+          ].map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition whitespace-nowrap ${isActive
+                  ? 'bg-white text-zinc-950 shadow-xs border border-zinc-200/70'
+                  : 'text-zinc-600 hover:text-zinc-950 hover:bg-white/50'
+                  }`}
+              >
+                <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-zinc-900' : 'text-zinc-400'}`} />
+                <span>{tab.label}</span>
+                {tab.count !== null && (
+                  <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-mono font-bold ${isActive ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-200/70 text-zinc-500'}`}>
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Tab 1: Overview */}
@@ -283,23 +379,26 @@ export default function SupplierDashboard() {
 
             {/* Urgent Fulfillment Banner */}
             {pendingOrdersCount > 0 && (
-              <div className="flex items-center justify-between rounded-3xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">⚠️</span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200/80 bg-amber-50/70 p-5 shadow-2xs">
+                <div className="flex items-start sm:items-center gap-3.5">
+                  <div className="h-9 w-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
+                    <AlertTriangle className="h-5 w-5" />
+                  </div>
                   <div>
-                    <h4 className="text-xs font-bold text-amber-900">
-                      You have {pendingOrdersCount} customer orders waiting for dispatch!
+                    <h4 className="text-sm font-bold text-amber-950">
+                      {pendingOrdersCount} customer {pendingOrdersCount === 1 ? 'order requires' : 'orders require'} urgent fulfillment
                     </h4>
-                    <p className="text-[11px] text-amber-700 mt-0.5">
-                      Process packaging and update shipment status with courier tracking number.
+                    <p className="text-xs text-amber-800/90 mt-0.5">
+                      Process packaging and attach courier tracking number to notify customers.
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setActiveTab('orders')}
-                  className="rounded-full bg-[#111827] px-4 py-2 text-xs font-bold text-white hover:bg-black"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs shrink-0"
                 >
-                  View Orders &rarr;
+                  <span>View Order Queue</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             )}
@@ -308,66 +407,95 @@ export default function SupplierDashboard() {
             <div className="grid gap-6 lg:grid-cols-2">
 
               {/* Recent Orders Card */}
-              <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                  <h3 className="text-xs font-bold text-gray-950 uppercase tracking-wider">
-                    Recent Customer Orders
-                  </h3>
-                  <button onClick={() => setActiveTab('orders')} className="text-xs text-gray-700 font-bold hover:underline">
-                    View All
+              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
+                  <div>
+                    <h3 className="text-sm font-bold text-zinc-900">Recent Customer Orders</h3>
+                    <p className="text-xs text-zinc-400">Latest transactions involving your inventory</p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('orders')}
+                    className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline"
+                  >
+                    <span>View all ({supplierOrders.length})</span>
+                    <ChevronRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
 
-                <div className="divide-y divide-gray-100 space-y-3">
-                  {supplierOrders.slice(0, 3).map(order => (
-                    <div key={order.id} className="pt-3 first:pt-0 flex items-center justify-between">
-                      <div>
-                        <span className="font-mono text-xs font-bold text-gray-950">{order.id}</span>
-                        <p className="text-xs text-gray-800 font-semibold mt-0.5">{order.customer?.firstName} {order.customer?.lastName}</p>
-                        <p className="text-[10px] text-gray-400">{order.date} &bull; {order.items?.length} products</p>
+                <div className="divide-y divide-zinc-100">
+                  {supplierOrders.slice(0, 4).map(order => (
+                    <div key={order.id} className="py-3.5 first:pt-1 last:pb-1 flex items-center justify-between hover:bg-zinc-50/50 rounded-xl px-2 -mx-2 transition">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-bold text-zinc-900">{order.id}</span>
+                          <span className="text-zinc-300">•</span>
+                          <span className="text-xs text-zinc-500">{order.date}</span>
+                        </div>
+                        <p className="text-xs font-medium text-zinc-800">
+                          {order.customer?.firstName} {order.customer?.lastName}
+                        </p>
+                        <p className="text-[11px] text-zinc-400">
+                          {order.items?.length || 0} line items &bull; {order.paymentMethod || 'Prepaid'}
+                        </p>
                       </div>
 
-                      <div className="text-right">
-                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                      <div className="text-right space-y-1">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
+                          order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                            'bg-amber-50 text-amber-700 border border-amber-200/60'
                           }`}>
                           {order.status}
                         </span>
-                        <p className="text-xs font-bold text-gray-950 mt-0.5">₹{order.total?.toLocaleString('en-IN')}</p>
+                        <p className="text-xs font-bold font-mono text-zinc-900">₹{order.total?.toLocaleString('en-IN')}</p>
                       </div>
                     </div>
                   ))}
+                  {supplierOrders.length === 0 && (
+                    <div className="py-8 text-center text-xs text-zinc-400">
+                      No customer orders recorded yet for {activeSupplierName}.
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Low Stock Alerts Card */}
-              <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                  <h3 className="text-xs font-bold text-gray-950 uppercase tracking-wider">
-                    Inventory Stock Health
-                  </h3>
-                  <button onClick={() => setActiveTab('inventory')} className="text-xs text-gray-700 font-bold hover:underline">
-                    Manage Stock
+              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
+                  <div>
+                    <h3 className="text-sm font-bold text-zinc-900">Inventory Stock Health</h3>
+                    <p className="text-xs text-zinc-400">Items requiring immediate stock replenishment</p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('inventory')}
+                    className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline"
+                  >
+                    <span>Manage stock</span>
+                    <ChevronRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
 
                 {lowStockItems.length > 0 ? (
-                  <div className="divide-y divide-gray-100 space-y-3">
-                    {lowStockItems.map(item => (
-                      <div key={item.id} className="pt-3 first:pt-0 flex items-center justify-between">
+                  <div className="divide-y divide-zinc-100">
+                    {lowStockItems.slice(0, 4).map(item => (
+                      <div key={item.id} className="py-3 first:pt-1 last:pb-1 flex items-center justify-between hover:bg-zinc-50/50 rounded-xl px-2 -mx-2 transition">
                         <div className="flex items-center gap-3">
-                          <img src={item.image} alt={item.name} className="h-10 w-10 rounded-xl object-contain bg-[#F4F4F6] border border-gray-200 p-1" />
-                          <div>
-                            <p className="text-xs font-bold text-gray-900 truncate max-w-[180px]">{item.name}</p>
-                            <span className="text-[10px] font-mono text-gray-400">{item.sku}</span>
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="h-10 w-10 rounded-xl object-cover bg-zinc-50 border border-zinc-200/80 p-0.5 shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold text-zinc-900 truncate max-w-[170px]">{item.name}</p>
+                            <span className="text-[10px] font-mono text-zinc-400">{item.sku}</span>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="rounded-full bg-red-50 text-red-700 px-2.5 py-0.5 text-[10px] font-bold">
+                          <span className="rounded-full bg-rose-50 text-rose-700 border border-rose-200/60 px-2 py-0.5 text-[10px] font-bold font-mono">
                             {item.stock} left
                           </span>
                           <button
                             onClick={() => handleQuickStockAdjust(item, 10)}
-                            className="rounded-full bg-gray-100 text-gray-900 hover:bg-gray-200 text-[10px] font-bold px-3 py-1 transition"
+                            className="rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-900 text-[11px] font-semibold px-2.5 py-1 transition shadow-2xs"
                           >
                             +10 Restock
                           </button>
@@ -376,8 +504,12 @@ export default function SupplierDashboard() {
                     ))}
                   </div>
                 ) : (
-                  <div className="py-8 text-center text-xs text-emerald-700 font-bold">
-                    ✓ All products have optimal inventory levels!
+                  <div className="py-12 text-center space-y-2">
+                    <div className="h-10 w-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto">
+                      <CheckCircle2 className="h-5 w-5" />
+                    </div>
+                    <p className="text-xs font-bold text-zinc-800">All products have healthy inventory levels</p>
+                    <p className="text-[11px] text-zinc-400">No low stock warnings active for this supplier catalog.</p>
                   </div>
                 )}
               </div>
@@ -393,79 +525,126 @@ export default function SupplierDashboard() {
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-gray-950">Product Catalog ({supplierProducts.length})</h3>
-                <p className="text-xs text-gray-500">Products assigned to {activeSupplierName} displayed across Krishna Accessories.</p>
+                <h3 className="text-base font-bold text-zinc-900">Product Catalog ({supplierProducts.length})</h3>
+                <p className="text-xs text-zinc-500">Products assigned to {activeSupplierName} displayed across Krishna Accessories store.</p>
               </div>
 
-              <button
-                type="button"
-                onClick={handleOpenAddModal}
-                className="rounded-full bg-[#111827] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-black"
-              >
-                + Add New Product
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                  <input
+                    type="text"
+                    placeholder="Search SKU, name, category..."
+                    value={productSearch}
+                    onChange={(e) => setProductSearch(e.target.value)}
+                    className="pl-8 pr-3 py-2 text-xs rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-900/5 w-56 transition shadow-2xs"
+                  />
+                  {productSearch && (
+                    <button onClick={() => setProductSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700">
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleOpenAddModal}
+                  className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Add New Product</span>
+                </button>
+              </div>
             </div>
 
-            <div className="overflow-x-auto rounded-3xl border border-gray-200 bg-white shadow-sm">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-gray-200 bg-[#F8F9FA] text-gray-600 uppercase text-[10px] font-bold tracking-wider">
-                  <tr>
-                    <th className="p-4">Product Details</th>
-                    <th className="p-4">Category / Brand</th>
-                    <th className="p-4">SKU Code</th>
-                    <th className="p-4">Price</th>
-                    <th className="p-4">Stock</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {supplierProducts.map(p => (
-                    <tr key={p.id} className="hover:bg-gray-50 transition">
-                      <td className="p-4">
-                        <div className="flex items-center gap-3">
-                          <img src={p.image || p.images?.[0]} alt={p.name} className="h-11 w-11 rounded-xl object-contain bg-[#F4F4F6] border border-gray-200 shrink-0 p-1" />
-                          <div>
-                            <Link to={`/product/${p.id}`} className="font-bold text-gray-950 hover:text-black transition">
-                              {p.name}
-                            </Link>
-                            <p className="text-[10px] text-amber-500 font-bold mt-0.5">★ {p.rating || 4.8}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <span className="text-gray-800 font-semibold">{p.category}</span>
-                        <p className="text-[10px] text-gray-400 font-bold">{p.brand}</p>
-                      </td>
-                      <td className="p-4 font-mono text-gray-800">{p.sku}</td>
-                      <td className="p-4">
-                        <span className="font-bold text-gray-950">₹{p.price.toLocaleString('en-IN')}</span>
-                        {p.oldPrice && (
-                          <span className="text-[10px] text-gray-400 line-through block">₹{p.oldPrice.toLocaleString('en-IN')}</span>
-                        )}
-                      </td>
-                      <td className="p-4">
-                        <span className={`font-bold ${p.stock < 10 ? 'text-red-600' : 'text-emerald-700'}`}>
-                          {p.stock} units
-                        </span>
-                      </td>
-                      <td className="p-4 text-right space-x-2">
-                        <button
-                          onClick={() => handleOpenEditModal(p)}
-                          className="rounded-full border border-gray-200 bg-[#F4F4F6] px-3 py-1 text-xs font-bold text-gray-800 hover:bg-gray-200 transition"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(p.id)}
-                          className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-bold text-red-600 hover:bg-red-100 transition"
-                        >
-                          Delete
-                        </button>
-                      </td>
+            <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4">Product Details</th>
+                      <th className="py-3 px-4">Department & Brand</th>
+                      <th className="py-3 px-4">SKU Code</th>
+                      <th className="py-3 px-4">Price</th>
+                      <th className="py-3 px-4">Inventory</th>
+                      <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-100">
+                    {filteredProducts.map(p => (
+                      <tr key={p.id} className="hover:bg-zinc-50/60 transition group">
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={p.image || p.images?.[0]}
+                              alt={p.name}
+                              className="h-11 w-11 rounded-xl object-cover bg-zinc-50 border border-zinc-200/80 shrink-0 p-0.5"
+                            />
+                            <div>
+                              <Link
+                                to={`/product/${p.id}`}
+                                className="font-bold text-zinc-900 hover:text-zinc-700 transition inline-flex items-center gap-1"
+                              >
+                                <span>{p.name}</span>
+                                <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition text-zinc-400" />
+                              </Link>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-[10px] text-amber-600 font-semibold">★ {p.rating || 4.8}</span>
+                                <span className="text-zinc-300">•</span>
+                                <span className="text-[10px] text-zinc-400">{p.subcategory || 'Standard'}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-800">
+                            {p.category}
+                          </span>
+                          <p className="text-[11px] text-zinc-500 font-medium mt-1">{p.brand}</p>
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-zinc-700 text-xs">{p.sku}</td>
+                        <td className="py-3.5 px-4">
+                          <span className="font-bold text-zinc-900 font-mono text-xs">₹{p.price.toLocaleString('en-IN')}</span>
+                          {p.oldPrice && (
+                            <span className="text-[10px] text-zinc-400 line-through block font-mono">₹{p.oldPrice.toLocaleString('en-IN')}</span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono ${Number(p.stock) < 10
+                            ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                            }`}>
+                            {p.stock} units
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right space-x-1.5">
+                          <button
+                            onClick={() => handleOpenEditModal(p)}
+                            className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 transition shadow-2xs"
+                          >
+                            <Edit3 className="h-3 w-3" />
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProduct(p.id)}
+                            className="inline-flex items-center gap-1 rounded-lg border border-rose-200/80 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-700 transition shadow-2xs"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>Delete</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredProducts.length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="py-10 text-center text-xs text-zinc-400">
+                          No matching products found for query "{productSearch}".
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
           </div>
@@ -474,26 +653,33 @@ export default function SupplierDashboard() {
         {/* Tab 3: Inventory Management */}
         {activeTab === 'inventory' && (
           <div className="space-y-5">
-            <div>
-              <h3 className="text-base font-bold text-gray-950">Inventory Stock Control</h3>
-              <p className="text-xs text-gray-500">Maintain physical stock counts and batch replenish inventory.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-base font-bold text-zinc-900">Inventory Stock Control</h3>
+                <p className="text-xs text-zinc-500">Quick adjust physical stock units and replenish catalog inventory on demand.</p>
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {supplierProducts.map(p => (
-                <div key={p.id} className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm flex flex-col justify-between">
+                <div key={p.id} className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs flex flex-col justify-between hover:border-zinc-300 transition">
                   <div>
                     <div className="flex items-center gap-3">
-                      <img src={p.image} alt="" className="h-11 w-11 rounded-xl object-contain bg-[#F4F4F6] border border-gray-200 p-1" />
+                      <img
+                        src={p.image}
+                        alt=""
+                        className="h-12 w-12 rounded-xl object-cover bg-zinc-50 border border-zinc-200/80 p-0.5 shrink-0"
+                      />
                       <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-gray-950 truncate">{p.name}</h4>
-                        <span className="text-[10px] text-gray-400 font-mono">{p.sku}</span>
+                        <h4 className="text-xs font-bold text-zinc-900 truncate">{p.name}</h4>
+                        <span className="text-[10px] text-zinc-400 font-mono block">{p.sku}</span>
+                        <span className="text-[10px] text-zinc-500">{p.category} &bull; {p.brand}</span>
                       </div>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#F8F9FA] p-3 border border-gray-100">
-                      <span className="text-xs text-gray-500 font-semibold">Current Stock:</span>
-                      <span className={`text-sm font-bold ${p.stock < 10 ? 'text-red-600' : 'text-emerald-700'}`}>
+                    <div className="mt-4 flex items-center justify-between rounded-xl bg-zinc-50/80 p-3 border border-zinc-100">
+                      <span className="text-xs text-zinc-500 font-medium">Current Available Stock:</span>
+                      <span className={`text-sm font-bold font-mono ${p.stock < 10 ? 'text-rose-600' : 'text-emerald-700'}`}>
                         {p.stock} Units
                       </span>
                     </div>
@@ -502,19 +688,22 @@ export default function SupplierDashboard() {
                   <div className="mt-4 flex gap-2">
                     <button
                       onClick={() => handleQuickStockAdjust(p, -1)}
-                      className="flex-1 rounded-full border border-gray-200 bg-[#F4F4F6] py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-200"
+                      className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/80 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition"
+                      title="Decrease by 1"
                     >
                       −1
                     </button>
                     <button
                       onClick={() => handleQuickStockAdjust(p, +5)}
-                      className="flex-1 rounded-full border border-gray-200 bg-gray-100 py-1.5 text-xs font-bold text-gray-900 hover:bg-gray-200"
+                      className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/80 py-1.5 text-xs font-semibold text-zinc-800 hover:bg-zinc-100 transition"
+                      title="Add 5 units"
                     >
                       +5
                     </button>
                     <button
                       onClick={() => handleQuickStockAdjust(p, +20)}
-                      className="flex-1 rounded-full bg-[#111827] py-1.5 text-xs font-bold text-white hover:bg-black shadow-sm"
+                      className="flex-1 rounded-xl bg-zinc-900 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs"
+                      title="Add 20 units"
                     >
                       +20
                     </button>
@@ -529,120 +718,146 @@ export default function SupplierDashboard() {
         {activeTab === 'orders' && (
           <div className="space-y-5">
             <div>
-              <h3 className="text-base font-bold text-gray-950">Customer Order Fulfillment</h3>
-              <p className="text-xs text-gray-500">Advance order stages from Processing to Shipped & Delivered. Updates sync live with Customer Order Tracking!</p>
+              <h3 className="text-base font-bold text-zinc-900">Customer Order Fulfillment Queue</h3>
+              <p className="text-xs text-zinc-500">Advance order dispatch stages from Processing to Shipped & Delivered. Status updates sync in real-time with customer tracking.</p>
             </div>
 
-            <div className="overflow-x-auto rounded-3xl border border-gray-200 bg-white shadow-sm">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-gray-200 bg-[#F8F9FA] text-gray-600 uppercase text-[10px] font-bold tracking-wider">
-                  <tr>
-                    <th className="p-4">Order ID & Date</th>
-                    <th className="p-4">Customer & Address</th>
-                    <th className="p-4">Items / Qty</th>
-                    <th className="p-4">Order Value</th>
-                    <th className="p-4">Current Status</th>
-                    <th className="p-4 text-right">Fulfillment Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {supplierOrders.map(order => (
-                    <tr key={order.id} className="hover:bg-gray-50 transition">
-                      <td className="p-4">
-                        <span className="font-mono text-xs font-bold text-gray-950">{order.id}</span>
-                        <p className="text-[10px] text-gray-400 mt-0.5">{order.date}</p>
-                        <p className="text-[10px] text-gray-500">{order.paymentMethod}</p>
-                      </td>
-
-                      <td className="p-4">
-                        <p className="font-bold text-gray-950">{order.customer?.firstName} {order.customer?.lastName}</p>
-                        <p className="text-[10px] text-gray-500 truncate max-w-xs">{order.customer?.city}, {order.customer?.state}</p>
-                        <p className="text-[10px] text-gray-400">Phone: {order.customer?.phone}</p>
-                      </td>
-
-                      <td className="p-4">
-                        {order.items?.map((it, idx) => (
-                          <div key={idx} className="text-xs text-gray-700">
-                            &bull; {it.name} <strong className="text-gray-950">×{it.quantity}</strong>
-                          </div>
-                        ))}
-                      </td>
-
-                      <td className="p-4">
-                        <span className="font-bold text-gray-950">₹{order.total?.toLocaleString('en-IN')}</span>
-                      </td>
-
-                      <td className="p-4">
-                        <span className={`inline-block rounded-full px-3 py-0.5 text-[10px] font-bold ${order.status === 'Delivered'
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : order.status === 'Shipped'
-                            ? 'bg-blue-50 text-blue-700'
-                            : order.status === 'Cancelled'
-                              ? 'bg-rose-50 text-rose-700'
-                              : order.status === 'Refunded'
-                                ? 'bg-emerald-100 text-emerald-900 font-bold'
-                                : order.status === 'Return Requested'
-                                  ? 'bg-purple-50 text-purple-800'
-                                  : 'bg-amber-50 text-amber-700'
-                          }`}>
-                          {order.status}
-                        </span>
-                        {order.cancellation && (
-                          <p className="text-[9.5px] text-rose-600 mt-1 font-semibold truncate max-w-[140px]">
-                            {order.cancellation.reason}
-                          </p>
-                        )}
-                        {order.returnRequest && (
-                          <p className="text-[9.5px] text-purple-700 mt-1 font-semibold truncate max-w-[140px]">
-                            Return: {order.returnRequest.reason}
-                          </p>
-                        )}
-                        {order.trackingNumber && (
-                          <p className="text-[9px] font-mono text-gray-400 mt-1">AWB: {order.trackingNumber}</p>
-                        )}
-                      </td>
-
-                      <td className="p-4 text-right">
-                        <button
-                          onClick={() => handleOpenStatusModal(order)}
-                          className="rounded-full bg-[#111827] px-4 py-1.5 text-xs font-bold text-white hover:bg-black transition shadow-sm"
-                        >
-                          Update Status ⚙️
-                        </button>
-                      </td>
+            <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4">Order ID & Date</th>
+                      <th className="py-3 px-4">Customer & Destination</th>
+                      <th className="py-3 px-4">Assigned Line Items</th>
+                      <th className="py-3 px-4">Order Total</th>
+                      <th className="py-3 px-4">Fulfillment Status</th>
+                      <th className="py-3 px-4 text-right">Dispatch Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-100">
+                    {supplierOrders.map(order => (
+                      <tr key={order.id} className="hover:bg-zinc-50/60 transition">
+                        <td className="py-3.5 px-4">
+                          <span className="font-mono text-xs font-bold text-zinc-900">{order.id}</span>
+                          <p className="text-[10px] text-zinc-400 mt-0.5">{order.date}</p>
+                          <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.2 text-[9px] font-medium text-zinc-600 mt-1">
+                            {order.paymentMethod || 'Prepaid'}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <p className="font-bold text-zinc-900">{order.customer?.firstName} {order.customer?.lastName}</p>
+                          <p className="text-[11px] text-zinc-500 truncate max-w-xs">{order.customer?.city}, {order.customer?.state}</p>
+                          <p className="text-[10px] text-zinc-400 font-mono">Ph: {order.customer?.phone}</p>
+                        </td>
+
+                        <td className="py-3.5 px-4 space-y-1">
+                          {order.items?.map((it, idx) => (
+                            <div key={idx} className="text-xs text-zinc-700 flex items-center gap-1.5">
+                              <span className="h-1 w-1 rounded-full bg-zinc-400"></span>
+                              <span>{it.name}</span>
+                              <strong className="text-zinc-900 font-mono">×{it.quantity}</strong>
+                            </div>
+                          ))}
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <span className="font-bold text-zinc-900 font-mono text-xs">₹{order.total?.toLocaleString('en-IN')}</span>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                            : order.status === 'Shipped'
+                              ? 'bg-blue-50 text-blue-700 border border-blue-200/60'
+                              : order.status === 'Cancelled'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                                : order.status === 'Refunded'
+                                  ? 'bg-purple-50 text-purple-700 border border-purple-200/60'
+                                  : order.status === 'Return Requested'
+                                    ? 'bg-amber-50 text-amber-800 border border-amber-200/60'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                            }`}>
+                            {order.status}
+                          </span>
+                          {order.cancellation && (
+                            <p className="text-[10px] text-rose-600 mt-1 font-medium truncate max-w-[150px]">
+                              Cancel: {order.cancellation.reason}
+                            </p>
+                          )}
+                          {order.returnRequest && (
+                            <p className="text-[10px] text-purple-700 mt-1 font-medium truncate max-w-[150px]">
+                              Return: {order.returnRequest.reason}
+                            </p>
+                          )}
+                          {order.trackingNumber && (
+                            <p className="text-[10px] font-mono text-zinc-400 mt-1">AWB: {order.trackingNumber}</p>
+                          )}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-right">
+                          <button
+                            onClick={() => handleOpenStatusModal(order)}
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs"
+                          >
+                            <Truck className="h-3 w-3" />
+                            <span>Update Logistics</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {supplierOrders.length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="py-10 text-center text-xs text-zinc-400">
+                          No orders currently assigned to {activeSupplierName}.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
         {/* Tab 5: Payouts & Earnings */}
         {activeTab === 'earnings' && (
-          <div className="space-y-5">
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 mb-5">
-                Vendor Financial Settlement Breakdown
-              </h3>
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-6">
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-900">
+                  Vendor Financial Settlement Breakdown
+                </h3>
+                <p className="text-xs text-zinc-400 mt-0.5">Automated revenue split and payout reconciliation</p>
+              </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-gray-100 bg-[#F8F9FA] p-4">
-                  <span className="text-xs text-gray-500 font-semibold">Gross Sales Value</span>
-                  <p className="text-xl font-bold text-gray-950 mt-1">₹{totalRevenue.toLocaleString('en-IN')}</p>
+                <div className="rounded-xl border border-zinc-100 bg-zinc-50/70 p-4">
+                  <span className="text-xs text-zinc-500 font-medium">Gross Merchandise Sales</span>
+                  <p className="text-2xl font-bold font-mono text-zinc-900 mt-1.5">₹{totalRevenue.toLocaleString('en-IN')}</p>
+                  <span className="text-[10px] text-zinc-400 mt-1 block">From fulfilled & active orders</span>
                 </div>
-                <div className="rounded-2xl border border-gray-100 bg-[#F8F9FA] p-4">
-                  <span className="text-xs text-gray-500 font-semibold">Platform Commission (5%)</span>
-                  <p className="text-xl font-bold text-red-600 mt-1">−₹{Math.round(totalRevenue * 0.05).toLocaleString('en-IN')}</p>
+                <div className="rounded-xl border border-zinc-100 bg-zinc-50/70 p-4">
+                  <span className="text-xs text-zinc-500 font-medium">Platform Service Fee (5%)</span>
+                  <p className="text-2xl font-bold font-mono text-rose-600 mt-1.5">−₹{Math.round(totalRevenue * 0.05).toLocaleString('en-IN')}</p>
+                  <span className="text-[10px] text-zinc-400 mt-1 block">Standard vendor marketplace fee</span>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-gray-100 p-4">
-                  <span className="text-xs text-gray-700 font-bold">Net Payout to Supplier</span>
-                  <p className="text-xl font-bold text-gray-950 mt-1">₹{netEarnings.toLocaleString('en-IN')}</p>
+                <div className="rounded-xl border border-zinc-200 bg-zinc-100/70 p-4">
+                  <span className="text-xs text-zinc-700 font-bold">Net Payout to Vendor</span>
+                  <p className="text-2xl font-bold font-mono text-zinc-950 mt-1.5">₹{netEarnings.toLocaleString('en-IN')}</p>
+                  <span className="text-[10px] text-emerald-700 font-semibold mt-1 block">Direct Bank Transfer (NEFT/RTGS)</span>
                 </div>
               </div>
 
-              <div className="mt-5 rounded-2xl bg-gray-50 border border-gray-100 p-4 text-xs text-gray-600">
-                💡 Payouts are automatically settled every Tuesday to your registered bank account for all orders marked <strong>Delivered</strong>.
+              <div className="rounded-xl bg-zinc-50 border border-zinc-200/70 p-4 text-xs text-zinc-600 flex items-start gap-3">
+                <Info className="h-4 w-4 text-zinc-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-zinc-900">Settlement Cycle Schedule</p>
+                  <p className="text-zinc-500">
+                    Vendor earnings are calculated on all orders marked <strong>Delivered</strong> and disbursed every Tuesday to your verified bank account.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -652,36 +867,44 @@ export default function SupplierDashboard() {
 
       {/* Add / Edit Product Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-7 shadow-xl max-h-[90vh] overflow-y-auto">
 
-            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-5">
-              <h3 className="text-lg font-bold text-gray-950">
-                {editingProduct ? 'Edit Catalog Product' : 'Add New Product to Store'}
-              </h3>
-              <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-black font-bold">✕</button>
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-4 mb-5">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Supplier Catalog</span>
+                <h3 className="text-lg font-bold text-zinc-900">
+                  {editingProduct ? 'Edit Catalog Product' : 'Add New Product to Store'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="h-8 w-8 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
             <form onSubmit={handleSaveProductSubmit} className="space-y-4">
 
-              <div className="grid gap-3.5 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Product Name *</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Product Name *</label>
                   <input
                     type="text"
                     required
                     value={form.name}
                     onChange={e => setForm({ ...form, name: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Brand *</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Brand *</label>
                   <select
                     value={form.brand}
                     onChange={e => setForm({ ...form, brand: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   >
                     {brands.map(b => (
                       <option key={b} value={b}>{b}</option>
@@ -690,11 +913,11 @@ export default function SupplierDashboard() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Category *</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Category *</label>
                   <select
                     value={form.category}
                     onChange={e => setForm({ ...form, category: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   >
                     {categories.map(c => (
                       <option key={c} value={c}>{c}</option>
@@ -703,90 +926,90 @@ export default function SupplierDashboard() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">SKU Code</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">SKU Code</label>
                   <input
                     type="text"
                     value={form.sku}
                     onChange={e => setForm({ ...form, sku: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs font-mono text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Price (₹) *</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Price (₹) *</label>
                   <input
                     type="number"
                     required
                     value={form.price}
                     onChange={e => setForm({ ...form, price: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Original Price (₹)</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Original Price (₹)</label>
                   <input
                     type="number"
                     value={form.oldPrice}
                     onChange={e => setForm({ ...form, oldPrice: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Initial Stock Units</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Initial Stock Units</label>
                   <input
                     type="number"
                     value={form.stock}
                     onChange={e => setForm({ ...form, stock: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-gray-700 mb-1 block">Warranty</label>
+                  <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Warranty Duration</label>
                   <input
                     type="text"
                     value={form.warranty}
                     onChange={e => setForm({ ...form, warranty: e.target.value })}
                     placeholder="e.g. 2 Years"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-gray-700 mb-1 block">Image URL</label>
+                <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Image URL</label>
                 <input
                   type="text"
                   value={form.image}
                   onChange={e => setForm({ ...form, image: e.target.value })}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-gray-700 mb-1 block">Product Description</label>
+                <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Product Description</label>
                 <textarea
                   rows={3}
                   value={form.description}
                   onChange={e => setForm({ ...form, description: e.target.value })}
-                  className="w-full resize-none rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                  className="w-full resize-none rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                 />
               </div>
 
-              <div className="flex justify-end gap-2.5 pt-4 border-t border-gray-100">
+              <div className="flex justify-end gap-2.5 pt-4 border-t border-zinc-100">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-full border border-gray-200 bg-[#F4F4F6] px-5 py-2 text-xs font-bold text-gray-700 hover:bg-gray-200"
+                  className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-full bg-[#111827] px-6 py-2 text-xs font-bold text-white hover:bg-black shadow-sm"
+                  className="rounded-xl bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-black transition shadow-xs"
                 >
                   {editingProduct ? 'Update Product' : 'Publish Product to Store'}
                 </button>
@@ -799,73 +1022,82 @@ export default function SupplierDashboard() {
 
       {/* Order Status Update Modal */}
       {statusModalOpen && selectedOrderToUpdate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl space-y-5">
 
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
               <div>
-                <span className="text-[10px] font-bold uppercase text-gray-400">Order Status Updater</span>
-                <h3 className="text-base font-bold text-gray-950 font-mono">{selectedOrderToUpdate.id}</h3>
+                <span className="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Fulfillment & Logistics</span>
+                <h3 className="text-base font-bold text-zinc-900 font-mono">{selectedOrderToUpdate.id}</h3>
               </div>
-              <button onClick={() => setStatusModalOpen(false)} className="text-gray-400 hover:text-black font-bold">✕</button>
+              <button
+                onClick={() => setStatusModalOpen(false)}
+                className="h-8 w-8 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Courier Partner</label>
+                <label className="text-xs font-semibold text-zinc-700 block mb-1.5">Courier Delivery Partner</label>
                 <input
                   type="text"
                   value={courierInput}
                   onChange={e => setCourierInput(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-gray-700 block mb-1">Tracking AWB Number</label>
+                <label className="text-xs font-semibold text-zinc-700 block mb-1.5">Tracking AWB Code</label>
                 <input
                   type="text"
                   value={awbInput}
                   onChange={e => setAwbInput(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs font-mono text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                 />
               </div>
             </div>
 
             {/* Quick Status Advance Buttons */}
-            <div className="space-y-2 pt-3 border-t border-gray-100">
-              <span className="text-xs text-gray-500 block font-bold">Advance Status to:</span>
+            <div className="space-y-2 pt-3 border-t border-zinc-100">
+              <span className="text-[11px] text-zinc-500 block font-semibold">Advance Order Stage:</span>
 
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Processing')}
-                className="w-full rounded-full border border-amber-200 bg-amber-50 py-2.5 text-xs font-bold text-amber-800 hover:bg-amber-100 transition"
+                className="w-full flex items-center justify-between rounded-xl border border-amber-200/80 bg-amber-50/70 px-4 py-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition"
               >
-                1. Mark as Processing & Packing
+                <span>1. Mark as Processing & Packaging</span>
+                <Clock className="h-3.5 w-3.5 text-amber-600" />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Shipped')}
-                className="w-full rounded-full border border-blue-200 bg-blue-50 py-2.5 text-xs font-bold text-blue-800 hover:bg-blue-100 transition"
+                className="w-full flex items-center justify-between rounded-xl border border-blue-200/80 bg-blue-50/70 px-4 py-2.5 text-xs font-semibold text-blue-900 hover:bg-blue-100 transition"
               >
-                2. Mark as Shipped via Courier
+                <span>2. Mark as Shipped via Courier</span>
+                <Truck className="h-3.5 w-3.5 text-blue-600" />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Out for Delivery')}
-                className="w-full rounded-full border border-purple-200 bg-purple-50 py-2.5 text-xs font-bold text-purple-800 hover:bg-purple-100 transition"
+                className="w-full flex items-center justify-between rounded-xl border border-purple-200/80 bg-purple-50/70 px-4 py-2.5 text-xs font-semibold text-purple-900 hover:bg-purple-100 transition"
               >
-                3. Mark as Out for Delivery
+                <span>3. Mark as Out for Delivery</span>
+                <ArrowRight className="h-3.5 w-3.5 text-purple-600" />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Delivered')}
-                className="w-full rounded-full bg-emerald-600 py-2.5 text-xs font-bold text-white hover:bg-emerald-500 transition shadow-sm"
+                className="w-full flex items-center justify-between rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-semibold text-white hover:bg-emerald-500 transition shadow-2xs"
               >
-                4. Mark as Delivered ✓
+                <span>4. Mark as Delivered</span>
+                <CheckCircle2 className="h-3.5 w-3.5 text-white" />
               </button>
             </div>
 
