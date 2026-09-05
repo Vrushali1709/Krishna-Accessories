@@ -157,7 +157,7 @@ export default function Cart() {
                             {item.name}
                           </Link>
 
-                          {(itemColor || itemVariant) && (
+                          {(itemColor || itemVariant) && (    
                             <p className="text-[10.5px] text-gray-500 mt-0.5 truncate">
                               {itemColor && <span>Color: <strong className="text-gray-700">{itemColor}</strong> </span>}
                               {itemVariant && <span>&bull; Size: <strong className="text-gray-700">{itemVariant}</strong></span>}
