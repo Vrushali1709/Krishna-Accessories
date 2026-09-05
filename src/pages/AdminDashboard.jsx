@@ -2,6 +2,45 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
+  LayoutDashboard,
+  Package,
+  CreditCard,
+  Users,
+  Zap,
+  BarChart3,
+  Settings,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  Bell,
+  ExternalLink,
+  LogOut,
+  Menu,
+  X,
+  Plus,
+  Trash2,
+  Eye,
+  Printer,
+  TrendingUp,
+  Clock,
+  Truck,
+  RotateCcw,
+  AlertTriangle,
+  ShieldCheck,
+  FileText,
+  Database,
+  Lock,
+  Tag,
+  ImageIcon,
+  Folder,
+  Copy,
+  Download,
+  Layers,
+  Store,
+  SlidersHorizontal,
+  CheckCircle2
+} from 'lucide-react';
+import {
   getProducts,
   saveProduct,
   deleteProduct,
@@ -198,7 +237,7 @@ export default function AdminDashboard() {
       courier: selectedOrderCourier,
       trackingNumber: selectedOrderTracking
     });
-    showToast(`Order ${selectedOrder.id} status & logistics updated!`);
+    showToast(`Order ${selectedOrder.id} fulfillment details updated!`);
     setSelectedOrder(prev => prev ? ({ ...prev, status: selectedOrderStatus, courier: selectedOrderCourier, trackingNumber: selectedOrderTracking }) : null);
   };
 
@@ -315,13 +354,13 @@ export default function AdminDashboard() {
     return orders.filter(o => o.status === 'Refunded' || o.paymentStatus === 'Refunded' || o.returnRequest);
   }, [orders]);
 
-  // Navigation Hierarchy Definition Matching the Exact User Spec
+  // Navigation Hierarchy Definition
   const navSections = [
     {
       id: 'dashboard',
       title: 'Dashboard',
-      icon: '📊',
-      badge: unreadNotifs > 0 ? `${unreadNotifs} alerts` : null,
+      icon: LayoutDashboard,
+      badge: unreadNotifs > 0 ? `${unreadNotifs}` : null,
       subItems: [
         { id: 'overview', label: 'Overview' },
         { id: 'users', label: 'Total Users' },
@@ -335,8 +374,8 @@ export default function AdminDashboard() {
     },
     {
       id: 'catalog',
-      title: 'Catalog Management',
-      icon: '📦',
+      title: 'Catalog',
+      icon: Package,
       badge: products.length,
       subItems: [
         { id: 'products', label: 'Products' },
@@ -344,14 +383,14 @@ export default function AdminDashboard() {
         { id: 'subcategories', label: 'Subcategories' },
         { id: 'brands', label: 'Brands' },
         { id: 'variants', label: 'Variants' },
-        { id: 'images', label: 'Images' }
+        { id: 'images', label: 'Images & Media' }
       ]
     },
     {
       id: 'commerce',
-      title: 'Commerce Management',
-      icon: '💳',
-      badge: activeOrdersCount > 0 ? `${activeOrdersCount} live` : null,
+      title: 'Commerce',
+      icon: CreditCard,
+      badge: activeOrdersCount > 0 ? `${activeOrdersCount}` : null,
       subItems: [
         { id: 'orders', label: 'Orders' },
         { id: 'payments', label: 'Payments' },
@@ -363,11 +402,11 @@ export default function AdminDashboard() {
     },
     {
       id: 'people',
-      title: 'People Management',
-      icon: '👥',
+      title: 'People',
+      icon: Users,
       badge: users.length,
       subItems: [
-        { id: 'users', label: 'Users' },
+        { id: 'users', label: 'Customers' },
         { id: 'suppliers', label: 'Suppliers' },
         { id: 'roles', label: 'Roles' },
         { id: 'permissions', label: 'Permissions' }
@@ -376,37 +415,37 @@ export default function AdminDashboard() {
     {
       id: 'operations',
       title: 'Operations',
-      icon: '⚡',
-      badge: lowStockItems.length > 0 ? `⚠️ ${lowStockItems.length} low` : null,
+      icon: Zap,
+      badge: lowStockItems.length > 0 ? `${lowStockItems.length}` : null,
       subItems: [
         { id: 'inventory', label: 'Inventory' },
-        { id: 'shipping', label: 'Shipping' },
+        { id: 'shipping', label: 'Shipping Carriers' },
         { id: 'order-status', label: 'Order Status' },
-        { id: 'notifications', label: 'Notifications' }
+        { id: 'notifications', label: 'Broadcasts' }
       ]
     },
     {
       id: 'analytics',
       title: 'Analytics',
-      icon: '📈',
+      icon: BarChart3,
       subItems: [
         { id: 'daily-sales', label: 'Daily Sales' },
         { id: 'monthly-sales', label: 'Monthly Sales' },
         { id: 'product-perf', label: 'Product Performance' },
-        { id: 'supplier-perf', label: 'Supplier Performance' },
-        { id: 'customer-reports', label: 'Customer Reports' }
+        { id: 'supplier-perf', label: 'Supplier GMV' },
+        { id: 'customer-reports', label: 'Customer Retention' }
       ]
     },
     {
       id: 'system',
       title: 'System',
-      icon: '⚙️',
+      icon: Settings,
       subItems: [
-        { id: 'settings', label: 'Settings' },
-        { id: 'audit-logs', label: 'Audit Logs' },
+        { id: 'settings', label: 'Store Settings' },
+        { id: 'audit-logs', label: 'Audit Trail' },
         { id: 'security', label: 'Security' },
         { id: 'backups', label: 'Backups' },
-        { id: 'configuration', label: 'Configuration' }
+        { id: 'configuration', label: 'Gateways' }
       ]
     }
   ];
@@ -521,7 +560,7 @@ export default function AdminDashboard() {
 
     saveProduct(payload);
     setProductModalOpen(false);
-    showToast(editingProduct ? 'Product updated successfully!' : 'New product published to live store!');
+    showToast(editingProduct ? 'Product updated successfully' : 'New product published to catalog');
 
     setAuditLogs(prev => [
       {
@@ -569,7 +608,7 @@ export default function AdminDashboard() {
     saveSubcategory(subcatForm);
     setSubcatModalOpen(false);
     setSubcatForm({ name: '', category: categories[0] || 'Watches', code: '' });
-    showToast('Subcategory created successfully!');
+    showToast('Subcategory registered');
   };
 
   // Variant Form Submit
@@ -579,7 +618,7 @@ export default function AdminDashboard() {
     saveVariant(variantForm);
     setVariantModalOpen(false);
     setVariantForm({ productName: products[0]?.name || 'Rolex Submariner Date 41mm', attributeType: 'Dial Color', value: '', priceModifier: '', stock: '10', sku: '' });
-    showToast('Variant configuration saved!');
+    showToast('Variant configuration saved');
   };
 
   // Media Asset Submit
@@ -589,7 +628,7 @@ export default function AdminDashboard() {
     addMediaAsset(mediaForm);
     setMediaModalOpen(false);
     setMediaForm({ title: '', category: 'Watches', url: '', size: '1.8 MB' });
-    showToast('Media asset indexed into asset gallery!');
+    showToast('Media asset indexed');
   };
 
   // Promotion Submit
@@ -599,7 +638,7 @@ export default function AdminDashboard() {
     savePromotion(promoForm);
     setPromoModalOpen(false);
     setPromoForm({ title: '', code: '', discount: '20% Off', targetCategory: 'All Departments', bannerType: 'Hero Banner', startDate: 'Today', endDate: '30 Days' });
-    showToast('Promotional campaign banner launched!');
+    showToast('Campaign banner launched');
   };
 
   // Role Submit
@@ -609,7 +648,7 @@ export default function AdminDashboard() {
     saveRole(roleForm);
     setRoleModalOpen(false);
     setRoleForm({ name: '', description: '', membersCount: '1' });
-    showToast('New governance role registered!');
+    showToast('Governance role registered');
   };
 
   // Add Supplier / Vendor Submit
@@ -633,7 +672,7 @@ export default function AdminDashboard() {
       category: 'Fitness',
       address: 'Gujarat, India'
     });
-    showToast('New Vendor Partner onboarded successfully!');
+    showToast('Vendor partner onboarded');
   };
 
   // Category & Brand Form Submit
@@ -642,7 +681,7 @@ export default function AdminDashboard() {
     if (!newCatInput.trim()) return;
     addCategory(newCatInput.trim());
     setNewCatInput('');
-    showToast('Department category added!');
+    showToast('Department category created');
   };
 
   const handleAddBrandSubmit = (e) => {
@@ -650,7 +689,7 @@ export default function AdminDashboard() {
     if (!newBrandInput.trim()) return;
     addBrand(newBrandInput.trim());
     setNewBrandInput('');
-    showToast('Luxury brand registered!');
+    showToast('Luxury brand registered');
   };
 
   // Coupon Submit
@@ -671,7 +710,7 @@ export default function AdminDashboard() {
     setNewCouponCode('');
     setNewCouponDiscount('');
     setNewCouponMin('');
-    showToast('Discount promo code generated!');
+    showToast('Discount voucher created');
   };
 
   // Return & Refund Review Flow
@@ -694,7 +733,7 @@ export default function AdminDashboard() {
     });
     setAdminReturnModalOpen(false);
     setSelectedReturnOrder(null);
-    showToast('Return & refund decision executed successfully!');
+    showToast('Return & refund decision executed');
     refreshAll();
   };
 
@@ -702,7 +741,7 @@ export default function AdminDashboard() {
   const handleSaveSettings = (e) => {
     e.preventDefault();
     saveSystemConfig(systemConfig);
-    showToast('Store global configuration saved!');
+    showToast('Store configuration saved');
   };
 
   // Database Backup Actions
@@ -715,7 +754,7 @@ export default function AdminDashboard() {
     a.download = `krishna_accessories_backup_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('Database JSON backup downloaded!');
+    showToast('Database JSON backup downloaded');
   };
 
   const handleRestoreBackup = () => {
@@ -744,46 +783,47 @@ export default function AdminDashboard() {
     });
     setNewNotificationTitle('');
     setNewNotificationText('');
-    showToast('System announcement broadcasted!');
+    showToast('System announcement broadcasted');
   };
 
   // Dedicated Admin Login Check
   if (!authenticatedAsAdmin) {
     return (
-      <div className="min-h-screen bg-[#0B1120] text-gray-100 flex flex-col justify-center items-center px-4 py-12">
-        <div className="w-full max-w-md bg-[#0F172A] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0B1120] border border-amber-500/30 text-amber-300 font-serif font-bold text-2xl shadow-lg">
-            K
+      <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 flex flex-col justify-center items-center px-4 py-12 font-sans selection:bg-zinc-900 selection:text-white">
+        <div className="w-full max-w-sm bg-white border border-zinc-200/80 rounded-2xl p-7 sm:p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] space-y-6 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900 text-white font-serif font-bold text-lg shadow-sm">
+            KA
           </div>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B89758]">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 block">
               Governance Console
             </span>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight mt-1">
-              Krishna Accessories Admin
+            <h1 className="text-xl font-semibold text-zinc-900 tracking-tight mt-1">
+              Krishna Accessories
             </h1>
-            <p className="text-xs text-gray-400 mt-1.5 max-w-xs mx-auto">
-              Unified multi-module management console for authorized system administrators.
+            <p className="text-xs text-zinc-500 mt-1.5 leading-relaxed">
+              Enterprise commerce administration & store management.
             </p>
           </div>
-          <div className="pt-2 space-y-3">
+          <div className="pt-2 space-y-2.5">
             <button
               onClick={handleQuickAdminLogin}
-              className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 py-3 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-md transition transform active:scale-98"
+              className="w-full rounded-xl bg-zinc-900 hover:bg-black py-2.5 text-xs font-semibold text-white shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
             >
-              ⚡ 1-Click Sign In as Super Admin
+              <ShieldCheck className="h-4 w-4" />
+              <span>1-Click Super Admin Login</span>
             </button>
             <Link
               to="/login"
-              className="block w-full rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-800 py-2.5 text-xs font-bold text-gray-200 transition"
+              className="block w-full rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 py-2.5 text-xs font-medium text-zinc-700 transition"
             >
               Sign In with Password &rarr;
             </Link>
             <Link
               to="/"
-              className="inline-block text-xs text-gray-400 hover:text-white pt-2 transition"
+              className="inline-block text-xs text-zinc-400 hover:text-zinc-700 pt-2 transition font-medium"
             >
-              &larr; Back to Public Storefront
+              &larr; Back to Storefront
             </Link>
           </div>
         </div>
@@ -796,14 +836,14 @@ export default function AdminDashboard() {
   const currentSubItemObj = currentSectionObj.subItems.find(sub => sub.id === activeSubTab) || currentSectionObj.subItems[0];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 flex overflow-hidden font-sans selection:bg-zinc-900 selection:text-white">
 
       {/* ==========================================
           TOAST ALERT BANNER
       ========================================== */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 rounded-2xl bg-[#0F172A] text-amber-300 border border-amber-500/40 px-4 py-2.5 text-xs font-bold shadow-2xl animate-fade-in flex items-center gap-2">
-          <span>✨</span>
+        <div className="fixed top-5 right-5 z-50 rounded-xl bg-zinc-900 text-white border border-zinc-800 px-4 py-2.5 text-xs font-medium shadow-xl animate-fade-in flex items-center gap-2.5">
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -812,24 +852,24 @@ export default function AdminDashboard() {
           1. DEDICATED HIERARCHICAL SIDEBAR
       ========================================== */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#0B1120] text-slate-300 border-r border-slate-800 transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          mobileSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0'
-        } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-72'}`}
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#121316] text-zinc-300 border-r border-zinc-800/80 transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          mobileSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
+        } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}`}
       >
         
         {/* Sidebar Brand Header */}
         <div className="flex flex-col min-h-0 flex-1">
-          <div className="flex h-16 items-center justify-between px-4 border-b border-slate-800/80 shrink-0">
+          <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
             <Link to="/admin" className="flex items-center gap-3 overflow-hidden min-w-0">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0F172A] text-amber-300 font-serif font-bold text-sm border border-amber-500/30 shadow-md">
-                K
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-100 font-serif font-bold text-xs border border-zinc-700/60 shadow-xs">
+                KA
               </div>
               {!sidebarCollapsed && (
                 <div className="flex flex-col min-w-0">
-                  <span className="font-serif font-bold text-white tracking-tight text-sm truncate">
+                  <span className="font-semibold text-zinc-100 tracking-tight text-xs truncate">
                     Krishna Accessories
                   </span>
-                  <span className="text-[9px] font-bold tracking-[0.16em] text-[#B89758] uppercase truncate">
+                  <span className="text-[9.5px] font-medium tracking-widest text-zinc-400 uppercase truncate">
                     Admin Governance
                   </span>
                 </div>
@@ -838,17 +878,18 @@ export default function AdminDashboard() {
 
             <button
               onClick={() => setMobileSidebarOpen(false)}
-              className="lg:hidden text-slate-400 hover:text-white p-1 text-sm shrink-0"
+              className="lg:hidden text-zinc-400 hover:text-white p-1 text-sm shrink-0 cursor-pointer"
             >
-              ✕
+              <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Navigation Items (Scrollable Hierarchical Accordion) */}
-          <nav className="flex-1 overflow-y-auto p-3 space-y-1.5 text-xs">
+          <nav className="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
             {navSections.map((sec) => {
               const isSectionActive = activeSection === sec.id;
               const isExpanded = expandedSections[sec.id];
+              const IconComp = sec.icon;
 
               return (
                 <div key={sec.id} className="space-y-0.5">
@@ -867,14 +908,14 @@ export default function AdminDashboard() {
                         }
                       }
                     }}
-                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 font-bold transition-all ${
+                    className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 font-medium transition-colors cursor-pointer ${
                       isSectionActive
-                        ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                        : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                        ? 'bg-zinc-800/90 text-white font-semibold'
+                        : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="text-base shrink-0">{sec.icon}</span>
+                      <IconComp className={`h-4 w-4 shrink-0 ${isSectionActive ? 'text-zinc-100' : 'text-zinc-400'}`} />
                       {!sidebarCollapsed && (
                         <span className="truncate text-left">{sec.title}</span>
                       )}
@@ -883,35 +924,33 @@ export default function AdminDashboard() {
                     {!sidebarCollapsed && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         {sec.badge && (
-                          <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[9px] font-bold text-amber-300">
+                          <span className="rounded-full bg-zinc-800 px-1.5 py-0.2 text-[9.5px] font-semibold text-zinc-300">
                             {sec.badge}
                           </span>
                         )}
-                        <span className={`text-[9px] text-slate-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
-                          ▼
-                        </span>
+                        <ChevronDown className={`h-3 w-3 text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                       </div>
                     )}
                   </button>
 
                   {/* Sub-items List (Rendered when expanded) */}
                   {!sidebarCollapsed && isExpanded && (
-                    <div className="ml-4 pl-3 border-l border-slate-800 space-y-0.5 pt-0.5 pb-1">
+                    <div className="ml-4 pl-3 border-l border-zinc-800/80 space-y-0.5 pt-0.5 pb-1">
                       {sec.subItems.map((sub) => {
                         const isSubActive = isSectionActive && activeSubTab === sub.id;
                         return (
                           <button
                             key={sub.id}
                             onClick={() => handleNavSelect(sec.id, sub.id)}
-                            className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[11.5px] font-medium transition ${
+                            className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-[11.5px] transition cursor-pointer ${
                               isSubActive
-                                ? 'bg-amber-400/20 text-white font-bold'
-                                : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
+                                ? 'bg-zinc-800/80 text-white font-semibold'
+                                : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
                             }`}
                           >
                             <span className="truncate">{sub.label}</span>
                             {sub.badge && (
-                              <span className="rounded-full bg-rose-500/20 text-rose-300 px-1.5 py-0.2 text-[8.5px] font-bold">
+                              <span className="rounded-full bg-zinc-800 text-zinc-300 px-1.5 py-0.2 text-[9px] font-semibold">
                                 {sub.badge}
                               </span>
                             )}
@@ -928,27 +967,27 @@ export default function AdminDashboard() {
         </div>
 
         {/* Sidebar Footer User Card */}
-        <div className="p-3 border-t border-slate-800/80 bg-[#080D1A] shrink-0">
+        <div className="p-3 border-t border-zinc-800/80 bg-[#0F1012] shrink-0">
           {!sidebarCollapsed ? (
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs border border-amber-500/40">
+                  <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-200 font-semibold text-xs border border-zinc-700">
                     SA
-                    <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-[#080D1A]" />
+                    <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-[#0F1012]" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-white truncate">Super Admin</p>
-                    <p className="text-[10px] text-slate-400 truncate">admin@krishna.com</p>
+                    <p className="text-xs font-semibold text-zinc-200 truncate">Super Admin</p>
+                    <p className="text-[10px] text-zinc-400 truncate">admin@krishna.com</p>
                   </div>
                 </div>
 
                 <button
                   onClick={handleAdminLogout}
                   title="Sign Out"
-                  className="text-slate-400 hover:text-rose-400 p-1 transition shrink-0"
+                  className="text-zinc-400 hover:text-rose-400 p-1 transition shrink-0 cursor-pointer"
                 >
-                  ⏻
+                  <LogOut className="h-3.5 w-3.5" />
                 </button>
               </div>
 
@@ -956,14 +995,14 @@ export default function AdminDashboard() {
                 <Link
                   to="/"
                   target="_blank"
-                  className="flex items-center justify-center gap-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 py-1.5 text-[10.5px] font-bold text-slate-200 transition truncate px-1"
+                  className="flex items-center justify-center gap-1 rounded-lg bg-zinc-800/70 hover:bg-zinc-800 py-1.5 text-[10.5px] font-medium text-zinc-300 transition truncate px-1"
                 >
-                  <span>Live Store</span>
-                  <span className="text-[9px]">↗</span>
+                  <span>Storefront</span>
+                  <ExternalLink className="h-2.5 w-2.5" />
                 </Link>
                 <button
                   onClick={handleAdminLogout}
-                  className="flex items-center justify-center rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 py-1.5 text-[10.5px] font-bold text-rose-300 transition truncate px-1"
+                  className="flex items-center justify-center rounded-lg bg-zinc-800/40 hover:bg-rose-950/40 border border-zinc-800 hover:border-rose-900/50 py-1.5 text-[10.5px] font-medium text-zinc-300 hover:text-rose-300 transition truncate px-1 cursor-pointer"
                 >
                   Sign Out
                 </button>
@@ -974,9 +1013,9 @@ export default function AdminDashboard() {
               <button
                 onClick={handleAdminLogout}
                 title="Sign Out"
-                className="text-slate-400 hover:text-rose-400 p-2"
+                className="text-zinc-400 hover:text-rose-400 p-2 cursor-pointer"
               >
-                ⏻
+                <LogOut className="h-4 w-4" />
               </button>
             </div>
           )}
@@ -988,85 +1027,84 @@ export default function AdminDashboard() {
       {mobileSidebarOpen && (
         <div
           onClick={() => setMobileSidebarOpen(false)}
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"
         />
       )}
 
       {/* ==========================================
           2. MAIN CONTENT WRAPPER WITH TOP HEADER
       ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen bg-[#F8FAFC]">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen bg-[#F9F9F8]">
 
         {/* Top Header */}
-        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/95 px-3 sm:px-6 lg:px-8 backdrop-blur-md">
+        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b border-zinc-200/80 bg-white/95 px-4 sm:px-6 lg:px-8 backdrop-blur-md">
           
           {/* Left: Mobile Toggle & Breadcrumbs */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="lg:hidden flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-base shrink-0"
+              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-700 hover:bg-zinc-200 text-sm shrink-0 cursor-pointer"
             >
-              ☰
+              <Menu className="h-4 w-4" />
             </button>
 
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-mono shrink-0"
+              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 hover:bg-zinc-200 text-xs font-mono shrink-0 cursor-pointer"
               title="Toggle sidebar collapse"
             >
-              {sidebarCollapsed ? '⇥' : '⇤'}
+              <SlidersHorizontal className="h-3.5 w-3.5" />
             </button>
 
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 truncate min-w-0">
-              <span className="font-semibold text-slate-400 shrink-0">Admin</span>
-              <span className="shrink-0">/</span>
-              <span className="font-bold text-slate-700 truncate">{currentSectionObj.title}</span>
-              <span className="shrink-0">/</span>
-              <span className="font-bold text-amber-600 truncate">{currentSubItemObj.label}</span>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
+              <span className="text-zinc-400 shrink-0">Admin</span>
+              <span className="text-zinc-300 shrink-0">/</span>
+              <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
+              <span className="text-zinc-300 shrink-0">/</span>
+              <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
             </div>
           </div>
 
           {/* Center: Global Search */}
-          <div className="hidden md:flex relative w-56 lg:w-80">
+          <div className="hidden md:flex relative w-60 lg:w-72">
             <input
               type="text"
               value={globalSearch}
               onChange={(e) => setGlobalSearch(e.target.value)}
               placeholder="Search catalog, orders, users..."
-              className="w-full rounded-full border border-slate-200 bg-slate-100/80 py-1.5 pl-8 pr-4 text-xs text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-slate-400 focus:bg-white"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 py-1.5 pl-8 pr-4 text-xs text-zinc-800 placeholder:text-zinc-400 outline-none transition focus:border-zinc-400 focus:bg-white"
             />
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">
-              🔍
-            </span>
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 h-3.5 w-3.5 pointer-events-none" />
             {globalSearch && (
               <button
                 onClick={() => setGlobalSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-black"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-black cursor-pointer"
               >
-                ✕
+                <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
 
           {/* Right: Actions, Notifications & Profile */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             
             <Link
               to="/"
               target="_blank"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 text-xs font-bold text-slate-800 transition shadow-2xs"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 transition shadow-2xs"
             >
-              <span>View Store</span>
-              <span className="text-[10px] text-slate-500">↗</span>
+              <Store className="h-3.5 w-3.5" />
+              <span>Storefront</span>
+              <ExternalLink className="h-2.5 w-2.5 text-zinc-400" />
             </Link>
 
             {/* Notifications Popover */}
             <div className="relative">
               <button
                 onClick={() => setNotifsOpen(!notifsOpen)}
-                className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+                className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition cursor-pointer"
               >
-                <span>🔔</span>
+                <Bell className="h-3.5 w-3.5" />
                 {unreadNotifs > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8.5px] font-bold text-white shadow-xs">
                     {unreadNotifs}
@@ -1075,15 +1113,15 @@ export default function AdminDashboard() {
               </button>
 
               {notifsOpen && (
-                <div className="absolute right-0 top-full mt-2 w-[calc(100vw-32px)] max-w-xs sm:w-80 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xl z-50 animate-fade-in">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-xl z-50 animate-fade-in">
+                  <div className="flex items-center justify-between border-b border-zinc-100 pb-2 mb-2">
+                    <span className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
                       Platform Alerts ({notifications.length})
                     </span>
                     {unreadNotifs > 0 && (
                       <button
                         onClick={markAllNotificationsRead}
-                        className="text-[10px] text-[#B89758] font-bold hover:underline"
+                        className="text-[10.5px] text-zinc-600 font-semibold hover:text-zinc-950 cursor-pointer"
                       >
                         Mark all read
                       </button>
@@ -1096,14 +1134,14 @@ export default function AdminDashboard() {
                         key={n.id}
                         onClick={() => markNotificationRead(n.id)}
                         className={`rounded-xl p-2.5 text-xs transition cursor-pointer ${
-                          n.unread ? 'bg-amber-50/70 border border-amber-200/60' : 'hover:bg-slate-50'
+                          n.unread ? 'bg-zinc-50 border border-zinc-200/80 font-medium' : 'hover:bg-zinc-50 text-zinc-600'
                         }`}
                       >
                         <div className="flex justify-between items-start">
-                          <span className="font-bold text-slate-900 text-xs">{n.title}</span>
-                          <span className="text-[9px] text-slate-400 font-mono shrink-0">{n.date}</span>
+                          <span className="font-semibold text-zinc-900 text-xs">{n.title}</span>
+                          <span className="text-[9px] text-zinc-400 font-mono shrink-0">{n.date}</span>
                         </div>
-                        <p className="mt-0.5 text-[11px] text-slate-600 leading-snug">{n.message}</p>
+                        <p className="mt-0.5 text-[11px] text-zinc-600 leading-snug">{n.message}</p>
                       </div>
                     ))}
                   </div>
@@ -1115,39 +1153,42 @@ export default function AdminDashboard() {
             <div className="relative">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200 bg-white px-2 sm:px-2.5 py-1.5 text-xs font-bold text-slate-900 hover:bg-slate-50 transition shadow-2xs"
+                className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-50 transition shadow-2xs cursor-pointer"
               >
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0F172A] text-amber-300 text-[10px] font-bold shrink-0">
-                  K
+                <div className="flex h-5 w-5 items-center justify-center rounded-md bg-zinc-900 text-white text-[9px] font-bold shrink-0">
+                  SA
                 </div>
-                <span className="hidden sm:inline">Super Admin</span>
-                <span className="text-slate-400 text-[9px]">▼</span>
+                <span className="hidden sm:inline text-xs font-medium">Super Admin</span>
+                <ChevronDown className="h-3 w-3 text-zinc-400" />
               </button>
 
               {userDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl z-50 animate-fade-in text-xs font-semibold">
-                  <div className="px-3 py-2 border-b border-slate-100 mb-1">
-                    <p className="font-bold text-slate-950">Super Admin</p>
-                    <p className="text-[10px] text-slate-400">admin@krishna.com</p>
+                <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-zinc-200 bg-white p-1.5 shadow-xl z-50 animate-fade-in text-xs font-medium">
+                  <div className="px-2.5 py-2 border-b border-zinc-100 mb-1">
+                    <p className="font-semibold text-zinc-950">Super Admin</p>
+                    <p className="text-[10px] text-zinc-400">admin@krishna.com</p>
                   </div>
                   <button
                     onClick={() => { handleNavSelect('system', 'settings'); setUserDropdownOpen(false); }}
-                    className="w-full text-left rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100 transition"
+                    className="w-full text-left rounded-lg px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100 transition cursor-pointer flex items-center gap-2"
                   >
-                    ⚙️ Store Settings
+                    <Settings className="h-3.5 w-3.5 text-zinc-400" />
+                    <span>Store Settings</span>
                   </button>
                   <button
                     onClick={() => { handleNavSelect('system', 'audit-logs'); setUserDropdownOpen(false); }}
-                    className="w-full text-left rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100 transition"
+                    className="w-full text-left rounded-lg px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100 transition cursor-pointer flex items-center gap-2"
                   >
-                    📜 Audit Trail
+                    <FileText className="h-3.5 w-3.5 text-zinc-400" />
+                    <span>Audit Trail</span>
                   </button>
-                  <div className="border-t border-slate-100 pt-1 mt-1">
+                  <div className="border-t border-zinc-100 pt-1 mt-1">
                     <button
                       onClick={handleAdminLogout}
-                      className="w-full text-left rounded-xl px-3 py-2 text-rose-600 hover:bg-rose-50 font-bold transition"
+                      className="w-full text-left rounded-lg px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 font-medium transition cursor-pointer flex items-center gap-2"
                     >
-                      Sign Out
+                      <LogOut className="h-3.5 w-3.5" />
+                      <span>Sign Out</span>
                     </button>
                   </div>
                 </div>
@@ -1159,8 +1200,8 @@ export default function AdminDashboard() {
         </header>
 
         {/* Section Sub-Navigation Tabs Bar */}
-        <div className="bg-white border-b border-slate-200/80 px-3 sm:px-6 lg:px-8 py-2.5 overflow-x-auto flex items-center gap-1.5 shadow-xs">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-2 shrink-0">
+        <div className="bg-[#FAF9F8] border-b border-zinc-200/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto flex items-center gap-1.5">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mr-2 shrink-0">
             {currentSectionObj.title}:
           </span>
           {currentSectionObj.subItems.map((sub) => {
@@ -1169,15 +1210,15 @@ export default function AdminDashboard() {
               <button
                 key={sub.id}
                 onClick={() => setActiveSubTab(sub.id)}
-                className={`rounded-full px-3.5 py-1 text-xs font-bold transition whitespace-nowrap shrink-0 ${
+                className={`rounded-lg px-3 py-1 text-xs font-medium transition whitespace-nowrap shrink-0 cursor-pointer ${
                   isSubActive
-                    ? 'bg-[#0F172A] text-amber-300 shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                    ? 'bg-zinc-900 text-white shadow-xs'
+                    : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
                 }`}
               >
                 {sub.label}
                 {sub.badge && (
-                  <span className={`ml-1.5 rounded-full px-1.5 py-0.2 text-[9px] ${isSubActive ? 'bg-amber-400/30 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                  <span className={`ml-1.5 rounded-full px-1.5 py-0.2 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-100 text-zinc-600'}`}>
                     {sub.badge}
                   </span>
                 )}
@@ -1187,9 +1228,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* ==========================================
-            3. MAIN BODY CONTENT (35+ SUB-VIEWS)
+            3. MAIN BODY CONTENT (ALL SUB-VIEWS)
         ========================================== */}
-        <main className="p-3 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
+        <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
 
           {/* ==========================================
               MODULE 1: DASHBOARD
@@ -1200,102 +1241,105 @@ export default function AdminDashboard() {
               {/* Header Title */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                  <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                     Operational Intelligence Dashboard
                   </h1>
-                  <p className="text-xs text-slate-500">
-                    Live KPIs, gross merchandise volume, fulfillment pipelines, and governance actions.
+                  <p className="text-xs text-zinc-500 mt-0.5">
+                    Live gross merchandise volume, fulfillment pipelines, and governance actions.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleOpenAddProduct}
-                    className="rounded-full bg-[#0F172A] hover:bg-black px-4 py-2 text-xs font-bold text-white shadow-xs transition"
+                    className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                   >
-                    + Add Product
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Add Product</span>
                   </button>
                 </div>
               </div>
 
-              {/* 5 Core Top Metric Cards (Total Users, Suppliers, Products, Orders, Revenue) */}
+              {/* 5 Core Top Metric Cards */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 
                 {/* 1. Revenue */}
                 <div
                   onClick={() => setActiveSubTab('revenue')}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:border-amber-400 cursor-pointer transition"
+                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
-                  <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
-                    <span className="font-bold uppercase tracking-wider text-[9.5px]">Revenue (GMV)</span>
-                    <span className="text-emerald-600 font-bold text-[10px]">↑ +18.4%</span>
+                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
+                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Revenue (GMV)</span>
+                    <span className="text-emerald-700 font-semibold text-[10px] flex items-center gap-0.5">
+                      <TrendingUp className="h-3 w-3" /> +18.4%
+                    </span>
                   </div>
-                  <p className="text-lg sm:text-2xl font-bold text-slate-950 tracking-tight truncate">
+                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
                     ₹{totalRevenue.toLocaleString('en-IN')}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">Gross processed volume</p>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">Gross processed volume</p>
                 </div>
 
                 {/* 2. Total Orders */}
                 <div
                   onClick={() => setActiveSubTab('orders')}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:border-amber-400 cursor-pointer transition"
+                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
-                  <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
-                    <span className="font-bold uppercase tracking-wider text-[9.5px]">Total Orders</span>
-                    <span className="text-blue-600 font-bold text-[10px]">{activeOrdersCount} Active</span>
+                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
+                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Total Orders</span>
+                    <span className="text-zinc-600 font-medium text-[10px]">{activeOrdersCount} in transit</span>
                   </div>
-                  <p className="text-lg sm:text-2xl font-bold text-slate-950 tracking-tight truncate">
+                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
                     {orders.length}
                   </p>
-                  <p className="text-[10px] text-amber-600 font-bold mt-0.5">{activeOrdersCount} in transit</p>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">Completed & active</p>
                 </div>
 
                 {/* 3. Products */}
                 <div
                   onClick={() => setActiveSubTab('products')}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:border-amber-400 cursor-pointer transition"
+                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
-                  <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
-                    <span className="font-bold uppercase tracking-wider text-[9.5px]">Catalog Products</span>
-                    <span className="text-slate-500 font-bold text-[10px]">{categories.length} Depts</span>
+                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
+                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Catalog</span>
+                    <span className="text-zinc-500 font-medium text-[10px]">{categories.length} Depts</span>
                   </div>
-                  <p className="text-lg sm:text-2xl font-bold text-slate-950 tracking-tight truncate">
+                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
                     {products.length} Items
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">{brands.length} luxury brands</p>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">{brands.length} luxury brands</p>
                 </div>
 
                 {/* 4. Suppliers */}
                 <div
                   onClick={() => setActiveSubTab('suppliers')}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:border-amber-400 cursor-pointer transition"
+                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
-                  <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
-                    <span className="font-bold uppercase tracking-wider text-[9.5px]">Suppliers</span>
-                    <span className={pendingSuppliers.length > 0 ? "text-rose-600 font-bold text-[10px]" : "text-emerald-600 font-bold text-[10px]"}>
-                      {pendingSuppliers.length > 0 ? `⚠️ ${pendingSuppliers.length} pending` : '✓ All Active'}
+                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
+                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Suppliers</span>
+                    <span className={pendingSuppliers.length > 0 ? "text-amber-700 font-medium text-[10px]" : "text-emerald-700 font-medium text-[10px]"}>
+                      {pendingSuppliers.length > 0 ? `${pendingSuppliers.length} pending` : '✓ All Active'}
                     </span>
                   </div>
-                  <p className="text-lg sm:text-2xl font-bold text-slate-950 tracking-tight truncate">
+                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
                     {suppliers.length}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">Approved vendor partners</p>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">Approved partners</p>
                 </div>
 
                 {/* 5. Total Users */}
                 <div
                   onClick={() => setActiveSubTab('users')}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:border-amber-400 cursor-pointer col-span-2 sm:col-span-1 transition"
+                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer col-span-2 sm:col-span-1 transition"
                 >
-                  <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
-                    <span className="font-bold uppercase tracking-wider text-[9.5px]">Total Users</span>
-                    <span className="text-emerald-600 font-bold text-[10px]">100% Verified</span>
+                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
+                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Users</span>
+                    <span className="text-zinc-500 font-medium text-[10px]">100% Verified</span>
                   </div>
-                  <p className="text-lg sm:text-2xl font-bold text-slate-950 tracking-tight truncate">
+                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
                     {users.length}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">Customer profiles</p>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">Customer profiles</p>
                 </div>
 
               </div>
@@ -1304,31 +1348,34 @@ export default function AdminDashboard() {
               {(activeSubTab === 'overview' || activeSubTab === 'pending') && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">
+                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
                       Pending Governance Actions ({pendingSuppliers.length + returnRequests.length + lowStockItems.length})
                     </h3>
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-3">
                     {/* Pending Suppliers */}
-                    <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-4 shadow-2xs flex flex-col justify-between">
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-amber-950 text-xs">🏢 Vendor Onboarding</span>
-                          <span className="text-[10px] font-bold bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-full">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                            <Users className="h-3.5 w-3.5 text-zinc-500" />
+                            <span>Vendor Onboarding</span>
+                          </span>
+                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
                             {pendingSuppliers.length} Pending
                           </span>
                         </div>
-                        <p className="text-[11px] text-amber-800">
+                        <p className="text-xs text-zinc-500 leading-relaxed">
                           {pendingSuppliers.length > 0
-                            ? `${pendingSuppliers.map(s => s.name).join(', ')} awaiting catalog publishing access.`
-                            : 'All vendor credentials and trade licenses are currently approved.'}
+                            ? `${pendingSuppliers.map(s => s.name).join(', ')} awaiting catalog publishing authorization.`
+                            : 'All supplier credentials and trade licenses are currently approved.'}
                         </p>
                       </div>
                       {pendingSuppliers.length > 0 && (
                         <button
                           onClick={() => handleNavSelect('people', 'suppliers')}
-                          className="mt-3 text-left text-xs font-bold text-amber-900 underline"
+                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
                         >
                           Review Vendor Documents &rarr;
                         </button>
@@ -1336,15 +1383,18 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Pending Returns */}
-                    <div className="rounded-2xl border border-purple-200 bg-purple-50/80 p-4 shadow-2xs flex flex-col justify-between">
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-purple-950 text-xs">↩ Return & RMA Requests</span>
-                          <span className="text-[10px] font-bold bg-purple-200/80 text-purple-900 px-2 py-0.5 rounded-full">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                            <RotateCcw className="h-3.5 w-3.5 text-zinc-500" />
+                            <span>Return & RMA Requests</span>
+                          </span>
+                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
                             {returnRequests.length} Pending
                           </span>
                         </div>
-                        <p className="text-[11px] text-purple-800">
+                        <p className="text-xs text-zinc-500 leading-relaxed">
                           {returnRequests.length > 0
                             ? `${returnRequests.length} customer return requests awaiting warehouse RMA decision.`
                             : 'No customer return requests currently pending inspection.'}
@@ -1353,7 +1403,7 @@ export default function AdminDashboard() {
                       {returnRequests.length > 0 && (
                         <button
                           onClick={() => handleNavSelect('commerce', 'returns')}
-                          className="mt-3 text-left text-xs font-bold text-purple-900 underline"
+                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
                         >
                           Review RMA Returns &rarr;
                         </button>
@@ -1361,15 +1411,18 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Low Stock Warnings */}
-                    <div className="rounded-2xl border border-rose-200 bg-rose-50/80 p-4 shadow-2xs flex flex-col justify-between">
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-rose-950 text-xs">⚠️ Low Inventory Alerts</span>
-                          <span className="text-[10px] font-bold bg-rose-200/80 text-rose-900 px-2 py-0.5 rounded-full">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                            <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
+                            <span>Low Inventory Alerts</span>
+                          </span>
+                          <span className="text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
                             {lowStockItems.length} Low
                           </span>
                         </div>
-                        <p className="text-[11px] text-rose-800">
+                        <p className="text-xs text-zinc-500 leading-relaxed">
                           {lowStockItems.length > 0
                             ? `${lowStockItems.length} items have less than 5 units left in warehouse bins.`
                             : 'All product inventories are above reorder safety thresholds.'}
@@ -1378,7 +1431,7 @@ export default function AdminDashboard() {
                       {lowStockItems.length > 0 && (
                         <button
                           onClick={() => handleNavSelect('operations', 'inventory')}
-                          className="mt-3 text-left text-xs font-bold text-rose-900 underline"
+                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
                         >
                           Replenish Stock Ledger &rarr;
                         </button>
@@ -1388,25 +1441,25 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Sub-item: Sales Charts Simulation */}
+              {/* Sub-item: Sales Charts */}
               {(activeSubTab === 'overview' || activeSubTab === 'charts' || activeSubTab === 'revenue') && (
                 <div className="grid gap-6 lg:grid-cols-3">
                   
                   {/* Revenue Trend Chart */}
-                  <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-2xs space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                  <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
                       <div>
-                        <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">
+                        <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
                           Revenue Performance & Monthly Growth
                         </h3>
-                        <p className="text-[11px] text-slate-400 mt-0.5">Processed GMV breakdown in INR (₹)</p>
+                        <p className="text-[11px] text-zinc-400 mt-0.5">Processed GMV breakdown in INR (₹)</p>
                       </div>
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-                        Avg Order Value: ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
+                      <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full self-start sm:self-auto tabular-nums">
+                        AOV: ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-4 px-1 sm:px-2">
+                    <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-4 px-2">
                       {[
                         { month: 'Apr', amount: 84000, height: '40%' },
                         { month: 'May', amount: 112000, height: '55%' },
@@ -1416,16 +1469,16 @@ export default function AdminDashboard() {
                         { month: 'Sep', amount: totalRevenue, height: '100%', active: true }
                       ].map(bar => (
                         <div key={bar.month} className="flex flex-col items-center gap-1.5 h-full justify-end group min-w-0">
-                          <span className="text-[9px] font-bold font-mono text-slate-600 opacity-0 group-hover:opacity-100 transition truncate">
+                          <span className="text-[9px] font-semibold font-mono text-zinc-600 opacity-0 group-hover:opacity-100 transition truncate">
                             ₹{(bar.amount / 1000).toFixed(0)}k
                           </span>
                           <div
                             style={{ height: bar.height }}
-                            className={`w-full rounded-t-xl transition-all duration-300 ${
-                              bar.active ? 'bg-gradient-to-t from-[#0B1120] to-amber-500' : 'bg-slate-200 hover:bg-slate-300'
+                            className={`w-full rounded-t-lg transition-all duration-300 ${
+                              bar.active ? 'bg-zinc-900' : 'bg-zinc-200 hover:bg-zinc-300'
                             }`}
                           />
-                          <span className={`text-[10px] font-bold truncate ${bar.active ? 'text-slate-950' : 'text-slate-400'}`}>
+                          <span className={`text-[10.5px] font-medium truncate ${bar.active ? 'text-zinc-950 font-semibold' : 'text-zinc-400'}`}>
                             {bar.month}
                           </span>
                         </div>
@@ -1434,12 +1487,12 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Category Distribution */}
-                  <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-2xs space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                    <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
                         Department Share
                       </h3>
-                      <button onClick={() => handleNavSelect('catalog', 'categories')} className="text-xs font-bold text-[#B89758] hover:underline">
+                      <button onClick={() => handleNavSelect('catalog', 'categories')} className="text-xs font-semibold text-zinc-600 hover:text-zinc-950 cursor-pointer">
                         Manage
                       </button>
                     </div>
@@ -1449,13 +1502,13 @@ export default function AdminDashboard() {
                         const count = products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
                         const pct = Math.round((count / Math.max(1, products.length)) * 100);
                         return (
-                          <div key={cat} className="space-y-1 text-xs">
-                            <div className="flex justify-between font-semibold">
-                              <span className="text-slate-800 truncate pr-2">{cat}</span>
-                              <span className="text-slate-500 font-mono shrink-0">{count} items ({pct}%)</span>
+                          <div key={cat} className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span className="font-medium text-zinc-800">{cat}</span>
+                              <span className="text-zinc-400 font-mono text-[11px]">{count} ({pct}%)</span>
                             </div>
-                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                              <div className="h-full bg-[#0F172A] rounded-full" style={{ width: `${pct}%` }} />
+                            <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                              <div style={{ width: `${pct}%` }} className="h-full bg-zinc-800 rounded-full" />
                             </div>
                           </div>
                         );
@@ -1463,84 +1516,6 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                </div>
-              )}
-
-              {/* Sub-item: Orders Snapshot */}
-              {(activeSubTab === 'overview' || activeSubTab === 'orders') && (
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-2xs space-y-4">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">
-                        Recent Fulfillment Orders
-                      </h3>
-                      <p className="text-[11px] text-slate-400">Live order status and express courier tracking</p>
-                    </div>
-                    <button onClick={() => handleNavSelect('commerce', 'orders')} className="text-xs font-bold text-[#B89758] hover:underline shrink-0">
-                      View All Orders ({orders.length}) &rarr;
-                    </button>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-slate-100 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
-                        <tr>
-                          <th className="p-3">Order ID</th>
-                          <th className="p-3">Customer</th>
-                          <th className="p-3">Items Summary</th>
-                          <th className="p-3">Total Amount</th>
-                          <th className="p-3">Status</th>
-                          <th className="p-3 text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
-                        {orders.slice(0, 5).map(o => (
-                          <tr key={o.id} className="hover:bg-slate-50 transition">
-                            <td className="p-3 font-mono font-bold text-slate-950">{o.id}</td>
-                            <td className="p-3">
-                              <p className="font-bold text-slate-900">{o.customer?.firstName} {o.customer?.lastName}</p>
-                              <p className="text-[10px] text-slate-400">{o.customer?.city ? `${o.customer.city}, ${o.customer.state || 'India'}` : 'India'}</p>
-                            </td>
-                            <td className="p-3 text-slate-600">{o.items?.length || 1} items &bull; {o.paymentMethod || 'Online UPI'}</td>
-                            <td className="p-3 font-bold text-slate-950">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
-                            <td className="p-3">
-                              <span className={`inline-block rounded-full px-2.5 py-0.5 text-[9.5px] font-bold ${
-                                o.status === 'Delivered'
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                  : o.status === 'Shipped'
-                                    ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
-                              }`}>
-                                {o.status}
-                              </span>
-                            </td>
-                            <td className="p-3 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                <button
-                                  onClick={() => handleOpenOrderModal(o)}
-                                  className="rounded-lg bg-[#0F172A] hover:bg-black text-white px-2.5 py-1 text-[11px] font-bold shadow-2xs transition"
-                                >
-                                  View Details &rarr;
-                                </button>
-                                <select
-                                  value={o.status}
-                                  onChange={(e) => updateOrderStatus(o.id, e.target.value)}
-                                  className="rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-semibold cursor-pointer outline-none"
-                                >
-                                  <option value="Confirmed">Confirmed</option>
-                                  <option value="Processing">Processing</option>
-                                  <option value="Shipped">Shipped</option>
-                                  <option value="Out for Delivery">Out for Delivery</option>
-                                  <option value="Delivered">Delivered</option>
-                                  <option value="Cancelled">Cancelled</option>
-                                </select>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
               )}
 
@@ -1558,10 +1533,10 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                         Product Catalog & Inventory
                       </h1>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-zinc-500 mt-0.5">
                         Manage {products.length} luxury products, SKUs, inventory counts, and price tiers.
                       </p>
                     </div>
@@ -1569,21 +1544,25 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={handleOpenAddProduct}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2.5 text-xs font-bold text-white shadow-xs transition self-start sm:self-auto"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-2 text-xs font-medium text-white shadow-xs transition self-start sm:self-auto flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Add New Product
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Add Product</span>
                     </button>
                   </div>
 
                   {/* Search & Filter Bar */}
-                  <div className="grid gap-3 sm:grid-cols-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
-                    <input
-                      type="text"
-                      value={searchCatalog}
-                      onChange={e => setSearchCatalog(e.target.value)}
-                      placeholder="Filter by title, SKU, brand..."
-                      className="rounded-xl border border-slate-200 bg-slate-100/80 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-slate-400 focus:bg-white"
-                    />
+                  <div className="grid gap-3 sm:grid-cols-3 rounded-xl border border-zinc-200/80 bg-white p-3 shadow-2xs">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={searchCatalog}
+                        onChange={e => setSearchCatalog(e.target.value)}
+                        placeholder="Filter by title, SKU, brand..."
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 pl-8 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white"
+                      />
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 h-3.5 w-3.5 pointer-events-none" />
+                    </div>
 
                     <select
                       value={filterCat}
@@ -1591,16 +1570,16 @@ export default function AdminDashboard() {
                         setFilterCat(e.target.value);
                         setFilterBrand('All');
                       }}
-                      className="rounded-xl border border-slate-200 bg-slate-100/80 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-slate-400 cursor-pointer font-semibold"
+                      className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer font-medium"
                     >
-                      <option value="All">All Departments / Categories</option>
+                      <option value="All">All Departments</option>
                       {categories.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
 
                     <select
                       value={filterBrand}
                       onChange={e => setFilterBrand(e.target.value)}
-                      className="rounded-xl border border-slate-200 bg-slate-100/80 px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-slate-400 cursor-pointer font-semibold"
+                      className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer font-medium"
                     >
                       <option value="All">All Brands</option>
                       {(filterCat === 'All' ? brands : getBrandsByCategory(filterCat)).map(b => (
@@ -1610,51 +1589,51 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Products Master Table */}
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[750px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold tracking-wider">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold tracking-wider">
                         <tr>
                           <th className="p-3.5">Product</th>
-                          <th className="p-3.5">Category & Brand</th>
+                          <th className="p-3.5">Department & Brand</th>
                           <th className="p-3.5">SKU & Gender</th>
                           <th className="p-3.5">Price</th>
                           <th className="p-3.5">Stock Controls</th>
                           <th className="p-3.5 text-right">Actions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {filteredProducts.map(p => (
-                          <tr key={p.id} className="hover:bg-slate-50/80 transition">
+                          <tr key={p.id} className="hover:bg-zinc-50/75 transition">
                             <td className="p-3.5">
                               <div className="flex items-center gap-3">
                                 <img
                                   src={p.image || p.images?.[0]}
                                   alt=""
-                                  className="h-12 w-12 rounded-xl object-contain bg-slate-100 border border-slate-200 shrink-0 p-1"
+                                  className="h-11 w-11 rounded-lg object-contain bg-zinc-50 border border-zinc-200 shrink-0 p-1"
                                 />
                                 <div className="min-w-0">
-                                  <span className="font-bold text-slate-950 block truncate max-w-xs">{p.name}</span>
-                                  <span className="text-[10px] text-amber-600 font-bold">★ {p.rating || 4.9}</span>
+                                  <span className="font-semibold text-zinc-900 block truncate max-w-xs">{p.name}</span>
+                                  <span className="text-[10px] text-zinc-400">Rating ★ {p.rating || 4.9}</span>
                                 </div>
                               </div>
                             </td>
 
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-900 block">{p.category}</span>
-                              <span className="text-[10px] text-[#B89758] font-bold">{p.brand}</span>
+                              <span className="font-medium text-zinc-900 block">{p.category}</span>
+                              <span className="text-[10.5px] text-zinc-500">{p.brand}</span>
                             </td>
 
                             <td className="p-3.5">
-                              <span className="font-mono text-slate-700 block">{p.sku}</span>
+                              <span className="font-mono text-zinc-700 block">{p.sku}</span>
                               {p.gender && (
-                                <span className="text-[10px] text-slate-400 font-semibold">{p.gender}</span>
+                                <span className="text-[10px] text-zinc-400 font-medium">{p.gender}</span>
                               )}
                             </td>
 
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-950 block">₹{Number(p.price).toLocaleString('en-IN')}</span>
+                              <span className="font-semibold text-zinc-900 block tabular-nums">₹{Number(p.price).toLocaleString('en-IN')}</span>
                               {p.oldPrice && (
-                                <span className="text-[10px] text-slate-400 line-through">₹{Number(p.oldPrice).toLocaleString('en-IN')}</span>
+                                <span className="text-[10px] text-zinc-400 line-through tabular-nums">₹{Number(p.oldPrice).toLocaleString('en-IN')}</span>
                               )}
                             </td>
 
@@ -1662,16 +1641,16 @@ export default function AdminDashboard() {
                               <div className="flex items-center gap-1.5">
                                 <button
                                   onClick={() => handleStockAdjust(p.id, -1)}
-                                  className="h-6 w-6 rounded-md bg-slate-100 hover:bg-slate-200 font-bold text-slate-700 flex items-center justify-center text-xs shrink-0"
+                                  className="h-6 w-6 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 font-medium text-zinc-700 flex items-center justify-center text-xs shrink-0 cursor-pointer"
                                 >
                                   −
                                 </button>
-                                <span className={`font-bold font-mono px-1.5 ${p.stock < 5 ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                <span className={`font-semibold font-mono px-1.5 text-xs ${p.stock < 5 ? 'text-rose-700' : 'text-zinc-800'}`}>
                                   {p.stock}
                                 </span>
                                 <button
                                   onClick={() => handleStockAdjust(p.id, 1)}
-                                  className="h-6 w-6 rounded-md bg-slate-100 hover:bg-slate-200 font-bold text-slate-700 flex items-center justify-center text-xs shrink-0"
+                                  className="h-6 w-6 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 font-medium text-zinc-700 flex items-center justify-center text-xs shrink-0 cursor-pointer"
                                 >
                                   +
                                 </button>
@@ -1681,13 +1660,13 @@ export default function AdminDashboard() {
                             <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
                               <button
                                 onClick={() => handleOpenEditProduct(p)}
-                                className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-3 py-1 text-xs font-bold text-slate-800 transition"
+                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => handleDeleteProduct(p.id)}
-                                className="rounded-full border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-1 text-xs font-bold text-rose-700 transition"
+                                className="rounded-md border border-rose-200 bg-rose-50/50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 text-xs font-medium transition cursor-pointer"
                               >
                                 Delete
                               </button>
@@ -1705,54 +1684,54 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Store Departments & Categories ({categories.length})
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Store Departments ({categories.length})
                       </h1>
-                      <p className="text-xs text-slate-500">Master product departmental classification.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Master product departmental classification.</p>
                     </div>
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-3">
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4 h-fit">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">+ Add Department</h3>
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4 h-fit">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">+ Add Department</h3>
                       <form onSubmit={handleAddCategorySubmit} className="space-y-3">
                         <input
                           type="text"
                           required
                           value={newCatInput}
                           onChange={e => setNewCatInput(e.target.value)}
-                          placeholder="e.g. Fine Jewelry, Sunglasses..."
-                          className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs font-bold outline-none focus:bg-white"
+                          placeholder="e.g. Fine Jewelry, Footwear..."
+                          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-medium outline-none focus:bg-white focus:border-zinc-400"
                         />
                         <button
                           type="submit"
-                          className="w-full rounded-xl bg-[#0F172A] hover:bg-black py-2 text-xs font-bold text-white shadow-xs transition"
+                          className="w-full rounded-lg bg-zinc-900 hover:bg-black py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                         >
-                          Create Category
+                          Create Department
                         </button>
                       </form>
                     </div>
 
-                    <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-3">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Active Category Hierarchy</h3>
-                      <div className="divide-y divide-slate-100">
+                    <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Active Departments</h3>
+                      <div className="divide-y divide-zinc-100">
                         {categories.map(cat => {
                           const count = products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
                           return (
                             <div key={cat} className="flex items-center justify-between py-2.5 text-xs">
-                              <div className="flex items-center gap-3">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 text-amber-700 font-bold text-xs">📁</span>
+                              <div className="flex items-center gap-2.5">
+                                <Folder className="h-4 w-4 text-zinc-400" />
                                 <div>
-                                  <span className="font-bold text-slate-950 block">{cat}</span>
-                                  <span className="text-[10.5px] text-slate-400">{count} products linked</span>
+                                  <span className="font-semibold text-zinc-900 block">{cat}</span>
+                                  <span className="text-[10.5px] text-zinc-400">{count} products linked</span>
                                 </div>
                               </div>
                               <button
                                 onClick={() => deleteCategory(cat)}
-                                className="text-slate-400 hover:text-rose-600 font-bold p-1 text-sm"
+                                className="text-zinc-400 hover:text-rose-600 font-medium p-1 cursor-pointer"
                                 title="Delete Category"
                               >
-                                ✕
+                                <Trash2 className="h-3.5 w-3.5" />
                               </button>
                             </div>
                           );
@@ -1768,38 +1747,39 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                         Subcategories Taxonomy ({subcategories.length})
                       </h1>
-                      <p className="text-xs text-slate-500">Detailed product classification mapped to parent departments.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Classification mapped to parent departments.</p>
                     </div>
                     <button
                       onClick={() => setSubcatModalOpen(true)}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Add Subcategory
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Add Subcategory</span>
                     </button>
                   </div>
 
                   <div className="grid gap-3.5 sm:grid-cols-3">
                     {subcategories.map(sub => (
-                      <div key={sub.id} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                      <div key={sub.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-1.5">
-                            <span className="font-mono font-bold text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
+                            <span className="font-mono font-semibold text-[10px] bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
                               {sub.code}
                             </span>
                             <button
                               onClick={() => deleteSubcategory(sub.id)}
-                              className="text-slate-400 hover:text-rose-600 font-bold text-xs"
+                              className="text-zinc-400 hover:text-rose-600 p-1 cursor-pointer"
                             >
-                              ✕
+                              <Trash2 className="h-3.5 w-3.5" />
                             </button>
                           </div>
-                          <h4 className="font-bold text-slate-950 text-sm">{sub.name}</h4>
-                          <p className="text-[11px] text-amber-700 font-semibold mt-0.5">Parent: {sub.category}</p>
+                          <h4 className="font-semibold text-zinc-900 text-sm">{sub.name}</h4>
+                          <p className="text-[11px] text-zinc-500 mt-0.5">Parent: {sub.category}</p>
                         </div>
-                        <div className="mt-3 pt-2 border-t border-slate-100 text-[10.5px] text-slate-400">
+                        <div className="mt-3 pt-2 border-t border-zinc-100 text-[10.5px] text-zinc-400">
                           {sub.itemCount || 0} catalog products mapped
                         </div>
                       </div>
@@ -1813,44 +1793,46 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Authorized Luxury Brands ({brands.length})
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Authorized Brands ({brands.length})
                       </h1>
-                      <p className="text-xs text-slate-500">Official registered luxury manufacturer partners.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Registered luxury manufacturer partners.</p>
                     </div>
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-3">
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4 h-fit">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">+ Register Brand</h3>
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4 h-fit">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">+ Register Brand</h3>
                       <form onSubmit={handleAddBrandSubmit} className="space-y-3">
                         <input
                           type="text"
                           required
                           value={newBrandInput}
                           onChange={e => setNewBrandInput(e.target.value)}
-                          placeholder="e.g. Bulgari, Gucci, Cartier..."
-                          className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs font-bold outline-none focus:bg-white"
+                          placeholder="e.g. Bulgari, Cartier, Rolex..."
+                          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs font-medium outline-none focus:bg-white focus:border-zinc-400"
                         />
                         <button
                           type="submit"
-                          className="w-full rounded-xl bg-[#0F172A] hover:bg-black py-2 text-xs font-bold text-white shadow-xs transition"
+                          className="w-full rounded-lg bg-zinc-900 hover:bg-black py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                         >
                           Add Brand
                         </button>
                       </form>
                     </div>
 
-                    <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-3">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Brand Directory</h3>
+                    <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Brand Directory</h3>
                       <div className="flex flex-wrap gap-2">
                         {brands.map(b => {
                           const count = products.filter(p => p.brand?.toLowerCase() === b.toLowerCase()).length;
                           return (
-                            <span key={b} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-bold text-slate-800">
+                            <span key={b} className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-800">
                               <span>{b}</span>
-                              {count > 0 && <span className="text-[10px] text-amber-700 bg-amber-100 px-1.5 py-0.2 rounded-full">{count}</span>}
-                              <button onClick={() => deleteBrand(b)} className="text-slate-400 hover:text-rose-600 font-bold ml-1">✕</button>
+                              {count > 0 && <span className="text-[10px] text-zinc-600 bg-zinc-200 px-1.5 py-0.2 rounded-md">{count}</span>}
+                              <button onClick={() => deleteBrand(b)} className="text-zinc-400 hover:text-rose-600 ml-1 cursor-pointer">
+                                <X className="h-3 w-3" />
+                              </button>
                             </span>
                           );
                         })}
@@ -1865,22 +1847,23 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                         Product Variants & Attribute Matrix
                       </h1>
-                      <p className="text-xs text-slate-500">Configure size, color, strap material, and storage variations.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Configure size, color, strap material, and storage variations.</p>
                     </div>
                     <button
                       onClick={() => setVariantModalOpen(true)}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Create Variant
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Create Variant</span>
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
                           <th className="p-3.5">Product</th>
                           <th className="p-3.5">Variant SKU</th>
@@ -1890,24 +1873,24 @@ export default function AdminDashboard() {
                           <th className="p-3.5 text-right">Actions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {variants.map(v => (
-                          <tr key={v.id} className="hover:bg-slate-50">
-                            <td className="p-3.5 font-bold text-slate-950">{v.productName}</td>
-                            <td className="p-3.5 font-mono text-slate-600">{v.sku}</td>
+                          <tr key={v.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5 font-semibold text-zinc-900">{v.productName}</td>
+                            <td className="p-3.5 font-mono text-zinc-600">{v.sku}</td>
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-900">{v.attributeType}:</span> {v.value}
+                              <span className="font-medium text-zinc-900">{v.attributeType}:</span> {v.value}
                             </td>
-                            <td className="p-3.5 font-bold text-slate-900">
+                            <td className="p-3.5 font-medium text-zinc-900 tabular-nums">
                               {v.priceModifier > 0 ? `+ ₹${v.priceModifier.toLocaleString('en-IN')}` : 'Base Price'}
                             </td>
-                            <td className="p-3.5 font-bold font-mono text-emerald-700">{v.stock} in stock</td>
+                            <td className="p-3.5 font-medium font-mono text-emerald-800">{v.stock} in stock</td>
                             <td className="p-3.5 text-right">
                               <button
                                 onClick={() => deleteVariant(v.id)}
-                                className="text-slate-400 hover:text-rose-600 font-bold p-1"
+                                className="text-zinc-400 hover:text-rose-600 p-1 cursor-pointer"
                               >
-                                ✕
+                                <Trash2 className="h-3.5 w-3.5" />
                               </button>
                             </td>
                           </tr>
@@ -1923,44 +1906,46 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                         Media & Image Asset Gallery ({mediaAssets.length})
                       </h1>
-                      <p className="text-xs text-slate-500">High-resolution catalog media assets, previews, and URLs.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">High-resolution catalog media assets, previews, and URLs.</p>
                     </div>
                     <button
                       onClick={() => setMediaModalOpen(true)}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Index Media Asset
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Index Media Asset</span>
                     </button>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                     {mediaAssets.map(m => (
-                      <div key={m.id} className="rounded-2xl border border-slate-200/80 bg-white p-3 shadow-2xs space-y-2.5">
-                        <div className="h-44 w-full bg-slate-100 rounded-xl overflow-hidden relative group">
+                      <div key={m.id} className="rounded-xl border border-zinc-200/80 bg-white p-3 shadow-2xs space-y-2.5">
+                        <div className="h-44 w-full bg-zinc-50 rounded-lg overflow-hidden relative group border border-zinc-100">
                           <img src={m.url} alt={m.title} className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
                           <button
                             onClick={() => {
                               navigator.clipboard?.writeText(m.url);
-                              showToast('Image URL copied to clipboard!');
+                              showToast('Image URL copied to clipboard');
                             }}
-                            className="absolute bottom-2 right-2 rounded-lg bg-black/70 hover:bg-black text-white px-2.5 py-1 text-[10.5px] font-bold backdrop-blur-xs transition"
+                            className="absolute bottom-2 right-2 rounded-md bg-zinc-900/80 hover:bg-zinc-900 text-white px-2 py-1 text-[10.5px] font-medium backdrop-blur-xs transition flex items-center gap-1 cursor-pointer"
                           >
-                            📋 Copy URL
+                            <Copy className="h-3 w-3" />
+                            <span>Copy URL</span>
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
-                            <h4 className="font-bold text-slate-950 text-xs truncate max-w-[180px]">{m.title}</h4>
-                            <p className="text-[10px] text-slate-400">{m.dimensions} &bull; {m.size}</p>
+                            <h4 className="font-semibold text-zinc-900 text-xs truncate max-w-[180px]">{m.title}</h4>
+                            <p className="text-[10px] text-zinc-400">{m.dimensions} &bull; {m.size}</p>
                           </div>
                           <button
                             onClick={() => deleteMediaAsset(m.id)}
-                            className="text-slate-400 hover:text-rose-600 font-bold p-1 text-xs"
+                            className="text-zinc-400 hover:text-rose-600 p-1 cursor-pointer"
                           >
-                            ✕
+                            <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </div>
@@ -1983,11 +1968,11 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Orders & Shipments Lifecycle
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Orders & Shipments
                       </h1>
-                      <p className="text-xs text-slate-500">
-                        Master fulfillment registry for {orders.length} transactions.
+                      <p className="text-xs text-zinc-500 mt-0.5">
+                        Fulfillment registry for {orders.length} store transactions.
                       </p>
                     </div>
 
@@ -1996,10 +1981,10 @@ export default function AdminDashboard() {
                         <button
                           key={st}
                           onClick={() => setOrderStatusFilter(st)}
-                          className={`rounded-full px-3 py-1 text-xs font-bold transition whitespace-nowrap ${
+                          className={`rounded-lg px-2.5 py-1 text-xs font-medium transition whitespace-nowrap cursor-pointer ${
                             orderStatusFilter === st
-                              ? 'bg-[#0F172A] text-amber-200 shadow-2xs'
-                              : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                              ? 'bg-zinc-900 text-white shadow-xs'
+                              : 'bg-white border border-zinc-200/80 text-zinc-700 hover:bg-zinc-50'
                           }`}
                         >
                           {st}
@@ -2008,59 +1993,66 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[800px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
                           <th className="p-3.5">Order ID & Date</th>
                           <th className="p-3.5">Customer</th>
-                          <th className="p-3.5">Payment Method</th>
+                          <th className="p-3.5">Payment</th>
                           <th className="p-3.5">Invoice Amount</th>
-                          <th className="p-3.5">Fulfillment Status</th>
+                          <th className="p-3.5">Status</th>
                           <th className="p-3.5 text-right">Actions & Lifecycle</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {filteredOrders.map(order => (
-                          <tr key={order.id} className="hover:bg-slate-50 transition">
+                          <tr key={order.id} className="hover:bg-zinc-50/75 transition">
                             <td className="p-3.5">
-                              <span className="font-mono font-bold text-slate-950 block">{order.id}</span>
-                              <span className="text-[10px] text-slate-400">{order.date}</span>
+                              <span className="font-mono font-semibold text-zinc-900 block">{order.id}</span>
+                              <span className="text-[10px] text-zinc-400">{order.date}</span>
                             </td>
 
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
-                              <span className="text-[10px] text-slate-500">{order.customer?.city}, {order.customer?.state}</span>
+                              <span className="font-medium text-zinc-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
+                              <span className="text-[10px] text-zinc-500">{order.customer?.city}, {order.customer?.state}</span>
                             </td>
 
                             <td className="p-3.5">
-                              <span className="text-slate-800 font-semibold">{order.paymentMethod || 'Online Gateway'}</span>
-                              <span className={`text-[10px] font-bold block ${
+                              <span className="text-zinc-800 font-medium">{order.paymentMethod || 'Online Gateway'}</span>
+                              <span className={`text-[10px] font-semibold block ${
                                 order.paymentStatus === 'Refunded' ? 'text-purple-700' : 'text-emerald-700'
                               }`}>
                                 {order.paymentStatus || 'Paid'}
                               </span>
                             </td>
 
-                            <td className="p-3.5 font-bold text-slate-950">
+                            <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">
                               ₹{Number(order.total || 0).toLocaleString('en-IN')}
                             </td>
 
                             <td className="p-3.5">
-                              <span className={`inline-block rounded-full px-2.5 py-0.5 text-[9.5px] font-bold ${
+                              <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${
                                 order.status === 'Delivered'
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                                   : order.status === 'Shipped'
-                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                  ? 'bg-sky-50 text-sky-800 border-sky-200'
                                   : order.status === 'Cancelled'
-                                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                  ? 'bg-rose-50 text-rose-800 border-rose-200'
                                   : order.status === 'Refunded'
-                                  ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                                  ? 'bg-purple-50 text-purple-800 border-purple-200'
                                   : order.status === 'Return Requested'
-                                  ? 'bg-purple-50 text-purple-800 border border-purple-200 font-bold animate-pulse'
-                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
+                                  : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                               }`}>
-                                {order.status}
+                                <span className={`h-1.5 w-1.5 rounded-full ${
+                                  order.status === 'Delivered' ? 'bg-emerald-500' :
+                                  order.status === 'Shipped' ? 'bg-sky-500' :
+                                  order.status === 'Cancelled' ? 'bg-rose-500' :
+                                  order.status === 'Refunded' ? 'bg-purple-500' :
+                                  order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
+                                }`} />
+                                <span>{order.status}</span>
                               </span>
                             </td>
 
@@ -2068,24 +2060,24 @@ export default function AdminDashboard() {
                               <div className="flex items-center justify-end gap-2">
                                 <button
                                   onClick={() => handleOpenOrderModal(order)}
-                                  className="rounded-lg bg-[#0F172A] hover:bg-black text-white px-2.5 py-1 text-[11px] font-bold shadow-2xs transition shrink-0"
+                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 px-2.5 py-1 text-[11px] font-medium shadow-2xs transition shrink-0 cursor-pointer"
                                 >
-                                  View Details &rarr;
+                                  Details
                                 </button>
 
                                 {order.status === 'Return Requested' && (
                                   <button
                                     onClick={() => handleOpenAdminReturnModal(order)}
-                                    className="rounded-lg bg-purple-700 hover:bg-purple-800 text-white px-2.5 py-1 text-[11px] font-bold shadow-2xs transition shrink-0"
+                                    className="rounded-md bg-zinc-900 hover:bg-black text-white px-2.5 py-1 text-[11px] font-medium shadow-2xs transition shrink-0 cursor-pointer"
                                   >
-                                    Review Return
+                                    Review
                                   </button>
                                 )}
 
                                 <select
                                   value={order.status}
                                   onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                                  className="rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-900 outline-none cursor-pointer"
+                                  className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-900 outline-none cursor-pointer"
                                 >
                                   <option value="Confirmed">Confirmed</option>
                                   <option value="Processing">Processing</option>
@@ -2111,61 +2103,61 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Payments Ledger & Gateway Reconciliation
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Payments Ledger & Settlements
                       </h1>
-                      <p className="text-xs text-slate-500">Real-time payment settlements, PG fee breakdown, and transaction status.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Payment settlements, PG fee breakdown, and transaction status.</p>
                     </div>
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-bold uppercase text-slate-400">Total Settled Volume</span>
-                      <p className="text-2xl font-bold text-slate-950 mt-1">₹{totalRevenue.toLocaleString('en-IN')}</p>
-                      <p className="text-[10px] text-emerald-700 font-semibold mt-1">✓ 100% 256-Bit SSL Encrypted</p>
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total Settled Volume</span>
+                      <p className="text-xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{totalRevenue.toLocaleString('en-IN')}</p>
+                      <p className="text-[10px] text-emerald-700 font-medium mt-1">✓ 256-Bit SSL Encrypted</p>
                     </div>
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-bold uppercase text-slate-400">Gateway Processing Fees (Est. 2%)</span>
-                      <p className="text-2xl font-bold text-slate-950 mt-1">₹{Math.round(totalRevenue * 0.02).toLocaleString('en-IN')}</p>
-                      <p className="text-[10px] text-slate-500 mt-1">Razorpay / UPI Interchange</p>
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Gateway Fees (Est. 2%)</span>
+                      <p className="text-xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{Math.round(totalRevenue * 0.02).toLocaleString('en-IN')}</p>
+                      <p className="text-[10px] text-zinc-500 mt-1">Razorpay / UPI Interchange</p>
                     </div>
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-bold uppercase text-slate-400">Net Merchant Payout</span>
-                      <p className="text-2xl font-bold text-emerald-700 mt-1">₹{Math.round(totalRevenue * 0.98).toLocaleString('en-IN')}</p>
-                      <p className="text-[10px] text-slate-500 mt-1">Direct Bank Account Credit</p>
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Net Merchant Payout</span>
+                      <p className="text-xl font-semibold text-emerald-800 mt-1 tabular-nums">₹{Math.round(totalRevenue * 0.98).toLocaleString('en-IN')}</p>
+                      <p className="text-[10px] text-zinc-500 mt-1">Direct Bank Account Credit</p>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[750px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
                           <th className="p-3.5">Txn ID & Date</th>
                           <th className="p-3.5">Order Ref</th>
                           <th className="p-3.5">Customer & Method</th>
                           <th className="p-3.5">Gross Amount</th>
-                          <th className="p-3.5">Gateway Fee</th>
+                          <th className="p-3.5">Fee</th>
                           <th className="p-3.5">Net Payout</th>
                           <th className="p-3.5 text-right">Status</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {paymentTransactions.map(txn => (
-                          <tr key={txn.id} className="hover:bg-slate-50">
+                          <tr key={txn.id} className="hover:bg-zinc-50/75">
                             <td className="p-3.5">
-                              <span className="font-mono font-bold text-slate-950 block">{txn.id}</span>
-                              <span className="text-[10px] text-slate-400">{txn.date}</span>
+                              <span className="font-mono font-semibold text-zinc-900 block">{txn.id}</span>
+                              <span className="text-[10px] text-zinc-400">{txn.date}</span>
                             </td>
-                            <td className="p-3.5 font-mono font-bold text-slate-700">{txn.orderId}</td>
+                            <td className="p-3.5 font-mono text-zinc-700">{txn.orderId}</td>
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-900 block">{txn.customer}</span>
-                              <span className="text-[10.5px] text-slate-500">{txn.method}</span>
+                              <span className="font-medium text-zinc-900 block">{txn.customer}</span>
+                              <span className="text-[10.5px] text-zinc-500">{txn.method}</span>
                             </td>
-                            <td className="p-3.5 font-bold text-slate-950">₹{txn.amount.toLocaleString('en-IN')}</td>
-                            <td className="p-3.5 text-slate-500">₹{txn.fee.toLocaleString('en-IN')}</td>
-                            <td className="p-3.5 font-bold text-emerald-700">₹{txn.netSettlement.toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-medium text-zinc-900 tabular-nums">₹{txn.amount.toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 text-zinc-500 tabular-nums">₹{txn.fee.toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-semibold text-emerald-800 tabular-nums">₹{txn.netSettlement.toLocaleString('en-IN')}</td>
                             <td className="p-3.5 text-right">
-                              <span className="rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 text-[9.5px] font-bold">
+                              <span className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-medium">
                                 {txn.status}
                               </span>
                             </td>
@@ -2182,16 +2174,16 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Customer Returns & RMA Desk
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Customer Returns & RMA
                       </h1>
-                      <p className="text-xs text-slate-500">Review inspection notes, return conditions, and authorize reverse logistics.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Review inspection notes, return conditions, and authorize reverse logistics.</p>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[750px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
                           <th className="p-3.5">Order Ref</th>
                           <th className="p-3.5">Customer Details</th>
@@ -2201,30 +2193,30 @@ export default function AdminDashboard() {
                           <th className="p-3.5 text-right">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {orders.filter(o => o.status === 'Return Requested' || o.returnRequest).map(order => (
-                          <tr key={order.id} className="hover:bg-slate-50">
-                            <td className="p-3.5 font-mono font-bold text-slate-950">{order.id}</td>
+                          <tr key={order.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5 font-mono font-semibold text-zinc-900">{order.id}</td>
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
-                              <span className="text-[10px] text-slate-400">{order.customer?.city}</span>
+                              <span className="font-medium text-zinc-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
+                              <span className="text-[10px] text-zinc-400">{order.customer?.city}</span>
                             </td>
                             <td className="p-3.5">
-                              <p className="font-bold text-purple-950">{order.returnRequest?.reason || 'Exchange Requested'}</p>
-                              <p className="text-[10.5px] text-slate-500">Condition: {order.returnRequest?.condition || 'Inspected'}</p>
+                              <p className="font-medium text-zinc-900">{order.returnRequest?.reason || 'Exchange Requested'}</p>
+                              <p className="text-[10.5px] text-zinc-500">Condition: {order.returnRequest?.condition || 'Inspected'}</p>
                             </td>
-                            <td className="p-3.5 font-bold text-slate-950">₹{order.total?.toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{order.total?.toLocaleString('en-IN')}</td>
                             <td className="p-3.5">
-                              <span className="rounded-full bg-purple-100 text-purple-800 px-2.5 py-0.5 text-[9.5px] font-bold">
+                              <span className="rounded-full bg-purple-50 text-purple-800 border border-purple-200 px-2.5 py-0.5 text-[10px] font-medium">
                                 {order.status}
                               </span>
                             </td>
                             <td className="p-3.5 text-right">
                               <button
                                 onClick={() => handleOpenAdminReturnModal(order)}
-                                className="rounded-full bg-purple-700 hover:bg-purple-800 text-white px-3.5 py-1 text-xs font-bold transition shadow-xs"
+                                className="rounded-md bg-zinc-900 hover:bg-black text-white px-3 py-1 text-xs font-medium transition shadow-xs cursor-pointer"
                               >
-                                Review & Refund &rarr;
+                                Review & Refund
                               </button>
                             </td>
                           </tr>
@@ -2240,16 +2232,16 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                         Refunds Disbursement Ledger
                       </h1>
-                      <p className="text-xs text-slate-500">Track refunded invoices and banking transaction IDs.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Track refunded invoices and banking transaction IDs.</p>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
                           <th className="p-3.5">Refund Ref</th>
                           <th className="p-3.5">Order ID</th>
@@ -2258,20 +2250,20 @@ export default function AdminDashboard() {
                           <th className="p-3.5 text-right">Status</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {refundsList.map(o => (
-                          <tr key={o.id} className="hover:bg-slate-50">
-                            <td className="p-3.5 font-mono font-bold text-slate-950">
+                          <tr key={o.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5 font-mono font-semibold text-zinc-900">
                               {o.refundDetails?.transactionId || `REF-${o.id.replace(/[^0-9]/g, '')}`}
                             </td>
-                            <td className="p-3.5 font-mono text-slate-700">{o.id}</td>
+                            <td className="p-3.5 font-mono text-zinc-700">{o.id}</td>
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-900 block">{o.customer?.firstName} {o.customer?.lastName}</span>
-                              <span className="text-[10.5px] text-slate-500">{o.paymentMethod}</span>
+                              <span className="font-medium text-zinc-900 block">{o.customer?.firstName} {o.customer?.lastName}</span>
+                              <span className="text-[10.5px] text-zinc-500">{o.paymentMethod}</span>
                             </td>
-                            <td className="p-3.5 font-bold text-emerald-700">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-semibold text-emerald-800 tabular-nums">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
                             <td className="p-3.5 text-right">
-                              <span className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 text-[9.5px] font-bold">
+                              <span className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-medium">
                                 Settled
                               </span>
                             </td>
@@ -2288,75 +2280,75 @@ export default function AdminDashboard() {
                 <div className="space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Coupons & Discount Vouchers
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Discount Vouchers & Coupons
                       </h1>
-                      <p className="text-xs text-slate-500">Create discount promo codes and minimum spend rules.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Create discount promo codes and minimum spend rules.</p>
                     </div>
                   </div>
 
-                  <form onSubmit={handleAddCoupon} className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-2xs grid gap-3 sm:grid-cols-4 items-end">
+                  <form onSubmit={handleAddCoupon} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs grid gap-3 sm:grid-cols-4 items-end">
                     <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">Promo Code *</label>
+                      <label className="text-xs font-medium text-zinc-700 block mb-1">Promo Code *</label>
                       <input
                         type="text"
                         required
-                        placeholder="e.g. FESTIVE20"
+                        placeholder="e.g. LUXURY20"
                         value={newCouponCode}
                         onChange={e => setNewCouponCode(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-mono font-bold uppercase outline-none focus:bg-white"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-mono font-semibold uppercase outline-none focus:bg-white focus:border-zinc-400"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">Discount (% or Flat ₹) *</label>
+                      <label className="text-xs font-medium text-zinc-700 block mb-1">Discount (% or ₹) *</label>
                       <input
                         type="number"
                         required
                         placeholder="e.g. 20"
                         value={newCouponDiscount}
                         onChange={e => setNewCouponDiscount(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold outline-none focus:bg-white"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium outline-none focus:bg-white focus:border-zinc-400"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">Min Order Spend (₹)</label>
+                      <label className="text-xs font-medium text-zinc-700 block mb-1">Min Spend (₹)</label>
                       <input
                         type="number"
                         placeholder="e.g. 5000"
                         value={newCouponMin}
                         onChange={e => setNewCouponMin(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold outline-none focus:bg-white"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium outline-none focus:bg-white focus:border-zinc-400"
                       />
                     </div>
                     <button
                       type="submit"
-                      className="rounded-xl bg-[#0F172A] hover:bg-black py-2.5 text-xs font-bold text-white shadow-xs transition"
+                      className="rounded-lg bg-zinc-900 hover:bg-black py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                     >
-                      + Generate Coupon
+                      + Create Coupon
                     </button>
                   </form>
 
                   <div className="grid gap-3.5 sm:grid-cols-3">
                     {coupons.map(c => (
-                      <div key={c.code} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                      <div key={c.code} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-mono font-bold text-sm bg-slate-100 px-2.5 py-0.5 rounded-lg text-slate-900 border border-slate-200">
+                            <span className="font-mono font-semibold text-xs bg-zinc-100 px-2 py-0.5 rounded-md text-zinc-900 border border-zinc-200/70">
                               {c.code}
                             </span>
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                               {c.status}
                             </span>
                           </div>
-                          <p className="text-xs font-bold text-slate-800">{c.discount}% Instant Off</p>
-                          <p className="text-[10.5px] text-slate-500 mt-0.5">
+                          <p className="text-xs font-semibold text-zinc-900">{c.discount}% Off Discount</p>
+                          <p className="text-[10.5px] text-zinc-500 mt-0.5">
                             Min spend: ₹{c.minSpend.toLocaleString('en-IN')} &bull; Used {c.usageCount} times
                           </p>
                         </div>
-                        <div className="mt-4 pt-2 border-t border-slate-100 flex justify-end">
+                        <div className="mt-4 pt-2 border-t border-zinc-100 flex justify-end">
                           <button
                             onClick={() => setCoupons(prev => prev.filter(cp => cp.code !== c.code))}
-                            className="text-xs font-bold text-rose-600 hover:underline"
+                            className="text-xs font-medium text-rose-600 hover:underline cursor-pointer"
                           >
                             Delete
                           </button>
@@ -2372,37 +2364,38 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Marketing Promotions & Campaign Banners
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Promotions & Campaign Banners
                       </h1>
-                      <p className="text-xs text-slate-500">Run seasonal sales, flash discounts, and hero storefront banners.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Seasonal sales, flash discounts, and hero storefront banners.</p>
                     </div>
                     <button
                       onClick={() => setPromoModalOpen(true)}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Create Promotion
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Create Promotion</span>
                     </button>
                   </div>
 
                   <div className="grid gap-3.5 sm:grid-cols-2">
                     {promotions.map(p => (
-                      <div key={p.id} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs space-y-3">
+                      <div key={p.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="font-mono font-bold text-xs bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-0.5 rounded-lg">
+                          <span className="font-mono font-semibold text-xs bg-zinc-100 text-zinc-900 border border-zinc-200 px-2 py-0.5 rounded-md">
                             {p.code}
                           </span>
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                             {p.status}
                           </span>
                         </div>
                         <div>
-                          <h4 className="font-bold text-slate-950 text-sm">{p.title}</h4>
-                          <p className="text-xs font-bold text-amber-700 mt-0.5">{p.discount} &bull; {p.targetCategory}</p>
+                          <h4 className="font-semibold text-zinc-900 text-sm">{p.title}</h4>
+                          <p className="text-xs font-medium text-zinc-600 mt-0.5">{p.discount} &bull; {p.targetCategory}</p>
                         </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[10.5px] text-slate-400">
+                        <div className="flex items-center justify-between pt-2 border-t border-zinc-100 text-[10.5px] text-zinc-400">
                           <span>{p.impressions.toLocaleString()} views &bull; {p.clicks.toLocaleString()} clicks</span>
-                          <button onClick={() => deletePromotion(p.id)} className="text-rose-600 font-bold hover:underline">
+                          <button onClick={() => deletePromotion(p.id)} className="text-rose-600 font-medium hover:underline cursor-pointer">
                             Delete
                           </button>
                         </div>
@@ -2426,16 +2419,16 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                         Customer & User Accounts ({users.length})
                       </h1>
-                      <p className="text-xs text-slate-500">Manage buyer accounts, order histories, and account statuses.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Manage buyer accounts, contact records, and access permissions.</p>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[650px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
                           <th className="p-3.5">Customer Name</th>
                           <th className="p-3.5">Email</th>
@@ -2446,35 +2439,35 @@ export default function AdminDashboard() {
                           <th className="p-3.5 text-right">Access Control</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {users.map(u => (
-                          <tr key={u.id} className="hover:bg-slate-50 transition">
-                            <td className="p-3.5 font-bold text-slate-950">{u.name}</td>
-                            <td className="p-3.5 text-slate-700">{u.email}</td>
-                            <td className="p-3.5 text-slate-600 font-mono">{u.phone}</td>
+                          <tr key={u.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5 font-semibold text-zinc-900">{u.name}</td>
+                            <td className="p-3.5 text-zinc-600 font-mono text-[11.5px]">{u.email}</td>
+                            <td className="p-3.5 text-zinc-500">{u.phone || '—'}</td>
                             <td className="p-3.5">
-                              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-800 uppercase">
+                              <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-700">
                                 {u.role}
                               </span>
                             </td>
-                            <td className="p-3.5 font-bold font-mono text-slate-900">{u.ordersCount || 0} orders</td>
+                            <td className="p-3.5 font-mono text-zinc-700">{u.ordersCount || 0}</td>
                             <td className="p-3.5">
-                              <span className={`inline-block rounded-full px-2.5 py-0.5 text-[9.5px] font-bold ${
-                                u.status === 'Active' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                              <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${
+                                u.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'
                               }`}>
-                                {u.status}
+                                {u.status || 'Active'}
                               </span>
                             </td>
                             <td className="p-3.5 text-right">
                               <button
-                                onClick={() => toggleUserStatus(u.id, u.status === 'Active' ? 'Blocked' : 'Active')}
-                                className={`rounded-full px-3 py-1 text-xs font-bold transition whitespace-nowrap ${
-                                  u.status === 'Active'
-                                    ? 'border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100'
-                                    : 'border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                                }`}
+                                onClick={() => {
+                                  toggleUserStatus(u.id);
+                                  showToast(`User ${u.name} status updated`);
+                                  refreshAll();
+                                }}
+                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
                               >
-                                {u.status === 'Active' ? 'Block User' : 'Unblock'}
+                                {u.status === 'Disabled' ? 'Activate' : 'Disable'}
                               </button>
                             </td>
                           </tr>
@@ -2490,73 +2483,71 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Supplier Partners & Verification ({suppliers.length})
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Vendor Partners & Suppliers ({suppliers.length})
                       </h1>
-                      <p className="text-xs text-slate-500">Approve vendor credentials, verify GSTIN, and monitor supplier fulfillment.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Approve vendor onboardings and manage supply relationships.</p>
                     </div>
                     <button
                       onClick={() => setSupplierModalOpen(true)}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs cursor-pointer"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Add New Vendor
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Onboard Vendor</span>
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
-                          <th className="p-3.5">Vendor Company</th>
-                          <th className="p-3.5">Contact Details</th>
+                          <th className="p-3.5">Vendor Name</th>
                           <th className="p-3.5">Department</th>
+                          <th className="p-3.5">Email & Phone</th>
+                          <th className="p-3.5">Address</th>
                           <th className="p-3.5">Status</th>
-                          <th className="p-3.5 text-right">Verification Action</th>
+                          <th className="p-3.5 text-right">Actions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
+                      <tbody className="divide-y divide-zinc-100 font-normal">
                         {suppliers.map(s => (
-                          <tr key={s.id} className="hover:bg-slate-50 transition">
+                          <tr key={s.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5 font-semibold text-zinc-900">{s.name}</td>
+                            <td className="p-3.5 text-zinc-600">{s.category}</td>
                             <td className="p-3.5">
-                              <span className="font-bold text-slate-950 block">{s.name}</span>
-                              <span className="text-[10px] text-slate-400">Joined: {s.joinedDate}</span>
+                              <span className="font-mono text-zinc-700 block">{s.email}</span>
+                              <span className="text-[10.5px] text-zinc-400">{s.phone}</span>
                             </td>
-
+                            <td className="p-3.5 text-zinc-500">{s.address}</td>
                             <td className="p-3.5">
-                              <p className="text-slate-900 font-semibold">{s.email}</p>
-                              <p className="text-[10px] text-slate-400">{s.phone}</p>
-                            </td>
-
-                            <td className="p-3.5">
-                              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10.5px] font-bold text-slate-800">
-                                {s.category}
-                              </span>
-                            </td>
-
-                            <td className="p-3.5">
-                              <span className={`inline-block rounded-full px-2.5 py-0.5 text-[9.5px] font-bold ${
-                                s.status === 'Active'
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+                              <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${
+                                s.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'
                               }`}>
                                 {s.status}
                               </span>
                             </td>
-
-                            <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+                            <td className="p-3.5 text-right space-x-1.5">
                               {s.status === 'Pending Approval' ? (
                                 <button
-                                  onClick={() => approveSupplier(s.id)}
-                                  className="rounded-full bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1 text-xs font-bold text-white shadow-2xs transition"
+                                  onClick={() => {
+                                    approveSupplier(s.id);
+                                    showToast(`Vendor ${s.name} approved`);
+                                    refreshAll();
+                                  }}
+                                  className="rounded-md bg-emerald-700 hover:bg-emerald-800 text-white px-2.5 py-1 text-xs font-medium transition cursor-pointer"
                                 >
-                                  ✓ Approve Vendor
+                                  Approve
                                 </button>
                               ) : (
                                 <button
-                                  onClick={() => toggleSupplierStatus(s.id, s.status === 'Active' ? 'Suspended' : 'Active')}
-                                  className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-3.5 py-1 text-xs font-bold text-slate-700"
+                                  onClick={() => {
+                                    toggleSupplierStatus(s.id);
+                                    showToast(`Supplier status updated`);
+                                    refreshAll();
+                                  }}
+                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
                                 >
-                                  {s.status === 'Active' ? 'Suspend' : 'Reactivate'}
+                                  {s.status === 'Active' ? 'Deactivate' : 'Activate'}
                                 </button>
                               )}
                             </td>
@@ -2573,85 +2564,98 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Governance Roles & Staff Access
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Governance Roles ({roles.length})
                       </h1>
-                      <p className="text-xs text-slate-500">Define staff responsibilities and module access hierarchies.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Platform access levels and functional permissions.</p>
                     </div>
                     <button
                       onClick={() => setRoleModalOpen(true)}
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-5 py-2 text-xs font-bold text-white shadow-xs"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      + Add Custom Role
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Add Role</span>
                     </button>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-3.5 sm:grid-cols-2">
                     {roles.map(r => (
-                      <div key={r.id} className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-2.5">
+                      <div key={r.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs space-y-2.5">
                         <div className="flex items-center justify-between">
-                          <span className={`font-bold text-xs px-3 py-1 rounded-full border ${r.color || 'bg-slate-100 text-slate-800'}`}>
-                            {r.name}
+                          <span className="font-semibold text-zinc-900 text-sm">{r.name}</span>
+                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
+                            {r.membersCount} Assigned
                           </span>
-                          <span className="text-[11px] font-bold text-slate-400">{r.membersCount} Assigned Users</span>
                         </div>
-                        <p className="text-xs text-slate-600">{r.description}</p>
+                        <p className="text-xs text-zinc-500 leading-relaxed">{r.description}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Sub-item: Permissions */}
+              {/* Sub-item: Permissions Matrix */}
               {activeSubTab === 'permissions' && (
                 <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Granular Permissions Matrix
-                      </h1>
-                      <p className="text-xs text-slate-500">Module-level Read / Write / Delete / Full access rights.</p>
-                    </div>
+                  <div>
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Permissions Matrix
+                    </h1>
+                    <p className="text-xs text-zinc-500 mt-0.5">Granular feature capabilities mapped to platform roles.</p>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
-                    <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
+                    <table className="w-full text-left text-xs min-w-[650px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
-                          <th className="p-3.5">Role</th>
-                          <th className="p-3.5 text-center">Dashboard</th>
-                          <th className="p-3.5 text-center">Catalog</th>
-                          <th className="p-3.5 text-center">Commerce</th>
-                          <th className="p-3.5 text-center">People</th>
-                          <th className="p-3.5 text-center">Operations</th>
-                          <th className="p-3.5 text-center">Analytics</th>
-                          <th className="p-3.5 text-center">System</th>
+                          <th className="p-3.5">Capability / Permission</th>
+                          <th className="p-3.5 text-center">Super Admin</th>
+                          <th className="p-3.5 text-center">Catalog Ops</th>
+                          <th className="p-3.5 text-center">Finance Lead</th>
+                          <th className="p-3.5 text-center">Support</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
-                        {roles.map(r => {
-                          const perms = permissionsMatrix[r.slug] || {};
-                          return (
-                            <tr key={r.id} className="hover:bg-slate-50">
-                              <td className="p-3.5 font-bold text-slate-950">{r.name}</td>
-                              {['dashboard', 'catalog', 'commerce', 'people', 'operations', 'analytics', 'system'].map(mod => (
-                                <td key={mod} className="p-3.5 text-center">
-                                  <span className={`inline-block rounded-full px-2 py-0.5 text-[9.5px] font-bold ${
-                                    perms[mod] === 'Full'
-                                      ? 'bg-emerald-100 text-emerald-800'
-                                      : perms[mod] === 'Write'
-                                      ? 'bg-blue-100 text-blue-800'
-                                      : perms[mod] === 'Read'
-                                      ? 'bg-slate-100 text-slate-700'
-                                      : 'bg-rose-50 text-rose-500'
-                                  }`}>
-                                    {perms[mod] || 'None'}
-                                  </span>
-                                </td>
-                              ))}
-                            </tr>
-                          );
-                        })}
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {permissionsMatrix.map(perm => (
+                          <tr key={perm.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5">
+                              <span className="font-medium text-zinc-900 block">{perm.capability}</span>
+                              <span className="text-[10.5px] text-zinc-400">{perm.category}</span>
+                            </td>
+                            <td className="p-3.5 text-center">
+                              <input
+                                type="checkbox"
+                                checked={perm.superAdmin}
+                                onChange={e => updateRolePermission(perm.id, 'superAdmin', e.target.checked)}
+                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
+                              />
+                            </td>
+                            <td className="p-3.5 text-center">
+                              <input
+                                type="checkbox"
+                                checked={perm.catalogManager}
+                                onChange={e => updateRolePermission(perm.id, 'catalogManager', e.target.checked)}
+                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
+                              />
+                            </td>
+                            <td className="p-3.5 text-center">
+                              <input
+                                type="checkbox"
+                                checked={perm.financeLead}
+                                onChange={e => updateRolePermission(perm.id, 'financeLead', e.target.checked)}
+                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
+                              />
+                            </td>
+                            <td className="p-3.5 text-center">
+                              <input
+                                type="checkbox"
+                                checked={perm.supportAgent}
+                                onChange={e => updateRolePermission(perm.id, 'supportAgent', e.target.checked)}
+                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
+                              />
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -2672,50 +2676,58 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Warehouse Inventory & Bin Locations
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Inventory Health & Stock Ledger
                       </h1>
-                      <p className="text-xs text-slate-500">Real-time stock ledger across physical storage racks.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Real-time unit availability and replenishment thresholds.</p>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
                         <tr>
-                          <th className="p-3.5">Product & SKU</th>
-                          <th className="p-3.5">Category</th>
-                          <th className="p-3.5">Warehouse Location</th>
-                          <th className="p-3.5">Stock Status</th>
+                          <th className="p-3.5">Product SKU</th>
+                          <th className="p-3.5">Title</th>
+                          <th className="p-3.5">Department</th>
+                          <th className="p-3.5">Current Stock</th>
+                          <th className="p-3.5">Status</th>
                           <th className="p-3.5 text-right">Quick Restock</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
-                        {products.map(p => (
-                          <tr key={p.id} className="hover:bg-slate-50">
-                            <td className="p-3.5">
-                              <span className="font-bold text-slate-950 block">{p.name}</span>
-                              <span className="font-mono text-[10.5px] text-slate-400">{p.sku}</span>
-                            </td>
-                            <td className="p-3.5 text-slate-700">{p.category}</td>
-                            <td className="p-3.5 font-mono text-slate-600">WH-1 / Bay-{(p.id % 8) + 1}</td>
-                            <td className="p-3.5 font-bold">
-                              <span className={`px-2.5 py-0.5 rounded-full text-[9.5px] ${
-                                p.stock < 5 ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
-                              }`}>
-                                {p.stock} units
-                              </span>
-                            </td>
-                            <td className="p-3.5 text-right">
-                              <button
-                                onClick={() => handleStockAdjust(p.id, 10)}
-                                className="rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1 text-xs font-bold transition"
-                              >
-                                +10 Restock
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {products.map(p => {
+                          const stock = Number(p.stock) || 0;
+                          return (
+                            <tr key={p.id} className="hover:bg-zinc-50/75">
+                              <td className="p-3.5 font-mono text-zinc-700">{p.sku}</td>
+                              <td className="p-3.5 font-medium text-zinc-900 truncate max-w-xs">{p.name}</td>
+                              <td className="p-3.5 text-zinc-500">{p.category}</td>
+                              <td className="p-3.5 font-mono font-semibold tabular-nums text-zinc-900">{stock} Units</td>
+                              <td className="p-3.5">
+                                <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${
+                                  stock <= 0 ? 'bg-rose-50 text-rose-800 border-rose-200' : stock < 5 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                }`}>
+                                  {stock <= 0 ? 'Out of Stock' : stock < 5 ? 'Low Stock' : 'Healthy'}
+                                </span>
+                              </td>
+                              <td className="p-3.5 text-right space-x-1.5">
+                                <button
+                                  onClick={() => handleStockAdjust(p.id, 5)}
+                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                                >
+                                  +5 Units
+                                </button>
+                                <button
+                                  onClick={() => handleStockAdjust(p.id, 20)}
+                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                                >
+                                  +20 Units
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -2725,37 +2737,37 @@ export default function AdminDashboard() {
               {/* Sub-item: Shipping */}
               {activeSubTab === 'shipping' && (
                 <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Courier Logistics & Carrier Partners
-                      </h1>
-                      <p className="text-xs text-slate-500">Manage BlueDart, Delhivery, FedEx priority integrations.</p>
-                    </div>
+                  <div>
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Logistics Carriers & SLAs
+                    </h1>
+                    <p className="text-xs text-zinc-500 mt-0.5">Configure integrated express delivery carriers.</p>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-3.5 sm:grid-cols-2">
                     {shippingCarriers.map(c => (
-                      <div key={c.id} className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-bold text-slate-950 text-sm">{c.name}</h4>
-                            <span className={`px-2.5 py-0.5 rounded-full text-[9.5px] font-bold ${c.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}`}>
-                              {c.active ? 'Active Carrier' : 'Disabled'}
-                            </span>
+                      <div key={c.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Truck className="h-4 w-4 text-zinc-600" />
+                            <h4 className="font-semibold text-zinc-900 text-sm">{c.name}</h4>
                           </div>
-                          <p className="text-xs text-slate-600">Service: {c.serviceType} &bull; Transit: {c.avgTransit}</p>
-                          <p className="text-[10.5px] text-slate-400 mt-1">{c.shipmentsHandled} dispatches handled &bull; Rating: ★ {c.rating}</p>
-                        </div>
-                        <div className="mt-4 pt-2 border-t border-slate-100 flex justify-end">
                           <button
-                            onClick={() => toggleCarrierStatus(c.id)}
-                            className={`rounded-full px-3.5 py-1 text-xs font-bold transition ${
-                              c.active ? 'border border-rose-200 bg-rose-50 text-rose-700' : 'bg-emerald-600 text-white'
+                            onClick={() => {
+                              toggleCarrierStatus(c.id);
+                              refreshAll();
+                              showToast('Carrier status updated');
+                            }}
+                            className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border cursor-pointer ${
+                              c.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-zinc-100 text-zinc-600 border-zinc-200'
                             }`}
                           >
-                            {c.active ? 'Disable Carrier' : 'Enable Carrier'}
+                            {c.status}
                           </button>
+                        </div>
+                        <div className="text-xs text-zinc-500 space-y-1">
+                          <p><strong>Tracking Format:</strong> <span className="font-mono">{c.trackingFormat}</span></p>
+                          <p><strong>Delivery SLA:</strong> {c.sla}</p>
                         </div>
                       </div>
                     ))}
@@ -2763,112 +2775,74 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Sub-item: Order Status Pipeline */}
+              {/* Sub-item: Order Status Distribution */}
               {activeSubTab === 'order-status' && (
                 <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Live Order Status Pipeline
-                      </h1>
-                      <p className="text-xs text-slate-500">Visual fulfillment stages tracker across order lifecycle.</p>
-                    </div>
+                  <div>
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Order Fulfillment Pipeline
+                    </h1>
+                    <p className="text-xs text-zinc-500 mt-0.5">Live distribution across delivery stages.</p>
                   </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-                    {['Confirmed', 'Processing', 'Shipped', 'Delivered'].map(stage => {
-                      const stageOrders = orders.filter(o => o.status === stage);
-                      return (
-                        <div key={stage} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs space-y-3">
-                          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                            <span className="font-bold text-xs text-slate-950 uppercase">{stage}</span>
-                            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-700">
-                              {stageOrders.length}
-                            </span>
-                          </div>
-                          <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-                            {stageOrders.map(o => (
-                              <div
-                                key={o.id}
-                                onClick={() => handleOpenOrderModal(o)}
-                                className="rounded-xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-amber-400 p-2.5 text-xs space-y-1 cursor-pointer transition shadow-2xs group"
-                              >
-                                <div className="flex justify-between font-bold items-center">
-                                  <span className="font-mono text-slate-950 group-hover:text-amber-700">{o.id}</span>
-                                  <span className="text-amber-700">₹{o.total?.toLocaleString('en-IN')}</span>
-                                </div>
-                                <p className="text-[11px] text-slate-600 truncate">{o.customer?.firstName} {o.customer?.lastName}</p>
-                                <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100">
-                                  <span>{o.items?.length || 1} items</span>
-                                  <span className="text-blue-600 font-bold group-hover:underline">Inspect &rarr;</span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
+                  <div className="grid gap-3 sm:grid-cols-4">
+                    {[
+                      { stage: 'Confirmed', count: orders.filter(o => o.status === 'Confirmed').length, color: 'border-zinc-300' },
+                      { stage: 'Processing', count: orders.filter(o => o.status === 'Processing').length, color: 'border-zinc-300' },
+                      { stage: 'Shipped', count: orders.filter(o => o.status === 'Shipped').length, color: 'border-sky-300' },
+                      { stage: 'Delivered', count: orders.filter(o => o.status === 'Delivered').length, color: 'border-emerald-300' }
+                    ].map(st => (
+                      <div key={st.stage} className={`rounded-xl border ${st.color} bg-white p-4 shadow-2xs`}>
+                        <span className="text-[10px] font-semibold uppercase text-zinc-400">{st.stage}</span>
+                        <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{st.count}</p>
+                        <p className="text-[10.5px] text-zinc-400 mt-0.5">Active Consignments</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* Sub-item: Notifications Broadcast */}
+              {/* Sub-item: Notifications */}
               {activeSubTab === 'notifications' && (
                 <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        System Notifications & Broadcast Center
-                      </h1>
-                      <p className="text-xs text-slate-500">Broadcast platform announcements to users and vendors.</p>
-                    </div>
+                  <div>
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Platform Broadcasts & Alerts
+                    </h1>
+                    <p className="text-xs text-zinc-500 mt-0.5">Publish global announcements to all store administrators and customers.</p>
                   </div>
 
-                  <form onSubmit={handleBroadcastNotification} className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-3">
-                    <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Broadcast Announcement</h3>
-                    <input
-                      type="text"
-                      required
-                      value={newNotificationTitle}
-                      onChange={e => setNewNotificationTitle(e.target.value)}
-                      placeholder="Notification Title (e.g. Scheduled Maintenance, Festive VIP Sale)..."
-                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs font-bold outline-none focus:bg-white"
-                    />
-                    <textarea
-                      rows={2}
-                      required
-                      value={newNotificationText}
-                      onChange={e => setNewNotificationText(e.target.value)}
-                      placeholder="Message content delivered to all active sessions..."
-                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs outline-none focus:bg-white resize-none"
-                    />
+                  <form onSubmit={handleBroadcastNotification} className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3.5 max-w-xl">
+                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">+ Send Broadcast</h3>
+                    <div>
+                      <label className="text-xs font-medium text-zinc-700 block mb-1">Title *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Scheduled Maintenance Window"
+                        value={newNotificationTitle}
+                        onChange={e => setNewNotificationTitle(e.target.value)}
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium outline-none focus:bg-white focus:border-zinc-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-zinc-700 block mb-1">Message *</label>
+                      <textarea
+                        rows={2}
+                        required
+                        placeholder="Announcement message content..."
+                        value={newNotificationText}
+                        onChange={e => setNewNotificationText(e.target.value)}
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs outline-none focus:bg-white focus:border-zinc-400 resize-none"
+                      />
+                    </div>
                     <button
                       type="submit"
-                      className="rounded-full bg-[#0F172A] hover:bg-black px-6 py-2 text-xs font-bold text-white shadow-xs transition"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-4 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                     >
-                      📢 Broadcast Notification
+                      Broadcast Message
                     </button>
                   </form>
-
-                  <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-3">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase">Notification History ({notifications.length})</h3>
-                      <button onClick={clearNotifications} className="text-xs font-bold text-rose-600 hover:underline">
-                        Clear All
-                      </button>
-                    </div>
-                    <div className="divide-y divide-slate-100">
-                      {notifications.map(n => (
-                        <div key={n.id} className="py-2.5 text-xs flex justify-between items-start">
-                          <div>
-                            <span className="font-bold text-slate-950 block">{n.title}</span>
-                            <p className="text-[11px] text-slate-600 mt-0.5">{n.message}</p>
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">{n.date}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -2881,156 +2855,59 @@ export default function AdminDashboard() {
           {activeSection === 'analytics' && (
             <div className="space-y-6 animate-fade-in">
               
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                    Business Intelligence & Executive Analytics
-                  </h1>
-                  <p className="text-xs text-slate-500">
-                    In-depth sales metrics, vendor conversion, and customer lifetime value.
-                  </p>
-                </div>
-                <button
-                  onClick={() => alert("Comprehensive Analytics Report exported as CSV.")}
-                  className="rounded-full border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2 text-xs font-bold text-slate-800 transition shadow-2xs self-start sm:self-auto"
-                >
-                  📥 Export CSV Report
-                </button>
+              <div>
+                <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                  Store Analytics & Intelligence
+                </h1>
+                <p className="text-xs text-zinc-500 mt-0.5">Commercial metrics, conversion, and supplier performance reporting.</p>
               </div>
 
-              {/* Sub-item: Daily Sales */}
-              {(activeSubTab === 'daily-sales' || activeSubTab === 'overview') && (
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4">
-                  <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Daily Sales & Volume Breakdown</h3>
-                  <div className="grid gap-3 sm:grid-cols-4">
-                    <div className="rounded-xl bg-slate-50 p-3.5 border border-slate-100">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Today's Processed GMV</span>
-                      <p className="text-xl font-bold text-slate-950 mt-1">₹48,990</p>
-                      <p className="text-[10px] text-emerald-700 font-bold mt-0.5">↑ +14.2% vs yesterday</p>
-                    </div>
-                    <div className="rounded-xl bg-slate-50 p-3.5 border border-slate-100">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Daily Orders</span>
-                      <p className="text-xl font-bold text-slate-950 mt-1">4 Orders</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5">100% successful gateway checkout</p>
-                    </div>
-                    <div className="rounded-xl bg-slate-50 p-3.5 border border-slate-100">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Peak Sales Hour</span>
-                      <p className="text-xl font-bold text-slate-950 mt-1">08:00 PM - 10:00 PM</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5">Evening prime purchasing</p>
-                    </div>
-                    <div className="rounded-xl bg-slate-50 p-3.5 border border-slate-100">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Conversion Rate</span>
-                      <p className="text-xl font-bold text-emerald-700 mt-1">4.2%</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5">Above luxury industry benchmark</p>
-                    </div>
-                  </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-zinc-400">Total GMV</span>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{totalRevenue.toLocaleString('en-IN')}</p>
+                  <p className="text-[10.5px] text-emerald-700 font-medium mt-0.5">↑ +18.4% vs last period</p>
                 </div>
-              )}
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-zinc-400">Average Order Value</span>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
+                    ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
+                  </p>
+                  <p className="text-[10.5px] text-zinc-400 mt-0.5">Based on completed sales</p>
+                </div>
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-zinc-400">Repeat Retention Rate</span>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">42.8%</p>
+                  <p className="text-[10.5px] text-zinc-400 mt-0.5">Verified customer base</p>
+                </div>
+              </div>
 
-              {/* Sub-item: Monthly Sales */}
-              {(activeSubTab === 'monthly-sales' || activeSubTab === 'overview') && (
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4">
-                  <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Month-on-Month Revenue Growth</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="border-b border-slate-100 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
-                        <tr>
-                          <th className="p-3">Month</th>
-                          <th className="p-3">Gross Revenue</th>
-                          <th className="p-3">Orders Count</th>
-                          <th className="p-3">Average Order Value</th>
-                          <th className="p-3 text-right">Growth Rate</th>
+              {/* Top Products Table */}
+              <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Top Performing Products</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                      <tr>
+                        <th className="p-3">Product Name</th>
+                        <th className="p-3">Department</th>
+                        <th className="p-3">Unit Price</th>
+                        <th className="p-3 text-right">Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100 font-normal">
+                      {products.slice(0, 5).map(p => (
+                        <tr key={p.id} className="hover:bg-zinc-50/75">
+                          <td className="p-3 font-semibold text-zinc-900">{p.name}</td>
+                          <td className="p-3 text-zinc-500">{p.category}</td>
+                          <td className="p-3 font-medium text-zinc-900 tabular-nums">₹{Number(p.price).toLocaleString('en-IN')}</td>
+                          <td className="p-3 text-right font-mono tabular-nums">{p.stock}</td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium">
-                        {[
-                          { m: 'September 2026', rev: totalRevenue, orders: orders.length, aov: Math.round(totalRevenue / Math.max(1, orders.length)), growth: '+21.5%' },
-                          { m: 'August 2026', rev: 195000, orders: 5, aov: 39000, growth: '+16.0%' },
-                          { m: 'July 2026', rev: 168000, orders: 4, aov: 42000, growth: '+15.8%' },
-                          { m: 'June 2026', rev: 145000, orders: 4, aov: 36250, growth: '+29.4%' }
-                        ].map(row => (
-                          <tr key={row.m} className="hover:bg-slate-50">
-                            <td className="p-3 font-bold text-slate-950">{row.m}</td>
-                            <td className="p-3 font-bold text-slate-900">₹{row.rev.toLocaleString('en-IN')}</td>
-                            <td className="p-3">{row.orders} orders</td>
-                            <td className="p-3 font-mono">₹{row.aov.toLocaleString('en-IN')}</td>
-                            <td className="p-3 text-right font-bold text-emerald-700">{row.growth}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              )}
-
-              {/* Sub-item: Product Performance */}
-              {(activeSubTab === 'product-perf' || activeSubTab === 'overview') && (
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4">
-                  <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Top Performing Products Leaderboard</h3>
-                  <div className="divide-y divide-slate-100">
-                    {products.slice(0, 5).map((p, idx) => (
-                      <div key={p.id} className="flex items-center justify-between py-3 text-xs">
-                        <div className="flex items-center gap-3">
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-900 font-bold text-xs">
-                            #{idx + 1}
-                          </span>
-                          <div>
-                            <span className="font-bold text-slate-950 block">{p.name}</span>
-                            <span className="text-[10px] text-slate-400">{p.brand} &bull; {p.category}</span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-bold text-slate-950 block">₹{Number(p.price).toLocaleString('en-IN')}</span>
-                          <span className="text-[10px] text-emerald-700 font-bold">★ {p.rating || 4.9} ({p.reviews || 50} reviews)</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Supplier Performance */}
-              {activeSubTab === 'supplier-perf' && (
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4">
-                  <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Supplier Performance & SLA Scorecard</h3>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {suppliers.map(s => (
-                      <div key={s.id} className="rounded-xl border border-slate-100 bg-slate-50 p-4 space-y-2 text-xs">
-                        <div className="flex justify-between font-bold text-slate-950">
-                          <span>{s.name}</span>
-                          <span className="text-amber-600">★ {s.rating || 4.8}</span>
-                        </div>
-                        <p className="text-[11px] text-slate-500">Department: {s.category}</p>
-                        <div className="flex justify-between pt-2 border-t border-slate-200/60 font-semibold text-[10.5px]">
-                          <span>Fulfillment Rate: 99.4%</span>
-                          <span>On-Time Dispatch: 98.2%</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Customer Reports */}
-              {activeSubTab === 'customer-reports' && (
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4">
-                  <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Customer Lifetime Value (LTV) & VIP Buyers</h3>
-                  <div className="divide-y divide-slate-100">
-                    {users.map(u => (
-                      <div key={u.id} className="flex items-center justify-between py-3 text-xs">
-                        <div>
-                          <span className="font-bold text-slate-950 block">{u.name}</span>
-                          <span className="text-[10px] text-slate-400">{u.email}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-bold text-slate-950 block">₹{(u.totalSpent || 42997).toLocaleString('en-IN')} LTV</span>
-                          <span className="text-[10px] text-amber-700 font-bold">{u.ordersCount || 3} lifetime orders</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              </div>
 
             </div>
           )}
@@ -3043,75 +2920,59 @@ export default function AdminDashboard() {
               
               {/* Sub-item: Settings */}
               {activeSubTab === 'settings' && (
-                <div className="space-y-5 max-w-2xl">
+                <div className="space-y-5 max-w-xl">
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                      Store Global Settings
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Store Profile & Global Settings
                     </h1>
-                    <p className="text-xs text-slate-500">General preferences, concierge contact info, and tax rates.</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">Master platform parameters and financial currencies.</p>
                   </div>
 
-                  <form onSubmit={handleSaveSettings} className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4">
+                  <form onSubmit={handleSaveSettings} className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3.5 text-xs">
                     <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">Store Legal Name</label>
+                      <label className="font-medium text-zinc-700 block mb-1">Store Name</label>
                       <input
                         type="text"
                         value={systemConfig.storeName}
                         onChange={e => setSystemConfigState({ ...systemConfig, storeName: e.target.value })}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs font-bold outline-none focus:bg-white"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400 font-semibold"
                       />
                     </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">Support Email</label>
-                        <input
-                          type="email"
-                          value={systemConfig.supportEmail}
-                          onChange={e => setSystemConfigState({ ...systemConfig, supportEmail: e.target.value })}
-                          className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs outline-none focus:bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">Support Hotline</label>
+                        <label className="font-medium text-zinc-700 block mb-1">Currency Symbol</label>
                         <input
                           type="text"
-                          value={systemConfig.supportPhone}
-                          onChange={e => setSystemConfigState({ ...systemConfig, supportPhone: e.target.value })}
-                          className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs outline-none focus:bg-white"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">Free Shipping Threshold (₹)</label>
-                        <input
-                          type="number"
-                          value={systemConfig.freeShippingThreshold}
-                          onChange={e => setSystemConfigState({ ...systemConfig, freeShippingThreshold: Number(e.target.value) })}
-                          className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs outline-none focus:bg-white"
+                          value={systemConfig.currency}
+                          onChange={e => setSystemConfigState({ ...systemConfig, currency: e.target.value })}
+                          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">Standard GST Rate (%)</label>
+                        <label className="font-medium text-zinc-700 block mb-1">Tax Rate (GST %)</label>
                         <input
                           type="number"
-                          value={systemConfig.taxGSTRate}
-                          onChange={e => setSystemConfigState({ ...systemConfig, taxGSTRate: Number(e.target.value) })}
-                          className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 text-xs outline-none focus:bg-white"
+                          value={systemConfig.taxRate}
+                          onChange={e => setSystemConfigState({ ...systemConfig, taxRate: Number(e.target.value) })}
+                          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                         />
                       </div>
                     </div>
-
-                    <div className="pt-2 flex justify-end">
-                      <button
-                        type="submit"
-                        className="rounded-full bg-[#0F172A] hover:bg-black px-6 py-2.5 text-xs font-bold text-white shadow-xs transition"
-                      >
-                        Save Configuration
-                      </button>
+                    <div>
+                      <label className="font-medium text-zinc-700 block mb-1">Support Email</label>
+                      <input
+                        type="email"
+                        value={systemConfig.supportEmail}
+                        onChange={e => setSystemConfigState({ ...systemConfig, supportEmail: e.target.value })}
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
+                      />
                     </div>
+                    <button
+                      type="submit"
+                      className="rounded-lg bg-zinc-900 hover:bg-black px-5 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
+                    >
+                      Save Configuration
+                    </button>
                   </form>
                 </div>
               )}
@@ -3119,70 +2980,77 @@ export default function AdminDashboard() {
               {/* Sub-item: Audit Logs */}
               {activeSubTab === 'audit-logs' && (
                 <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Immutable Security & Audit Trail
-                      </h1>
-                      <p className="text-xs text-slate-500">Chronological security ledger of all administrative events.</p>
-                    </div>
+                  <div>
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Security & Governance Audit Trail
+                    </h1>
+                    <p className="text-xs text-zinc-500 mt-0.5">Immutable record of administrator actions and modifications.</p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200/80 bg-white divide-y divide-slate-100 shadow-2xs">
-                    {auditLogs.map(log => (
-                      <div key={log.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-50 transition text-xs">
-                        <div className="min-w-0 pr-2">
-                          <span className="font-bold text-slate-900 block">{log.action}</span>
-                          <p className="text-slate-600 mt-0.5">{log.detail}</p>
-                          <span className="text-[10px] text-slate-400 font-mono">IP: {log.ip || '103.21.144.20'}</span>
-                        </div>
-                        <div className="text-left sm:text-right shrink-0">
-                          <span className="font-mono text-[10px] text-slate-400 block">{log.time}</span>
-                          <p className="text-[10.5px] font-bold text-[#B89758]">{log.admin}</p>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
+                    <table className="w-full text-left text-xs min-w-[650px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="p-3.5">Action</th>
+                          <th className="p-3.5">Event Detail</th>
+                          <th className="p-3.5">Administrator</th>
+                          <th className="p-3.5">Timestamp</th>
+                          <th className="p-3.5 text-right">IP Address</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {auditLogs.map(log => (
+                          <tr key={log.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3.5 font-semibold text-zinc-900">{log.action}</td>
+                            <td className="p-3.5 text-zinc-600">{log.detail}</td>
+                            <td className="p-3.5 font-medium text-zinc-800">{log.admin}</td>
+                            <td className="p-3.5 text-zinc-400">{log.time}</td>
+                            <td className="p-3.5 text-right font-mono text-[11px] text-zinc-500">{log.ip}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               )}
 
               {/* Sub-item: Security */}
               {activeSubTab === 'security' && (
-                <div className="space-y-5 max-w-2xl">
+                <div className="space-y-5 max-w-xl">
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                      Security Policies & Access Guard
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                      Platform Security Overview
                     </h1>
-                    <p className="text-xs text-slate-500">Manage 2FA, session timeouts, and password governance.</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">Authentication policies and encryption certificates.</p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4 text-xs">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3.5 text-xs">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
                       <div>
-                        <span className="font-bold text-slate-950 block">Two-Factor Authentication (2FA)</span>
-                        <p className="text-slate-500 text-[11px]">Require OTP verification on Super Admin sign-in</p>
+                        <span className="font-semibold text-zinc-900 block">Two-Factor Authentication (2FA)</span>
+                        <p className="text-zinc-500 text-[11px]">Enforced for all administrative sessions</p>
                       </div>
-                      <span className="rounded-full bg-emerald-100 text-emerald-800 font-bold px-3 py-1 text-[10px]">
-                        Enforced Active
+                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
+                        ✓ Enabled
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
                       <div>
-                        <span className="font-bold text-slate-950 block">Session Timeout Duration</span>
-                        <p className="text-slate-500 text-[11px]">Automatically terminate inactive administrative sessions</p>
+                        <span className="font-semibold text-zinc-900 block">TLS / SSL Encryption</span>
+                        <p className="text-zinc-500 text-[11px]">High-grade SHA-256 with RSA Certificate</p>
                       </div>
-                      <span className="font-mono font-bold text-slate-800">60 Minutes</span>
+                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
+                        ✓ Active (A+ Grade)
+                      </span>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="font-bold text-slate-950 block">Password Complexity Policy</span>
-                        <p className="text-slate-500 text-[11px]">Strict enforcement of numbers, symbols, and casing</p>
+                        <span className="font-semibold text-zinc-900 block">Session Inactivity Timeout</span>
+                        <p className="text-zinc-500 text-[11px]">Auto-locks idle consoles after 30 minutes</p>
                       </div>
-                      <span className="rounded-full bg-slate-100 text-slate-700 font-bold px-3 py-1 text-[10px]">
-                        High Enterprise
-                      </span>
+                      <span className="font-mono text-zinc-700 font-medium">30 Mins</span>
                     </div>
                   </div>
                 </div>
@@ -3190,46 +3058,47 @@ export default function AdminDashboard() {
 
               {/* Sub-item: Backups */}
               {activeSubTab === 'backups' && (
-                <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-5 max-w-2xl">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
-                        Database Snapshots & Disaster Recovery
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Database Backups & Snapshot Recovery
                       </h1>
-                      <p className="text-xs text-slate-500">Export complete platform JSON backup or restore from archive.</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Export full store state as JSON or restore from snapshot.</p>
                     </div>
                     <button
                       onClick={handleDownloadBackup}
-                      className="rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 text-xs font-bold shadow-xs transition"
+                      className="rounded-lg bg-zinc-900 hover:bg-black text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                     >
-                      💾 Export JSON Backup
+                      <Download className="h-3.5 w-3.5" />
+                      <span>Export JSON Backup</span>
                     </button>
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-2">
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-3">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Automated Backup Schedule</h3>
-                      <p className="text-xs text-slate-600">
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Automated Backup Schedule</h3>
+                      <p className="text-xs text-zinc-500">
                         Nightly snapshots are saved automatically to redundant storage.
                       </p>
-                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs space-y-1">
-                        <p className="font-bold text-slate-900">Last Snapshot: Today at 04:30 AM</p>
-                        <p className="text-slate-500 text-[11px]">Includes: Products, Orders, Suppliers, Users, Media, Config</p>
+                      <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-200/60 text-xs space-y-1">
+                        <p className="font-semibold text-zinc-900">Last Snapshot: Today at 04:30 AM</p>
+                        <p className="text-zinc-400 text-[11px]">Includes: Products, Orders, Suppliers, Users, Config</p>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-3">
-                      <h3 className="text-xs font-bold text-slate-950 uppercase tracking-wider">Restore Database from JSON</h3>
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Restore Database from JSON</h3>
                       <textarea
                         rows={3}
                         value={backupJsonInput}
                         onChange={e => setBackupJsonInput(e.target.value)}
                         placeholder="Paste exported backup JSON content here to restore state..."
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-xs font-mono outline-none focus:bg-white resize-none"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 p-2.5 text-xs font-mono outline-none focus:bg-white focus:border-zinc-400 resize-none"
                       />
                       <button
                         onClick={handleRestoreBackup}
-                        className="rounded-xl bg-[#0F172A] hover:bg-black px-4 py-2 text-xs font-bold text-white shadow-xs"
+                        className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer"
                       >
                         Restore Database Snapshot
                       </button>
@@ -3242,41 +3111,37 @@ export default function AdminDashboard() {
               {activeSubTab === 'configuration' && (
                 <div className="space-y-5 max-w-2xl">
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950">
+                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
                       System Infrastructure & Gateways
                     </h1>
-                    <p className="text-xs text-slate-500">API keys, SMTP mailer status, and maintenance mode toggles.</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">API keys, SMTP mailer status, and maintenance mode toggles.</p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4 text-xs">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4 text-xs">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
                       <div>
-                        <span className="font-bold text-slate-950 block">Payment Gateway (Razorpay API)</span>
-                        <p className="text-slate-500 text-[11px]">Production merchant keys active</p>
+                        <span className="font-semibold text-zinc-900 block">Payment Gateway (Razorpay API)</span>
+                        <p className="text-zinc-500 text-[11px]">Production merchant keys active</p>
                       </div>
-                      <span className="text-emerald-700 font-bold">✓ Live Production</span>
+                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
+                        ✓ Connected
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
                       <div>
-                        <span className="font-bold text-slate-950 block">Transactional Email SMTP</span>
-                        <p className="text-slate-500 text-[11px]">{systemConfig.smtpMailerStatus}</p>
+                        <span className="font-semibold text-zinc-900 block">Transactional Email SMTP</span>
+                        <p className="text-zinc-500 text-[11px]">{systemConfig.smtpMailerStatus}</p>
                       </div>
-                      <span className="text-emerald-700 font-bold">✓ Connected</span>
+                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
+                        ✓ Connected
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
                       <div>
-                        <span className="font-bold text-slate-950 block">SMS Notification Gateway</span>
-                        <p className="text-slate-500 text-[11px]">{systemConfig.smsGatewayStatus}</p>
-                      </div>
-                      <span className="text-emerald-700 font-bold">✓ Active</span>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-1">
-                      <div>
-                        <span className="font-bold text-slate-950 block">Storefront Maintenance Mode</span>
-                        <p className="text-slate-500 text-[11px]">Temporary downtime overlay for customers</p>
+                        <span className="font-semibold text-zinc-900 block">Storefront Maintenance Mode</span>
+                        <p className="text-zinc-500 text-[11px]">Temporary downtime overlay for customers</p>
                       </div>
                       <button
                         onClick={() => {
@@ -3284,11 +3149,11 @@ export default function AdminDashboard() {
                           setSystemConfigState(updated);
                           showToast(updated.maintenanceMode ? 'Maintenance Mode activated' : 'Store is live');
                         }}
-                        className={`rounded-full px-3 py-1 text-xs font-bold transition ${
-                          systemConfig.maintenanceMode ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-700'
+                        className={`rounded-full px-3 py-1 text-xs font-semibold transition cursor-pointer ${
+                          systemConfig.maintenanceMode ? 'bg-rose-600 text-white' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                         }`}
                       >
-                        {systemConfig.maintenanceMode ? 'Mode: Active (Store Offline)' : 'Mode: Inactive (Store Live)'}
+                        {systemConfig.maintenanceMode ? 'Active (Store Offline)' : 'Inactive (Store Live)'}
                       </button>
                     </div>
                   </div>
@@ -3308,41 +3173,41 @@ export default function AdminDashboard() {
 
       {/* 1. Add/Edit Product Modal */}
       {productModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl">
             
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-4">
               <div>
-                <h3 className="text-sm sm:text-base font-bold text-slate-950">
-                  {editingProduct ? 'Edit Catalog Product' : 'Add New Product to Catalog'}
+                <h3 className="text-base font-semibold text-zinc-900">
+                  {editingProduct ? 'Edit Catalog Product' : 'Add New Product'}
                 </h3>
-                <p className="text-xs text-slate-500">Live synchronization with customer storefront</p>
+                <p className="text-xs text-zinc-500 mt-0.5">Live synchronization with customer storefront</p>
               </div>
               <button
                 onClick={() => setProductModalOpen(false)}
-                className="text-slate-400 hover:text-black font-bold p-1 text-base"
+                className="text-zinc-400 hover:text-black p-1 cursor-pointer"
               >
-                ✕
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             <form onSubmit={handleSaveProduct} className="space-y-3.5 text-xs">
               
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Product Title *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Product Title *</label>
                 <input
                   type="text"
                   required
                   value={productForm.name}
                   onChange={e => setProductForm({ ...productForm, name: e.target.value })}
                   placeholder="e.g. Submariner Date 41mm Cerachrom"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3.5 py-2 outline-none focus:bg-white focus:border-slate-400"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Department *</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Department *</label>
                   <select
                     value={productForm.category}
                     onChange={e => {
@@ -3354,18 +3219,18 @@ export default function AdminDashboard() {
                         brand: catBrands[0] || brands[0]
                       });
                     }}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white font-semibold cursor-pointer"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-medium cursor-pointer"
                   >
                     {categories.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
 
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Brand *</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Brand *</label>
                   <select
                     value={productForm.brand}
                     onChange={e => setProductForm({ ...productForm, brand: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white font-semibold cursor-pointer"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-medium cursor-pointer"
                   >
                     {(getBrandsByCategory(productForm.category) || brands).map(b => (
                       <option key={b} value={b}>{b}</option>
@@ -3374,11 +3239,11 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Gender / Dept</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Gender / Dept</label>
                   <select
                     value={productForm.gender}
                     onChange={e => setProductForm({ ...productForm, gender: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white font-semibold cursor-pointer"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-medium cursor-pointer"
                   >
                     <option value="Men's">Men's</option>
                     <option value="Ladies">Ladies</option>
@@ -3389,55 +3254,55 @@ export default function AdminDashboard() {
 
               <div className="grid gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Selling Price (₹) *</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Selling Price (₹) *</label>
                   <input
                     type="number"
                     required
                     value={productForm.price}
                     onChange={e => setProductForm({ ...productForm, price: e.target.value })}
                     placeholder="e.g. 945000"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">MRP Price (₹)</label>
+                  <label className="font-medium text-zinc-700 block mb-1">MRP Price (₹)</label>
                   <input
                     type="number"
                     value={productForm.oldPrice}
                     onChange={e => setProductForm({ ...productForm, oldPrice: e.target.value })}
                     placeholder="e.g. 1050000"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Stock Units</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Stock Units</label>
                   <input
                     type="number"
                     value={productForm.stock}
                     onChange={e => setProductForm({ ...productForm, stock: e.target.value })}
                     placeholder="e.g. 15"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white"
                   />
                 </div>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">SKU Code</label>
+                  <label className="font-medium text-zinc-700 block mb-1">SKU Code</label>
                   <input
                     type="text"
                     value={productForm.sku}
                     onChange={e => setProductForm({ ...productForm, sku: e.target.value })}
                     placeholder="e.g. KA-ROL-001"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 font-mono outline-none focus:bg-white"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono outline-none focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Assigned Vendor</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Assigned Vendor</label>
                   <select
                     value={productForm.supplier}
                     onChange={e => setProductForm({ ...productForm, supplier: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white cursor-pointer font-medium"
                   >
                     {suppliers.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                   </select>
@@ -3445,24 +3310,24 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Product Image URL</label>
+                <label className="font-medium text-zinc-700 block mb-1">Product Image URL</label>
                 <input
                   type="text"
                   value={productForm.image}
                   onChange={e => setProductForm({ ...productForm, image: e.target.value })}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Description</label>
+                <label className="font-medium text-zinc-700 block mb-1">Description</label>
                 <textarea
                   rows={2}
                   value={productForm.description}
                   onChange={e => setProductForm({ ...productForm, description: e.target.value })}
                   placeholder="Detailed specifications and features..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white resize-none"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white resize-none"
                 />
               </div>
 
@@ -3470,13 +3335,13 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setProductModalOpen(false)}
-                  className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-5 py-2 font-bold text-slate-700 order-2 sm:order-1"
+                  className="rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-4 py-2 font-medium text-zinc-700 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-full bg-[#0F172A] hover:bg-black px-6 py-2 font-bold uppercase tracking-wider text-white shadow-xs order-1 sm:order-2"
+                  className="rounded-lg bg-zinc-900 hover:bg-black px-5 py-2 font-semibold text-white shadow-xs cursor-pointer"
                 >
                   {editingProduct ? 'Update Product' : 'Publish Product'}
                 </button>
@@ -3489,39 +3354,41 @@ export default function AdminDashboard() {
 
       {/* 2. Subcategory Modal */}
       {subcatModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-950">Add New Subcategory</h3>
-              <button onClick={() => setSubcatModalOpen(false)} className="text-slate-400 font-bold">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+              <h3 className="text-sm font-semibold text-zinc-900">Add New Subcategory</h3>
+              <button onClick={() => setSubcatModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
             </div>
             <form onSubmit={handleAddSubcategory} className="space-y-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Parent Category *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Parent Department *</label>
                 <select
                   value={subcatForm.category}
                   onChange={e => setSubcatForm({ ...subcatForm, category: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
                 >
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Subcategory Name *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Subcategory Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Chronograph Watches, Leather Wallets"
                   value={subcatForm.name}
                   onChange={e => setSubcatForm({ ...subcatForm, name: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setSubcatModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold">
+                <button type="button" onClick={() => setSubcatModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold">
+                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
                   Save Subcategory
                 </button>
               </div>
@@ -3532,29 +3399,31 @@ export default function AdminDashboard() {
 
       {/* 3. Variant Modal */}
       {variantModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-950">Add Product Variant</h3>
-              <button onClick={() => setVariantModalOpen(false)} className="text-slate-400 font-bold">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+              <h3 className="text-sm font-semibold text-zinc-900">Add Product Variant</h3>
+              <button onClick={() => setVariantModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
             </div>
             <form onSubmit={handleAddVariant} className="space-y-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Parent Product *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Parent Product *</label>
                 <select
                   value={variantForm.productName}
                   onChange={e => setVariantForm({ ...variantForm, productName: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
                 >
                   {products.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Attribute Type *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Attribute Type *</label>
                 <select
                   value={variantForm.attributeType}
                   onChange={e => setVariantForm({ ...variantForm, attributeType: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
                 >
                   <option value="Dial Color">Dial Color</option>
                   <option value="Strap Material">Strap Material</option>
@@ -3564,42 +3433,42 @@ export default function AdminDashboard() {
                 </select>
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Option Value *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Option Value *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Kermit Green, UK 10, 512 GB"
                   value={variantForm.value}
                   onChange={e => setVariantForm({ ...variantForm, value: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Price Add-on (₹)</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Price Add-on (₹)</label>
                   <input
                     type="number"
                     placeholder="0"
                     value={variantForm.priceModifier}
                     onChange={e => setVariantForm({ ...variantForm, priceModifier: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Stock Units</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Stock Units</label>
                   <input
                     type="number"
                     value={variantForm.stock}
                     onChange={e => setVariantForm({ ...variantForm, stock: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none"
                   />
                 </div>
               </div>
               <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setVariantModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold">
+                <button type="button" onClick={() => setVariantModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold">
+                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
                   Save Variant
                 </button>
               </div>
@@ -3610,50 +3479,52 @@ export default function AdminDashboard() {
 
       {/* 4. Media Asset Modal */}
       {mediaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-950">Index Media Asset</h3>
-              <button onClick={() => setMediaModalOpen(false)} className="text-slate-400 font-bold">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+              <h3 className="text-sm font-semibold text-zinc-900">Index Media Asset</h3>
+              <button onClick={() => setMediaModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
             </div>
             <form onSubmit={handleAddMedia} className="space-y-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Asset Title *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Asset Title *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Rolex Submariner Macro Studio"
                   value={mediaForm.title}
                   onChange={e => setMediaForm({ ...mediaForm, title: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Image URL *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Image URL *</label>
                 <input
                   type="url"
                   required
                   placeholder="https://images.unsplash.com/..."
                   value={mediaForm.url}
                   onChange={e => setMediaForm({ ...mediaForm, url: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Category</label>
+                <label className="font-medium text-zinc-700 block mb-1">Category</label>
                 <select
                   value={mediaForm.category}
                   onChange={e => setMediaForm({ ...mediaForm, category: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
                 >
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setMediaModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold">
+                <button type="button" onClick={() => setMediaModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold">
+                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
                   Add Asset
                 </button>
               </div>
@@ -3664,62 +3535,64 @@ export default function AdminDashboard() {
 
       {/* 5. Promotion Modal */}
       {promoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-950">Create Promotional Campaign</h3>
-              <button onClick={() => setPromoModalOpen(false)} className="text-slate-400 font-bold">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+              <h3 className="text-sm font-semibold text-zinc-900">Create Promotional Campaign</h3>
+              <button onClick={() => setPromoModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
             </div>
             <form onSubmit={handleAddPromotion} className="space-y-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Campaign Title *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Campaign Title *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Royal Autumn Horology Showcase"
                   value={promoForm.title}
                   onChange={e => setPromoForm({ ...promoForm, title: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Promo Code</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Promo Code</label>
                   <input
                     type="text"
                     placeholder="AUTUMN20"
                     value={promoForm.code}
                     onChange={e => setPromoForm({ ...promoForm, code: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 font-mono uppercase font-bold outline-none"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono uppercase font-semibold outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Discount Text</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Discount Text</label>
                   <input
                     type="text"
                     placeholder="Flat 20% Off"
                     value={promoForm.discount}
                     onChange={e => setPromoForm({ ...promoForm, discount: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Target Department</label>
+                <label className="font-medium text-zinc-700 block mb-1">Target Department</label>
                 <select
                   value={promoForm.targetCategory}
                   onChange={e => setPromoForm({ ...promoForm, targetCategory: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
                 >
                   <option value="All Departments">All Departments</option>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setPromoModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold">
+                <button type="button" onClick={() => setPromoModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold">
+                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
                   Launch Campaign
                 </button>
               </div>
@@ -3730,39 +3603,41 @@ export default function AdminDashboard() {
 
       {/* 6. Role Modal */}
       {roleModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-950">Add Governance Role</h3>
-              <button onClick={() => setRoleModalOpen(false)} className="text-slate-400 font-bold">✕</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+              <h3 className="text-sm font-semibold text-zinc-900">Add Governance Role</h3>
+              <button onClick={() => setRoleModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
             </div>
             <form onSubmit={handleAddRole} className="space-y-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Role Title *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Role Title *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. VIP Concierge Manager"
                   value={roleForm.name}
                   onChange={e => setRoleForm({ ...roleForm, name: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Role Description</label>
+                <label className="font-medium text-zinc-700 block mb-1">Role Description</label>
                 <textarea
                   rows={2}
                   placeholder="Responsibilities and access scope..."
                   value={roleForm.description}
                   onChange={e => setRoleForm({ ...roleForm, description: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none resize-none"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white resize-none"
                 />
               </div>
               <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setRoleModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold">
+                <button type="button" onClick={() => setRoleModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold">
+                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
                   Create Role
                 </button>
               </div>
@@ -3773,48 +3648,48 @@ export default function AdminDashboard() {
 
       {/* 7. Admin Return & Refund Review Modal */}
       {adminReturnModalOpen && selectedReturnOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-lg rounded-2xl border border-purple-200 bg-white p-6 shadow-2xl space-y-4 text-xs max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl space-y-4 text-xs max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
               <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 text-purple-800 font-bold text-sm">
-                  ↩
-                </span>
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-100 text-zinc-800 font-semibold text-xs">
+                  <RotateCcw className="h-3.5 w-3.5" />
+                </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-950">
+                  <h3 className="text-sm font-semibold text-zinc-900">
                     Review Return & Settle Refund
                   </h3>
-                  <span className="font-mono text-[10px] text-slate-400">Order Ref: {selectedReturnOrder.id}</span>
+                  <span className="font-mono text-[10px] text-zinc-400">Order: {selectedReturnOrder.id}</span>
                 </div>
               </div>
               <button
                 onClick={() => setAdminReturnModalOpen(false)}
-                className="text-slate-400 hover:text-slate-900 font-bold text-sm"
+                className="text-zinc-400 hover:text-zinc-900 p-1 cursor-pointer"
               >
-                ✕
+                <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="rounded-xl border border-purple-100 bg-purple-50/70 p-3.5 space-y-2 text-slate-900">
+            <div className="rounded-xl border border-zinc-200/70 bg-zinc-50/70 p-3.5 space-y-2 text-zinc-900">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-purple-950">Customer: {selectedReturnOrder.customer?.firstName} {selectedReturnOrder.customer?.lastName}</span>
-                <span className="font-mono font-bold text-purple-900">₹{selectedReturnOrder.total?.toLocaleString('en-IN')}</span>
+                <span className="font-semibold text-zinc-900">Customer: {selectedReturnOrder.customer?.firstName} {selectedReturnOrder.customer?.lastName}</span>
+                <span className="font-mono font-semibold text-zinc-900">₹{selectedReturnOrder.total?.toLocaleString('en-IN')}</span>
               </div>
-              <p className="text-[11px] text-slate-700">
+              <p className="text-[11px] text-zinc-600">
                 <strong>Reason:</strong> {selectedReturnOrder.returnRequest?.reason || 'Not specified'}
               </p>
-              <p className="text-[11px] text-slate-700">
+              <p className="text-[11px] text-zinc-600">
                 <strong>Condition:</strong> {selectedReturnOrder.returnRequest?.condition || 'Inspected'}
               </p>
             </div>
 
             <form onSubmit={handleProcessAdminReturn} className="space-y-3.5">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Administrative Decision *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Administrative Decision *</label>
                 <select
                   value={adminReturnDecision}
                   onChange={e => setAdminReturnDecision(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white text-xs font-bold text-slate-900"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white text-xs font-semibold text-zinc-900 cursor-pointer"
                 >
                   <option value="Refunded">Approve Return & Issue Full Refund (Refunded)</option>
                   <option value="Return Approved">Authorize Return Pickup (Pending Warehouse Inspection)</option>
@@ -3825,53 +3700,53 @@ export default function AdminDashboard() {
               {adminReturnDecision === 'Refunded' && (
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Refund Amount (₹) *</label>
+                    <label className="font-medium text-zinc-700 block mb-1">Refund Amount (₹) *</label>
                     <input
                       type="number"
                       required
                       value={adminRefundAmount}
                       onChange={e => setAdminRefundAmount(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white font-mono font-bold"
+                      className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-mono font-semibold"
                     />
                   </div>
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Refund Txn ID *</label>
+                    <label className="font-medium text-zinc-700 block mb-1">Refund Txn ID *</label>
                     <input
                       type="text"
                       required
                       value={adminRefundTxn}
                       onChange={e => setAdminRefundTxn(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white font-mono"
+                      className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-mono"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Admin Audit Notes / Feedback</label>
+                <label className="font-medium text-zinc-700 block mb-1">Admin Audit Notes / Feedback</label>
                 <textarea
                   rows={2}
                   value={adminReturnNotes}
                   onChange={e => setAdminReturnNotes(e.target.value)}
                   placeholder="Notes logged in customer timeline..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white resize-none"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white resize-none"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
+              <div className="pt-2 flex justify-end gap-2 border-t border-zinc-100">
                 <button
                   type="button"
                   onClick={() => setAdminReturnModalOpen(false)}
-                  className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-5 py-2 font-bold text-slate-700"
+                  className="rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-4 py-2 font-medium text-zinc-700 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`rounded-full px-6 py-2 font-bold uppercase tracking-wider text-white shadow-xs ${
+                  className={`rounded-lg px-5 py-2 font-semibold text-white shadow-xs cursor-pointer ${
                     adminReturnDecision === 'Return Rejected'
                       ? 'bg-rose-700 hover:bg-rose-800'
-                      : 'bg-[#0F172A] hover:bg-black'
+                      : 'bg-zinc-900 hover:bg-black'
                   }`}
                 >
                   {adminReturnDecision === 'Refunded'
@@ -3888,75 +3763,77 @@ export default function AdminDashboard() {
 
       {/* 8. Add Supplier / Vendor Modal */}
       {supplierModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
               <div>
-                <h3 className="text-sm font-bold text-slate-950">Onboard New Vendor Partner</h3>
-                <p className="text-[11px] text-slate-500">Add a new supplier company for product fulfillment</p>
+                <h3 className="text-sm font-semibold text-zinc-900">Onboard New Vendor</h3>
+                <p className="text-[11px] text-zinc-500">Register a new supplier for product fulfillment</p>
               </div>
-              <button onClick={() => setSupplierModalOpen(false)} className="text-slate-400 font-bold hover:text-black cursor-pointer">✕</button>
+              <button onClick={() => setSupplierModalOpen(false)} className="text-zinc-400 font-bold hover:text-black cursor-pointer">
+                <X className="h-4 w-4" />
+              </button>
             </div>
             <form onSubmit={handleAddSupplierSubmit} className="space-y-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Company / Vendor Name *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Company / Vendor Name *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. FitPro Gear Ltd. (or Garmin Sports)"
+                  placeholder="e.g. Apex Timepieces Ltd."
                   value={supplierForm.name}
                   onChange={e => setSupplierForm({ ...supplierForm, name: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Department / Category</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Department</label>
                   <select
                     value={supplierForm.category}
                     onChange={e => setSupplierForm({ ...supplierForm, category: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none font-semibold cursor-pointer"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
                   >
                     {categories.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Phone Number</label>
+                  <label className="font-medium text-zinc-700 block mb-1">Phone Number</label>
                   <input
                     type="text"
                     placeholder="+91 98765 43210"
                     value={supplierForm.phone}
                     onChange={e => setSupplierForm({ ...supplierForm, phone: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                   />
                 </div>
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Business Email Address *</label>
+                <label className="font-medium text-zinc-700 block mb-1">Business Email Address *</label>
                 <input
                   type="email"
                   required
                   placeholder="vendor@company.com"
                   value={supplierForm.email}
                   onChange={e => setSupplierForm({ ...supplierForm, email: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Registered Business Address</label>
+                <label className="font-medium text-zinc-700 block mb-1">Registered Address</label>
                 <input
                   type="text"
                   placeholder="City, State, India"
                   value={supplierForm.address}
                   onChange={e => setSupplierForm({ ...supplierForm, address: e.target.value })}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 outline-none focus:bg-white"
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
                 />
               </div>
-              <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
-                <button type="button" onClick={() => setSupplierModalOpen(false)} className="rounded-full px-4 py-2 bg-slate-100 font-bold hover:bg-slate-200 cursor-pointer">
+              <div className="pt-2 flex justify-end gap-2 border-t border-zinc-100">
+                <button type="button" onClick={() => setSupplierModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium hover:bg-zinc-50 cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="rounded-full px-5 py-2 bg-[#0F172A] text-white font-bold hover:bg-black cursor-pointer shadow-xs">
+                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold hover:bg-black cursor-pointer shadow-xs">
                   Add Vendor
                 </button>
               </div>
@@ -3967,34 +3844,34 @@ export default function AdminDashboard() {
 
       {/* 9. Admin Order Details Inspector & Invoice Modal */}
       {orderModalOpen && selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-3 sm:p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-3xl rounded-3xl border border-slate-200 bg-white p-5 sm:p-7 shadow-2xl space-y-5 text-xs max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white p-5 sm:p-7 shadow-2xl space-y-5 text-xs max-h-[92vh] overflow-y-auto">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#0F172A] text-amber-400 flex items-center justify-center text-lg font-bold shadow-xs">
-                  📦
+                <div className="h-9 w-9 rounded-xl bg-zinc-900 text-white flex items-center justify-center text-sm font-semibold shadow-xs">
+                  <Package className="h-4 w-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base sm:text-lg font-bold text-slate-950 tracking-tight">
+                    <h3 className="text-base font-semibold text-zinc-900 tracking-tight">
                       Order Consignment {selectedOrder.id}
                     </h3>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
                       selectedOrder.status === 'Delivered'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         : selectedOrder.status === 'Shipped'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        ? 'bg-sky-50 text-sky-800 border-sky-200'
                         : selectedOrder.status === 'Cancelled'
-                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                        : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        ? 'bg-rose-50 text-rose-800 border-rose-200'
+                        : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                     }`}>
                       {selectedOrder.status}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    Placed on {selectedOrder.date} &bull; Payment: <strong className="text-slate-700 font-semibold">{selectedOrder.paymentMethod} ({selectedOrder.paymentStatus || 'Paid'})</strong>
+                  <p className="text-[11px] text-zinc-400 mt-0.5">
+                    Placed on {selectedOrder.date} &bull; Payment: <strong className="text-zinc-700 font-medium">{selectedOrder.paymentMethod} ({selectedOrder.paymentStatus || 'Paid'})</strong>
                   </p>
                 </div>
               </div>
@@ -4003,16 +3880,17 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 transition"
+                  className="rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 transition flex items-center gap-1.5 cursor-pointer"
                   title="Print Consignment Invoice"
                 >
-                  🖨️ Print
+                  <Printer className="h-3.5 w-3.5" />
+                  <span>Print</span>
                 </button>
                 <button
                   onClick={() => setOrderModalOpen(false)}
-                  className="rounded-full bg-slate-100 hover:bg-slate-200 h-8 w-8 flex items-center justify-center text-slate-500 hover:text-slate-900 font-bold transition cursor-pointer"
+                  className="rounded-lg bg-zinc-100 hover:bg-zinc-200 h-8 w-8 flex items-center justify-center text-zinc-500 hover:text-zinc-900 font-bold transition cursor-pointer"
                 >
-                  ✕
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -4022,50 +3900,50 @@ export default function AdminDashboard() {
               
               {/* Left Column: Customer & Delivery Destination */}
               <div className="space-y-4">
-                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 space-y-2.5">
-                  <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      👤 Client & Contact Details
+                <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-4 space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                      Client & Contact
                     </span>
-                    <span className="text-[10.5px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                       Verified Client
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-950">
+                    <p className="text-sm font-semibold text-zinc-900">
                       {selectedOrder.customer?.firstName} {selectedOrder.customer?.lastName}
                     </p>
-                    <p className="text-slate-600 flex items-center gap-1.5">
-                      <span className="font-semibold text-slate-400">Email:</span>
-                      <a href={`mailto:${selectedOrder.customer?.email}`} className="text-blue-600 font-medium hover:underline">
+                    <p className="text-zinc-600 flex items-center gap-1.5">
+                      <span className="text-zinc-400">Email:</span>
+                      <a href={`mailto:${selectedOrder.customer?.email}`} className="text-zinc-900 font-medium hover:underline">
                         {selectedOrder.customer?.email || 'Not provided'}
                       </a>
                     </p>
-                    <p className="text-slate-600 flex items-center gap-1.5">
-                      <span className="font-semibold text-slate-400">Phone:</span>
-                      <a href={`tel:${selectedOrder.customer?.phone}`} className="text-slate-900 font-bold hover:underline font-mono">
+                    <p className="text-zinc-600 flex items-center gap-1.5">
+                      <span className="text-zinc-400">Phone:</span>
+                      <a href={`tel:${selectedOrder.customer?.phone}`} className="text-zinc-900 font-medium hover:underline font-mono">
                         {selectedOrder.customer?.phone || 'Not provided'}
                       </a>
                     </p>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 space-y-2.5">
-                  <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      📍 Shipping & Destination Address
+                <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-4 space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-zinc-200/60 pb-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                      Shipping Destination
                     </span>
-                    <span className="font-mono text-[10.5px] font-bold text-slate-700">
+                    <span className="font-mono text-[10.5px] font-semibold text-zinc-700">
                       PIN: {selectedOrder.customer?.pincode || '380001'}
                     </span>
                   </div>
 
-                  <div className="space-y-1 text-slate-700 leading-relaxed">
-                    <p className="font-medium text-slate-900">
+                  <div className="space-y-1 text-zinc-700 leading-relaxed">
+                    <p className="font-medium text-zinc-900">
                       {selectedOrder.customer?.address || 'Standard Address'}
                     </p>
-                    <p className="text-[11px] text-slate-500 font-semibold">
+                    <p className="text-[11px] text-zinc-500 font-medium">
                       {selectedOrder.customer?.city || 'Ahmedabad'}, {selectedOrder.customer?.state || 'Gujarat'} - {selectedOrder.customer?.pincode}
                     </p>
                   </div>
@@ -4076,30 +3954,30 @@ export default function AdminDashboard() {
               <div className="space-y-4">
                 
                 {/* Financial Summary */}
-                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block border-b border-slate-200/60 pb-1.5">
-                    💰 Financial Summary
+                <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-4 space-y-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block border-b border-zinc-200/60 pb-1.5">
+                    Financial Summary
                   </span>
-                  <div className="space-y-1.5 text-xs text-slate-600">
+                  <div className="space-y-1.5 text-xs text-zinc-600">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span className="font-semibold text-slate-900">₹{(selectedOrder.subtotal || 0).toLocaleString('en-IN')}</span>
+                      <span className="font-semibold text-zinc-900 tabular-nums">₹{(selectedOrder.subtotal || 0).toLocaleString('en-IN')}</span>
                     </div>
                     {selectedOrder.discount > 0 && (
-                      <div className="flex justify-between text-emerald-700 font-semibold">
+                      <div className="flex justify-between text-emerald-800 font-medium">
                         <span>Discount Applied</span>
-                        <span>−₹{selectedOrder.discount.toLocaleString('en-IN')}</span>
+                        <span className="tabular-nums">−₹{selectedOrder.discount.toLocaleString('en-IN')}</span>
                       </div>
                     )}
                     <div className="flex justify-between">
                       <span>Shipping Handling</span>
-                      <span className="font-semibold text-slate-900">
-                        {selectedOrder.shipping === 0 ? <span className="text-emerald-700 font-bold">FREE</span> : `₹${selectedOrder.shipping}`}
+                      <span className="font-semibold text-zinc-900 tabular-nums">
+                        {selectedOrder.shipping === 0 ? <span className="text-emerald-800 font-semibold">FREE</span> : `₹${selectedOrder.shipping}`}
                       </span>
                     </div>
-                    <div className="border-t border-slate-200 pt-2 flex justify-between items-baseline">
-                      <span className="font-bold text-slate-950">Total Invoice Amount</span>
-                      <span className="text-base font-bold text-slate-950">
+                    <div className="border-t border-zinc-200 pt-2 flex justify-between items-baseline">
+                      <span className="font-semibold text-zinc-900">Total Invoice Amount</span>
+                      <span className="text-base font-semibold text-zinc-900 tabular-nums">
                         ₹{(selectedOrder.total || 0).toLocaleString('en-IN')}
                       </span>
                     </div>
@@ -4107,21 +3985,21 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Logistics & Status Form */}
-                <form onSubmit={handleUpdateOrderDetails} className="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-3 shadow-2xs">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block border-b border-slate-100 pb-1.5">
-                    🚚 Fulfillment & Courier Controls
+                <form onSubmit={handleUpdateOrderDetails} className="rounded-xl border border-zinc-200/80 bg-white p-4 space-y-3 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block border-b border-zinc-100 pb-1.5">
+                    Fulfillment & Courier Controls
                   </span>
 
                   <div>
-                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Fulfillment Status</label>
+                    <label className="text-[11px] font-medium text-zinc-700 block mb-1">Fulfillment Status</label>
                     <select
                       value={selectedOrderStatus}
                       onChange={e => setSelectedOrderStatus(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-900 outline-none cursor-pointer"
+                      className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-900 outline-none cursor-pointer"
                     >
                       <option value="Confirmed">Confirmed (Order Accepted)</option>
                       <option value="Processing">Processing & Packing</option>
-                      <option value="Shipped">Shipped (Dispatched to Courier Hub)</option>
+                      <option value="Shipped">Shipped (Dispatched to Courier)</option>
                       <option value="Out for Delivery">Out for Delivery (Final Mile)</option>
                       <option value="Delivered">Delivered (Completed)</option>
                       <option value="Return Requested">Return Requested</option>
@@ -4132,11 +4010,11 @@ export default function AdminDashboard() {
 
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="text-[11px] font-bold text-slate-700 block mb-1">Carrier Partner</label>
+                      <label className="text-[11px] font-medium text-zinc-700 block mb-1">Carrier Partner</label>
                       <select
                         value={selectedOrderCourier}
                         onChange={e => setSelectedOrderCourier(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-900 outline-none cursor-pointer"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-900 outline-none cursor-pointer"
                       >
                         <option value="BlueDart Express Air">BlueDart Express Air</option>
                         <option value="Delhivery Surface & Air">Delhivery Surface & Air</option>
@@ -4146,22 +4024,22 @@ export default function AdminDashboard() {
                     </div>
 
                     <div>
-                      <label className="text-[11px] font-bold text-slate-700 block mb-1">AWB Tracking No.</label>
+                      <label className="text-[11px] font-medium text-zinc-700 block mb-1">AWB Tracking No.</label>
                       <input
                         type="text"
                         value={selectedOrderTracking}
                         onChange={e => setSelectedOrderTracking(e.target.value)}
                         placeholder="e.g. BD98234110IN"
-                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-mono font-bold text-slate-900 outline-none focus:bg-white"
+                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-mono font-semibold text-zinc-900 outline-none focus:bg-white focus:border-zinc-400"
                       />
                     </div>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full rounded-xl bg-[#0F172A] hover:bg-black py-2.5 text-xs font-bold text-white shadow-xs transition"
+                    className="w-full rounded-lg bg-zinc-900 hover:bg-black py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                   >
-                    💾 Save Fulfillment & Dispatch Details
+                    Save Fulfillment Details
                   </button>
                 </form>
 
@@ -4170,33 +4048,33 @@ export default function AdminDashboard() {
             </div>
 
             {/* Purchased Items Table */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-2xs">
-              <div className="bg-slate-50 px-4 py-2.5 border-b border-slate-200 flex items-center justify-between">
-                <span className="text-[10.5px] font-bold uppercase tracking-wider text-slate-600">
+            <div className="rounded-xl border border-zinc-200/80 bg-white overflow-hidden shadow-2xs">
+              <div className="bg-zinc-50/75 px-4 py-2.5 border-b border-zinc-200 flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                   Consignment Items Checklist ({selectedOrder.items?.length || 0})
                 </span>
-                <span className="font-mono text-[10px] text-slate-400">Inventory Verified</span>
+                <span className="font-mono text-[10px] text-zinc-400">Inventory Verified</span>
               </div>
 
-              <div className="divide-y divide-slate-100 max-h-48 overflow-y-auto">
+              <div className="divide-y divide-zinc-100 max-h-48 overflow-y-auto">
                 {selectedOrder.items?.map((item, idx) => (
                   <div key={idx} className="p-3.5 flex items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-3 min-w-0">
                       <img
                         src={item.image}
                         alt=""
-                        className="h-11 w-11 rounded-xl object-contain bg-slate-100 border border-slate-200 p-0.5 shrink-0"
+                        className="h-10 w-10 rounded-lg object-contain bg-zinc-50 border border-zinc-200 p-0.5 shrink-0"
                       />
                       <div className="min-w-0">
-                        <p className="font-bold text-slate-950 truncate">{item.name}</p>
-                        <p className="text-[10.5px] text-slate-400 truncate">
-                          {item.brand || 'Luxury Edition'} {item.color && `&bull; ${item.color}`} &bull; Qty: <strong className="text-slate-700">{item.quantity}</strong>
+                        <p className="font-semibold text-zinc-900 truncate">{item.name}</p>
+                        <p className="text-[10.5px] text-zinc-400 truncate">
+                          {item.brand || 'Luxury Edition'} {item.color && `&bull; ${item.color}`} &bull; Qty: <strong className="text-zinc-700 font-semibold">{item.quantity}</strong>
                         </p>
                       </div>
                     </div>
                     <div className="text-right shrink-0 font-mono">
-                      <span className="font-bold text-slate-950 block">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN')}</span>
-                      <span className="text-[10px] text-slate-400">₹{(item.price || 0).toLocaleString('en-IN')} each</span>
+                      <span className="font-semibold text-zinc-900 block tabular-nums">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN')}</span>
+                      <span className="text-[10px] text-zinc-400 tabular-nums">₹{(item.price || 0).toLocaleString('en-IN')} each</span>
                     </div>
                   </div>
                 ))}
@@ -4204,11 +4082,11 @@ export default function AdminDashboard() {
             </div>
 
             {/* Modal Footer Actions */}
-            <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
+            <div className="pt-2 flex justify-end gap-2 border-t border-zinc-100">
               <button
                 type="button"
                 onClick={() => setOrderModalOpen(false)}
-                className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-5 py-2 font-bold text-slate-700 transition cursor-pointer"
+                className="rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-4 py-1.5 font-medium text-zinc-700 transition cursor-pointer"
               >
                 Close Inspector
               </button>
