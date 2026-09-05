@@ -321,7 +321,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 aria-label="Notifications"
-                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative"
+                className="max-sm:hidden flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative"
               >
                 <BellIcon className="w-3.5 h-3.5 text-gray-700" />
                 {unreadNotifsCount > 0 && (
@@ -397,7 +397,7 @@ export default function Navbar() {
             {/* Wishlist Button */}
             <Link
               to="/wishlist"
-              className={`relative flex h-7 sm:h-8 items-center justify-center rounded-lg border px-1.5 sm:px-2.5 transition ${location.pathname === '/wishlist'
+              className={`relative max-sm:hidden flex h-7 sm:h-8 items-center justify-center rounded-lg border px-1.5 sm:px-2.5 transition ${location.pathname === '/wishlist'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
@@ -596,6 +596,33 @@ export default function Navbar() {
                   </Link>
                 ))}
               </div>
+            </div>
+
+            <div className="flex items-center gap-2 px-3 py-2 sm:hidden">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setNotificationsOpen(true);
+                }}
+                className="relative flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-[#F4F4F6] px-2.5 py-2 text-[10px] font-bold uppercase tracking-wider text-gray-700"
+              >
+                <BellIcon className="h-3.5 w-3.5" />
+                Notifications
+                {unreadNotifsCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-600 text-[8px] text-white">
+                    {unreadNotifsCount}
+                  </span>
+                )}
+              </button>
+              <Link
+                to="/wishlist"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gray-200 bg-[#F4F4F6] px-2.5 py-2 text-[10px] font-bold uppercase tracking-wider text-gray-700"
+              >
+                <HeartIcon className="h-3.5 w-3.5" />
+                Wishlist
+              </Link>
             </div>
 
             <Link
