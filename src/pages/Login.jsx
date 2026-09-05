@@ -46,9 +46,11 @@ export default function Login() {
     }
   }, [location.state]);
 
+  // When a demo role button is clicked, select that role, CLEAR the inputs, and do NOT auto-fill
   const handleSelectRole = (role) => {
     setSelectedRole(role);
     setError('');
+    // Ensure inputs are not auto-filled so the user must type manually
     setEmail('');
     setPassword('');
   };
@@ -72,7 +74,7 @@ export default function Login() {
           email: 'admin@krishna.com',
           role: 'admin',
           name: 'Super Administrator',
-          phone: '+91 (079) 4000-5500'
+          phone: '+91 98765 00001'
         });
         navigate(returnPath || '/admin', { replace: true });
         return;
@@ -103,30 +105,20 @@ export default function Login() {
     }
 
     // 3. Customer Authentication
-    if (cleanPassword.length >= 4) {
+    if (cleanEmail && cleanPassword) {
+      if (cleanPassword.length < 3) {
+        setError('Password is too short.');
+        return;
+      }
       setCurrentUser({
         email: cleanEmail,
         role: 'customer',
-        name: cleanEmail.split('@')[0].replace('.', ' ').replace(/^./, str => str.toUpperCase()) || 'Valued Client',
+        name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
         phone: '+91 98765 12345'
       });
       navigate(returnPath || '/account', { replace: true });
     } else {
-      setError('Password must contain at least 4 characters.');
-    }
-  };
-
-  const handleQuickDemoFill = (roleType) => {
-    setSelectedRole(roleType);
-    if (roleType === 'admin') {
-      setEmail('admin@krishna.com');
-      setPassword('admin123');
-    } else if (roleType === 'supplier') {
-      setEmail('supplier@krishna.com');
-      setPassword('supplier123');
-    } else {
-      setEmail('rahul.patel@example.com');
-      setPassword('user123');
+      setError('Please provide a valid email and password.');
     }
   };
 
@@ -134,257 +126,236 @@ export default function Login() {
     e.preventDefault();
     if (forgotEmail.trim()) {
       setOtpSent(true);
+      setForgotSuccess(`6-digit OTP verification code sent to ${forgotEmail}`);
     }
   };
 
   const handleResetPassword = (e) => {
     e.preventDefault();
-    if (otpCode.trim() && newPassword.trim()) {
-      setForgotSuccess('Password reset successfully. You may now sign in.');
+    if (otpCode && newPassword) {
+      setForgotSuccess('✓ Password reset successfully! You may now sign in.');
       setTimeout(() => {
         setForgotModalOpen(false);
-        setForgotSuccess('');
         setOtpSent(false);
+        setForgotEmail('');
         setOtpCode('');
         setNewPassword('');
-      }, 1500);
+        setForgotSuccess('');
+      }, 2000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] text-zinc-900 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md rounded-2xl border border-zinc-200/90 bg-white p-6 sm:p-8 shadow-xs space-y-5 animate-fade-in">
-          
+      <main className="flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
+        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
+
           <div className="text-center">
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-amber-300 font-serif font-bold text-base mb-2.5 shadow-xs border border-amber-500/25">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#111827] text-white font-serif font-bold text-base mb-2.5 shadow-sm">
               K
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#B89035]">
-              Boutique Access Portal
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+              Client Authentication
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-950 mt-0.5">Sign In to Your Account</h2>
-            <p className="text-xs text-zinc-500 mt-1">
-              Select your authorization tier to access orders, consignment tools, or catalog governance.
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-950 mt-1">Sign In to Your Account</h2>
+            <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+              Access your saved bag, order timeline tracking, and address book
             </p>
           </div>
 
           {redirectMessage && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3 text-xs text-amber-800 font-medium leading-relaxed">
-              {redirectMessage}
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-xs">
+              <span className="text-base">🔒</span>
+              <div>
+                <strong className="font-bold block text-amber-950">Authentication Required</strong>
+                <span>{redirectMessage}</span>
+              </div>
             </div>
           )}
 
           {error && (
-            <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-3 text-xs text-rose-800 font-medium">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center">
               {error}
             </div>
           )}
 
-          {/* Role Tabs */}
-          <div className="flex rounded-xl bg-zinc-100 p-1 border border-zinc-200/60">
-            {[
-              { id: 'customer', label: 'Customer' },
-              { id: 'supplier', label: 'Vendor Partner' },
-              { id: 'admin', label: 'Administrator' }
-            ].map(r => (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => handleSelectRole(r.id)}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition ${
-                  selectedRole === r.id
-                    ? 'bg-white text-zinc-950 shadow-2xs'
-                    : 'text-zinc-500 hover:text-zinc-900'
-                }`}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-3.5">
+          <form onSubmit={handleLogin} className="space-y-3.5" autoComplete="off">
             <div>
-              <label className="text-xs font-semibold text-zinc-700 mb-1 block">
-                {selectedRole === 'admin' ? 'Administrator Email / Username' : selectedRole === 'supplier' ? 'Partner Business Email' : 'Client Email Address'} *
-              </label>
+              <label className="text-xs font-semibold text-gray-700 mb-1 block">Email Address</label>
               <input
                 type="text"
                 required
+                autoComplete="off"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={
-                  selectedRole === 'admin'
-                    ? 'admin@krishna.com'
-                    : selectedRole === 'supplier'
+                  selectedRole === 'supplier'
                     ? 'supplier@krishna.com'
-                    : 'rahul.patel@example.com'
+                    : selectedRole === 'admin'
+                      ? 'admin@krishna.com'
+                      : 'name@domain.com'
                 }
-                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-xs text-zinc-900 outline-none focus:border-zinc-900 focus:bg-white transition"
+                className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-zinc-700">Security Password *</label>
+                <label className="text-xs font-semibold text-gray-700">Password</label>
                 <button
                   type="button"
                   onClick={() => setForgotModalOpen(true)}
-                  className="text-[11px] font-semibold text-[#B89035] hover:underline"
+                  className="text-[11px] text-gray-900 font-semibold hover:underline"
                 >
-                  Forgot Password?
+                  Forgot?
                 </button>
               </div>
               <input
                 type="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password..."
-                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-xs text-zinc-900 outline-none focus:border-zinc-900 focus:bg-white transition"
+                placeholder="••••••••"
+                className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-zinc-900 py-3 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition shadow-xs flex items-center justify-center gap-2 cursor-pointer mt-2"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer"
             >
-              <span>Authenticate & Sign In</span>
+              <span>Sign In</span>
               <ArrowRightIcon className="w-3.5 h-3.5" />
             </button>
           </form>
 
-          {/* Quick 1-Click Credentials Tester */}
-          <div className="pt-3 border-t border-zinc-100">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-2 text-center">
-              Quick 1-Click Test Credentials
-            </span>
-            <div className="grid grid-cols-3 gap-1.5 text-[10.5px]">
+          {/* Quick Access Account Selector (Selects Mode but does NOT auto-fill credentials) */}
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
+              Demo Access
+            </p>
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => handleQuickDemoFill('customer')}
-                className="rounded border border-zinc-200 bg-zinc-50 py-1.5 px-2 font-medium text-zinc-700 hover:bg-zinc-100"
+                onClick={() => handleSelectRole('customer')}
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
+                    ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                    : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                  }`}
               >
-                Customer
+                Customer Demo
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickDemoFill('supplier')}
-                className="rounded border border-zinc-200 bg-zinc-50 py-1.5 px-2 font-medium text-zinc-700 hover:bg-zinc-100"
+                onClick={() => handleSelectRole('supplier')}
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
+                    ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                    : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                  }`}
               >
-                Supplier
+                Supplier Demo
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickDemoFill('admin')}
-                className="rounded border border-zinc-200 bg-zinc-50 py-1.5 px-2 font-medium text-zinc-700 hover:bg-zinc-100"
+                onClick={() => handleSelectRole('admin')}
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
+                    ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                    : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
+                  }`}
               >
-                Admin
+                Admin Demo
               </button>
             </div>
           </div>
 
-          <div className="text-center text-xs text-zinc-500 pt-1">
-            New client to Krishna Accessories?{' '}
-            <Link to="/register" state={{ from: returnPath }} className="font-semibold text-zinc-950 hover:underline">
-              Create an account &rarr;
+          <div className="text-center text-xs text-gray-500">
+            Don't have an account?{' '}
+            <Link to="/register" state={location.state} className="font-bold text-gray-950 hover:underline">
+              Create Account
             </Link>
           </div>
 
         </div>
       </main>
 
-      {/* Forgot Password Modal */}
+      {/* Forgot Password OTP Modal */}
       {forgotModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-xs p-4 animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 border border-zinc-200 shadow-2xl space-y-4 animate-modal">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-              <h3 className="text-sm font-bold text-zinc-950">Password Recovery Desk</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-2xl animate-fade-in">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+              <h3 className="text-sm font-bold text-gray-950 uppercase tracking-wider">Reset Account Password</h3>
               <button
                 type="button"
                 onClick={() => setForgotModalOpen(false)}
-                className="text-zinc-400 hover:text-zinc-950 text-xs font-bold cursor-pointer"
+                className="text-gray-400 hover:text-black font-bold p-1 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            {forgotSuccess ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 font-semibold text-center">
+            {forgotSuccess && (
+              <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800">
                 {forgotSuccess}
               </div>
-            ) : !otpSent ? (
-              <form onSubmit={handleSendOtp} className="space-y-3.5">
-                <p className="text-xs text-zinc-500">
-                  Enter your registered email address to receive a secure 6-digit verification PIN.
-                </p>
+            )}
+
+            {!otpSent ? (
+              <form onSubmit={handleSendOtp} className="space-y-3.5 text-xs">
+                <p className="text-gray-600">Enter your registered email address to receive an instant OTP verification code.</p>
                 <div>
-                  <label className="text-xs font-semibold text-zinc-700 block mb-1">Email Address *</label>
+                  <label className="font-semibold text-gray-700 block mb-1">Email Address</label>
                   <input
                     type="email"
                     required
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
-                    placeholder="user@example.com"
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs outline-none focus:border-zinc-900 focus:bg-white"
+                    placeholder="registered@krishna.com"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                   />
                 </div>
-                <div className="flex justify-end gap-2 pt-2 border-t border-zinc-100">
-                  <button
-                    type="button"
-                    onClick={() => setForgotModalOpen(false)}
-                    className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold text-zinc-700"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-black"
-                  >
-                    Send PIN
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer"
+                >
+                  Send OTP Code
+                </button>
               </form>
             ) : (
-              <form onSubmit={handleResetPassword} className="space-y-3.5">
-                <p className="text-xs text-emerald-700 font-medium">
-                  ✓ 6-Digit PIN sent to <strong>{forgotEmail}</strong>. (Simulated PIN: <span className="font-mono font-bold">123456</span>)
-                </p>
+              <form onSubmit={handleResetPassword} className="space-y-3.5 text-xs">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-700 block mb-1">Verification PIN *</label>
+                  <label className="font-semibold text-gray-700 block mb-1">6-Digit OTP Code</label>
                   <input
                     type="text"
                     required
+                    maxLength={6}
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value)}
                     placeholder="123456"
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs font-mono outline-none focus:border-zinc-900 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white tracking-widest text-center font-bold"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-zinc-700 block mb-1">New Security Password *</label>
+                  <label className="font-semibold text-gray-700 block mb-1">New Password</label>
                   <input
                     type="password"
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Min 6 characters..."
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs outline-none focus:border-zinc-900 focus:bg-white"
+                    placeholder="Enter new strong password"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                   />
                 </div>
-                <div className="flex justify-end gap-2 pt-2 border-t border-zinc-100">
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-black"
-                  >
-                    Update Password
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer"
+                >
+                  Save New Password & Sign In
+                </button>
               </form>
             )}
-
           </div>
         </div>
       )}

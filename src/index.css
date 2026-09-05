@@ -3,36 +3,28 @@
 @theme {
   --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --color-gold-50: #FDFBF7;
-  --color-gold-100: #F7F2E7;
-  --color-gold-200: #EEDBBD;
-  --color-gold-300: #E2C28E;
-  --color-gold-400: #D3A75E;
-  --color-gold-500: #B89035;
-  --color-gold-600: #9E7728;
-  --color-gold-700: #7C5B1C;
-  --color-gold-800: #5F4415;
-  --color-gold-900: #45310F;
+  --color-gold-50: #fdfbf7;
+  --color-gold-100: #f7f3e8;
+  --color-gold-200: #eee3cb;
+  --color-gold-300: #dfcba3;
+  --color-gold-400: #d0b075;
+  --color-gold-500: #c5a059;
+  --color-gold-600: #b08744;
+  --color-gold-700: #8c6734;
+  --color-gold-800: #71522e;
+  --color-gold-900: #5f4428;
 
-  --color-zinc-950: #09090B;
-  --color-zinc-900: #18181B;
-  --color-zinc-850: #1F1F23;
-  --color-zinc-800: #27272A;
-  --color-zinc-700: #3F3F46;
-  --color-zinc-600: #52525B;
-  --color-zinc-500: #71717A;
-  --color-zinc-400: #A1A1AA;
-  --color-zinc-300: #D4D4D8;
-  --color-zinc-200: #E4E4E7;
-  --color-zinc-100: #F4F4F5;
-  --color-zinc-50: #FAFAFA;
+  --color-navy-950: #0B132B;
+  --color-navy-900: #0F172A;
+  --color-navy-800: #1E293B;
+  --color-navy-700: #334155;
 }
 
 @layer base {
   :root {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #18181B;
-    background-color: #FAFAF9;
+    color: #111827;
+    background: #FAFAFB;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -43,14 +35,14 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: #FAFAF9;
+    background-color: #FAFAFB;
   }
 
   body {
     margin: 0;
     min-width: 320px;
-    background-color: #FAFAF9;
-    color: #18181B;
+    background-color: #FAFAFB;
+    color: #111827;
     overflow-x: clip;
     font-size: 13px;
     line-height: 1.5;
@@ -70,40 +62,40 @@
 
   a {
     text-decoration: none;
-    color: inherit;
   }
 
   ::selection {
-    background: #18181B;
+    background: #111827;
     color: #FFFFFF;
   }
 }
 
-/* Minimalist luxury scrollbars */
+/* Minimalist luxury scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #F4F5F7;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4D4D8;
+  background: #D1D5DB;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A1A1AA;
+  background: #9CA3AF;
 }
 
-/* Refined Keyframe Animations */
+/* Natural micro-animation keyframes */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(3px);
+    transform: translateY(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -113,52 +105,39 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.985) translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
 .animate-fade-in {
-  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-slide-up {
-  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-modal {
-  animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Bespoke luxury container card */
+/* Refined luxury cards */
 .luxury-card {
   background: #FFFFFF;
-  border: 1px solid rgba(228, 228, 231, 0.9);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(229, 231, 235, 0.85);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .luxury-card:hover {
-  border-color: rgba(212, 212, 216, 1);
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+  border-color: rgba(209, 213, 219, 0.9);
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
 .gold-accent-text {
-  color: #B89035;
+  color: #B89758;
 }
 
 /* Line clamp utilities */
@@ -172,13 +151,6 @@
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
