@@ -16,17 +16,16 @@ export default function Checkout() {
 
   const user = getCurrentUser();
   const savedAddresses = getUserAddresses();
-  const defaultAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
 
   const [form, setForm] = useState({
-    firstName: user?.name?.split(' ')[0] || defaultAddr?.firstName || 'Rahul',
-    lastName: user?.name?.split(' ')[1] || defaultAddr?.lastName || 'Patel',
-    email: user?.email || 'rahul.patel@example.com',
-    phone: user?.phone || defaultAddr?.phone || '9876512345',
-    address: defaultAddr?.address || 'B-402, Shivalik Heights, Judges Bungalow Road, Bodakdev',
-    city: defaultAddr?.city || 'Ahmedabad',
-    state: defaultAddr?.state || 'Gujarat',
-    pincode: defaultAddr?.pincode || '380054',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: '',
   });
 
   useEffect(() => {
@@ -39,6 +38,35 @@ export default function Checkout() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleClearForm = () => {
+    setForm({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
+      state: '',
+      pincode: '',
+    });
+  };
+
+  const handleAutofillProfile = () => {
+    if (user) {
+      setForm(prev => ({
+        ...prev,
+        firstName: user.name?.split(' ')[0] || prev.firstName,
+        lastName: user.name?.split(' ').slice(1).join(' ') || prev.lastName,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        address: user.address || prev.address,
+        city: user.city || prev.city,
+        state: user.state || prev.state,
+        pincode: user.pincode || prev.pincode
+      }));
+    }
   };
 
   const handleSelectSavedAddress = (addr) => {
@@ -57,8 +85,8 @@ export default function Checkout() {
   const handlePlaceOrder = (e) => {
     e.preventDefault();
 
-    if (!form.firstName || !form.phone || !form.address || !form.pincode) {
-      alert('Please complete all required contact and delivery details.');
+    if (!form.firstName.trim() || !form.email.trim() || !form.phone.trim() || !form.address.trim() || !form.city.trim() || !form.pincode.trim()) {
+      alert('Please fill in all required contact and delivery details.');
       return;
     }
 
@@ -117,13 +145,37 @@ export default function Checkout() {
 
       {/* Checkout Header */}
       <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
-            Encrypted 256-Bit Transaction
-          </span>
-          <h1 className="mt-0.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-            Express Checkout
-          </h1>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
+              Encrypted 256-Bit Transaction
+            </span>
+            <h1 className="mt-0.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+              Express Checkout
+            </h1>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Enter your client contact details & shipping address below to confirm your order.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {user && (
+              <button
+                type="button"
+                onClick={handleAutofillProfile}
+                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 px-3.5 py-1.5 text-xs font-semibold text-gray-800 transition shadow-2xs"
+              >
+                <span>⚡ Autofill from Profile</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleClearForm}
+              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white hover:bg-gray-50 px-3.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-rose-600 transition shadow-2xs"
+            >
+              <span>Clear Form</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -136,25 +188,29 @@ export default function Checkout() {
 
             {/* Step 1: Contact Information */}
             <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs">
-              <div className="flex items-center gap-2 border-b border-gray-100 pb-2.5 mb-3.5">
-                <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#111827] text-[9.5px] font-bold text-white">
-                  1
-                </span>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-gray-950">
-                  Client Contact Information
-                </h2>
+              <div className="flex items-center justify-between border-b border-gray-100 pb-2.5 mb-3.5">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#111827] text-[9.5px] font-bold text-white">
+                    1
+                  </span>
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-gray-950">
+                    Client Contact Information
+                  </h2>
+                </div>
+                <span className="text-[10.5px] text-gray-400 font-medium">Manual Input</span>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3.5 sm:grid-cols-2">
                 <div>
                   <label className="text-[11px] font-medium text-gray-700 mb-1 block">First Name *</label>
                   <input
                     type="text"
                     name="firstName"
                     required
+                    placeholder="e.g. Rahul"
                     value={form.firstName}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                   />
                 </div>
 
@@ -163,33 +219,36 @@ export default function Checkout() {
                   <input
                     type="text"
                     name="lastName"
+                    placeholder="e.g. Patel"
                     value={form.lastName}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Email Address (For Invoice) *</label>
+                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Email Address (For Invoice & Updates) *</label>
                   <input
                     type="email"
                     name="email"
                     required
+                    placeholder="e.g. rahul.patel@example.com"
                     value={form.email}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Mobile Number (For Courier OTP) *</label>
+                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Mobile Number (For Courier Delivery) *</label>
                   <input
                     type="tel"
                     name="phone"
                     required
+                    placeholder="e.g. 98765 12345"
                     value={form.phone}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                   />
                 </div>
               </div>
@@ -203,7 +262,7 @@ export default function Checkout() {
                     2
                   </span>
                   <h2 className="text-xs font-bold uppercase tracking-wider text-gray-950">
-                    Delivery Destination
+                    Delivery Destination Address
                   </h2>
                 </div>
 
@@ -224,29 +283,31 @@ export default function Checkout() {
                 )}
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Street Address / House No. / Landmark *</label>
+                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Street Address / House No. / Building / Landmark *</label>
                   <input
                     type="text"
                     name="address"
                     required
+                    placeholder="e.g. Flat B-402, Shivalik Heights, Judges Bungalow Road"
                     value={form.address}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                   />
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3.5 sm:grid-cols-3">
                   <div>
                     <label className="text-[11px] font-medium text-gray-700 mb-1 block">City *</label>
                     <input
                       type="text"
                       name="city"
                       required
+                      placeholder="e.g. Ahmedabad"
                       value={form.city}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                      className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                     />
                   </div>
 
@@ -256,9 +317,10 @@ export default function Checkout() {
                       type="text"
                       name="state"
                       required
+                      placeholder="e.g. Gujarat"
                       value={form.state}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                      className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                     />
                   </div>
 
@@ -268,9 +330,10 @@ export default function Checkout() {
                       type="text"
                       name="pincode"
                       required
+                      placeholder="e.g. 380054"
                       value={form.pincode}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs font-mono text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                      className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-mono text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
                     />
                   </div>
                 </div>

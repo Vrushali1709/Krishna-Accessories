@@ -294,32 +294,7 @@ const defaultNotifications = [
   }
 ];
 
-const defaultAddresses = [
-  {
-    id: 1,
-    isDefault: true,
-    label: "Home",
-    firstName: "Rahul",
-    lastName: "Patel",
-    phone: "+91 98765 12345",
-    address: "B-402, Shivalik Heights, Judges Bungalow Road, Bodakdev",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    pincode: "380054"
-  },
-  {
-    id: 2,
-    isDefault: false,
-    label: "Office",
-    firstName: "Rahul",
-    lastName: "Patel",
-    phone: "+91 98765 12345",
-    address: "704, Mondeal Heights, Near Wide Angle, SG Highway",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    pincode: "380015"
-  }
-];
+const defaultAddresses = [];
 
 // ================= ORDERS STORE =================
 
@@ -359,9 +334,20 @@ export function createOrder(orderData) {
     hour12: true
   });
 
+  const customerData = {
+    firstName: orderData.customer?.firstName?.trim() || '',
+    lastName: orderData.customer?.lastName?.trim() || '',
+    email: orderData.customer?.email?.trim() || '',
+    phone: orderData.customer?.phone?.trim() || '',
+    address: orderData.customer?.address?.trim() || '',
+    city: orderData.customer?.city?.trim() || '',
+    state: orderData.customer?.state?.trim() || '',
+    pincode: orderData.customer?.pincode?.trim() || ''
+  };
+
   const newOrder = {
     id: orderNumber,
-    customer: orderData.customer,
+    customer: customerData,
     items: orderData.items || [],
     subtotal: orderData.subtotal || 0,
     shipping: orderData.shipping || 0,
@@ -386,10 +372,42 @@ export function createOrder(orderData) {
   const updatedOrders = [newOrder, ...orders];
   localStorage.setItem(ORDERS_KEY, JSON.stringify(updatedOrders));
   
-  // Also add a notification for the customer
+  // Update or add user to Platform Users Registry for Admin
+  try {
+    const users = getUsers();
+    const customerEmail = customerData.email.toLowerCase();
+    const customerFullName = `${customerData.firstName} ${customerData.lastName}`.trim() || 'Client';
+    
+    const existingUserIndex = users.findIndex(u => u.email?.toLowerCase() === customerEmail);
+    if (existingUserIndex >= 0) {
+      users[existingUserIndex].ordersCount = (users[existingUserIndex].ordersCount || 0) + 1;
+      users[existingUserIndex].totalSpent = (users[existingUserIndex].totalSpent || 0) + newOrder.total;
+      if (customerData.phone && !users[existingUserIndex].phone) {
+        users[existingUserIndex].phone = customerData.phone;
+      }
+    } else if (customerEmail) {
+      users.unshift({
+        id: Date.now(),
+        name: customerFullName,
+        email: customerData.email,
+        phone: customerData.phone || '+91 98765 00000',
+        role: "Customer",
+        status: "Active",
+        ordersCount: 1,
+        totalSpent: newOrder.total,
+        joinedDate: dateFormatted
+      });
+    }
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    window.dispatchEvent(new Event('usersUpdated'));
+  } catch (err) {
+    console.error("Failed to sync customer profile:", err);
+  }
+
+  // Also add a notification for the customer & admin
   addNotification({
     title: `Order Placed: ${orderNumber}`,
-    message: `Thank you! Your order for ₹${newOrder.total.toLocaleString('en-IN')} has been placed successfully.`,
+    message: `Thank you ${customerData.firstName || ''}! Your order for ₹${newOrder.total.toLocaleString('en-IN')} has been confirmed.`,
     type: "order"
   });
 

@@ -176,6 +176,32 @@ export default function AdminDashboard() {
   const [adminRefundTxn, setAdminRefundTxn] = useState('');
   const [adminReturnNotes, setAdminReturnNotes] = useState('');
 
+  // Admin Order Details Inspector Modal State
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderCourier, setSelectedOrderCourier] = useState('BlueDart Express Air');
+  const [selectedOrderTracking, setSelectedOrderTracking] = useState('');
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState('Confirmed');
+
+  const handleOpenOrderModal = (order) => {
+    setSelectedOrder(order);
+    setSelectedOrderCourier(order.courier || 'BlueDart Express Air');
+    setSelectedOrderTracking(order.trackingNumber || `BD${Math.floor(10000000 + Math.random() * 90000000)}IN`);
+    setSelectedOrderStatus(order.status || 'Confirmed');
+    setOrderModalOpen(true);
+  };
+
+  const handleUpdateOrderDetails = (e) => {
+    e.preventDefault();
+    if (!selectedOrder) return;
+    updateOrderStatus(selectedOrder.id, selectedOrderStatus, {
+      courier: selectedOrderCourier,
+      trackingNumber: selectedOrderTracking
+    });
+    showToast(`Order ${selectedOrder.id} status & logistics updated!`);
+    setSelectedOrder(prev => prev ? ({ ...prev, status: selectedOrderStatus, courier: selectedOrderCourier, trackingNumber: selectedOrderTracking }) : null);
+  };
+
   // Top header popovers & alert toasts
   const [notifsOpen, setNotifsOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -1456,7 +1482,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs min-w-[650px]">
+                    <table className="w-full text-left text-xs min-w-[700px]">
                       <thead className="border-b border-slate-100 bg-slate-50 text-slate-500 uppercase text-[9.5px] font-bold">
                         <tr>
                           <th className="p-3">Order ID</th>
@@ -1464,16 +1490,16 @@ export default function AdminDashboard() {
                           <th className="p-3">Items Summary</th>
                           <th className="p-3">Total Amount</th>
                           <th className="p-3">Status</th>
-                          <th className="p-3 text-right">Quick Update</th>
+                          <th className="p-3 text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 font-medium">
-                        {orders.slice(0, 4).map(o => (
+                        {orders.slice(0, 5).map(o => (
                           <tr key={o.id} className="hover:bg-slate-50 transition">
                             <td className="p-3 font-mono font-bold text-slate-950">{o.id}</td>
                             <td className="p-3">
                               <p className="font-bold text-slate-900">{o.customer?.firstName} {o.customer?.lastName}</p>
-                              <p className="text-[10px] text-slate-400">{o.customer?.city || 'India'}</p>
+                              <p className="text-[10px] text-slate-400">{o.customer?.city ? `${o.customer.city}, ${o.customer.state || 'India'}` : 'India'}</p>
                             </td>
                             <td className="p-3 text-slate-600">{o.items?.length || 1} items &bull; {o.paymentMethod || 'Online UPI'}</td>
                             <td className="p-3 font-bold text-slate-950">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
@@ -1489,18 +1515,26 @@ export default function AdminDashboard() {
                               </span>
                             </td>
                             <td className="p-3 text-right">
-                              <select
-                                value={o.status}
-                                onChange={(e) => updateOrderStatus(o.id, e.target.value)}
-                                className="rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-semibold cursor-pointer outline-none"
-                              >
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Shipped">Shipped</option>
-                                <option value="Out for Delivery">Out for Delivery</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                              </select>
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  onClick={() => handleOpenOrderModal(o)}
+                                  className="rounded-lg bg-[#0F172A] hover:bg-black text-white px-2.5 py-1 text-[11px] font-bold shadow-2xs transition"
+                                >
+                                  View Details &rarr;
+                                </button>
+                                <select
+                                  value={o.status}
+                                  onChange={(e) => updateOrderStatus(o.id, e.target.value)}
+                                  className="rounded-lg border border-slate-200 bg-slate-100 px-2 py-1 text-xs font-semibold cursor-pointer outline-none"
+                                >
+                                  <option value="Confirmed">Confirmed</option>
+                                  <option value="Processing">Processing</option>
+                                  <option value="Shipped">Shipped</option>
+                                  <option value="Out for Delivery">Out for Delivery</option>
+                                  <option value="Delivered">Delivered</option>
+                                  <option value="Cancelled">Cancelled</option>
+                                </select>
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -2032,6 +2066,13 @@ export default function AdminDashboard() {
 
                             <td className="p-3.5 text-right">
                               <div className="flex items-center justify-end gap-2">
+                                <button
+                                  onClick={() => handleOpenOrderModal(order)}
+                                  className="rounded-lg bg-[#0F172A] hover:bg-black text-white px-2.5 py-1 text-[11px] font-bold shadow-2xs transition shrink-0"
+                                >
+                                  View Details &rarr;
+                                </button>
+
                                 {order.status === 'Return Requested' && (
                                   <button
                                     onClick={() => handleOpenAdminReturnModal(order)}
@@ -2747,12 +2788,20 @@ export default function AdminDashboard() {
                           </div>
                           <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
                             {stageOrders.map(o => (
-                              <div key={o.id} className="rounded-xl border border-slate-100 bg-slate-50 p-2.5 text-xs space-y-1">
-                                <div className="flex justify-between font-bold">
-                                  <span className="font-mono text-slate-950">{o.id}</span>
+                              <div
+                                key={o.id}
+                                onClick={() => handleOpenOrderModal(o)}
+                                className="rounded-xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-amber-400 p-2.5 text-xs space-y-1 cursor-pointer transition shadow-2xs group"
+                              >
+                                <div className="flex justify-between font-bold items-center">
+                                  <span className="font-mono text-slate-950 group-hover:text-amber-700">{o.id}</span>
                                   <span className="text-amber-700">₹{o.total?.toLocaleString('en-IN')}</span>
                                 </div>
                                 <p className="text-[11px] text-slate-600 truncate">{o.customer?.firstName} {o.customer?.lastName}</p>
+                                <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-100">
+                                  <span>{o.items?.length || 1} items</span>
+                                  <span className="text-blue-600 font-bold group-hover:underline">Inspect &rarr;</span>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -3912,6 +3961,259 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 9. Admin Order Details Inspector & Invoice Modal */}
+      {orderModalOpen && selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-3 sm:p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-3xl rounded-3xl border border-slate-200 bg-white p-5 sm:p-7 shadow-2xl space-y-5 text-xs max-h-[92vh] overflow-y-auto">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#0F172A] text-amber-400 flex items-center justify-center text-lg font-bold shadow-xs">
+                  📦
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-950 tracking-tight">
+                      Order Consignment {selectedOrder.id}
+                    </h3>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      selectedOrder.status === 'Delivered'
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        : selectedOrder.status === 'Shipped'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : selectedOrder.status === 'Cancelled'
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                        : 'bg-amber-50 text-amber-700 border border-amber-200'
+                    }`}>
+                      {selectedOrder.status}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Placed on {selectedOrder.date} &bull; Payment: <strong className="text-slate-700 font-semibold">{selectedOrder.paymentMethod} ({selectedOrder.paymentStatus || 'Paid'})</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 transition"
+                  title="Print Consignment Invoice"
+                >
+                  🖨️ Print
+                </button>
+                <button
+                  onClick={() => setOrderModalOpen(false)}
+                  className="rounded-full bg-slate-100 hover:bg-slate-200 h-8 w-8 flex items-center justify-center text-slate-500 hover:text-slate-900 font-bold transition cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* 2-Column Grid */}
+            <div className="grid gap-5 md:grid-cols-2">
+              
+              {/* Left Column: Customer & Delivery Destination */}
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      👤 Client & Contact Details
+                    </span>
+                    <span className="text-[10.5px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      Verified Client
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-slate-950">
+                      {selectedOrder.customer?.firstName} {selectedOrder.customer?.lastName}
+                    </p>
+                    <p className="text-slate-600 flex items-center gap-1.5">
+                      <span className="font-semibold text-slate-400">Email:</span>
+                      <a href={`mailto:${selectedOrder.customer?.email}`} className="text-blue-600 font-medium hover:underline">
+                        {selectedOrder.customer?.email || 'Not provided'}
+                      </a>
+                    </p>
+                    <p className="text-slate-600 flex items-center gap-1.5">
+                      <span className="font-semibold text-slate-400">Phone:</span>
+                      <a href={`tel:${selectedOrder.customer?.phone}`} className="text-slate-900 font-bold hover:underline font-mono">
+                        {selectedOrder.customer?.phone || 'Not provided'}
+                      </a>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      📍 Shipping & Destination Address
+                    </span>
+                    <span className="font-mono text-[10.5px] font-bold text-slate-700">
+                      PIN: {selectedOrder.customer?.pincode || '380001'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1 text-slate-700 leading-relaxed">
+                    <p className="font-medium text-slate-900">
+                      {selectedOrder.customer?.address || 'Standard Address'}
+                    </p>
+                    <p className="text-[11px] text-slate-500 font-semibold">
+                      {selectedOrder.customer?.city || 'Ahmedabad'}, {selectedOrder.customer?.state || 'Gujarat'} - {selectedOrder.customer?.pincode}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Financial Breakdown & Fast Status/Courier Assignment */}
+              <div className="space-y-4">
+                
+                {/* Financial Summary */}
+                <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block border-b border-slate-200/60 pb-1.5">
+                    💰 Financial Summary
+                  </span>
+                  <div className="space-y-1.5 text-xs text-slate-600">
+                    <div className="flex justify-between">
+                      <span>Subtotal</span>
+                      <span className="font-semibold text-slate-900">₹{(selectedOrder.subtotal || 0).toLocaleString('en-IN')}</span>
+                    </div>
+                    {selectedOrder.discount > 0 && (
+                      <div className="flex justify-between text-emerald-700 font-semibold">
+                        <span>Discount Applied</span>
+                        <span>−₹{selectedOrder.discount.toLocaleString('en-IN')}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span>Shipping Handling</span>
+                      <span className="font-semibold text-slate-900">
+                        {selectedOrder.shipping === 0 ? <span className="text-emerald-700 font-bold">FREE</span> : `₹${selectedOrder.shipping}`}
+                      </span>
+                    </div>
+                    <div className="border-t border-slate-200 pt-2 flex justify-between items-baseline">
+                      <span className="font-bold text-slate-950">Total Invoice Amount</span>
+                      <span className="text-base font-bold text-slate-950">
+                        ₹{(selectedOrder.total || 0).toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Logistics & Status Form */}
+                <form onSubmit={handleUpdateOrderDetails} className="rounded-2xl border border-slate-200/80 bg-white p-4 space-y-3 shadow-2xs">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block border-b border-slate-100 pb-1.5">
+                    🚚 Fulfillment & Courier Controls
+                  </span>
+
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-700 block mb-1">Fulfillment Status</label>
+                    <select
+                      value={selectedOrderStatus}
+                      onChange={e => setSelectedOrderStatus(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-900 outline-none cursor-pointer"
+                    >
+                      <option value="Confirmed">Confirmed (Order Accepted)</option>
+                      <option value="Processing">Processing & Packing</option>
+                      <option value="Shipped">Shipped (Dispatched to Courier Hub)</option>
+                      <option value="Out for Delivery">Out for Delivery (Final Mile)</option>
+                      <option value="Delivered">Delivered (Completed)</option>
+                      <option value="Return Requested">Return Requested</option>
+                      <option value="Refunded">Refunded</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="text-[11px] font-bold text-slate-700 block mb-1">Carrier Partner</label>
+                      <select
+                        value={selectedOrderCourier}
+                        onChange={e => setSelectedOrderCourier(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-900 outline-none cursor-pointer"
+                      >
+                        <option value="BlueDart Express Air">BlueDart Express Air</option>
+                        <option value="Delhivery Surface & Air">Delhivery Surface & Air</option>
+                        <option value="FedEx Luxury Secure">FedEx Luxury Secure</option>
+                        <option value="DTDC Prime Gold">DTDC Prime Gold</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-bold text-slate-700 block mb-1">AWB Tracking No.</label>
+                      <input
+                        type="text"
+                        value={selectedOrderTracking}
+                        onChange={e => setSelectedOrderTracking(e.target.value)}
+                        placeholder="e.g. BD98234110IN"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-mono font-bold text-slate-900 outline-none focus:bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full rounded-xl bg-[#0F172A] hover:bg-black py-2.5 text-xs font-bold text-white shadow-xs transition"
+                  >
+                    💾 Save Fulfillment & Dispatch Details
+                  </button>
+                </form>
+
+              </div>
+
+            </div>
+
+            {/* Purchased Items Table */}
+            <div className="rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-2xs">
+              <div className="bg-slate-50 px-4 py-2.5 border-b border-slate-200 flex items-center justify-between">
+                <span className="text-[10.5px] font-bold uppercase tracking-wider text-slate-600">
+                  Consignment Items Checklist ({selectedOrder.items?.length || 0})
+                </span>
+                <span className="font-mono text-[10px] text-slate-400">Inventory Verified</span>
+              </div>
+
+              <div className="divide-y divide-slate-100 max-h-48 overflow-y-auto">
+                {selectedOrder.items?.map((item, idx) => (
+                  <div key={idx} className="p-3.5 flex items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="h-11 w-11 rounded-xl object-contain bg-slate-100 border border-slate-200 p-0.5 shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-950 truncate">{item.name}</p>
+                        <p className="text-[10.5px] text-slate-400 truncate">
+                          {item.brand || 'Luxury Edition'} {item.color && `&bull; ${item.color}`} &bull; Qty: <strong className="text-slate-700">{item.quantity}</strong>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0 font-mono">
+                      <span className="font-bold text-slate-950 block">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN')}</span>
+                      <span className="text-[10px] text-slate-400">₹{(item.price || 0).toLocaleString('en-IN')} each</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setOrderModalOpen(false)}
+                className="rounded-full border border-slate-200 bg-slate-100 hover:bg-slate-200 px-5 py-2 font-bold text-slate-700 transition cursor-pointer"
+              >
+                Close Inspector
+              </button>
+            </div>
+
           </div>
         </div>
       )}

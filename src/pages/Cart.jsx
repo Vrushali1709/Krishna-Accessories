@@ -240,7 +240,7 @@ export default function Cart() {
                       Remove
                     </button>
                   </div>
-                ) : (
+                ) : (                        
                   <form onSubmit={handleApplyCoupon} className="flex gap-1.5">
                     <input
                       type="text"
