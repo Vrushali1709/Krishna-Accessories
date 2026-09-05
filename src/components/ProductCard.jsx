@@ -79,21 +79,21 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   };
 
   return (
-    <div className="group relative flex flex-col justify-between rounded-xl border border-gray-200/75 bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-250 hover:shadow-[0_6px_16px_rgba(0,0,0,0.05)] hover:border-gray-300 hover:-translate-y-0.5">
-
-      {/* Product Image Stage (Matching Reference Image) */}
+    <div className="group relative flex flex-col justify-between rounded-xl border border-zinc-200/90 bg-white p-3 transition-all duration-200 hover:border-zinc-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:-translate-y-0.5">
+      
+      {/* Product Image Stage */}
       <Link
         to={`/product/${product.id}`}
-        className="relative aspect-square w-full overflow-hidden rounded-lg bg-[#F4F4F6] p-3 flex items-center justify-center group-hover:bg-[#EFEFF2] transition-colors duration-250"
+        className="relative aspect-square w-full overflow-hidden rounded-lg bg-[#F6F6F7] p-4 flex items-center justify-center transition-colors duration-200 group-hover:bg-[#F0F0F2]"
       >
         {/* Category Pill Tag (Top Right) */}
-        <span className="absolute right-2 top-2 z-10 rounded-full bg-white/95 px-2 py-0.5 text-[8.5px] font-semibold uppercase tracking-wider text-gray-600 shadow-2xs border border-gray-200/50">
+        <span className="absolute right-2.5 top-2.5 z-10 rounded-md bg-white/90 backdrop-blur-xs px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-zinc-600 border border-zinc-200/60 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
           {product.category || 'Luxury'}
         </span>
 
         {/* Discount Badge (Top Left) */}
         {discount > 0 && (
-          <span className="absolute left-2 top-2 z-10 rounded-full bg-[#111827] px-1.5 py-0.5 text-[8.5px] font-bold text-white shadow-2xs">
+          <span className="absolute left-2.5 top-2.5 z-10 rounded-md bg-zinc-900 px-1.5 py-0.5 text-[9px] font-semibold text-white tracking-wide shadow-xs">
             {discount}% OFF
           </span>
         )}
@@ -103,8 +103,9 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           type="button"
           onClick={handleWishlistToggle}
           aria-label="Toggle Wishlist"
-          className={`absolute ${discount > 0 ? 'top-7 left-2' : 'top-2 left-2'} z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white/95 text-[11px] shadow-2xs border border-gray-200/60 transition-transform duration-150 hover:scale-110 active:scale-90 ${inWish ? 'text-rose-500 bg-rose-50/80' : 'text-gray-400 hover:text-rose-500'
-            }`}
+          className={`absolute ${discount > 0 ? 'top-8 left-2.5' : 'top-2.5 left-2.5'} z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 backdrop-blur-xs text-xs shadow-xs border border-zinc-200/80 transition-all duration-150 hover:scale-105 active:scale-95 ${
+            inWish ? 'text-rose-600 bg-rose-50 border-rose-200' : 'text-zinc-400 hover:text-rose-600 hover:border-zinc-300'
+          }`}
         >
           {inWish ? '♥' : '♡'}
         </button>
@@ -112,65 +113,64 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
         <img
           src={product.image || product.images?.[0]}
           alt={product.name}
-          className="h-full w-full object-contain mix-blend-multiply transition-transform duration-400 ease-out group-hover:scale-104"
+          className="h-full w-full object-contain mix-blend-multiply transition-transform duration-300 ease-out group-hover:scale-105"
           loading="lazy"
         />
       </Link>
 
       {/* Product Information */}
-      <div className="mt-2.5 flex flex-1 flex-col justify-between">
+      <div className="mt-3 flex flex-1 flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between gap-1">
-            <Link
-              to={`/product/${product.id}`}
-              className="text-xs font-semibold text-gray-900 transition-colors duration-150 hover:text-black line-clamp-1"
-              title={product.name}
-            >
-              {product.name}
-            </Link>
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 shrink-0">
+          <div className="flex items-center justify-between gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 truncate">
               {product.brand}
             </span>
+            <div className="flex items-center gap-1 text-[11px] text-zinc-700 font-medium shrink-0">
+              <span className="text-amber-500 font-bold text-[10px]">★</span>
+              <span className="font-semibold text-zinc-900">{product.rating || 4.8}</span>
+              <span className="text-zinc-400 text-[10px]">({product.reviews || 42})</span>
+            </div>
           </div>
 
-          {/* Rating & Price Row */}
-          <div className="mt-1 flex items-center justify-between">
-            <div className="flex items-center gap-1 text-[10.5px] text-gray-600 font-medium">
-              <span className="text-amber-500 font-bold text-[11px]">★</span>
-              <span className="text-gray-900 font-semibold">{product.rating || 4.8}</span>
-              <span className="text-gray-400 text-[9.5px]">({product.reviews || 84})</span>
-            </div>
+          <Link
+            to={`/product/${product.id}`}
+            className="mt-0.5 block text-xs font-semibold text-zinc-900 transition-colors duration-150 hover:text-black line-clamp-1"
+            title={product.name}
+          >
+            {product.name}
+          </Link>
 
-            <div className="text-right">
-              <span className="text-xs font-bold text-gray-950">
-                ₹{Number(product.price).toLocaleString('en-IN')}
+          {/* Pricing Row */}
+          <div className="mt-1.5 flex items-baseline gap-1.5">
+            <span className="text-sm font-bold text-zinc-950 tracking-tight">
+              ₹{Number(product.price).toLocaleString('en-IN')}
+            </span>
+            {product.oldPrice && product.oldPrice > product.price && (
+              <span className="text-[10.5px] text-zinc-400 line-through">
+                ₹{Number(product.oldPrice).toLocaleString('en-IN')}
               </span>
-              {product.oldPrice && product.oldPrice > product.price && (
-                <span className="ml-1 text-[9.5px] text-gray-400 line-through">
-                  ₹{Number(product.oldPrice).toLocaleString('en-IN')}
-                </span>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
         {/* Dual Action Buttons */}
-        <div className="mt-2.5 flex items-center gap-1.5 pt-2 border-t border-gray-100">
+        <div className="mt-3 flex items-center gap-1.5 pt-2 border-t border-zinc-100">
           <button
             type="button"
             onClick={handleQuickAdd}
-            className={`flex-1 rounded-full border py-1.5 text-[10.5px] font-semibold transition-all duration-150 active:scale-97 ${justAdded
-              ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-              : 'border-gray-200 bg-[#F4F4F6] text-gray-800 hover:bg-gray-200 hover:text-black'
-              }`}
+            className={`flex-1 rounded-lg border py-1.5 text-[11px] font-semibold transition-all duration-150 active:scale-98 ${
+              justAdded
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                : 'border-zinc-200 bg-zinc-50 text-zinc-800 hover:bg-zinc-100 hover:border-zinc-300 hover:text-black'
+            }`}
           >
-            {justAdded ? '✓ Added' : 'Add to Bag'}
+            {justAdded ? '✓ In Bag' : 'Add to Bag'}
           </button>
 
           <button
             type="button"
             onClick={handleBuyNowClick}
-            className="flex-1 rounded-full bg-[#111827] py-1.5 text-[10.5px] font-semibold text-white transition-all duration-150 hover:bg-black hover:shadow-xs active:scale-97 border border-gray-900"
+            className="flex-1 rounded-lg bg-zinc-900 py-1.5 text-[11px] font-semibold text-white transition-all duration-150 hover:bg-black active:scale-98 border border-zinc-900 shadow-2xs"
           >
             Buy Now
           </button>

@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard';
 import { getProducts, getProductById, getProductReviews, addProductReview, isInWishlist, toggleWishlist } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon } from '../components/Icons';
+import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon, ArrowRightIcon } from '../components/Icons';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -58,13 +58,13 @@ export default function ProductDetails() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+      <div className="min-h-screen bg-[#FAFAF9] text-zinc-900">
         <Navbar />
         <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-          <div className="text-4xl font-bold text-gray-300 mb-2">404</div>
-          <h1 className="text-xl font-bold text-gray-950">Product Not Found</h1>
-          <p className="mt-1 text-xs text-gray-500">The product you are looking for may have been removed.</p>
-          <Link to="/shop" className="mt-4 rounded-full bg-[#111827] px-5 py-2 text-xs font-semibold text-white hover:bg-black transition">
+          <div className="text-4xl font-bold text-zinc-300 mb-2 font-mono">404</div>
+          <h1 className="text-xl font-bold text-zinc-950">Product Not Found</h1>
+          <p className="mt-1 text-xs text-zinc-500">The requested timepiece or luxury accessory could not be found.</p>
+          <Link to="/shop" className="mt-4 rounded-lg bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs">
             Explore All Products
           </Link>
         </div>
@@ -131,80 +131,72 @@ export default function ProductDetails() {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+    <div className="min-h-screen bg-[#FAFAF9] text-zinc-900">
       <Navbar />
 
-      {/* Toast Alert */}
+      {/* Floating Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-900 shadow-xl animate-slide-up">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs">✓</span>
-          <span>{toastMessage}</span>
-          <Link to="/cart" className="ml-1.5 rounded-full bg-[#111827] px-3 py-0.5 text-[10.5px] font-semibold text-white hover:bg-black transition">
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-xs font-semibold text-zinc-900 shadow-xl animate-slide-up max-w-[calc(100vw-32px)]">
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-xs">✓</span>
+          <span className="truncate">{toastMessage}</span>
+          <Link to="/cart" className="ml-1 rounded-md bg-zinc-900 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-black transition shrink-0">
             View Bag
           </Link>
         </div>
       )}
 
-      {/* Breadcrumb Navigation */}
-      <div className="border-b border-gray-200/80 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-2.5 text-xs text-gray-500 sm:px-6 lg:px-8 flex items-center gap-1.5">
-          <Link to="/" className="hover:text-black">Home</Link>
-          <span className="text-gray-300">/</span>
-          <Link to="/shop" className="hover:text-black">Shop</Link>
-          <span className="text-gray-300">/</span>
-          <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="hover:text-black font-medium text-gray-700">
-            {product.category}
-          </Link>
-          <span className="text-gray-300">/</span>
-          <span className="text-gray-900 font-semibold truncate max-w-xs">{product.name}</span>
+      {/* Breadcrumbs */}
+      <div className="border-b border-zinc-200/80 bg-white py-2.5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-[11px] text-zinc-500 flex items-center gap-2 overflow-x-auto">
+          <Link to="/" className="hover:text-zinc-900">Home</Link>
+          <span>/</span>
+          <Link to="/shop" className="hover:text-zinc-900">Collections</Link>
+          <span>/</span>
+          <Link to={`/shop?category=${encodeURIComponent(product.category || '')}`} className="hover:text-zinc-900">{product.category}</Link>
+          <span>/</span>
+          <span className="text-zinc-900 font-semibold truncate">{product.name}</span>
         </div>
       </div>
 
-      {/* Main Product Showcase */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
 
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 items-start">
+        {/* 2-Column Product Main Stage */}
+        <div className="grid gap-10 lg:grid-cols-12 items-start">
 
-          {/* Left Column: Images Gallery */}
-          <div className="space-y-3">
-
+          {/* Left Column: Gallery (Span 6) */}
+          <div className="lg:col-span-6 space-y-3">
+            
             {/* Main Stage Image */}
-            <div className="relative aspect-square overflow-hidden rounded-2xl border border-gray-200/80 bg-[#F4F4F6] p-6 flex items-center justify-center shadow-2xs">
+            <div className="relative aspect-square w-full rounded-2xl border border-zinc-200/90 bg-white p-6 sm:p-8 flex items-center justify-center shadow-xs overflow-hidden">
               {discount > 0 && (
-                <span className="absolute left-3 top-3 z-10 rounded-full bg-[#0F172A] px-2.5 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                <span className="absolute left-4 top-4 rounded-md bg-zinc-900 px-2 py-1 text-[10px] font-bold text-white shadow-2xs">
                   {discount}% OFF
                 </span>
               )}
-
-              <button
-                type="button"
-                onClick={handleWishlistToggle}
-                className={`absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white/95 shadow-2xs transition hover:scale-105 ${inWish ? 'text-rose-500 border-rose-200 bg-rose-50/80' : 'text-gray-500 hover:text-black'
-                  }`}
-                title={inWish ? "Remove from Wishlist" : "Add to Wishlist"}
-              >
-                <HeartIcon className="w-4 h-4" filled={inWish} />
-              </button>
+              <span className="absolute right-4 top-4 rounded-md bg-zinc-100 px-2.5 py-1 text-[9.5px] font-semibold uppercase tracking-wider text-zinc-600 border border-zinc-200/60">
+                {product.category}
+              </span>
 
               <img
-                src={images[selectedImage] || images[0]}
+                src={images[selectedImage] || product.image}
                 alt={product.name}
-                className="h-full w-full object-contain mix-blend-multiply transition-transform duration-400 ease-out hover:scale-104"
+                className="h-full w-full object-contain mix-blend-multiply transition-transform duration-300 hover:scale-105"
               />
             </div>
 
-            {/* Thumbnail Strip */}
+            {/* Thumbnails Row */}
             {images.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="flex items-center gap-2.5 overflow-x-auto pb-1">
                 {images.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setSelectedImage(idx)}
-                    className={`aspect-square overflow-hidden rounded-xl border p-1.5 bg-[#F4F4F6] transition ${selectedImage === idx
-                      ? 'border-gray-950 ring-1 ring-gray-950/20'
-                      : 'border-gray-200 hover:border-gray-400'
-                      }`}
+                    className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border bg-white p-1 transition ${
+                      selectedImage === idx
+                        ? 'border-zinc-900 ring-2 ring-zinc-900/10 shadow-2xs'
+                        : 'border-zinc-200 opacity-70 hover:opacity-100 hover:border-zinc-400'
+                    }`}
                   >
                     <img src={img} alt="" className="h-full w-full object-contain mix-blend-multiply" />
                   </button>
@@ -212,127 +204,120 @@ export default function ProductDetails() {
               </div>
             )}
 
-            {/* Trust Assurances Under Gallery */}
-            <div className="grid grid-cols-3 gap-2 rounded-xl border border-gray-200/80 bg-white p-3 text-center shadow-2xs">
-              <div>
-                <span className="text-emerald-600 text-sm font-bold">✓</span>
-                <p className="text-[11px] font-bold text-gray-900 mt-0.2">100% Genuine</p>
-                <p className="text-[9.5px] text-gray-500">Official Warranty Card</p>
-              </div>
-              <div className="border-x border-gray-100">
-                <span className="text-gray-900 text-sm font-bold">🚚</span>
-                <p className="text-[11px] font-bold text-gray-900 mt-0.2">Free Express</p>
-                <p className="text-[9.5px] text-gray-500">Orders &ge; ₹2,000</p>
-              </div>
-              <div>
-                <span className="text-gray-900 text-sm font-bold">🛡️</span>
-                <p className="text-[11px] font-bold text-gray-900 mt-0.2">Warranty</p>
-                <p className="text-[9.5px] text-gray-500">All-India Network</p>
-              </div>
-            </div>
-
           </div>
 
-          {/* Right Column: Product Info & Buy Box */}
-          <div className="flex flex-col justify-start rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-xs">
+          {/* Right Column: Product Purchase & Specifications Stage (Span 6) */}
+          <div className="lg:col-span-6 space-y-5">
 
-            {/* Header info: Brand, SKU & Supplier */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#B89758]">
-                {product.brand}
-              </span>
-              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[9.5px] font-mono text-gray-600 border border-gray-200">
-                SKU: {product.sku || `KA-${product.id}`}
-              </span>
-            </div>
-
-            <h1 className="mt-1.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-              {product.name}
-            </h1>
-
-            {/* Rating & Stock Status */}
-            <div className="mt-2 flex flex-wrap items-center gap-2.5 text-xs">
-              <div className="flex items-center gap-1 font-semibold text-gray-900">
-                <span className="text-amber-500">★ {product.rating || 4.8}</span>
-                <span className="text-gray-400 font-normal">({reviews.length} Reviews)</span>
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#B89035]">
+                  {product.brand} &bull; SKU: {product.sku || `KA-${product.id}`}
+                </span>
+                
+                {/* Wishlist Button */}
+                <button
+                  type="button"
+                  onClick={handleWishlistToggle}
+                  className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                    inWish
+                      ? 'border-rose-200 bg-rose-50 text-rose-600'
+                      : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-rose-600'
+                  }`}
+                >
+                  <span>{inWish ? '♥ Saved' : '♡ Save to Wishlist'}</span>
+                </button>
               </div>
-              <span className="text-gray-300">&bull;</span>
-              <span className="text-gray-500">Category: <strong className="text-gray-900">{product.category}</strong></span>
-              <span className="text-gray-300">&bull;</span>
-              <span className="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.2 rounded-full text-[10px]">
-                In Stock ({product.stock} units)
-              </span>
+
+              <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 font-sans">
+                {product.name}
+              </h1>
+
+              {/* Rating & Review Counter */}
+              <div className="mt-2 flex items-center gap-2 text-xs">
+                <div className="flex items-center gap-1 text-amber-500 font-bold">
+                  <span>★</span>
+                  <span className="text-zinc-900 font-semibold">{product.rating || 4.8}</span>
+                </div>
+                <span className="text-zinc-300">•</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('reviews');
+                    const el = document.getElementById('product-tabs-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-zinc-600 hover:text-zinc-950 hover:underline"
+                >
+                  {reviews.length} Verified Reviews
+                </button>
+              </div>
             </div>
 
-            {/* Price Box */}
-            <div className="mt-3.5 rounded-xl bg-[#F8F9FA] border border-gray-200 p-3.5">
+            {/* Pricing Section */}
+            <div className="rounded-xl border border-zinc-200/80 bg-white p-4 space-y-1 shadow-2xs">
               <div className="flex items-baseline gap-2.5">
-                <span className="text-xl sm:text-2xl font-bold text-gray-950">
+                <span className="text-2xl sm:text-3xl font-bold text-zinc-950 tracking-tight font-mono">
                   ₹{Number(product.price).toLocaleString('en-IN')}
                 </span>
-                {product.oldPrice && (
-                  <span className="text-xs text-gray-400 line-through">
+                {product.oldPrice && product.oldPrice > product.price && (
+                  <span className="text-sm text-zinc-400 line-through">
                     ₹{Number(product.oldPrice).toLocaleString('en-IN')}
                   </span>
                 )}
                 {savings > 0 && (
-                  <span className="rounded-full bg-emerald-100 border border-emerald-200 px-2 py-0.2 text-[10.5px] font-semibold text-emerald-800">
+                  <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-800">
                     Save ₹{savings.toLocaleString('en-IN')} ({discount}%)
                   </span>
                 )}
               </div>
-              <p className="mt-0.5 text-[11px] text-gray-500">
-                Inclusive of all GST &bull; Insured Express Delivery across India
+              <p className="text-[11px] text-zinc-500">
+                Inclusive of all taxes & complimentary insured express delivery nationwide.
               </p>
             </div>
 
-            {/* Short Description */}
-            <p className="mt-3 text-xs leading-relaxed text-gray-600">
-              {product.description}
-            </p>
-
-            {/* Color Options */}
+            {/* Color Selector */}
             {product.colors && product.colors.length > 0 && (
-              <div className="mt-3.5">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-700">Finish:</span>
-                  <span className="text-[11px] text-gray-900 font-semibold">{selectedColor}</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {product.colors.map((color) => (
+              <div className="space-y-1.5">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-900 block">
+                  Select Edition / Color: <span className="font-normal text-zinc-600">{selectedColor}</span>
+                </span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {product.colors.map((c) => (
                     <button
-                      key={color}
+                      key={c}
                       type="button"
-                      onClick={() => setSelectedColor(color)}
-                      className={`rounded-lg border px-3 py-1 text-xs font-medium transition ${selectedColor === color
-                        ? 'border-gray-950 bg-[#0F172A] text-white shadow-2xs'
-                        : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'
-                        }`}
+                      onClick={() => setSelectedColor(c)}
+                      className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition ${
+                        selectedColor === c
+                          ? 'bg-zinc-900 text-white shadow-xs'
+                          : 'border border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50'
+                      }`}
                     >
-                      {color}
+                      {c}
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Variant Options */}
+            {/* Variant Selector */}
             {product.variants && product.variants.length > 0 && (
-              <div className="mt-3">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-700">Edition / Size:</span>
-                  <span className="text-[11px] text-gray-900 font-semibold">{selectedVariant}</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="space-y-1.5">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-900 block">
+                  Specification / Size: <span className="font-normal text-zinc-600">{selectedVariant}</span>
+                </span>
+                <div className="flex items-center gap-2 flex-wrap">
                   {product.variants.map((v) => (
                     <button
                       key={v}
                       type="button"
                       onClick={() => setSelectedVariant(v)}
-                      className={`rounded-lg border px-3 py-1 text-xs font-medium transition ${selectedVariant === v
-                        ? 'border-gray-950 bg-[#0F172A] text-white shadow-2xs'
-                        : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'
-                        }`}
+                      className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition ${
+                        selectedVariant === v
+                          ? 'bg-zinc-900 text-white shadow-xs'
+                          : 'border border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50'
+                      }`}
                     >
                       {v}
                     </button>
@@ -341,204 +326,232 @@ export default function ProductDetails() {
               </div>
             )}
 
-            {/* Quantity Stepper & Actions */}
-            <div className="mt-4 space-y-3 border-t border-gray-100 pt-3.5">
-
-              <div className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-gray-700">Quantity:</span>
-                <div className="flex items-center rounded-full border border-gray-200 bg-[#F4F4F6]">
+            {/* Quantity Stepper & Stock Status */}
+            <div className="flex items-center gap-4 pt-1">
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Quantity</span>
+                <div className="flex items-center rounded-lg border border-zinc-200 bg-white">
                   <button
                     type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="flex h-7 w-7 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
+                    className="px-3 py-1.5 text-sm font-bold text-zinc-600 hover:text-zinc-950"
                   >
                     −
                   </button>
-                  <span className="w-7 text-center text-xs font-semibold text-gray-900">
+                  <span className="px-3 py-1.5 text-xs font-bold font-mono text-zinc-950 min-w-[32px] text-center">
                     {quantity}
                   </span>
                   <button
                     type="button"
-                    onClick={() => setQuantity(Math.min(product.stock || 10, quantity + 1))}
-                    className="flex h-7 w-7 items-center justify-center text-xs font-bold text-gray-700 hover:text-black transition"
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="px-3 py-1.5 text-sm font-bold text-zinc-600 hover:text-zinc-950"
                   >
                     +
                   </button>
                 </div>
-                <span className="text-[11px] text-gray-400">
-                  (In Stock: {product.stock})
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Status</span>
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50/70 px-3 py-1.5 text-xs font-semibold text-emerald-800">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  {product.stock > 0 ? `${product.stock} units in stock` : 'Available to Order'}
                 </span>
               </div>
+            </div>
 
-              {/* Action Buttons */}
-              <div className="grid gap-2 sm:grid-cols-2 pt-1">
-                <button
-                  type="button"
-                  onClick={handleAddToCart}
-                  className="rounded-full border border-gray-300 bg-[#F4F4F6] py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-900 transition hover:bg-gray-200"
-                >
-                  Add to Bag
-                </button>
-                <button
-                  type="button"
-                  onClick={handleBuyNow}
-                  className="rounded-full bg-[#111827] py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-black shadow-xs border border-gray-900"
-                >
-                  Buy Now
-                </button>
+            {/* Main Action Buttons */}
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="flex-1 rounded-lg border border-zinc-300 bg-white py-3 text-xs font-semibold uppercase tracking-wider text-zinc-900 hover:bg-zinc-50 hover:border-zinc-400 transition shadow-2xs cursor-pointer"
+              >
+                Add to Shopping Bag
+              </button>
+
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="flex-1 rounded-lg bg-zinc-900 py-3 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition shadow-xs cursor-pointer"
+              >
+                Buy Now
+              </button>
+            </div>
+
+            {/* Trust Accordion / Guarantees List */}
+            <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/60 p-4 space-y-2.5 text-xs text-zinc-600">
+              <div className="flex items-center gap-2">
+                <ShieldCheckIcon className="w-4 h-4 text-zinc-900 shrink-0" />
+                <span><strong>Authenticity:</strong> 100% genuine with stamped manufacturer warranty card.</span>
               </div>
-
+              <div className="flex items-center gap-2">
+                <TruckIcon className="w-4 h-4 text-zinc-900 shrink-0" />
+                <span><strong>Express Delivery:</strong> Dispatched within 24 hours via BlueDart / Delhivery.</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <BoxIcon className="w-4 h-4 text-zinc-900 shrink-0" />
+                <span><strong>7-Day Returns:</strong> Hassle-free pickup for unopened pristine returns.</span>
+              </div>
             </div>
 
           </div>
 
         </div>
 
-        {/* Tabbed Specifications & Customer Reviews */}
-        <section className="mt-10 rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-xs">
-
-          <div className="flex border-b border-gray-200 gap-4 overflow-x-auto">
+        {/* ================= DETAILED SPECIFICATIONS & REVIEWS TABS ================= */}
+        <div id="product-tabs-section" className="space-y-6 pt-6 border-t border-zinc-200/80">
+          
+          <div className="flex items-center gap-2 border-b border-zinc-200/80 pb-px">
             <button
+              type="button"
               onClick={() => setActiveTab('specs')}
-              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'specs'
-                ? 'border-b-2 border-[#111827] text-gray-950'
-                : 'text-gray-400 hover:text-black'
-                }`}
+              className={`border-b-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                activeTab === 'specs'
+                  ? 'border-zinc-950 text-zinc-950'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-800'
+              }`}
             >
-              Specifications
+              Specifications & Description
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('reviews')}
-              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'reviews'
-                ? 'border-b-2 border-[#111827] text-gray-950'
-                : 'text-gray-400 hover:text-black'
-                }`}
+              className={`border-b-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                activeTab === 'reviews'
+                  ? 'border-zinc-950 text-zinc-950'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-800'
+              }`}
             >
               Customer Reviews ({reviews.length})
             </button>
             <button
-              onClick={() => setActiveTab('delivery')}
-              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'delivery'
-                ? 'border-b-2 border-[#111827] text-gray-950'
-                : 'text-gray-400 hover:text-black'
-                }`}
+              type="button"
+              onClick={() => setActiveTab('warranty')}
+              className={`border-b-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                activeTab === 'warranty'
+                  ? 'border-zinc-950 text-zinc-950'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-800'
+              }`}
             >
-              Shipping & Authenticity
+              Warranty & Verification
             </button>
           </div>
 
-          <div className="mt-4">
-            {/* Specs Tab */}
-            {activeTab === 'specs' && (
-              <div className="grid gap-4 sm:grid-cols-2 animate-fade-in">
-                <div className="space-y-2">
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
-                    <span className="text-gray-500">Brand</span>
-                    <span className="font-semibold text-gray-900">{product.brand}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
-                    <span className="text-gray-500">Category</span>
-                    <span className="font-semibold text-gray-900">{product.category}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
-                    <span className="text-gray-500">SKU Code</span>
-                    <span className="font-mono font-semibold text-gray-900">{product.sku}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
-                    <span className="text-gray-500">Authorized Vendor</span>
-                    <span className="font-semibold text-gray-900">{product.supplier || 'Apex Timepieces Ltd.'}</span>
-                  </div>
-                </div>
+          {/* TAB 1: Specifications */}
+          {activeTab === 'specs' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
+                <h3 className="text-sm font-bold text-zinc-950">Curator Description</h3>
+                <p className="text-xs text-zinc-600 leading-relaxed max-w-3xl">
+                  {product.description || 'This exclusive edition represents the pinnacle of luxury craftsmanship, sourced directly through authorized horological and lifestyle brand distributors.'}
+                </p>
 
-                <div className="space-y-2">
-                  {product.specifications && Object.entries(product.specifications).map(([key, val]) => (
-                    <div key={key} className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
-                      <span className="text-gray-500">{key}</span>
-                      <span className="font-semibold text-gray-900">{val}</span>
+                {product.specifications && (
+                  <div className="pt-3 border-t border-zinc-100">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900 mb-3">
+                      Technical Specifications
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {Object.entries(product.specifications).map(([key, val]) => (
+                        <div key={key} className="rounded-lg bg-zinc-50 p-3 border border-zinc-200/60">
+                          <span className="text-[10px] font-semibold uppercase text-zinc-400 block">{key}</span>
+                          <span className="text-xs font-bold text-zinc-900 mt-0.5 block">{String(val)}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Customer Reviews Tab */}
-            {activeTab === 'reviews' && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xl font-bold text-gray-950">{product.rating || 4.8}</span>
-                      <span className="text-amber-500 text-base">★★★★★</span>
-                      <span className="text-xs text-gray-500">({reviews.length} verified reviews)</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setReviewModalOpen(true)}
-                    className="rounded-full bg-[#111827] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition"
-                  >
-                    Write a Review
-                  </button>
+          {/* TAB 2: Customer Reviews */}
+          {activeTab === 'reviews' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-6 rounded-2xl border border-zinc-200/80 shadow-2xs">
+                <div>
+                  <h3 className="text-base font-bold text-zinc-950">Verified Buyer Reviews</h3>
+                  <p className="text-xs text-zinc-500 mt-0.5">Average Rating: {product.rating || 4.8} / 5.0 based on {reviews.length} reviews</p>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setReviewModalOpen(true)}
+                  className="rounded-lg bg-zinc-900 px-4 py-2 text-xs font-semibold text-white hover:bg-black transition shadow-xs self-start sm:self-auto cursor-pointer"
+                >
+                  Write a Review
+                </button>
+              </div>
 
-                {/* Review List */}
-                <div className="divide-y divide-gray-100 space-y-3">
-                  {reviews.length === 0 ? (
-                    <p className="text-xs text-gray-500 py-3">No reviews yet for this product. Be the first to share your experience!</p>
-                  ) : (
-                    reviews.map(rev => (
-                      <div key={rev.id} className="pt-3 first:pt-0 space-y-1">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-xs text-gray-900">{rev.user}</span>
-                            {rev.verified && (
-                              <span className="rounded-full bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 text-[8.5px] font-bold text-emerald-800">
-                                Verified
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[9.5px] text-gray-400 font-mono">{rev.date}</span>
-                        </div>
-
-                        <div className="flex items-center gap-1 text-amber-500 text-xs">
-                          {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
-                          <span className="ml-1 text-xs font-semibold text-gray-900">{rev.title}</span>
-                        </div>
-
-                        <p className="text-xs text-gray-600 leading-relaxed">{rev.text}</p>
+              <div className="space-y-3">
+                {reviews.map((rev) => (
+                  <div key={rev.id} className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-zinc-950">{rev.user}</span>
+                        {rev.verified && (
+                          <span className="rounded bg-emerald-50 px-1.5 py-0.2 text-[9.5px] font-semibold text-emerald-800 border border-emerald-200/60">
+                            ✓ Verified Purchase
+                          </span>
+                        )}
                       </div>
-                    ))
-                  )}
+                      <span className="text-[10.5px] text-zinc-400">{rev.date}</span>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-amber-500 text-xs">
+                      {[...Array(rev.rating)].map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                    </div>
+
+                    <h4 className="text-xs font-bold text-zinc-900">{rev.title}</h4>
+                    <p className="text-xs text-zinc-600 leading-relaxed">{rev.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Warranty & Verification */}
+          {activeTab === 'warranty' && (
+            <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4 animate-fade-in">
+              <h3 className="text-sm font-bold text-zinc-950">Official Manufacturer Warranty & Authenticity</h3>
+              <p className="text-xs text-zinc-600 leading-relaxed max-w-3xl">
+                Every timepiece and lifestyle good sold through Krishna Accessories includes the official manufacturer warranty card stamped by authorized partner boutiques. Service is honored at any brand service center across India.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200/60">
+                  <h4 className="text-xs font-bold text-zinc-950">Boutique Inspection</h4>
+                  <p className="text-[11px] text-zinc-500 mt-1">Multi-point movement and aesthetic authenticity check prior to dispatch.</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200/60">
+                  <h4 className="text-xs font-bold text-zinc-950">Warranty Duration</h4>
+                  <p className="text-[11px] text-zinc-500 mt-1">2 Years standard manufacturer international warranty coverage.</p>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Delivery Tab */}
-            {activeTab === 'delivery' && (
-              <div className="space-y-2 text-xs text-gray-700 leading-relaxed animate-fade-in">
-                <p>📦 <strong>Express Shipping:</strong> Orders are dispatched within 24 hours via BlueDart or Delhivery. Complimentary express delivery applies to orders above ₹2,000.</p>
-                <p>🔄 <strong>7-Day Returns:</strong> If you are not completely satisfied, return unopened goods in original pristine packaging with tags intact for an immediate refund.</p>
-                <p>🛡️ <strong>Certified Authentic Guarantee:</strong> Every item is verified by our boutique inspection specialists prior to dispatch with official warranty cards.</p>
-              </div>
-            )}
-          </div>
+        </div>
 
-        </section>
-
-        {/* Related Products Showcase */}
+        {/* ================= RELATED PIECES ================= */}
         {relatedProducts.length > 0 && (
-          <section className="mt-10">
-            <div className="flex items-center justify-between mb-4">
+          <div className="space-y-6 pt-6 border-t border-zinc-200/80">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-gray-400">You May Also Like</p>
-                <h3 className="text-lg font-bold tracking-tight text-gray-950">Similar Curated Items</h3>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B89035]">
+                  Complementary Editions
+                </span>
+                <h2 className="text-xl font-bold tracking-tight text-zinc-950 mt-0.5">
+                  You May Also Admire
+                </h2>
               </div>
-              <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="text-xs font-semibold text-gray-900 hover:underline">
-                View All {product.category} &rarr;
+              <Link to={`/shop?category=${encodeURIComponent(product.category || '')}`} className="text-xs font-semibold text-zinc-700 hover:text-zinc-950">
+                View Category &rarr;
               </Link>
             </div>
 
-            <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {relatedProducts.map((p) => (
                 <ProductCard
                   key={p.id}
@@ -548,89 +561,89 @@ export default function ProductDetails() {
                 />
               ))}
             </div>
-          </section>
+          </div>
         )}
 
       </main>
 
-      {/* Review Submission Modal */}
+      {/* ================= WRITE A REVIEW MODAL ================= */}
       {reviewModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2 mb-3">
-              <h3 className="text-xs font-bold text-gray-950 uppercase tracking-wider">Write a Verified Review</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 border border-zinc-200 shadow-2xl space-y-4 animate-modal">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <h3 className="text-sm font-bold text-zinc-950">Write a Review</h3>
               <button
                 type="button"
                 onClick={() => setReviewModalOpen(false)}
-                className="text-gray-400 hover:text-black font-bold"
+                className="text-zinc-400 hover:text-zinc-950 text-xs font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleReviewSubmit} className="space-y-2.5 text-xs">
+            <form onSubmit={handleReviewSubmit} className="space-y-3.5">
               <div>
-                <label className="font-semibold text-gray-700 block mb-0.5">Your Full Name *</label>
+                <label className="text-xs font-semibold text-zinc-700 block mb-1">Your Name</label>
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Rahul P."
                   value={reviewForm.user}
-                  onChange={(e) => setReviewForm(prev => ({ ...prev, user: e.target.value }))}
-                  placeholder="e.g. Anand Verma"
-                  className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 outline-none focus:border-gray-400"
+                  onChange={(e) => setReviewForm({ ...reviewForm, user: e.target.value })}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-900 focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-0.5">Rating *</label>
+                <label className="text-xs font-semibold text-zinc-700 block mb-1">Rating</label>
                 <select
                   value={reviewForm.rating}
-                  onChange={(e) => setReviewForm(prev => ({ ...prev, rating: Number(e.target.value) }))}
-                  className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 outline-none focus:border-gray-400 cursor-pointer"
+                  onChange={(e) => setReviewForm({ ...reviewForm, rating: Number(e.target.value) })}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-900 font-semibold cursor-pointer"
                 >
                   <option value={5}>★★★★★ (5 Stars - Exceptional)</option>
                   <option value={4}>★★★★☆ (4 Stars - Very Good)</option>
                   <option value={3}>★★★☆☆ (3 Stars - Average)</option>
-                  <option value={2}>★★☆☆☆ (2 Stars - Below Expectations)</option>
+                  <option value={2}>★★☆☆☆ (2 Stars - Below Average)</option>
                   <option value={1}>★☆☆☆☆ (1 Star - Poor)</option>
                 </select>
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-0.5">Review Headline *</label>
+                <label className="text-xs font-semibold text-zinc-700 block mb-1">Review Headline</label>
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Magnificent craftsmanship and fast delivery"
                   value={reviewForm.title}
-                  onChange={(e) => setReviewForm(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder="e.g. Masterpiece craftsmanship"
-                  className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 outline-none focus:border-gray-400"
+                  onChange={(e) => setReviewForm({ ...reviewForm, title: e.target.value })}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-900 focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-0.5">Detailed Review *</label>
+                <label className="text-xs font-semibold text-zinc-700 block mb-1">Detailed Feedback</label>
                 <textarea
+                  rows={4}
                   required
-                  rows={3}
+                  placeholder="Share details regarding movement precision, packaging, and feel..."
                   value={reviewForm.text}
-                  onChange={(e) => setReviewForm(prev => ({ ...prev, text: e.target.value }))}
-                  placeholder="Share details on build quality, packaging, and design..."
-                  className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 outline-none focus:border-gray-400"
+                  onChange={(e) => setReviewForm({ ...reviewForm, text: e.target.value })}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-900 focus:bg-white resize-none transition"
                 />
               </div>
 
-              <div className="pt-1.5 flex gap-2">
+              <div className="flex justify-end gap-2 pt-2 border-t border-zinc-100">
                 <button
                   type="button"
                   onClick={() => setReviewModalOpen(false)}
-                  className="flex-1 rounded-full border border-gray-200 bg-gray-100 py-2 font-semibold text-gray-700 hover:bg-gray-200"
+                  className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 rounded-full bg-[#111827] py-2 font-semibold uppercase tracking-wider text-white hover:bg-black"
+                  className="rounded-lg bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-black transition shadow-xs"
                 >
                   Submit Review
                 </button>

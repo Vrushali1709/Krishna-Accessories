@@ -4,7 +4,10 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore'; import { getCurrentUser } from '../utils/auth'; import { addToCart } from '../utils/cart';
+import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
+import { getCurrentUser } from '../utils/auth';
+import { addToCart } from '../utils/cart';
+import { SearchIcon } from '../components/Icons';
 
 export default function Shop() {
   const navigate = useNavigate();
@@ -122,7 +125,7 @@ export default function Shop() {
       );
     }
 
-    // Sorting (Including Price Low to High, High to Low)
+    // Sorting
     if (sort === 'price-low') {
       list.sort((a, b) => a.price - b.price);
     } else if (sort === 'price-high') {
@@ -169,342 +172,256 @@ export default function Shop() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+    <div className="min-h-screen bg-[#FAFAF9] text-zinc-900 overflow-x-clip">
       <Navbar />
 
-      {/* Toast Notification */}
+      {/* Floating Alert Toast */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-900 shadow-xl animate-slide-up">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs">✓</span>
-          <span>{toastMessage}</span>
-          <Link to="/cart" className="ml-1.5 rounded-full bg-[#111827] px-3 py-0.5 text-[10.5px] font-semibold text-white hover:bg-black transition">
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-xs font-semibold text-zinc-900 shadow-xl animate-slide-up max-w-[calc(100vw-32px)]">
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-xs">✓</span>
+          <span className="truncate">{toastMessage}</span>
+          <Link to="/cart" className="ml-1 rounded-md bg-zinc-900 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-black transition shrink-0">
             View Bag
           </Link>
         </div>
       )}
 
-      {/* Minimalist Luxury Catalog Header */}
-      <section className="bg-white border-b border-gray-200/80 py-6 sm:py-8">
+      {/* Catalog Header Banner */}
+      <section className="border-b border-zinc-200/80 bg-white py-8 sm:py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
-                Authorized Luxury Catalog
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B89035]">
+                Certified Luxury Collections
               </span>
-              <h1 className="mt-0.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-                {category === 'All' ? 'Shop All Products' : `${category} Collection`}
+              <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 font-sans">
+                {category === 'All' ? 'Complete Store Catalog' : category}
               </h1>
-              <p className="mt-1 text-xs text-gray-500 max-w-md">
-                Certified authentic brand warranties and insured express delivery across India.
+              <p className="mt-1 text-xs text-zinc-500">
+                Displaying {filteredProducts.length} certified authentic horology and lifestyle pieces.
               </p>
             </div>
 
-            {/* Category Filter Chips */}
-            <div className="flex flex-wrap gap-1.5">
-              {categories.slice(0, 7).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategorySelect(cat)}
-                  className={`rounded-full px-3 py-1 text-[11px] font-medium transition-all duration-150 active:scale-97 ${category === cat
-                    ? 'bg-[#0F172A] text-amber-200 shadow-2xs'
-                    : 'bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 hover:text-black'
-                    }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Mobile Filter Trigger Button */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileFilters(true)}
+                className="flex-1 rounded-lg border border-zinc-300 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-800 shadow-2xs"
+              >
+                Filters & Refinements ({category !== 'All' ? 1 : 0} active)
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Catalog Body */}
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
 
-        {/* Top Search & Filter Bar */}
-        <div className="mb-5 flex flex-col gap-2.5 rounded-xl border border-gray-200/80 bg-white p-3 shadow-xs lg:flex-row lg:items-center lg:justify-between">
+          {/* ================= DESKTOP FILTER SIDEBAR ================= */}
+          <aside className="hidden lg:block space-y-6">
 
-          {/* Search Box */}
-          <div className="relative flex-1 max-w-md">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by product name, brand, or SKU..."
-              className="w-full rounded-full border border-gray-200 bg-[#F4F4F6] py-1.5 pl-8 pr-8 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-gray-400 focus:bg-white"
-            />
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
-              🔍
-            </span>
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-black"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          {/* Controls: Sort & Mobile Filter toggle */}
-          <div className="flex items-center gap-2">
-
-            <button
-              type="button"
-              onClick={() => setMobileFilters(!mobileFilters)}
-              className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs font-semibold text-gray-800 lg:hidden hover:bg-gray-200"
-            >
-              <span>⚙️ Filters</span>
-              {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly) && (
-                <span className="flex h-1.5 w-1.5 rounded-full bg-[#111827]" />
-              )}
-            </button>
-
-            {/* Sort Dropdown */}
-            <div className="flex items-center gap-1.5 flex-1 lg:flex-initial">
-              <label className="hidden sm:inline text-xs text-gray-500 font-medium whitespace-nowrap">
-                Sort:
-              </label>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="w-full lg:w-44 rounded-full border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs font-medium text-gray-800 outline-none focus:border-gray-400 cursor-pointer"
-              >
-                <option value="featured">Featured / Best Match</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="discount">Biggest Discount</option>
-                <option value="newest">New Arrivals</option>
-              </select>
-            </div>
-
-          </div>
-        </div>
-
-        {/* 2-Column Layout (Sidebar Filters + Products Grid) */}
-        <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
-
-          {/* ================= SIDEBAR FILTERS ================= */}
-          <aside className={`${mobileFilters ? 'block' : 'hidden'} lg:block`}>
-            <div className="sticky top-20 space-y-4 rounded-xl border border-gray-200/80 bg-white p-4 shadow-xs">
-
-              {/* Filter Header */}
-              <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold uppercase tracking-wider text-gray-950">Categories</span>
-                  <span className="rounded-full bg-gray-100 px-1.5 py-0.2 text-[9.5px] font-bold text-gray-600">
-                    {filteredProducts.length}
-                  </span>
-                </div>
-
-                {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly || minPrice > 0 || maxPrice < 250000) && (
+            {/* Search within Catalog */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-900 block">Search</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Model, brand, SKU..."
+                  className="w-full rounded-lg border border-zinc-200 bg-white py-2 pl-3 pr-8 text-xs text-zinc-900 outline-none focus:border-zinc-900"
+                />
+                {search && (
                   <button
                     type="button"
-                    onClick={clearAllFilters}
-                    className="text-[10.5px] font-semibold text-[#B89758] hover:underline"
+                    onClick={() => setSearch('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-400 hover:text-zinc-700"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Categories List */}
+            <div className="space-y-2 border-t border-zinc-200/80 pt-5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-900">Department</span>
+                {category !== 'All' && (
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySelect('All')}
+                    className="text-[10px] text-[#B89035] hover:underline font-semibold"
                   >
                     Reset
                   </button>
                 )}
               </div>
-
-              {/* 1. Category Tree Filter */}
-              <div className="space-y-0.5 max-h-48 overflow-y-auto pr-1">
-                {categories.map((cat) => {
-                  const count = cat === 'All'
-                    ? products.length
-                    : products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
-                  return (
-                    <button
-                      type="button"
-                      key={cat}
-                      onClick={() => handleCategorySelect(cat)}
-                      className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1 text-xs transition ${category === cat
-                        ? 'bg-[#0F172A] font-semibold text-amber-200 shadow-2xs'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-black'
-                        }`}
-                    >
-                      <span className="truncate">{cat}</span>
-                      <span className={`text-[9.5px] font-mono ${category === cat ? 'text-amber-300/80' : 'text-gray-400'}`}>
-                        ({count})
-                      </span>
-                    </button>
-                  );
-                })}
+              <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => handleCategorySelect(cat)}
+                    className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-xs text-left transition ${
+                      category === cat
+                        ? 'bg-zinc-900 text-white font-semibold shadow-2xs'
+                        : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+                    }`}
+                  >
+                    <span className="truncate">{cat}</span>
+                    {category === cat && <span className="text-[10px]">✓</span>}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* 2. DYNAMIC CATEGORY-WISE BRAND FILTER */}
-              <div className="border-t border-gray-100 pt-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950">
-                    Brands {category !== 'All' && <span className="text-gray-400 font-normal">in {category}</span>}
-                  </h3>
-                  {selectedBrand !== 'All' && (
-                    <button
-                      type="button"
-                      onClick={() => handleBrandSelect('All')}
-                      className="text-[10px] text-[#B89758] hover:underline font-semibold"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-
-                <div className="space-y-0.5 max-h-40 overflow-y-auto pr-1">
-                  {dynamicBrands.map((brand) => {
-                    const isSelected = selectedBrand === brand;
-                    const brandCount = brand === 'All'
-                      ? (category === 'All' ? products.length : products.filter(p => p.category === category).length)
-                      : products.filter(p => (category === 'All' || p.category === category) && p.brand === brand).length;
-
-                    return (
-                      <label
-                        key={brand}
-                        onClick={() => handleBrandSelect(brand)}
-                        className={`flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1 text-xs transition ${isSelected
-                          ? 'bg-gray-100 text-gray-950 font-semibold'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-black'
-                          }`}
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <input
-                            type="radio"
-                            name="brandFilter"
-                            checked={isSelected}
-                            onChange={() => handleBrandSelect(brand)}
-                            className="accent-[#111827] h-3 w-3"
-                          />
-                          <span>{brand}</span>
-                        </div>
-                        <span className="text-[9.5px] text-gray-400 font-mono">({brandCount})</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* 3. Price Range Filter */}
-              <div className="border-t border-gray-100 pt-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 mb-2">
-                  Price Range
-                </h3>
-
-                <div className="grid grid-cols-2 gap-1.5">
-                  <div>
-                    <label className="text-[8.5px] text-gray-400 uppercase block mb-0.5">Min (₹)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={minPrice}
-                      onChange={(e) => setMinPrice(Math.max(0, Number(e.target.value)))}
-                      className="w-full rounded-md border border-gray-200 bg-[#F4F4F6] px-2 py-1 text-xs text-gray-900 outline-none focus:border-gray-400"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[8.5px] text-gray-400 uppercase block mb-0.5">Max (₹)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={maxPrice}
-                      onChange={(e) => setMaxPrice(Math.max(0, Number(e.target.value)))}
-                      className="w-full rounded-md border border-gray-200 bg-[#F4F4F6] px-2 py-1 text-xs text-gray-900 outline-none focus:border-gray-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Quick Price Shortcuts */}
-                <div className="mt-2 flex flex-wrap gap-1">
+            {/* Brands List */}
+            <div className="space-y-2 border-t border-zinc-200/80 pt-5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-900">Brand Maison</span>
+                {selectedBrand !== 'All' && (
                   <button
                     type="button"
-                    onClick={() => { setMinPrice(0); setMaxPrice(5000); }}
-                    className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-700 hover:bg-gray-200"
+                    onClick={() => handleBrandSelect('All')}
+                    className="text-[10px] text-[#B89035] hover:underline font-semibold"
                   >
-                    &lt; ₹5K
+                    Reset
                   </button>
+                )}
+              </div>
+              <div className="space-y-1 max-h-52 overflow-y-auto pr-1">
+                {dynamicBrands.map((b) => (
                   <button
+                    key={b}
                     type="button"
-                    onClick={() => { setMinPrice(5000); setMaxPrice(25000); }}
-                    className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-700 hover:bg-gray-200"
+                    onClick={() => handleBrandSelect(b)}
+                    className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-xs text-left transition ${
+                      selectedBrand === b
+                        ? 'bg-zinc-900 text-white font-semibold shadow-2xs'
+                        : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+                    }`}
                   >
-                    ₹5K - ₹25K
+                    <span className="truncate">{b}</span>
+                    {selectedBrand === b && <span className="text-[10px]">✓</span>}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => { setMinPrice(25000); setMaxPrice(250000); }}
-                    className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-700 hover:bg-gray-200"
-                  >
-                    &gt; ₹25K
-                  </button>
-                </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Price Filter */}
+            <div className="space-y-2 border-t border-zinc-200/80 pt-5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-900">Max Budget</span>
+                <span className="text-xs font-bold font-mono text-zinc-950">₹{maxPrice.toLocaleString('en-IN')}</span>
+              </div>
+              <input
+                type="range"
+                min="1000"
+                max="250000"
+                step="1000"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="w-full accent-zinc-900 cursor-pointer"
+              />
+            </div>
+
+            {/* In Stock Toggle */}
+            <div className="border-t border-zinc-200/80 pt-5">
+              <label className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
+                />
+                <span>In-Stock Ready for Dispatch</span>
+              </label>
+            </div>
+
+            {/* Reset All Filters CTA */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="w-full rounded-lg border border-zinc-200 bg-white py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition shadow-2xs"
+              >
+                Clear All Filters
+              </button>
+            </div>
+
+          </aside>
+
+          {/* ================= MAIN PRODUCTS AREA ================= */}
+          <div className="space-y-6">
+
+            {/* Top Toolbar: Active Pills + Sort Selector */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-xl border border-zinc-200/80 shadow-2xs">
+              
+              {/* Active Filter Chips */}
+              <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                <span className="text-zinc-400 text-[11px] font-medium mr-1">Active:</span>
+                {category !== 'All' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-800">
+                    Dept: {category}
+                    <button type="button" onClick={() => handleCategorySelect('All')} className="hover:text-black">✕</button>
+                  </span>
+                )}
+                {selectedBrand !== 'All' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-800">
+                    Brand: {selectedBrand}
+                    <button type="button" onClick={() => handleBrandSelect('All')} className="hover:text-black">✕</button>
+                  </span>
+                )}
+                {inStockOnly && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
+                    In Stock Only
+                    <button type="button" onClick={() => setInStockOnly(false)} className="hover:text-black">✕</button>
+                  </span>
+                )}
+                {category === 'All' && selectedBrand === 'All' && !inStockOnly && (
+                  <span className="text-zinc-500 text-[11px]">All Products</span>
+                )}
               </div>
 
-              {/* 4. Availability Filter */}
-              <div className="border-t border-gray-100 pt-3">
-                <label className="flex cursor-pointer items-center justify-between">
-                  <span className="text-xs text-gray-800 font-semibold">In Stock Only</span>
-                  <input
-                    type="checkbox"
-                    checked={inStockOnly}
-                    onChange={(e) => setInStockOnly(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-gray-300 accent-[#111827] cursor-pointer"
-                  />
-                </label>
+              {/* Sort Selector */}
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-xs text-zinc-500 font-medium">Sort:</span>
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-900 cursor-pointer"
+                >
+                  <option value="featured">Featured Curations</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="discount">Greatest Discount</option>
+                  <option value="newest">Newest Arrivals</option>
+                </select>
               </div>
 
             </div>
-          </aside>
 
-          {/* ================= PRODUCT LISTING AREA ================= */}
-          <section>
-
-            {/* Active Filters Pill Bar */}
-            {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly) && (
-              <div className="mb-4 flex flex-wrap items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white p-2.5 text-xs shadow-2xs animate-fade-in">
-                <span className="text-[10.5px] text-gray-400 font-semibold">Active:</span>
-
-                {category !== 'All' && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-[10.5px] font-semibold text-gray-900 border border-gray-200">
-                    Category: {category}
-                    <button type="button" onClick={() => handleCategorySelect('All')} className="hover:text-black ml-0.5 font-bold">×</button>
-                  </span>
-                )}
-
-                {selectedBrand !== 'All' && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-[10.5px] font-semibold text-gray-900 border border-gray-200">
-                    Brand: {selectedBrand}
-                    <button type="button" onClick={() => handleBrandSelect('All')} className="hover:text-black ml-0.5 font-bold">×</button>
-                  </span>
-                )}
-
-                {search && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-[10.5px] font-semibold text-blue-700 border border-blue-200">
-                    "{search}"
-                    <button type="button" onClick={() => setSearch('')} className="hover:text-black ml-0.5 font-bold">×</button>
-                  </span>
-                )}
-
-                {inStockOnly && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10.5px] font-semibold text-emerald-700 border border-emerald-200">
-                    In Stock
-                    <button type="button" onClick={() => setInStockOnly(false)} className="hover:text-black ml-0.5 font-bold">×</button>
-                  </span>
-                )}
-
+            {/* Products Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="rounded-2xl border border-zinc-200/80 bg-white p-12 text-center shadow-xs space-y-3">
+                <h3 className="text-base font-bold text-zinc-950">No Matching Products Found</h3>
+                <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                  We couldn't find any products matching your active filters. Try resetting your department or price range.
+                </p>
                 <button
                   type="button"
                   onClick={clearAllFilters}
-                  className="ml-auto text-[10.5px] text-[#B89758] hover:underline font-semibold"
+                  className="rounded-lg bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs mt-2 cursor-pointer"
                 >
-                  Clear All
+                  Reset All Filters
                 </button>
               </div>
-            )}
-
-            {/* Products Grid */}
-            {filteredProducts.length > 0 ? (
-              <div className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-3">
+            ) : (
+              <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
@@ -514,56 +431,80 @@ export default function Shop() {
                   />
                 ))}
               </div>
-            ) : (
-              /* Empty State */
-              <div className="flex min-h-[350px] flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-xs">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-xl">
-                  🔍
-                </div>
-                <h3 className="mt-3 text-sm font-bold text-gray-900">
-                  No products found
-                </h3>
-                <p className="mt-1 max-w-sm text-xs text-gray-500">
-                  We couldn't find any products matching your filters in {category === 'All' ? 'our catalog' : category}.
-                </p>
-                <button
-                  type="button"
-                  onClick={clearAllFilters}
-                  className="mt-4 rounded-full bg-[#111827] px-5 py-1.5 text-xs font-semibold text-white hover:bg-black transition"
-                >
-                  Reset All Filters
-                </button>
-              </div>
             )}
 
-            {/* Recommendations Section */}
-            <div className="mt-12 border-t border-gray-200 pt-8">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-lg font-bold tracking-tight text-gray-950">
-                    Explore Curated Recommendations
-                  </h2>
-                  <p className="text-xs text-gray-500">Top-rated certified items handpicked for luxury connoisseurs</p>
-                </div>
-              </div>
+          </div>
 
-              <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-                {products.slice(0, 3).map((product) => (
-                  <ProductCard
-                    key={`rec-${product.id}`}
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                  />
+        </div>
+      </main>
+
+      {/* ================= MOBILE FILTERS DRAWER ================= */}
+      {mobileFilters && (
+        <div className="fixed inset-0 z-50 flex bg-zinc-950/40 backdrop-blur-xs lg:hidden animate-fade-in">
+          <div className="ml-auto w-full max-w-xs h-full bg-white p-6 overflow-y-auto space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-900">Filters</h3>
+              <button
+                type="button"
+                onClick={() => setMobileFilters(false)}
+                className="text-zinc-500 hover:text-zinc-900 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Mobile Categories */}
+            <div className="space-y-2">
+              <span className="text-xs font-bold uppercase text-zinc-900 block">Department</span>
+              <div className="space-y-1">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => {
+                      handleCategorySelect(cat);
+                      setMobileFilters(false);
+                    }}
+                    className={`block w-full text-left px-3 py-1.5 rounded-lg text-xs ${
+                      category === cat ? 'bg-zinc-900 text-white font-semibold' : 'text-zinc-700 hover:bg-zinc-100'
+                    }`}
+                  >
+                    {cat}
+                  </button>
                 ))}
               </div>
             </div>
 
-          </section>
+            {/* Mobile Price */}
+            <div className="space-y-2 border-t border-zinc-100 pt-4">
+              <div className="flex justify-between text-xs font-semibold">
+                <span>Max Budget:</span>
+                <span>₹{maxPrice.toLocaleString('en-IN')}</span>
+              </div>
+              <input
+                type="range"
+                min="1000"
+                max="250000"
+                step="1000"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="w-full accent-zinc-900"
+              />
+            </div>
 
+            <button
+              type="button"
+              onClick={() => {
+                clearAllFilters();
+                setMobileFilters(false);
+              }}
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 py-2 text-xs font-semibold text-zinc-800"
+            >
+              Reset Filters
+            </button>
+          </div>
         </div>
-
-      </main>
+      )}
 
       <Footer />
     </div>
