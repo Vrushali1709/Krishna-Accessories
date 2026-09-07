@@ -78,6 +78,39 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
     setInWish(active);
   };
 
+  const renderWatchTypeBadge = () => {
+    if (product.category !== 'Watches' && !product.watchType) return null;
+    const type = product.watchType || 'Original';
+
+    if (type === 'Original') {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold text-emerald-700 border border-emerald-200 shadow-2xs">
+          <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+          ✨ Original
+        </span>
+      );
+    }
+    if (type === 'First Copy') {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-1.5 py-0.5 text-[8px] font-bold text-indigo-700 border border-indigo-200 shadow-2xs">
+          ⭐ 1st Copy
+        </span>
+      );
+    }
+    if (type === 'Duplicate') {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[8px] font-bold text-amber-800 border border-amber-200 shadow-2xs">
+          🔄 Duplicate
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-1.5 py-0.5 text-[8px] font-bold text-slate-700 border border-slate-200 shadow-2xs">
+        🏷️ {type}
+      </span>
+    );
+  };
+
   return (
     <div className="group relative flex flex-col justify-between rounded-xl border border-gray-200/75 bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-250 hover:shadow-[0_6px_16px_rgba(0,0,0,0.05)] hover:border-gray-300 hover:-translate-y-0.5">
 
@@ -90,6 +123,13 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
         <span className="absolute right-2 top-2 z-10 rounded-full bg-white/95 px-2 py-0.5 text-[8.5px] font-semibold uppercase tracking-wider text-gray-600 shadow-2xs border border-gray-200/50">
           {product.category || 'Luxury'}
         </span>
+
+        {/* Watch Quality Badge (Bottom Left of Image) */}
+        {(product.category === 'Watches' || product.watchType) && (
+          <div className="absolute left-2 bottom-2 z-10">
+            {renderWatchTypeBadge()}
+          </div>
+        )}
 
         {/* Discount Badge (Top Left) */}
         {discount > 0 && (

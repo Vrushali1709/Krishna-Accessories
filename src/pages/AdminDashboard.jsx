@@ -50,7 +50,8 @@ import {
   getBrands,
   getBrandsByCategory,
   addBrand,
-  deleteBrand
+  deleteBrand,
+  WATCH_TYPES
 } from '../utils/productStore';
 import {
   getOrders,
@@ -143,6 +144,7 @@ export default function AdminDashboard() {
   const [searchCatalog, setSearchCatalog] = useState('');
   const [filterCat, setFilterCat] = useState('All');
   const [filterBrand, setFilterBrand] = useState('All');
+  const [filterWatchType, setFilterWatchType] = useState('All');
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
 
   // Add / Edit Product Modal State
@@ -153,6 +155,7 @@ export default function AdminDashboard() {
     brand: 'Rolex',
     category: 'Watches',
     subcategory: 'Automatic Watches',
+    watchType: 'Original',
     gender: "Men's",
     sku: '',
     price: '',
@@ -300,12 +303,14 @@ export default function AdminDashboard() {
         p.name?.toLowerCase().includes(q) ||
         p.sku?.toLowerCase().includes(q) ||
         p.brand?.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q);
+        p.category?.toLowerCase().includes(q) ||
+        p.watchType?.toLowerCase().includes(q);
       const matchesCat = filterCat === 'All' || p.category?.toLowerCase() === filterCat.toLowerCase();
       const matchesBrand = filterBrand === 'All' || p.brand?.toLowerCase() === filterBrand.toLowerCase();
-      return matchesSearch && matchesCat && matchesBrand;
+      const matchesWatchType = filterWatchType === 'All' || (p.watchType || (p.category === 'Watches' ? 'Original' : '')).toLowerCase() === filterWatchType.toLowerCase();
+      return matchesSearch && matchesCat && matchesBrand && matchesWatchType;
     });
-  }, [products, searchCatalog, globalSearch, filterCat, filterBrand]);
+  }, [products, searchCatalog, globalSearch, filterCat, filterBrand, filterWatchType]);
 
   // Filter Orders
   const filteredOrders = useMemo(() => {
@@ -491,6 +496,7 @@ export default function AdminDashboard() {
       brand: catBrands[0] || 'Rolex',
       category: cat,
       subcategory: catSub,
+      watchType: 'Original',
       gender: "Men's",
       sku: `KA-${cat.substring(0, 3).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`,
       price: '',
@@ -512,6 +518,7 @@ export default function AdminDashboard() {
       brand: p.brand || 'Rolex',
       category: p.category || 'Watches',
       subcategory: p.subcategory || 'Automatic Watches',
+      watchType: p.watchType || (p.category === 'Watches' ? 'Original' : ''),
       gender: p.gender || "Men's",
       sku: p.sku || '',
       price: p.price || '',
@@ -540,6 +547,7 @@ export default function AdminDashboard() {
       brand: productForm.brand,
       category: productForm.category,
       subcategory: productForm.subcategory || 'Luxury Goods',
+      watchType: productForm.watchType || (productForm.category === 'Watches' ? 'Original' : ''),
       gender: productForm.gender || "Unisex",
       sku: productForm.sku.trim() || `KA-SKU-${Date.now().toString().slice(-4)}`,
       price,
@@ -554,7 +562,8 @@ export default function AdminDashboard() {
       description: productForm.description || 'Exclusive luxury piece from Krishna Accessories.',
       specifications: {
         Material: productForm.material || 'Genuine Luxury Material',
-        Warranty: productForm.warranty || '2 Years'
+        Warranty: productForm.warranty || '2 Years',
+        Grade: productForm.watchType || '100% Original Brand Authentic'
       }
     };
 
@@ -1546,7 +1555,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Search & Filter Bar */}
-                  <div className="grid gap-3 sm:grid-cols-3 rounded-xl border border-zinc-200/80 bg-white p-3 shadow-2xs">
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 rounded-xl border border-zinc-200/80 bg-white p-3 shadow-2xs">
                     <div className="relative">
                       <input
                         type="text"
@@ -1578,6 +1587,19 @@ export default function AdminDashboard() {
                       <option value="All">All Brands</option>
                       {(filterCat === 'All' ? brands : getBrandsByCategory(filterCat)).map(b => (
                         <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={filterWatchType}
+                      onChange={e => setFilterWatchType(e.target.value)}
+                      className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer font-medium"
+                    >
+                      <option value="All">All Watch Types</option>
+                      {WATCH_TYPES.map(wt => (
+                        <option key={wt} value={wt}>
+                          {wt} {wt === 'Original' ? '(Original)' : wt === 'First Copy' ? '(1st Copy)' : wt === 'Duplicate' ? '(Duplicate)' : '(Other)'}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -1613,7 +1635,22 @@ export default function AdminDashboard() {
                             </td>
 
                             <td className="p-3.5">
-                              <span className="font-medium text-zinc-900 block">{p.category}</span>
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-medium text-zinc-900">{p.category}</span>
+                                {(p.category === 'Watches' || p.watchType) && (
+                                  <span className={`inline-block px-1.5 py-0.2 rounded text-[8.5px] font-bold border ${
+                                    (p.watchType || 'Original') === 'Original'
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                      : p.watchType === 'First Copy'
+                                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                      : p.watchType === 'Duplicate'
+                                      ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                      : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                                  }`}>
+                                    {p.watchType || 'Original'}
+                                  </span>
+                                )}
+                              </div>
                               <span className="text-[10.5px] text-zinc-500">{p.brand}</span>
                             </td>
 
@@ -3190,7 +3227,7 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
                   <label className="font-medium text-zinc-700 block mb-1">Department *</label>
                   <select
@@ -3219,6 +3256,21 @@ export default function AdminDashboard() {
                   >
                     {(getBrandsByCategory(productForm.category) || brands).map(b => (
                       <option key={b} value={b}>{b}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-medium text-zinc-700 block mb-1">Watch Quality / Type</label>
+                  <select
+                    value={productForm.watchType || 'Original'}
+                    onChange={e => setProductForm({ ...productForm, watchType: e.target.value })}
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-medium cursor-pointer"
+                  >
+                    {WATCH_TYPES.map(t => (
+                      <option key={t} value={t}>
+                        {t} {t === 'Original' ? '(✨ Original)' : t === 'First Copy' ? '(⭐ 1st Copy)' : t === 'Duplicate' ? '(🔄 Replica)' : '(🏷️ Other)'}
+                      </option>
                     ))}
                   </select>
                 </div>
