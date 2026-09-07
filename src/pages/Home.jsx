@@ -2210,63 +2210,6 @@ export default function Home() {
 
         </div>
 
-
-        {/* PROGRESS */}
-
-        <div className="
-          mt-1
-          flex
-          items-center
-          justify-between
-          gap-3
-          px-1
-        ">
-
-          <div className="
-            h-1
-            flex-1
-            rounded-full
-            bg-gray-200/80
-            overflow-hidden
-            max-w-xs
-          ">
-
-            <div
-              className="
-                h-full
-                bg-[#0F172A]
-                rounded-full
-                transition-all
-                duration-150
-              "
-              style={{
-                width: `${Math.max(
-                  12,
-                  scrollProgress
-                )}%`
-              }}
-            />
-
-          </div>
-
-
-          <div className="
-            flex
-            items-center
-            gap-1
-            text-[9px]
-            text-gray-400
-            font-medium
-          ">
-            <span>
-              Scroll for more categories (
-              {categoryList.length}
-              )
-            </span>
-          </div>
-
-        </div>
-
       </section>
 
 
