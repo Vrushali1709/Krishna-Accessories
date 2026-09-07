@@ -2571,36 +2571,34 @@ export default function Home() {
                   flex-col
                   items-center
                   justify-center
-                  min-h-[132px]
-                  p-4
-                  rounded-xl
+                  min-h-[122px]
+                  p-3
+                  rounded-[12px]
                   border
                   border-gray-200/80
                   bg-white
                   text-center
+                  shadow-[0_2px_8px_rgba(15,23,42,0.06)]
                   transition-all
-                  duration-150
-                  hover:bg-[#0F172A]
-                  hover:text-white
-                  hover:border-[#0F172A]
+                  duration-200
+                  hover:-translate-y-0.5
+                  hover:border-gray-300
+                  hover:shadow-[0_8px_18px_rgba(15,23,42,0.10)]
                 "
               >
 
-                <span className="mb-2.5 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-gray-800 shadow-sm transition-all group-hover:border-white/30 group-hover:bg-white/10 group-hover:text-white group-hover:shadow-none">
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-7 w-7 fill-current"
-                  >
-                    <path d={b.icon?.path || brandFallbackPaths[b.name]} />
-                  </svg>
-                </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="mb-2 h-12 w-12 fill-current text-gray-800 transition-transform duration-200 group-hover:scale-105"
+                >
+                  <path d={b.icon?.path || brandFallbackPaths[b.name]} />
+                </svg>
 
                 <span className="
-                  text-sm
+                  text-[13px]
                   font-bold
                   text-gray-950
-                  group-hover:text-white
                   transition-colors
                   truncate
                   max-w-full
@@ -2609,9 +2607,9 @@ export default function Home() {
                 </span>
 
                 <span className="
-                  text-[9px]
+                  mt-0.5
+                  text-[10px]
                   text-gray-400
-                  group-hover:text-gray-300
                   transition-colors
                   truncate
                   max-w-full
