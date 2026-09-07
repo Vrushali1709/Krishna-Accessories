@@ -1365,8 +1365,6 @@ export default function Home() {
         text-white
         border-b
         border-neutral-800
-        min-h-[540px]
-        sm:min-h-[580px]
         lg:h-[670px]
         lg:min-h-[670px]
       ">
@@ -1501,13 +1499,13 @@ export default function Home() {
           mx-auto
           max-w-7xl
           w-full
-          min-h-[540px]
-          sm:min-h-[580px]
+          min-h-[560px]
+          sm:min-h-[590px]
           lg:min-h-[670px]
           lg:h-full
           px-5
           sm:px-8
-          lg:px-8
+          lg:px-10
           pt-16
           sm:pt-20
           lg:pt-0
@@ -1916,9 +1914,9 @@ export default function Home() {
         mx-auto
         max-w-7xl
         px-4
-        py-10
+        py-8
         sm:px-6
-        sm:py-14
+        sm:py-10
         lg:px-8
         relative
       ">
@@ -1932,7 +1930,7 @@ export default function Home() {
           sm:items-end
           justify-between
           gap-3
-          mb-6
+          mb-5
         ">
 
           <div>
@@ -2262,16 +2260,15 @@ export default function Home() {
         px-3
         sm:px-6
         lg:px-8
-        pb-10
-        sm:pb-14
+        pb-6
       ">
 
         <div className="
           rounded-2xl
           bg-[#0F172A]
           text-white
-          p-5
-          sm:p-6
+          p-4
+          sm:p-5
           flex
           flex-col
           md:flex-row
@@ -2397,8 +2394,8 @@ export default function Home() {
         bg-white
         border-y
         border-gray-200/80
-        py-10
-        sm:py-14
+        py-8
+        sm:py-10
       ">
 
         <div className="
@@ -2416,7 +2413,7 @@ export default function Home() {
             items-end
             justify-between
             gap-3
-            mb-6
+            mb-5
           ">
 
             <div>
@@ -2512,15 +2509,15 @@ export default function Home() {
         mx-auto
         max-w-7xl
         px-4
-        py-10
+        py-8
         sm:px-6
-        sm:py-14
+        sm:py-10
         lg:px-8
       ">
 
         <div className="
           text-center
-          mb-6
+          mb-5
         ">
 
           <span className="
