@@ -1014,6 +1014,66 @@ export const defaultProducts = [
     },
     colors: ["Gold / Green Classic G-15", "Gunmetal / Polarized Grey"],
     variants: ["Standard 58mm", "Large 62mm"]
+  },
+  {
+    id: 25,
+    name: "Apple Watch Ultra 2 (Titanium GPS + Cellular)",
+    brand: "Apple",
+    category: "Smart Gadgets",
+    subcategory: "Smart Wearables",
+    sku: "KA-APP-025",
+    price: 89900,
+    oldPrice: 94900,
+    discount: 5,
+    stock: 15,
+    rating: 4.9,
+    reviews: 130,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=700"
+    ],
+    description: "Rugged 49mm aerospace-grade titanium casing, dual-frequency precision GPS, up to 72 hours battery life in low power mode, and 100m water resistance.",
+    specifications: {
+      Case: "49mm Titanium",
+      Display: "Always-On Retina 3000 nits",
+      Battery: "Up to 36 hours (72h Low Power)",
+      WaterResistance: "100m Water Resistance (EN13319)",
+      Warranty: "1 Year Official AppleCare"
+    },
+    colors: ["Titanium / Orange Ocean Band", "Titanium / Midnight Ocean Band"],
+    variants: ["49mm GPS + Cellular"]
+  },
+  {
+    id: 26,
+    name: "Forerunner 965 AMOLED Premium Multisport Watch",
+    brand: "Garmin",
+    category: "Fitness",
+    subcategory: "Fitness Trackers",
+    sku: "KA-GAR-026",
+    price: 67490,
+    oldPrice: 74990,
+    discount: 10,
+    stock: 12,
+    rating: 4.8,
+    reviews: 86,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=700"
+    ],
+    description: "Brilliant 1.4-inch AMOLED touchscreen display, titanium bezel, advanced training metrics, built-in full-color mapping, and up to 23 days battery life.",
+    specifications: {
+      Display: "1.4 inch AMOLED Touchscreen",
+      Battery: "Up to 23 Days in Smartwatch Mode",
+      Bezel: "Titanium Bezel",
+      Sensors: "Multi-Band GNSS & Pulse Ox",
+      Warranty: "2 Years Garmin Warranty"
+    },
+    colors: ["Black / Powder Gray", "Whitestone / Powder Gray"],
+    variants: ["Standard Titanium Edition"]
   }
 ];
 

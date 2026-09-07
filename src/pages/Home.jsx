@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts } from '../utils/productStore';
+import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import { ShieldCheckIcon, TruckIcon, StarIcon, ArrowRightIcon, BoxIcon } from '../components/Icons';
+import {
+  ShieldCheckIcon,
+  TruckIcon,
+  StarIcon,
+  ArrowRightIcon,
+  BoxIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from '../components/Icons';
 
-const categoryBanners = [
+const defaultCategoryBanners = [
   {
     name: 'Watches',
     description: 'Heritage Swiss & Smart Chronographs',
@@ -34,6 +42,12 @@ const categoryBanners = [
     tag: 'Apple, Samsung, OnePlus'
   },
   {
+    name: 'Clothes & Fashion',
+    description: 'Tailored Suits, Denim & Luxury Apparel',
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900',
+    tag: 'Levis, Zara, Tommy, Calvin Klein'
+  },
+  {
     name: 'Laptops',
     description: 'High-Performance OLED Workstations',
     image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900',
@@ -45,6 +59,30 @@ const categoryBanners = [
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900',
     tag: 'Sony, Bose, JBL, Marshall'
   },
+  {
+    name: 'Smart Gadgets',
+    description: 'Smart Rings, AI Devices & Wearables',
+    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900',
+    tag: 'Apple, Samsung, Google, boAt'
+  },
+  {
+    name: 'Gaming',
+    description: 'RGB Mechanical Gear & Consoles',
+    image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=900',
+    tag: 'Razer, Sony PS5, Logitech, Asus'
+  },
+  {
+    name: 'Fitness',
+    description: 'GPS Multi-Sport Trackers & Health',
+    image: 'https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900',
+    tag: 'Garmin, Fitbit, Apple, Noise'
+  },
+  {
+    name: 'Fashion Accessories',
+    description: 'Polarized Eyewear & Belts',
+    image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900',
+    tag: 'Ray-Ban, Police, Titan, Fossil'
+  }
 ];
 
 export default function Home() {
@@ -52,13 +90,118 @@ export default function Home() {
   const [products, setProducts] = useState(() => getProducts());
   const [toastMessage, setToastMessage] = useState('');
 
+  // Carousel State & Logic
+  const carouselRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [hasMoved, setHasMoved] = useState(false);
+
+  // Combine default category banners with dynamic stored categories
+  const [categoryList, setCategoryList] = useState(() => {
+    const storedCats = getCategories();
+    const bannerNames = new Set(defaultCategoryBanners.map(b => b.name.toLowerCase()));
+    const customBanners = storedCats
+      .filter(cat => !bannerNames.has(cat.toLowerCase()))
+      .map(cat => ({
+        name: cat,
+        description: `Explore ${cat} Collection`,
+        image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900',
+        tag: 'Curated Essentials'
+      }));
+    return [...defaultCategoryBanners, ...customBanners];
+  });
+
   useEffect(() => {
-    const handleUpdate = () => setProducts(getProducts());
+    const handleUpdate = () => {
+      setProducts(getProducts());
+      const storedCats = getCategories();
+      const bannerNames = new Set(defaultCategoryBanners.map(b => b.name.toLowerCase()));
+      const customBanners = storedCats
+        .filter(cat => !bannerNames.has(cat.toLowerCase()))
+        .map(cat => ({
+          name: cat,
+          description: `Explore ${cat} Collection`,
+          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900',
+          tag: 'Curated Essentials'
+        }));
+      setCategoryList([...defaultCategoryBanners, ...customBanners]);
+    };
     window.addEventListener('productsUpdated', handleUpdate);
-    return () => window.removeEventListener('productsUpdated', handleUpdate);
+    window.addEventListener('categoriesUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('productsUpdated', handleUpdate);
+      window.removeEventListener('categoriesUpdated', handleUpdate);
+    };
   }, []);
 
+  const checkScroll = useCallback(() => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    const maxScroll = scrollWidth - clientWidth;
+    setScrollProgress(maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0);
+  }, []);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    checkScroll();
+    el.addEventListener('scroll', checkScroll, { passive: true });
+    window.addEventListener('resize', checkScroll);
+    return () => {
+      el.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, [checkScroll, categoryList]);
+
+  const scrollCarousel = (direction) => {
+    if (!carouselRef.current) return;
+    const container = carouselRef.current;
+    const cardWidth = container.firstElementChild?.clientWidth || 220;
+    const scrollAmount = (cardWidth + 14) * 2;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleMouseDown = (e) => {
+    if (!carouselRef.current) return;
+    setIsDragging(true);
+    setHasMoved(false);
+    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    setScrollLeft(carouselRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    if (Math.abs(walk) > 5) setHasMoved(true);
+    carouselRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleCategoryClick = (e) => {
+    if (hasMoved) {
+      e.preventDefault();
+    }
+  };
+
   const featured = products.slice(0, 8);
+
+  const getProductCountForCategory = (catName) => {
+    return products.filter(p => p.category?.toLowerCase() === catName.toLowerCase()).length;
+  };
 
   const handleAddToCart = (product) => {
     if (!getCurrentUser()) {
@@ -91,11 +234,15 @@ export default function Home() {
     { name: 'Samsung', cat: 'Mobiles' },
     { name: 'Sony', cat: 'Electronics' },
     { name: 'Bose', cat: 'Electronics' },
-    { name: 'Dell', cat: 'Laptops' }
+    { name: 'Dell', cat: 'Laptops' },
+    { name: 'Zara', cat: 'Clothes & Fashion' },
+    { name: 'Razer', cat: 'Gaming' },
+    { name: 'Garmin', cat: 'Fitness' },
+    { name: 'Ray-Ban', cat: 'Fashion Accessories' }
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip select-none sm:select-auto">
       <Navbar />
 
       {/* Floating Alert Toast */}
@@ -177,7 +324,7 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Curated Heritage Caption Bar (Positioned below the image so image is 100% visible and unobstructed) */}
+                {/* Curated Heritage Caption Bar */}
                 <div className="mt-2 sm:mt-2.5 flex items-center justify-between gap-2.5 sm:gap-4 rounded-xl bg-[#FAF9F6] border border-gray-200/80 px-3 sm:px-4 py-2 sm:py-2.5">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-amber-50 border border-amber-200/60 text-amber-600 text-xs font-bold shrink-0">
@@ -252,45 +399,141 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= CURATED DEPARTMENTS ================= */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex items-end justify-between mb-4">
+      {/* ================= CURATED DEPARTMENTS - INTERACTIVE CAROUSEL ================= */}
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
-            <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">Departments</span>
-            <h2 className="mt-0.5 text-lg sm:text-xl font-bold tracking-tight text-gray-950">Curated Collections</h2>
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
+                Explore Categories ({categoryList.length})
+              </span>
+              <span className="text-[9px] text-gray-400 font-medium hidden sm:inline">&bull; Swipe or use arrows</span>
+            </div>
+            <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+              Curated Collections
+            </h2>
           </div>
-          <Link to="/shop" className="text-xs font-semibold text-gray-900 hover:underline flex items-center gap-1 shrink-0">
-            <span>View All</span>
-            <ArrowRightIcon className="w-3 h-3" />
-          </Link>
+
+          {/* Carousel Controls & View All */}
+          <div className="flex items-center gap-2.5 self-end sm:self-auto">
+            <Link
+              to="/shop"
+              className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
+            >
+              <span>View All</span>
+              <ArrowRightIcon className="w-3 h-3" />
+            </Link>
+
+            {/* Left Carousel Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollCarousel('left')}
+              disabled={!canScrollLeft}
+              aria-label="Previous categories"
+              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${
+                canScrollLeft
+                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+              }`}
+            >
+              <ChevronLeftIcon className="w-4 h-4" />
+            </button>
+
+            {/* Right Carousel Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollCarousel('right')}
+              disabled={!canScrollRight}
+              aria-label="Next categories"
+              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${
+                canScrollRight
+                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+              }`}
+            >
+              <ChevronRightIcon className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3.5">
-          {categoryBanners.map((c) => (
-            <Link
-              key={c.name}
-              to={`/shop?category=${encodeURIComponent(c.name)}`}
-              className="group relative aspect-[0.85] overflow-hidden rounded-xl border border-gray-200/80 bg-white transition-all duration-200 hover:shadow-md hover:border-gray-300"
-            >
-              <img
-                src={c.image}
-                alt={c.name}
-                className="h-full w-full object-cover transition-transform duration-400 group-hover:scale-106"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        {/* Carousel Scroll Container */}
+        <div
+          ref={carouselRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          className={`flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
+        >
+          {categoryList.map((c) => {
+            const count = getProductCountForCategory(c.name);
+            return (
+              <Link
+                key={c.name}
+                to={`/shop?category=${encodeURIComponent(c.name)}`}
+                onClick={handleCategoryClick}
+                className="group relative flex-shrink-0 w-[165px] sm:w-[195px] md:w-[215px] lg:w-[225px] aspect-[0.82] overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:border-gray-300 hover:-translate-y-1 snap-start"
+              >
+                {/* Background Luxury Photo */}
+                <img
+                  src={c.image}
+                  alt={c.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-108 pointer-events-none"
+                />
 
-              <div className="absolute inset-x-2 bottom-2">
-                <h3 className="text-xs font-bold text-white transition truncate">
-                  {c.name}
-                </h3>
-                <p className="text-[9px] text-gray-300 truncate">{c.tag}</p>
-              </div>
-            </Link>
-          ))}
+                {/* Dark Cinematic Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+
+                {/* Top Badge: Product Count / Tag */}
+                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                  {count > 0 ? (
+                    <span className="rounded-full bg-black/40 backdrop-blur-md px-2 py-0.5 text-[8.5px] font-semibold text-white/90 border border-white/10 shadow-2xs">
+                      {count} {count === 1 ? 'Item' : 'Items'}
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[8.5px] font-medium text-white/90 border border-white/10">
+                      Curated
+                    </span>
+                  )}
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <ArrowRightIcon className="w-2.5 h-2.5" />
+                  </span>
+                </div>
+
+                {/* Bottom Content Bar */}
+                <div className="absolute inset-x-2.5 bottom-2.5 pointer-events-none">
+                  <h3 className="text-xs sm:text-[13px] font-bold text-white transition-colors group-hover:text-amber-300 truncate leading-snug">
+                    {c.name}
+                  </h3>
+                  <p className="text-[9px] sm:text-[9.5px] text-gray-300 truncate mt-0.5 opacity-90 leading-tight">
+                    {c.tag || c.description}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Carousel Progress Indicator Track */}
+        <div className="mt-1 flex items-center justify-between gap-3 px-1">
+          <div className="h-1 flex-1 rounded-full bg-gray-200/80 overflow-hidden max-w-xs">
+            <div
+              className="h-full bg-[#0F172A] rounded-full transition-all duration-150"
+              style={{ width: `${Math.max(12, scrollProgress)}%` }}
+            />
+          </div>
+          <div className="flex items-center gap-1 text-[9px] text-gray-400 font-medium">
+            <span>Scroll for more categories ({categoryList.length})</span>
+          </div>
         </div>
       </section>
-
-
 
       {/* ================= PROMOTIONAL VOUCHER BANNER ================= */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
