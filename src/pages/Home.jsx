@@ -47,15 +47,6 @@ const categoryBanners = [
   },
 ];
 
-const watchTypes = [
-  { name: 'Analog Watches', description: 'Classic dial and hands', icon: '01' },
-  { name: 'Chronograph Watches', description: 'Precision stopwatch dials', icon: '02' },
-  { name: 'Solar Watches', description: 'Powered by natural light', icon: '03' },
-  { name: 'Luxury Watches', description: 'Premium statement timepieces', icon: '04' },
-  { name: 'Smart Watches', description: 'Connected everyday technology', icon: '05' },
-  { name: 'Swiss Made Watches', description: 'Swiss precision and heritage', icon: '06' },
-];
-
 export default function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState(() => getProducts());
@@ -296,41 +287,6 @@ export default function Home() {
               </div>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* ================= WATCH TYPES ================= */}
-      <section className="border-y border-gray-200/80 bg-[#F8F7F3] py-8 sm:py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-5 flex items-end justify-between gap-3">
-            <div>
-              <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#B89758]">Watches</span>
-              <h2 className="mt-0.5 text-lg sm:text-xl font-bold tracking-tight text-gray-950">Shop by Watch Type</h2>
-            </div>
-            <Link to="/shop?category=Watches" className="flex shrink-0 items-center gap-1 text-xs font-semibold text-gray-900 hover:underline">
-              <span>View Watches</span>
-              <ArrowRightIcon className="h-3 w-3" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-            {watchTypes.map((type) => (
-              <Link
-                key={type.name}
-                to={`/shop?category=Watches&search=${encodeURIComponent(type.name)}`}
-                className="group flex items-center gap-3 rounded-xl border border-gray-200/80 bg-white px-3.5 py-3 transition-all duration-200 hover:border-[#B89758] hover:shadow-sm"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0F172A] text-[10px] font-bold tracking-wider text-amber-200">
-                  {type.icon}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-xs font-bold text-gray-950 group-hover:text-[#8B6B2F]">{type.name}</span>
-                  <span className="mt-0.5 block truncate text-[10px] text-gray-500">{type.description}</span>
-                </span>
-                <ArrowRightIcon className="ml-auto h-3.5 w-3.5 shrink-0 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-[#8B6B2F]" />
-              </Link>
-            ))}
-          </div>
         </div>
       </section>
 

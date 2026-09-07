@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCartCount } from '../utils/cart';
-import { defaultCategories, getWishlist } from '../utils/productStore';
+import { defaultCategories, getWishlist, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
 import { getCurrentUser, logout } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import { BagIcon, SearchIcon, UserIcon, ChevronDownIcon, HeartIcon, BellIcon } from './Icons';
@@ -223,6 +223,29 @@ export default function Navbar() {
                           <span className="text-[9.5px] text-gray-400">&rarr;</span>
                         </Link>
                       ))}
+                    </div>
+
+                    {/* Dedicated Watch Types Highlight */}
+                    <div className="mt-2.5 pt-2 border-t border-gray-100">
+                      <span className="text-[8.5px] font-bold uppercase tracking-wider text-amber-600 block px-1 mb-1">
+                        ⌚ Watch Editions & Quality Types
+                      </span>
+                      <div className="grid grid-cols-2 gap-1">
+                        {WATCH_TYPES.slice(0, 6).map((wt) => {
+                          const meta = WATCH_TYPE_METADATA[wt];
+                          return (
+                            <Link
+                              key={wt}
+                              to={`/shop?category=Watches&watchType=${encodeURIComponent(wt)}`}
+                              onClick={() => setCategoriesOpen(false)}
+                              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-medium text-gray-700 hover:bg-gray-100 hover:text-black transition"
+                            >
+                              <span className={`h-1.5 w-1.5 rounded-full ${meta?.dotClass || 'bg-current'}`} />
+                              <span className="truncate">{wt}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>

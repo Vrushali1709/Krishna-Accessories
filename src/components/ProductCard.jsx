@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import { isInWishlist, toggleWishlist } from '../utils/productStore';
+import { isInWishlist, toggleWishlist, WATCH_TYPE_METADATA } from '../utils/productStore';
 
 export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const navigate = useNavigate();
@@ -24,6 +24,9 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
       ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : 0
   );
+
+  const isWatch = product.category === 'Watches' || Boolean(product.watchType);
+  const watchMeta = product.watchType ? WATCH_TYPE_METADATA[product.watchType] : (isWatch ? WATCH_TYPE_METADATA['Original'] : null);
 
   const requireLogin = (action = 'continue') => {
     if (!getCurrentUser()) {
@@ -90,6 +93,14 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
         <span className="absolute right-2 top-2 z-10 rounded-full bg-white/95 px-2 py-0.5 text-[8.5px] font-semibold uppercase tracking-wider text-gray-600 shadow-2xs border border-gray-200/50">
           {product.category || 'Luxury'}
         </span>
+
+        {/* Watch Type Pill (Bottom Left of Stage) */}
+        {isWatch && watchMeta && (
+          <span className={`absolute bottom-2 left-2 z-10 inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[8.5px] font-bold border shadow-2xs backdrop-blur-xs ${watchMeta.badgeClass}`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${watchMeta.dotClass || 'bg-current'}`} />
+            {watchMeta.label}
+          </span>
+        )}
 
         {/* Discount Badge (Top Left) */}
         {discount > 0 && (

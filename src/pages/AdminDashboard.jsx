@@ -50,7 +50,9 @@ import {
   getBrands,
   getBrandsByCategory,
   addBrand,
-  deleteBrand
+  deleteBrand,
+  WATCH_TYPES,
+  WATCH_TYPE_METADATA
 } from '../utils/productStore';
 import {
   getOrders,
@@ -143,6 +145,7 @@ export default function AdminDashboard() {
   const [searchCatalog, setSearchCatalog] = useState('');
   const [filterCat, setFilterCat] = useState('All');
   const [filterBrand, setFilterBrand] = useState('All');
+  const [filterWatchType, setFilterWatchType] = useState('All');
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
 
   // Add / Edit Product Modal State
@@ -153,6 +156,7 @@ export default function AdminDashboard() {
     brand: 'Rolex',
     category: 'Watches',
     subcategory: 'Automatic Watches',
+    watchType: 'Original',
     gender: "Men's",
     sku: '',
     price: '',
@@ -300,12 +304,14 @@ export default function AdminDashboard() {
         p.name?.toLowerCase().includes(q) ||
         p.sku?.toLowerCase().includes(q) ||
         p.brand?.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q);
+        p.category?.toLowerCase().includes(q) ||
+        p.watchType?.toLowerCase().includes(q);
       const matchesCat = filterCat === 'All' || p.category?.toLowerCase() === filterCat.toLowerCase();
       const matchesBrand = filterBrand === 'All' || p.brand?.toLowerCase() === filterBrand.toLowerCase();
-      return matchesSearch && matchesCat && matchesBrand;
+      const matchesWatchType = filterWatchType === 'All' || (p.watchType || (p.category === 'Watches' ? 'Original' : '')) === filterWatchType;
+      return matchesSearch && matchesCat && matchesBrand && matchesWatchType;
     });
-  }, [products, searchCatalog, globalSearch, filterCat, filterBrand]);
+  }, [products, searchCatalog, globalSearch, filterCat, filterBrand, filterWatchType]);
 
   // Filter Orders
   const filteredOrders = useMemo(() => {
@@ -491,6 +497,7 @@ export default function AdminDashboard() {
       brand: catBrands[0] || 'Rolex',
       category: cat,
       subcategory: catSub,
+      watchType: 'Original',
       gender: "Men's",
       sku: `KA-${cat.substring(0, 3).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`,
       price: '',
@@ -512,6 +519,7 @@ export default function AdminDashboard() {
       brand: p.brand || 'Rolex',
       category: p.category || 'Watches',
       subcategory: p.subcategory || 'Automatic Watches',
+      watchType: p.watchType || (p.category === 'Watches' ? 'Original' : 'Original'),
       gender: p.gender || "Men's",
       sku: p.sku || '',
       price: p.price || '',
@@ -540,6 +548,7 @@ export default function AdminDashboard() {
       brand: productForm.brand,
       category: productForm.category,
       subcategory: productForm.subcategory || 'Luxury Goods',
+      watchType: productForm.category === 'Watches' ? (productForm.watchType || 'Original') : undefined,
       gender: productForm.gender || "Unisex",
       sku: productForm.sku.trim() || `KA-SKU-${Date.now().toString().slice(-4)}`,
       price,
@@ -554,7 +563,8 @@ export default function AdminDashboard() {
       description: productForm.description || 'Exclusive luxury piece from Krishna Accessories.',
       specifications: {
         Material: productForm.material || 'Genuine Luxury Material',
-        Warranty: productForm.warranty || '2 Years'
+        Warranty: productForm.warranty || '2 Years',
+        ...(productForm.category === 'Watches' ? { "Quality Type": productForm.watchType || 'Original' } : {})
       }
     };
 
@@ -1563,6 +1573,9 @@ export default function AdminDashboard() {
                       onChange={e => {
                         setFilterCat(e.target.value);
                         setFilterBrand('All');
+                        if (e.target.value !== 'Watches' && e.target.value !== 'All') {
+                          setFilterWatchType('All');
+                        }
                       }}
                       className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer font-medium"
                     >
@@ -1578,6 +1591,17 @@ export default function AdminDashboard() {
                       <option value="All">All Brands</option>
                       {(filterCat === 'All' ? brands : getBrandsByCategory(filterCat)).map(b => (
                         <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={filterWatchType}
+                      onChange={e => setFilterWatchType(e.target.value)}
+                      className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer font-medium"
+                    >
+                      <option value="All">All Watch Types</option>
+                      {WATCH_TYPES.map(wt => (
+                        <option key={wt} value={wt}>⌚ {wt}</option>
                       ))}
                     </select>
                   </div>
@@ -1596,26 +1620,37 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-100 font-normal">
-                        {filteredProducts.map(p => (
-                          <tr key={p.id} className="hover:bg-zinc-50/75 transition">
-                            <td className="p-3.5">
-                              <div className="flex items-center gap-3">
-                                <img
-                                  src={p.image || p.images?.[0]}
-                                  alt=""
-                                  className="h-11 w-11 rounded-lg object-contain bg-zinc-50 border border-zinc-200 shrink-0 p-1"
-                                />
-                                <div className="min-w-0">
-                                  <span className="font-semibold text-zinc-900 block truncate max-w-xs">{p.name}</span>
-                                  <span className="text-[10px] text-zinc-400">Rating ★ {p.rating || 4.9}</span>
-                                </div>
-                              </div>
-                            </td>
+                        {filteredProducts.map(p => {
+                          const isWatch = p.category === 'Watches' || Boolean(p.watchType);
+                          const wMeta = isWatch ? WATCH_TYPE_METADATA[p.watchType || 'Original'] : null;
 
-                            <td className="p-3.5">
-                              <span className="font-medium text-zinc-900 block">{p.category}</span>
-                              <span className="text-[10.5px] text-zinc-500">{p.brand}</span>
-                            </td>
+                          return (
+                            <tr key={p.id} className="hover:bg-zinc-50/75 transition">
+                              <td className="p-3.5">
+                                <div className="flex items-center gap-3">
+                                  <img
+                                    src={p.image || p.images?.[0]}
+                                    alt=""
+                                    className="h-11 w-11 rounded-lg object-contain bg-zinc-50 border border-zinc-200 shrink-0 p-1"
+                                  />
+                                  <div className="min-w-0">
+                                    <span className="font-semibold text-zinc-900 block truncate max-w-xs">{p.name}</span>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                      <span className="text-[10px] text-zinc-400">Rating ★ {p.rating || 4.9}</span>
+                                      {isWatch && wMeta && (
+                                        <span className={`inline-flex items-center rounded px-1.5 py-0.2 text-[8.5px] font-bold border ${wMeta.badgeClass}`}>
+                                          {wMeta.label}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="p-3.5">
+                                <span className="font-medium text-zinc-900 block">{p.category}</span>
+                                <span className="text-[10.5px] text-zinc-500">{p.brand}</span>
+                              </td>
 
                             <td className="p-3.5">
                               <span className="font-mono text-zinc-700 block">{p.sku}</span>
@@ -1666,7 +1701,8 @@ export default function AdminDashboard() {
                               </button>
                             </td>
                           </tr>
-                        ))}
+                        );
+                      })}
                       </tbody>
                     </table>
                   </div>
@@ -2698,18 +2734,18 @@ export default function AdminDashboard() {
                                   {stock <= 0 ? 'Out of Stock' : stock < 5 ? 'Low Stock' : 'Healthy'}
                                 </span>
                               </td>
-                              <td className="p-3.5 text-right space-x-1.5">
+                              <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
                                 <button
-                                  onClick={() => handleStockAdjust(p.id, 5)}
+                                  onClick={() => handleOpenEditProduct(p)}
                                   className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
                                 >
-                                  +5 Units
+                                  Edit
                                 </button>
                                 <button
-                                  onClick={() => handleStockAdjust(p.id, 20)}
-                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                                  onClick={() => handleDeleteProduct(p.id)}
+                                  className="rounded-md border border-rose-200 bg-rose-50/50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 text-xs font-medium transition cursor-pointer"
                                 >
-                                  +20 Units
+                                  Delete
                                 </button>
                               </td>
                             </tr>
@@ -3190,7 +3226,7 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className={`grid gap-3 ${productForm.category === 'Watches' ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
                 <div>
                   <label className="font-medium text-zinc-700 block mb-1">Department *</label>
                   <select
@@ -3222,6 +3258,23 @@ export default function AdminDashboard() {
                     ))}
                   </select>
                 </div>
+
+                {productForm.category === 'Watches' && (
+                  <div>
+                    <label className="font-medium text-zinc-700 block mb-1">Watch Quality / Type *</label>
+                    <select
+                      value={productForm.watchType || 'Original'}
+                      onChange={e => setProductForm({ ...productForm, watchType: e.target.value })}
+                      className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white font-medium cursor-pointer"
+                    >
+                      {WATCH_TYPES.map(wt => (
+                        <option key={wt} value={wt}>
+                          {wt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
                 <div>
                   <label className="font-medium text-zinc-700 block mb-1">Gender / Dept</label>
