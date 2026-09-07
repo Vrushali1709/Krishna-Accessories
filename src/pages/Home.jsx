@@ -628,6 +628,27 @@ import React, {
   useRef,
   useCallback
 } from 'react';
+import {
+  siAdidas,
+  siApple,
+  siBose,
+  siDell,
+  siGarmin,
+  siNike,
+  siRazer,
+  siSamsung,
+  siSony,
+  siZara
+} from 'simple-icons';
+
+const brandFallbackPaths = {
+  Fossil: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 3v6l4 2',
+  Titan: 'M5 6h14M8 6v12m8-12v12M5 18h14',
+  Rolex: 'M4 9l2-3 3 2 3-4 3 4 3-2 2 3-2 1v7H6v-7L4 9Z',
+  Casio: 'M7 4h10v16H7V4Zm2 3h6v6H9V7Zm2 9h2',
+  Hidesign: 'M5 8h14l-1 12H6L5 8Zm3 0a4 4 0 0 1 8 0',
+  'Ray-Ban': 'M3 9h7l2 2 2-2h7l-1 7h-6l-2-3-2 3H4L3 9Z'
+};
 
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -1173,82 +1194,82 @@ export default function Home() {
     {
       name: 'Titan',
       cat: 'Watches',
-      mark: 'T'
+      icon: null
     },
     {
       name: 'Fossil',
       cat: 'Watches',
-      mark: 'F'
+      icon: null
     },
     {
       name: 'Rolex',
       cat: 'Watches',
-      mark: 'R'
+      icon: null
     },
     {
       name: 'Casio',
       cat: 'Watches',
-      mark: 'C'
+      icon: null
     },
     {
       name: 'Nike',
       cat: 'Shoes',
-      mark: 'N'
+      icon: siNike
     },
     {
       name: 'Adidas',
       cat: 'Shoes',
-      mark: 'A'
+      icon: siAdidas
     },
     {
       name: 'Hidesign',
       cat: 'Bags & Wallets',
-      mark: 'H'
+      icon: null
     },
     {
       name: 'Apple',
       cat: 'Mobiles',
-      mark: 'A'
+      icon: siApple
     },
     {
       name: 'Samsung',
       cat: 'Mobiles',
-      mark: 'S'
+      icon: siSamsung
     },
     {
       name: 'Sony',
       cat: 'Electronics',
-      mark: 'S'
+      icon: siSony
     },
     {
       name: 'Bose',
       cat: 'Electronics',
-      mark: 'B'
+      icon: siBose
     },
     {
       name: 'Dell',
       cat: 'Laptops',
-      mark: 'D'
+      icon: siDell
     },
     {
       name: 'Zara',
       cat: 'Clothes & Fashion',
-      mark: 'Z'
+      icon: siZara
     },
     {
       name: 'Razer',
       cat: 'Gaming',
-      mark: 'R'
+      icon: siRazer
     },
     {
       name: 'Garmin',
       cat: 'Fitness',
-      mark: 'G'
+      icon: siGarmin
     },
     {
       name: 'Ray-Ban',
       cat: 'Fashion Accessories',
-      mark: 'RB'
+      icon: null
     }
   ];
 
@@ -2564,8 +2585,14 @@ export default function Home() {
                 "
               >
 
-                <span className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-[11px] font-bold tracking-tight text-gray-800 transition-colors group-hover:border-white/30 group-hover:bg-white/10 group-hover:text-white">
-                  {b.mark}
+                <span className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-gray-800 transition-colors group-hover:border-white/30 group-hover:bg-white/10 group-hover:text-white">
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-4 w-4 fill-current"
+                  >
+                    <path d={b.icon?.path || brandFallbackPaths[b.name]} />
+                  </svg>
                 </span>
 
                 <span className="
