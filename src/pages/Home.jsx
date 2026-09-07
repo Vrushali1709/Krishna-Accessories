@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -51,7 +51,6 @@ export default function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState(() => getProducts());
   const [toastMessage, setToastMessage] = useState('');
-  const productCarouselRef = useRef(null);
 
   useEffect(() => {
     const handleUpdate = () => setProducts(getProducts());
@@ -59,33 +58,7 @@ export default function Home() {
     return () => window.removeEventListener('productsUpdated', handleUpdate);
   }, []);
 
-  const featured = products;
-
-  const scrollProducts = (direction) => {
-    const carousel = productCarouselRef.current;
-    if (!carousel) return;
-
-    const distance = carousel.clientWidth * 0.82;
-    const isAtEnd = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 4;
-    const nextPosition = direction > 0 && isAtEnd ? 0 : Math.max(0, carousel.scrollLeft + direction * distance);
-    carousel.scrollTo({ left: nextPosition, behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    if (featured.length < 2) return undefined;
-
-    const interval = window.setInterval(() => {
-      const carousel = productCarouselRef.current;
-      if (!carousel) return;
-
-      const isAtEnd = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 4;
-      carousel.scrollTo({
-        left: isAtEnd ? 0 : carousel.scrollLeft + carousel.clientWidth * 0.82,
-        behavior: 'smooth'
-      });
-    }, 4500);
-    return () => window.clearInterval(interval);
-  }, [featured.length]);
+  const featured = products.slice(0, 8);
 
   const handleAddToCart = (product) => {
     if (!getCurrentUser()) {
@@ -354,43 +327,20 @@ export default function Home() {
                 Selected Editions
               </h2>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => scrollProducts(-1)}
-                aria-label="Previous products"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:border-gray-400 hover:text-black"
-              >
-                <span aria-hidden="true" className="text-base leading-none">&larr;</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollProducts(1)}
-                aria-label="Next products"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:border-gray-400 hover:text-black"
-              >
-                <span aria-hidden="true" className="text-base leading-none">&rarr;</span>
-              </button>
-              <Link to="/shop" className="ml-1 hidden text-xs font-semibold text-gray-900 hover:underline sm:flex items-center gap-1">
-                <span>View All</span>
-                <ArrowRightIcon className="w-3 h-3" />
-              </Link>
-            </div>
+            <Link to="/shop" className="text-xs font-semibold text-gray-900 hover:underline flex items-center gap-1 shrink-0">
+              <span>View All</span>
+              <ArrowRightIcon className="w-3 h-3" />
+            </Link>
           </div>
 
-          <div
-            ref={productCarouselRef}
-            className="flex snap-x snap-mandatory gap-2.5 overflow-x-auto scroll-smooth pb-2 sm:gap-3.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            aria-label="All products"
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
             {featured.map((product) => (
-              <div key={product.id} className="w-[calc((100%-10px)/2)] shrink-0 snap-start sm:w-[calc((100%-14px)/2)] lg:w-[calc((100%-42px)/4)]">
-                <ProductCard
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onBuyNow={handleBuyNow}
-                />
-              </div>
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
+              />
             ))}
           </div>
 
