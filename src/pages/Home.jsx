@@ -1172,67 +1172,83 @@ export default function Home() {
   const partnerBrands = [
     {
       name: 'Titan',
-      cat: 'Watches'
+      cat: 'Watches',
+      mark: 'T'
     },
     {
       name: 'Fossil',
-      cat: 'Watches'
+      cat: 'Watches',
+      mark: 'F'
     },
     {
       name: 'Rolex',
-      cat: 'Watches'
+      cat: 'Watches',
+      mark: 'R'
     },
     {
       name: 'Casio',
-      cat: 'Watches'
+      cat: 'Watches',
+      mark: 'C'
     },
     {
       name: 'Nike',
-      cat: 'Shoes'
+      cat: 'Shoes',
+      mark: 'N'
     },
     {
       name: 'Adidas',
-      cat: 'Shoes'
+      cat: 'Shoes',
+      mark: 'A'
     },
     {
       name: 'Hidesign',
-      cat: 'Bags & Wallets'
+      cat: 'Bags & Wallets',
+      mark: 'H'
     },
     {
       name: 'Apple',
-      cat: 'Mobiles'
+      cat: 'Mobiles',
+      mark: 'A'
     },
     {
       name: 'Samsung',
-      cat: 'Mobiles'
+      cat: 'Mobiles',
+      mark: 'S'
     },
     {
       name: 'Sony',
-      cat: 'Electronics'
+      cat: 'Electronics',
+      mark: 'S'
     },
     {
       name: 'Bose',
-      cat: 'Electronics'
+      cat: 'Electronics',
+      mark: 'B'
     },
     {
       name: 'Dell',
-      cat: 'Laptops'
+      cat: 'Laptops',
+      mark: 'D'
     },
     {
       name: 'Zara',
-      cat: 'Clothes & Fashion'
+      cat: 'Clothes & Fashion',
+      mark: 'Z'
     },
     {
       name: 'Razer',
-      cat: 'Gaming'
+      cat: 'Gaming',
+      mark: 'R'
     },
     {
       name: 'Garmin',
-      cat: 'Fitness'
+      cat: 'Fitness',
+      mark: 'G'
     },
     {
       name: 'Ray-Ban',
-      cat: 'Fashion Accessories'
+      cat: 'Fashion Accessories',
+      mark: 'RB'
     }
   ];
 
@@ -2547,6 +2563,10 @@ export default function Home() {
                   hover:border-[#0F172A]
                 "
               >
+
+                <span className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-[11px] font-bold tracking-tight text-gray-800 transition-colors group-hover:border-white/30 group-hover:bg-white/10 group-hover:text-white">
+                  {b.mark}
+                </span>
 
                 <span className="
                   text-xs
