@@ -139,7 +139,7 @@ export default function Navbar() {
 
       {/* Main Navigation Bar */}
       <div className="mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8">
-        <div className="flex h-14 sm:h-16 items-center justify-between gap-1.5 sm:gap-4">
+        <div className="relative flex h-14 sm:h-16 items-center justify-between gap-1.5 sm:gap-4">
 
           {/* Left: Brand Identity */}
           <Link to="/" className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 group min-w-0">
@@ -161,7 +161,7 @@ export default function Navbar() {
           </Link>
 
           {/* Center: Primary Navigation Links (Desktop) */}
-          <nav className="hidden xl:flex items-center gap-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600">
+          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600 xl:flex">
             <Link
               to="/"
               className={`relative py-1.5 transition-colors ${location.pathname === '/'
