@@ -619,7 +619,6 @@
 
 
 
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -709,25 +708,25 @@ const defaultCategoryBanners = [
 
 const watchHeroSlides = [
   {
-    tag: 'Authorized Retailer & Luxury Consignment',
-    titleLine1: 'Curated Luxury',
-    titleLine2: 'Timepieces & Essentials',
-    description: 'Direct access to brand-certified Swiss and heritage watches, handcrafted leather bags, performance sneakers, and flagship technology with 100% verified authenticity and complimentary insured shipping.',
+    tag: 'NEW COLLECTION',
+    titleLine1: 'PRECISION.',
+    titleLine2: 'CRAFTED FOR TIME.',
+    description: 'Where timeless design meets modern performance.',
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200'
+  },
+  {
+    tag: 'LIMITED EDITION',
+    titleLine1: 'HERITAGE.',
+    titleLine2: 'SWISS CHRONOGRAPHS.',
+    description: 'Engineered for absolute accuracy and prestige.',
     image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg'
   },
   {
-    tag: 'Designed to Endure',
-    titleLine1: 'Heritage Swiss',
-    titleLine2: 'Swiss Chronographs',
-    description: 'Inspired by modern simplicity and crafted with unmatched detail. Our timepieces balance innovation and tradition to create a lasting impression.',
+    tag: 'AUTOMATIC SERIES',
+    titleLine1: 'TIMELESS.',
+    titleLine2: 'MASTERPIECE WATCHES.',
+    description: 'Crafted with sapphire crystal and fine leather.',
     image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200'
-  },
-  {
-    tag: 'Masterpiece Collection',
-    titleLine1: 'Automatic Royal',
-    titleLine2: 'Precision Timekeeping',
-    description: 'Engineered with sapphire crystal glass and precision automatic movement. Built for those who appreciate uncompromising horology.',
-    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=1200'
   }
 ];
 
@@ -910,8 +909,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* ================= FULL SCREEN FULL-WIDTH WATCH CAROUSEL HERO SECTION ================= */}
-      <section className="relative overflow-hidden w-full min-h-[520px] lg:min-h-[600px] flex items-center bg-[#EAE5DE]">
+      {/* ================= DARK LUXURY FULL-WIDTH WATCH HERO CAROUSEL SECTION ================= */}
+      <section className="relative w-full bg-[#0A0A0A] text-white overflow-hidden border-b border-neutral-800">
         {watchHeroSlides.map((slide, index) => (
           <div
             key={slide.titleLine1}
@@ -919,66 +918,46 @@ export default function Home() {
               index === currentSlide ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
-            {/* Full-width Background Image */}
+            {/* Background Watch Image */}
             <img
               src={slide.image}
               alt={slide.titleLine1}
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover object-center opacity-70"
             />
-            {/* Elegant Gradient Overlay to make text perfectly readable across full width */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#F5F2ED]/95 via-[#F5F2ED]/80 lg:via-[#F5F2ED]/65 to-transparent z-10" />
+            {/* Dark Cinematic Gradient Overlay matching reference image */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 lg:via-black/70 to-transparent z-10" />
           </div>
         ))}
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full px-4 py-12 sm:px-6 lg:px-8">
+        <div className="relative z-20 mx-auto max-w-7xl w-full px-4 pt-12 pb-16 sm:px-6 sm:pt-16 sm:pb-20 lg:px-8 min-h-[480px] lg:min-h-[540px] flex flex-col justify-between">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md px-3.5 py-1 mb-4 border border-amber-500/30 shadow-xs">
-              <span className="h-2 w-2 rounded-full bg-[#B89758]" />
-              <span className="text-[10px] font-bold tracking-[0.18em] text-gray-900 uppercase">
-                {watchHeroSlides[currentSlide].tag}
-              </span>
-            </div>
+            <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] text-neutral-400 uppercase block mb-3">
+              {watchHeroSlides[currentSlide].tag}
+            </span>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-gray-950 leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight text-white leading-[1.08]">
               {watchHeroSlides[currentSlide].titleLine1} <br />
-              <span className="font-serif italic font-normal text-[#B89758]">{watchHeroSlides[currentSlide].titleLine2}</span>
+              <span className="text-[#C5A880] font-normal">{watchHeroSlides[currentSlide].titleLine2}</span>
             </h1>
 
-            <p className="mt-4 text-sm sm:text-base leading-relaxed text-gray-800 max-w-lg font-normal">
+            <p className="mt-4 text-xs sm:text-sm leading-relaxed text-neutral-300 max-w-md">
               {watchHeroSlides[currentSlide].description}
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
-                to="/shop"
-                className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-black hover:scale-[1.02]"
+                to="/shop?category=Watches"
+                className="inline-flex items-center justify-center rounded-md bg-[#C5A880] px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-black transition hover:bg-[#b0936b]"
               >
-                <span className="text-white">Explore Catalog</span>
-                <ArrowRightIcon className="w-4 h-4 text-white" />
+                SHOP NEW IN
               </Link>
 
               <Link
-                to="/shop?category=Watches"
-                className="inline-flex items-center gap-2 rounded-full border border-gray-400 bg-white/90 backdrop-blur-md px-7 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-gray-900 transition hover:bg-white shadow-xs"
+                to="/shop"
+                className="inline-flex items-center justify-center rounded-md border border-neutral-600 bg-transparent px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-white/10"
               >
-                <span className="text-gray-900">Watch Collections</span>
+                EXPLORE COLLECTIONS
               </Link>
-            </div>
-
-            {/* Service Highlights */}
-            <div className="mt-8 grid grid-cols-3 gap-3 border-t border-gray-400/50 pt-5 text-gray-900 max-w-md">
-              <div>
-                <p className="text-base sm:text-xl font-bold text-gray-950">100%</p>
-                <p className="text-[9.5px] sm:text-[10px] text-gray-700 font-medium">Genuine Authenticity</p>
-              </div>
-              <div className="border-x border-gray-400/50 px-2 sm:px-3">
-                <p className="text-base sm:text-xl font-bold text-gray-950">₹2,000+</p>
-                <p className="text-[9.5px] sm:text-[10px] text-gray-700 font-medium">Free Insured Air</p>
-              </div>
-              <div>
-                <p className="text-base sm:text-xl font-bold text-gray-950">7 Days</p>
-                <p className="text-[9.5px] sm:text-[10px] text-gray-700 font-medium">Return Privilege</p>
-              </div>
             </div>
 
             {/* Slide Indicators */}
@@ -988,61 +967,44 @@ export default function Home() {
                   key={idx}
                   onClick={() => setCurrentSlide(idx)}
                   aria-label={`Go to slide ${idx + 1}`}
-                  className={`h-2 transition-all rounded-full ${
-                    idx === currentSlide ? 'w-8 bg-gray-900' : 'w-2 bg-gray-400 hover:bg-gray-600'
+                  className={`h-1.5 transition-all rounded-full ${
+                    idx === currentSlide ? 'w-6 bg-[#C5A880]' : 'w-2 bg-neutral-600 hover:bg-neutral-400'
                   }`}
                 />
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ================= FOUR PILLARS GUARANTEE ================= */}
-      <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
-
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <ShieldCheckIcon className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Certified Authentic</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Official brand warranty</p>
+          {/* Bottom Feature Bar matching reference layout */}
+          <div className="mt-12 pt-6 border-t border-neutral-800 grid grid-cols-2 md:grid-cols-4 gap-4 text-neutral-300">
+            <div className="flex items-center gap-3">
+              <TruckIcon className="w-5 h-5 text-[#C5A880] shrink-0" />
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white">Free Shipping</p>
+                <p className="text-[10px] text-neutral-400">On orders over $75</p>
               </div>
             </div>
-
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <TruckIcon className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Express Dispatch</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Free on orders &ge; ₹2,000</p>
+            <div className="flex items-center gap-3">
+              <BoxIcon className="w-5 h-5 text-[#C5A880] shrink-0" />
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white">Easy Returns</p>
+                <p className="text-[10px] text-neutral-400">30-day hassle free returns</p>
               </div>
             </div>
-
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <BoxIcon className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Secure Packaging</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Multi-point inspected</p>
+            <div className="flex items-center gap-3">
+              <ShieldCheckIcon className="w-5 h-5 text-[#C5A880] shrink-0" />
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white">Secure Payment</p>
+                <p className="text-[10px] text-neutral-400">100% secure checkout</p>
               </div>
             </div>
-
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <StarIcon className="w-3.5 h-3.5 text-gray-900" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Concierge Desk</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Ahmedabad flagship</p>
+            <div className="flex items-center gap-3">
+              <StarIcon className="w-5 h-5 text-[#C5A880] shrink-0" />
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-white">Customer Support</p>
+                <p className="text-[10px] text-neutral-400">We're here to help</p>
               </div>
             </div>
-
           </div>
         </div>
       </section>
