@@ -712,21 +712,21 @@ const watchHeroSlides = [
     titleLine1: 'PRECISION.',
     titleLine2: 'CRAFTED FOR TIME.',
     description: 'Where timeless design meets modern performance.',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200'
+    image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg'
   },
   {
     tag: 'LIMITED EDITION',
     titleLine1: 'HERITAGE.',
     titleLine2: 'SWISS CHRONOGRAPHS.',
     description: 'Engineered for absolute accuracy and prestige.',
-    image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg'
+    image: 'https://i.pinimg.com/736x/4e/3c/06/4e3c0664c648762c363e42f2618f7711.jpg'
   },
   {
     tag: 'AUTOMATIC SERIES',
     titleLine1: 'TIMELESS.',
     titleLine2: 'MASTERPIECE WATCHES.',
     description: 'Crafted with sapphire crystal and fine leather.',
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200'
+    image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg'
   }
 ];
 
