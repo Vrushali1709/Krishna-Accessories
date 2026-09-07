@@ -852,15 +852,15 @@ export default function AdminDashboard() {
           1. DEDICATED HIERARCHICAL SIDEBAR
       ========================================== */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#121316] text-zinc-300 border-r border-zinc-800/80 transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${mobileSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#1f232b] text-zinc-300 border-r border-[#2d323e] transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${mobileSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
           } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}`}
       >
 
         {/* Sidebar Brand Header */}
         <div className="flex flex-col min-h-0 flex-1">
-          <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
+          <div className="flex h-16 items-center justify-between px-4 border-b border-[#2d323e] shrink-0">
             <Link to="/admin" className="flex items-center gap-3 overflow-hidden min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-100 font-serif font-bold text-xs border border-zinc-700/60 shadow-xs">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#2a2f3a] text-zinc-100 font-serif font-bold text-xs border border-[#3a4150] shadow-xs">
                 KA
               </div>
               {!sidebarCollapsed && (
@@ -908,8 +908,8 @@ export default function AdminDashboard() {
                       }
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 font-medium transition-colors cursor-pointer ${isSectionActive
-                        ? 'bg-zinc-800/90 text-white font-semibold'
-                        : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
+                        ? 'bg-[#2f3542] text-white font-semibold shadow-xs'
+                        : 'text-zinc-300 hover:bg-[#282d38] hover:text-white'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -922,7 +922,7 @@ export default function AdminDashboard() {
                     {!sidebarCollapsed && (
                       <div className="flex items-center gap-1.5 shrink-0">
                         {sec.badge && (
-                          <span className="rounded-full bg-zinc-800 px-1.5 py-0.2 text-[9.5px] font-semibold text-zinc-300">
+                          <span className="rounded-full bg-[#2a2f3a] border border-[#3a4150]/60 px-1.5 py-0.2 text-[9.5px] font-semibold text-zinc-300">
                             {sec.badge}
                           </span>
                         )}
@@ -933,7 +933,7 @@ export default function AdminDashboard() {
 
                   {/* Sub-items List (Rendered when expanded) */}
                   {!sidebarCollapsed && isExpanded && (
-                    <div className="ml-4 pl-3 border-l border-zinc-800/80 space-y-0.5 pt-0.5 pb-1">
+                    <div className="ml-4 pl-3 border-l border-[#2d323e] space-y-0.5 pt-0.5 pb-1">
                       {sec.subItems.map((sub) => {
                         const isSubActive = isSectionActive && activeSubTab === sub.id;
                         return (
@@ -941,13 +941,13 @@ export default function AdminDashboard() {
                             key={sub.id}
                             onClick={() => handleNavSelect(sec.id, sub.id)}
                             className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-[11.5px] transition cursor-pointer ${isSubActive
-                                ? 'bg-zinc-800/80 text-white font-semibold'
-                                : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
+                                ? 'bg-[#2f3542] text-white font-semibold shadow-2xs'
+                                : 'text-zinc-400 hover:bg-[#282d38] hover:text-zinc-200 font-normal'
                               }`}
                           >
                             <span className="truncate">{sub.label}</span>
                             {sub.badge && (
-                              <span className="rounded-full bg-zinc-800 text-zinc-300 px-1.5 py-0.2 text-[9px] font-semibold">
+                              <span className="rounded-full bg-[#2a2f3a] text-zinc-300 px-1.5 py-0.2 text-[9px] font-semibold">
                                 {sub.badge}
                               </span>
                             )}
@@ -964,14 +964,14 @@ export default function AdminDashboard() {
         </div>
 
         {/* Sidebar Footer User Card */}
-        <div className="p-3 border-t border-zinc-800/80 bg-[#0F1012] shrink-0">
+        <div className="p-3 border-t border-[#2d323e] bg-[#191b22] shrink-0">
           {!sidebarCollapsed ? (
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-200 font-semibold text-xs border border-zinc-700">
+                  <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#2a2f3a] text-zinc-200 font-semibold text-xs border border-[#3a4150]">
                     SA
-                    <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-[#0F1012]" />
+                    <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-[#191b22]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-semibold text-zinc-200 truncate">Super Admin</p>
@@ -992,14 +992,14 @@ export default function AdminDashboard() {
                 <Link
                   to="/"
                   target="_blank"
-                  className="flex items-center justify-center gap-1 rounded-lg bg-zinc-800/70 hover:bg-zinc-800 py-1.5 text-[10.5px] font-medium text-zinc-300 transition truncate px-1"
+                  className="flex items-center justify-center gap-1 rounded-lg bg-[#282d38] hover:bg-[#323846] border border-[#363c4a]/60 py-1.5 text-[10.5px] font-medium text-zinc-200 transition truncate px-1"
                 >
                   <span>Storefront</span>
                   <ExternalLink className="h-2.5 w-2.5" />
                 </Link>
                 <button
                   onClick={handleAdminLogout}
-                  className="flex items-center justify-center rounded-lg bg-zinc-800/40 hover:bg-rose-950/40 border border-zinc-800 hover:border-rose-900/50 py-1.5 text-[10.5px] font-medium text-zinc-300 hover:text-rose-300 transition truncate px-1 cursor-pointer"
+                  className="flex items-center justify-center rounded-lg bg-[#282d38]/50 hover:bg-rose-950/40 border border-[#363c4a]/60 hover:border-rose-900/50 py-1.5 text-[10.5px] font-medium text-zinc-300 hover:text-rose-300 transition truncate px-1 cursor-pointer"
                 >
                   Sign Out
                 </button>
