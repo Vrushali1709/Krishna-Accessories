@@ -139,7 +139,7 @@ export default function Navbar() {
 
       {/* Main Navigation Bar */}
       <div className="mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8">
-        <div className="relative flex h-14 sm:h-16 items-center justify-between gap-1.5 sm:gap-4">
+        <div className="flex h-14 sm:h-16 items-center justify-between gap-1.5 sm:gap-4">
 
           {/* Left: Brand Identity */}
           <Link to="/" className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 group min-w-0">
@@ -161,7 +161,7 @@ export default function Navbar() {
           </Link>
 
           {/* Center: Primary Navigation Links (Desktop) */}
-          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600 xl:flex">
+          <nav className="hidden xl:flex items-center gap-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600">
             <Link
               to="/"
               className={`relative py-1.5 transition-colors ${location.pathname === '/'
@@ -437,14 +437,13 @@ export default function Navbar() {
             {/* Shopping Bag Button */}
             <Link
               to="/cart"
-              aria-label="Shopping bag"
-              title="Shopping bag"
-              className={`relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border transition ${location.pathname === '/cart'
+              className={`relative flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border px-1.5 sm:px-2.5 transition ${location.pathname === '/cart'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
             >
-              <BagIcon className="w-3.5 h-3.5 text-gray-800" />
+              <BagIcon className="w-3.5 h-3.5 text-gray-800 shrink-0" />
+              <span className="hidden md:inline text-[11px] font-semibold uppercase tracking-wider text-gray-900">Bag</span>
               {cartCount > 0 ? (
                 <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#111827] text-[8px] font-bold text-white shadow-2xs">
                   {cartCount}
