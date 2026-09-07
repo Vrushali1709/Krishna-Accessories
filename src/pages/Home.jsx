@@ -910,8 +910,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* ================= FULL SCREEN WATCH CAROUSEL HERO SECTION ================= */}
-      <section className="relative overflow-hidden bg-[#EFECE6] border-b border-gray-200/85 min-h-[520px] lg:min-h-[580px] flex items-center">
+      {/* ================= FULL SCREEN FULL-WIDTH WATCH CAROUSEL HERO SECTION ================= */}
+      <section className="relative overflow-hidden w-full min-h-[520px] lg:min-h-[600px] flex items-center bg-[#EAE5DE]">
         {watchHeroSlides.map((slide, index) => (
           <div
             key={slide.titleLine1}
@@ -919,80 +919,80 @@ export default function Home() {
               index === currentSlide ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
             }`}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#F4F1EC] via-[#F4F1EC]/90 lg:via-[#F4F1EC]/70 to-transparent z-10 lg:w-3/5" />
+            {/* Full-width Background Image */}
             <img
               src={slide.image}
               alt={slide.titleLine1}
-              className="absolute right-0 top-0 h-full w-full lg:w-3/5 object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover object-center"
             />
+            {/* Elegant Gradient Overlay to make text perfectly readable across full width */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#F5F2ED]/95 via-[#F5F2ED]/80 lg:via-[#F5F2ED]/65 to-transparent z-10" />
           </div>
         ))}
 
-        <div className="relative z-20 mx-auto flex max-w-7xl items-center px-4 py-10 sm:px-6 sm:py-14 lg:px-8 w-full">
-          <div className="grid lg:grid-cols-12 gap-8 items-center w-full">
-            <div className="lg:col-span-7 text-left max-w-2xl">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md px-3.5 py-1 mb-4 border border-amber-500/25 shadow-xs">
-                <span className="h-2 w-2 rounded-full bg-[#B89758]" />
-                <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.16em] text-gray-800 uppercase">
-                  {watchHeroSlides[currentSlide].tag}
-                </span>
+        <div className="relative z-20 mx-auto max-w-7xl w-full px-4 py-12 sm:px-6 lg:px-8">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md px-3.5 py-1 mb-4 border border-amber-500/30 shadow-xs">
+              <span className="h-2 w-2 rounded-full bg-[#B89758]" />
+              <span className="text-[10px] font-bold tracking-[0.18em] text-gray-900 uppercase">
+                {watchHeroSlides[currentSlide].tag}
+              </span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-gray-950 leading-[1.1]">
+              {watchHeroSlides[currentSlide].titleLine1} <br />
+              <span className="font-serif italic font-normal text-[#B89758]">{watchHeroSlides[currentSlide].titleLine2}</span>
+            </h1>
+
+            <p className="mt-4 text-sm sm:text-base leading-relaxed text-gray-800 max-w-lg font-normal">
+              {watchHeroSlides[currentSlide].description}
+            </p>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg transition hover:bg-black hover:scale-[1.02]"
+              >
+                <span className="text-white">Explore Catalog</span>
+                <ArrowRightIcon className="w-4 h-4 text-white" />
+              </Link>
+
+              <Link
+                to="/shop?category=Watches"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-400 bg-white/90 backdrop-blur-md px-7 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-gray-900 transition hover:bg-white shadow-xs"
+              >
+                <span className="text-gray-900">Watch Collections</span>
+              </Link>
+            </div>
+
+            {/* Service Highlights */}
+            <div className="mt-8 grid grid-cols-3 gap-3 border-t border-gray-400/50 pt-5 text-gray-900 max-w-md">
+              <div>
+                <p className="text-base sm:text-xl font-bold text-gray-950">100%</p>
+                <p className="text-[9.5px] sm:text-[10px] text-gray-700 font-medium">Genuine Authenticity</p>
               </div>
-
-              <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-bold tracking-tight text-gray-950 leading-[1.12]">
-                {watchHeroSlides[currentSlide].titleLine1} <br />
-                <span className="font-serif italic font-normal text-[#B89758]">{watchHeroSlides[currentSlide].titleLine2}</span>
-              </h1>
-
-              <p className="mt-3.5 text-xs sm:text-[13.5px] leading-relaxed text-gray-700 max-w-lg">
-                {watchHeroSlides[currentSlide].description}
-              </p>
-
-              <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
-                <Link
-                  to="/shop"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-6 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-black hover:scale-[1.02]"
-                >
-                  <span className="text-white">Explore Catalog</span>
-                  <ArrowRightIcon className="w-3.5 h-3.5 text-white" />
-                </Link>
-
-                <Link
-                  to="/shop?category=Watches"
-                  className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white/80 backdrop-blur-md px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-gray-900 transition hover:bg-white shadow-xs"
-                >
-                  <span className="text-gray-900">Watch Collections</span>
-                </Link>
+              <div className="border-x border-gray-400/50 px-2 sm:px-3">
+                <p className="text-base sm:text-xl font-bold text-gray-950">₹2,000+</p>
+                <p className="text-[9.5px] sm:text-[10px] text-gray-700 font-medium">Free Insured Air</p>
               </div>
-
-              {/* Service Highlights */}
-              <div className="mt-8 grid grid-cols-3 gap-3 border-t border-gray-300/60 pt-5 text-gray-900 max-w-md">
-                <div>
-                  <p className="text-base sm:text-xl font-bold text-gray-950">100%</p>
-                  <p className="text-[9.5px] sm:text-[10px] text-gray-600 font-medium">Genuine Authenticity</p>
-                </div>
-                <div className="border-x border-gray-300/60 px-2 sm:px-3">
-                  <p className="text-base sm:text-xl font-bold text-gray-950">₹2,000+</p>
-                  <p className="text-[9.5px] sm:text-[10px] text-gray-600 font-medium">Free Insured Air</p>
-                </div>
-                <div>
-                  <p className="text-base sm:text-xl font-bold text-gray-950">7 Days</p>
-                  <p className="text-[9.5px] sm:text-[10px] text-gray-600 font-medium">Return Privilege</p>
-                </div>
+              <div>
+                <p className="text-base sm:text-xl font-bold text-gray-950">7 Days</p>
+                <p className="text-[9.5px] sm:text-[10px] text-gray-700 font-medium">Return Privilege</p>
               </div>
+            </div>
 
-              {/* Carousel Slide Indicators */}
-              <div className="mt-6 flex items-center gap-2">
-                {watchHeroSlides.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentSlide(idx)}
-                    aria-label={`Go to slide ${idx + 1}`}
-                    className={`h-1.5 transition-all rounded-full ${
-                      idx === currentSlide ? 'w-8 bg-gray-900' : 'w-2 bg-gray-400/70 hover:bg-gray-600'
-                    }`}
-                  />
-                ))}
-              </div>
+            {/* Slide Indicators */}
+            <div className="mt-8 flex items-center gap-2">
+              {watchHeroSlides.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  className={`h-2 transition-all rounded-full ${
+                    idx === currentSlide ? 'w-8 bg-gray-900' : 'w-2 bg-gray-400 hover:bg-gray-600'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
