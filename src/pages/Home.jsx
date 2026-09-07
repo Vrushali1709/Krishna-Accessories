@@ -26,7 +26,7 @@ const defaultCategoryBanners = [
   {
     name: 'Bags & Wallets',
     description: 'Genuine Leather & Urban Backpacks',
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900',
+    image: 'https://i.pinimg.com/736x/15/dc/da/15dcdac0fcc6a94440471bf201b96b75.jpg',
     tag: 'Hidesign, Wildcraft, Tommy'
   },
   {
@@ -38,25 +38,25 @@ const defaultCategoryBanners = [
   {
     name: 'Mobiles',
     description: 'Flagship Titanium Handsets & Gear',
-    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900',
+    image: 'https://i.pinimg.com/736x/00/9b/91/009b91eaa9c50df8e5d5681cbde9a9c3.jpg',
     tag: 'Apple, Samsung, OnePlus'
   },
   {
     name: 'Clothes & Fashion',
     description: 'Tailored Suits, Denim & Luxury Apparel',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900',
+    image: 'https://i.pinimg.com/1200x/7e/e0/55/7ee055c1c667557a592fa716eb5005fc.jpg',
     tag: 'Levis, Zara, Tommy, Calvin Klein'
   },
   {
     name: 'Laptops',
     description: 'High-Performance OLED Workstations',
-    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900',
+    image: 'https://i.pinimg.com/1200x/fe/f7/b3/fef7b3cbaeb59afc974ab04dd20741e6.jpg',
     tag: 'Apple, Dell, HP, Asus'
   },
   {
     name: 'Electronics',
     description: 'Audiophile Noise-Cancelling Sound',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900',
+    image: 'https://i.pinimg.com/1200x/db/6c/da/db6cdaadde558a889e0c812ea679d8e1.jpg',
     tag: 'Sony, Bose, JBL, Marshall'
   },
   {
@@ -74,7 +74,7 @@ const defaultCategoryBanners = [
   {
     name: 'Fitness',
     description: 'GPS Multi-Sport Trackers & Health',
-    image: 'https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900',
+    image: 'https://i.pinimg.com/736x/ce/b4/1d/ceb41df7737b5918904522051f1f56f5.jpg',
     tag: 'Garmin, Fitbit, Apple, Noise'
   },
   {
