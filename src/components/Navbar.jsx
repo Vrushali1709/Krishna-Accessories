@@ -224,43 +224,6 @@ export default function Navbar() {
                         </Link>
                       ))}
                     </div>
-
-                    {/* Dedicated Watch Types Highlight */}
-                    <div className="mt-2.5 pt-2 border-t border-gray-100">
-                      <span className="text-[8.5px] font-bold uppercase tracking-wider text-amber-600 block px-1 mb-1">
-                        ⌚ Watch Editions & Types
-                      </span>
-                      <div className="grid grid-cols-2 gap-1">
-                        <Link
-                          to="/shop?category=Watches&watchType=Original"
-                          onClick={() => setCategoriesOpen(false)}
-                          className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium text-emerald-700 bg-emerald-50/60 hover:bg-emerald-100/80 transition"
-                        >
-                          <span>✨ Original</span>
-                        </Link>
-                        <Link
-                          to="/shop?category=Watches&watchType=First+Copy"
-                          onClick={() => setCategoriesOpen(false)}
-                          className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium text-indigo-700 bg-indigo-50/60 hover:bg-indigo-100/80 transition"
-                        >
-                          <span>⭐ 1st Copy</span>
-                        </Link>
-                        <Link
-                          to="/shop?category=Watches&watchType=Duplicate"
-                          onClick={() => setCategoriesOpen(false)}
-                          className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium text-amber-800 bg-amber-50/60 hover:bg-amber-100/80 transition"
-                        >
-                          <span>🔄 Duplicate</span>
-                        </Link>
-                        <Link
-                          to="/shop?category=Watches&watchType=Other"
-                          onClick={() => setCategoriesOpen(false)}
-                          className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium text-slate-700 bg-slate-100/80 hover:bg-slate-200 transition"
-                        >
-                          <span>🏷️ Other</span>
-                        </Link>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}

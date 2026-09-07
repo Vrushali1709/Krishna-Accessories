@@ -6,19 +6,6 @@ const BRANDS_KEY = "krishna_brands";
 const WISHLIST_KEY = "krishna_wishlist";
 const REVIEWS_KEY = "krishna_product_reviews";
 
-export const WATCH_TYPES = [
-  "Original",
-  "First Copy",
-  "Duplicate",
-  "Other",
-];
-
-export const defaultWatchTypes = WATCH_TYPES;
-
-export function getWatchTypes() {
-  return WATCH_TYPES;
-}
-
 export const defaultCategories = [
   "Watches",
   "Bags & Wallets",
@@ -45,8 +32,6 @@ export const defaultBrands = [
   "Tissot",
   "Rado",
   "Seiko",
-  "Audemars Piguet",
-  "Patek Philippe",
   // Bags & Wallets
   "Wildcraft",
   "American Tourister",
@@ -104,7 +89,7 @@ export const defaultBrands = [
 ];
 
 export const categoryBrandMap = {
-  "Watches": ["Titan", "Fossil", "Casio", "Rolex", "Fastrack", "Timex", "Omega", "Tissot", "Rado", "Seiko", "Audemars Piguet", "Patek Philippe"],
+  "Watches": ["Titan", "Fossil", "Casio", "Rolex", "Fastrack", "Timex", "Omega", "Tissot", "Rado", "Seiko"],
   "Bags & Wallets": ["Wildcraft", "American Tourister", "Samsonite", "Tommy Hilfiger", "Lavie", "Hidesign"],
   "Shoes": ["Nike", "Adidas", "Puma", "Reebok", "Jordan", "Woodland", "Asics"],
   "Mobiles": ["Apple", "Samsung", "OnePlus", "Google Pixel", "Xiaomi", "Vivo"],
@@ -125,7 +110,6 @@ export const defaultProducts = [
     brand: "Titan",
     category: "Watches",
     subcategory: "Analog Watches",
-    watchType: "Original",
     sku: "KA-TIT-001",
     price: 4999,
     oldPrice: 6999,
@@ -147,7 +131,6 @@ export const defaultProducts = [
       Movement: "Japanese Automatic Quartz",
       Glass: "Sapphire Crystal",
       WaterResistance: "50m / 5 ATM",
-      Grade: "100% Original Brand Authentic",
       Warranty: "2 Years International"
     },
     colors: ["Gold", "Silver", "Midnight Black"],
@@ -159,7 +142,6 @@ export const defaultProducts = [
     brand: "Fossil",
     category: "Watches",
     subcategory: "Chronograph Watches",
-    watchType: "Original",
     sku: "KA-FOS-002",
     price: 8999,
     oldPrice: 11999,
@@ -180,7 +162,6 @@ export const defaultProducts = [
       Movement: "Multi-Function Chronograph",
       Glass: "Mineral Glass",
       WaterResistance: "50m",
-      Grade: "100% Original Brand Authentic",
       Warranty: "2 Years"
     },
     colors: ["Royal Blue", "Deep Black"],
@@ -192,7 +173,6 @@ export const defaultProducts = [
     brand: "Casio",
     category: "Watches",
     subcategory: "Solar Watches",
-    watchType: "Original",
     sku: "KA-CAS-003",
     price: 9499,
     oldPrice: 12999,
@@ -213,7 +193,6 @@ export const defaultProducts = [
       Movement: "Tough Solar Quartz",
       Glass: "Sapphire Anti-Reflective",
       WaterResistance: "100m / 10 ATM",
-      Grade: "100% Original Brand Authentic",
       Warranty: "2 Years"
     },
     colors: ["Carbon Black", "Silver"],
@@ -221,15 +200,14 @@ export const defaultProducts = [
   },
   {
     id: 4,
-    name: "Submariner Luxury Master Edition",
+    name: "Submariner Luxury Tribute Edition",
     brand: "Rolex",
     category: "Watches",
     subcategory: "Luxury Watches",
-    watchType: "First Copy",
     sku: "KA-ROL-004",
-    price: 14999,
-    oldPrice: 21999,
-    discount: 31,
+    price: 18999,
+    oldPrice: 24999,
+    discount: 24,
     stock: 6,
     rating: 4.9,
     reviews: 75,
@@ -240,179 +218,16 @@ export const defaultProducts = [
       "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700",
       "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
     ],
-    description: "Master 1:1 First Copy luxury diver aesthetic with ceramic rotating bezel, luminescent hour markers, sweep second automatic caliber, and 904L steel.",
+    description: "Ultimate luxury diver aesthetic with ceramic rotating bezel, luminescent hour markers, and automatic perpetual self-winding caliber.",
     specifications: {
       Material: "Oystersteel 904L",
-      Movement: "Automatic Sweep Second Movement",
+      Movement: "Perpetual Mechanical Automatic",
       Glass: "Cyclops Sapphire Glass",
-      WaterResistance: "50m Water Resistant",
-      Grade: "1st Copy / Master 1:1 Edition",
-      Warranty: "1 Year Store Warranty"
+      WaterResistance: "300m / 30 ATM",
+      Warranty: "5 Years"
     },
     colors: ["Emerald Green", "Onyx Black", "Gold Two-Tone"],
     variants: ["Emerald Green Bezel", "Onyx Black"]
-  },
-  {
-    id: 101,
-    name: "Cosmograph Daytona Master 1:1 Chronograph",
-    brand: "Rolex",
-    category: "Watches",
-    subcategory: "Chronograph Watches",
-    watchType: "First Copy",
-    sku: "KA-ROL-FC101",
-    price: 15999,
-    oldPrice: 22999,
-    discount: 30,
-    stock: 10,
-    rating: 4.9,
-    reviews: 64,
-    status: "Active",
-    supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
-    images: [
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
-      "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700"
-    ],
-    description: "High-grade 1:1 First Copy Master Edition of the world-famous Daytona chronograph featuring working multi-dial subcounters, tachymeter ceramic bezel, and oysterlock clasp.",
-    specifications: {
-      Material: "904L Heavy Solid Steel",
-      Movement: "High Accuracy Chronograph Caliber",
-      Glass: "Scratch-Resistant Sapphire",
-      WaterResistance: "50m",
-      Grade: "1st Copy / Master 1:1 Edition",
-      Warranty: "1 Year Store Warranty"
-    },
-    colors: ["Panda White Dial", "Black Dial"],
-    variants: ["Oyster Bracelet", "Oysterflex Rubber"]
-  },
-  {
-    id: 102,
-    name: "Royal Oak Skeleton High Replica",
-    brand: "Audemars Piguet",
-    category: "Watches",
-    subcategory: "Skeleton Watches",
-    watchType: "Duplicate",
-    sku: "KA-AP-DUP102",
-    price: 4499,
-    oldPrice: 6999,
-    discount: 35,
-    stock: 20,
-    rating: 4.5,
-    reviews: 38,
-    status: "Active",
-    supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
-    images: [
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
-    ],
-    description: "High duplicate replica timepiece showcasing the classic octagonal bezel with exposed screws, open-worked skeleton dial aesthetic, and integrated steel strap.",
-    specifications: {
-      Material: "Stainless Steel Alloy",
-      Movement: "Automatic Movement",
-      Glass: "Hardened Mineral Glass",
-      WaterResistance: "Splash Resistant",
-      Grade: "Duplicate / High Replica",
-      Warranty: "6 Months Store Warranty"
-    },
-    colors: ["Silver Steel", "Rose Gold Tone"],
-    variants: ["Skeleton Open Dial", "Blue Tapisserie"]
-  },
-  {
-    id: 103,
-    name: "Seamaster Planet Ocean Replica",
-    brand: "Omega",
-    category: "Watches",
-    subcategory: "Diver Watches",
-    watchType: "Duplicate",
-    sku: "KA-OMG-DUP103",
-    price: 3899,
-    oldPrice: 5999,
-    discount: 35,
-    stock: 15,
-    rating: 4.4,
-    reviews: 29,
-    status: "Active",
-    supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700",
-    images: [
-      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700"
-    ],
-    description: "Stylish duplicate diver watch with rotating orange bezel, luminous dial indices, and sturdy rubber sport band.",
-    specifications: {
-      Material: "Steel & Silicone",
-      Movement: "Quartz High Accuracy",
-      Glass: "Mineral Crystal",
-      WaterResistance: "30m",
-      Grade: "Duplicate / Replica",
-      Warranty: "6 Months Store Warranty"
-    },
-    colors: ["Deep Ocean Blue", "Black / Orange"],
-    variants: ["Silicone Diver Strap", "Steel Mesh"]
-  },
-  {
-    id: 104,
-    name: "Vintage Digital Gold Retro Custom",
-    brand: "Casio",
-    category: "Watches",
-    subcategory: "Digital Watches",
-    watchType: "Other",
-    sku: "KA-CAS-OTH104",
-    price: 1999,
-    oldPrice: 2799,
-    discount: 28,
-    stock: 30,
-    rating: 4.6,
-    reviews: 55,
-    status: "Active",
-    supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700",
-    images: [
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
-    ],
-    description: "Custom vintage gold aesthetic digital watch with retro LED backlight, daily alarm, 1/100 second stopwatch, and adjustable gold-tone mesh clasp.",
-    specifications: {
-      Material: "Gold Ion Plated Resin & Steel",
-      Movement: "Digital Module",
-      Glass: "Resin Glass",
-      WaterResistance: "Water Resistant",
-      Grade: "Other / Custom Vintage Edition",
-      Warranty: "1 Year Warranty"
-    },
-    colors: ["Vintage Gold", "Silver Chrome"],
-    variants: ["Gold Mesh Band", "Silver Classic"]
-  },
-  {
-    id: 105,
-    name: "Calatrava Minimalist Dress Homage",
-    brand: "Patek Philippe",
-    category: "Watches",
-    subcategory: "Dress Watches",
-    watchType: "Other",
-    sku: "KA-PAT-OTH105",
-    price: 2999,
-    oldPrice: 4499,
-    discount: 33,
-    stock: 18,
-    rating: 4.7,
-    reviews: 21,
-    status: "Active",
-    supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
-    images: [
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700"
-    ],
-    description: "Elegant bespoke homage timepiece featuring ultra-slim bezel, roman numeral indices, and embossed brown leather band.",
-    specifications: {
-      Material: "Polished Rose Gold Alloy",
-      Movement: "Japanese Quartz",
-      Glass: "Mineral Glass",
-      WaterResistance: "Splash Resistant",
-      Grade: "Other / Bespoke Homage",
-      Warranty: "1 Year Store Warranty"
-    },
-    colors: ["Rose Gold / Brown Leather", "Silver / Black Leather"],
-    variants: ["Classic 40mm", "Slim 38mm"]
   },
   {
     id: 5,
@@ -420,7 +235,6 @@ export const defaultProducts = [
     brand: "Fastrack",
     category: "Watches",
     subcategory: "Smart Watches",
-    watchType: "Original",
     sku: "KA-FAS-005",
     price: 2499,
     oldPrice: 3999,
@@ -440,7 +254,6 @@ export const defaultProducts = [
       Battery: "7 Days Typical Usage",
       Connectivity: "Bluetooth 5.3",
       WaterResistance: "IP68 Water & Dust Resistant",
-      Grade: "100% Original Brand Authentic",
       Warranty: "1 Year"
     },
     colors: ["Pitch Black", "Teal Blue", "Olive Green"],
@@ -452,7 +265,6 @@ export const defaultProducts = [
     brand: "Tissot",
     category: "Watches",
     subcategory: "Swiss Made Watches",
-    watchType: "Original",
     sku: "KA-TIS-006",
     price: 34999,
     oldPrice: 42999,
@@ -473,7 +285,6 @@ export const defaultProducts = [
       Movement: "Swiss Powermatic 80 Automatic",
       Glass: "Domed Scratch-Resistant Sapphire",
       WaterResistance: "100m",
-      Grade: "100% Original Brand Authentic",
       Warranty: "2 Years International"
     },
     colors: ["Silver Dial / Brown Strap", "Black Dial / Black Strap"],
@@ -1053,21 +864,7 @@ export function getProducts() {
   }
   try {
     const parsed = JSON.parse(data);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      // Merge any new default products (e.g. newly added sample watches) if they don't exist yet
-      const existingIds = new Set(parsed.map(p => Number(p.id)));
-      const missingDefaults = defaultProducts.filter(dp => !existingIds.has(Number(dp.id)));
-      
-      const merged = [...parsed, ...missingDefaults].map(p => {
-        if (p.category === 'Watches' && !p.watchType) {
-          const match = defaultProducts.find(d => Number(d.id) === Number(p.id));
-          return { ...p, watchType: match?.watchType || 'Original' };
-        }
-        return p;
-      });
-      return merged;
-    }
-    return defaultProducts;
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultProducts;
   } catch {
     return defaultProducts;
   }
@@ -1082,20 +879,16 @@ export function getProductById(id) {
 
 export function saveProduct(product) {
   const products = getProducts();
-  const productToSave = {
-    ...product,
-    watchType: product.watchType || (product.category === 'Watches' ? 'Original' : '')
-  };
   let updated;
-  if (productToSave.id) {
-    const index = products.findIndex(p => Number(p.id) === Number(productToSave.id));
+  if (product.id) {
+    const index = products.findIndex(p => Number(p.id) === Number(product.id));
     if (index !== -1) {
-      updated = products.map(p => Number(p.id) === Number(productToSave.id) ? { ...p, ...productToSave } : p);
+      updated = products.map(p => Number(p.id) === Number(product.id) ? { ...p, ...product } : p);
     } else {
-      updated = [productToSave, ...products];
+      updated = [product, ...products];
     }
   } else {
-    updated = [{ ...productToSave, id: Date.now() }, ...products];
+    updated = [{ ...product, id: Date.now() }, ...products];
   }
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('productsUpdated'));

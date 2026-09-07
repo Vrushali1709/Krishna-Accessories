@@ -238,27 +238,9 @@ export default function ProductDetails() {
 
             {/* Header info: Brand, SKU & Supplier */}
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#B89758]">
-                  {product.brand}
-                </span>
-                {(product.category === 'Watches' || product.watchType) && (
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold shadow-2xs border ${
-                    (product.watchType || 'Original') === 'Original'
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                      : (product.watchType === 'First Copy')
-                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-                      : (product.watchType === 'Duplicate')
-                      ? 'bg-amber-50 text-amber-800 border-amber-200'
-                      : 'bg-slate-100 text-slate-700 border-slate-200'
-                  }`}>
-                    {(product.watchType || 'Original') === 'Original' && '✨ Original'}
-                    {product.watchType === 'First Copy' && '⭐ 1st Copy Master Edition'}
-                    {product.watchType === 'Duplicate' && '🔄 Duplicate / Replica'}
-                    {product.watchType === 'Other' && `🏷️ ${product.watchType || 'Custom'}`}
-                  </span>
-                )}
-              </div>
+              <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#B89758]">
+                {product.brand}
+              </span>
               <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[9.5px] font-mono text-gray-600 border border-gray-200">
                 SKU: {product.sku || `KA-${product.id}`}
               </span>
@@ -276,12 +258,6 @@ export default function ProductDetails() {
               </div>
               <span className="text-gray-300">&bull;</span>
               <span className="text-gray-500">Category: <strong className="text-gray-900">{product.category}</strong></span>
-              {(product.category === 'Watches' || product.watchType) && (
-                <>
-                  <span className="text-gray-300">&bull;</span>
-                  <span className="text-gray-500">Type: <strong className="text-gray-950">{product.watchType || 'Original'}</strong></span>
-                </>
-              )}
               <span className="text-gray-300">&bull;</span>
               <span className="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.2 rounded-full text-[10px]">
                 In Stock ({product.stock} units)
@@ -464,17 +440,6 @@ export default function ProductDetails() {
                     <span className="text-gray-500">Category</span>
                     <span className="font-semibold text-gray-900">{product.category}</span>
                   </div>
-                  {(product.category === 'Watches' || product.watchType) && (
-                    <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
-                      <span className="text-gray-500">Watch Quality / Type</span>
-                      <span className="font-bold text-gray-950 flex items-center gap-1">
-                        {(product.watchType || 'Original') === 'Original' && '✨ Original (100% Authentic)'}
-                        {product.watchType === 'First Copy' && '⭐ 1st Copy Master 1:1 Edition'}
-                        {product.watchType === 'Duplicate' && '🔄 Duplicate / High Replica'}
-                        {product.watchType === 'Other' && `🏷️ ${product.watchType || 'Custom'}`}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
                     <span className="text-gray-500">SKU Code</span>
                     <span className="font-mono font-semibold text-gray-900">{product.sku}</span>

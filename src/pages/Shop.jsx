@@ -4,7 +4,9 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts, getCategories, getBrandsByCategory, WATCH_TYPES } from '../utils/productStore'; import { getCurrentUser } from '../utils/auth'; import { addToCart } from '../utils/cart';
+import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
+import { getCurrentUser } from '../utils/auth';
+import { addToCart } from '../utils/cart';
 
 export default function Shop() {
   const navigate = useNavigate();
@@ -12,7 +14,6 @@ export default function Shop() {
 
   const urlCategory = searchParams.get('category') || 'All';
   const urlBrand = searchParams.get('brand') || 'All';
-  const urlWatchType = searchParams.get('watchType') || 'All';
   const urlSearch = searchParams.get('search') || '';
 
   const [products, setProducts] = useState(() => getProducts());
@@ -20,7 +21,6 @@ export default function Shop() {
 
   const [category, setCategory] = useState(urlCategory);
   const [selectedBrand, setSelectedBrand] = useState(urlBrand);
-  const [selectedWatchType, setSelectedWatchType] = useState(urlWatchType);
   const [sort, setSort] = useState('featured');
   const [search, setSearch] = useState(urlSearch);
   const [minPrice, setMinPrice] = useState(0);
@@ -51,12 +51,6 @@ export default function Shop() {
       setSelectedBrand(urlBrand);
     }
   }, [urlBrand]);
-
-  useEffect(() => {
-    if (urlWatchType && urlWatchType !== selectedWatchType) {
-      setSelectedWatchType(urlWatchType);
-    }
-  }, [urlWatchType]);
 
   useEffect(() => {
     if (urlSearch && urlSearch !== search) {
@@ -95,17 +89,6 @@ export default function Shop() {
     setSearchParams(params);
   };
 
-  const handleWatchTypeSelect = (type) => {
-    setSelectedWatchType(type);
-    const params = new URLSearchParams(searchParams);
-    if (type === 'All') {
-      params.delete('watchType');
-    } else {
-      params.set('watchType', type);
-    }
-    setSearchParams(params);
-  };
-
   // Filtered and Sorted Products
   const filteredProducts = useMemo(() => {
     let list = [...products];
@@ -118,14 +101,6 @@ export default function Shop() {
     // Brand Filter
     if (selectedBrand !== 'All') {
       list = list.filter((p) => p.brand?.toLowerCase() === selectedBrand.toLowerCase());
-    }
-
-    // Watch Type / Quality Filter
-    if (selectedWatchType !== 'All') {
-      list = list.filter((p) => {
-        const pType = p.watchType || (p.category === 'Watches' ? 'Original' : '');
-        return pType.toLowerCase() === selectedWatchType.toLowerCase();
-      });
     }
 
     // Price Range Filter
@@ -145,7 +120,6 @@ export default function Shop() {
           p.brand?.toLowerCase().includes(q) ||
           p.category?.toLowerCase().includes(q) ||
           p.subcategory?.toLowerCase().includes(q) ||
-          p.watchType?.toLowerCase().includes(q) ||
           p.sku?.toLowerCase().includes(q)
       );
     }
@@ -164,12 +138,11 @@ export default function Shop() {
     }
 
     return list;
-  }, [products, category, selectedBrand, selectedWatchType, minPrice, maxPrice, inStockOnly, search, sort]);
+  }, [products, category, selectedBrand, minPrice, maxPrice, inStockOnly, search, sort]);
 
   const clearAllFilters = () => {
     setCategory('All');
     setSelectedBrand('All');
-    setSelectedWatchType('All');
     setSort('featured');
     setSearch('');
     setMinPrice(0);
@@ -244,38 +217,6 @@ export default function Shop() {
               ))}
             </div>
           </div>
-
-          {/* Dedicated Watch Types Pill Bar (When browsing Watches or All) */}
-          {(category === 'Watches' || category === 'All') && (
-            <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center gap-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mr-1 flex items-center gap-1">
-                <span>⌚</span> Watch Types:
-              </span>
-              {['All', ...WATCH_TYPES].map((type) => {
-                const isSelected = selectedWatchType === type;
-                const icon = type === 'Original' ? '✨' : type === 'First Copy' ? '⭐' : type === 'Duplicate' ? '🔄' : type === 'Other' ? '🏷️' : '🔘';
-                const count = type === 'All'
-                  ? (category === 'Watches' ? products.filter(p => p.category === 'Watches').length : products.length)
-                  : products.filter(p => (category === 'All' || p.category === 'Watches') && (p.watchType || 'Original') === type).length;
-
-                return (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => handleWatchTypeSelect(type)}
-                    className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all duration-150 active:scale-95 ${isSelected
-                      ? 'bg-amber-100 text-amber-950 border border-amber-300 shadow-2xs'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                      }`}
-                  >
-                    <span>{icon}</span>
-                    <span>{type === 'All' ? 'All Watch Types' : type}</span>
-                    <span className={`text-[9.5px] font-mono ${isSelected ? 'text-amber-800' : 'text-gray-400'}`}>({count})</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
         </div>
       </section>
 
@@ -317,7 +258,7 @@ export default function Shop() {
               className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs font-semibold text-gray-800 lg:hidden hover:bg-gray-200"
             >
               <span>⚙️ Filters</span>
-              {(category !== 'All' || selectedBrand !== 'All' || selectedWatchType !== 'All' || search || inStockOnly) && (
+              {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly) && (
                 <span className="flex h-1.5 w-1.5 rounded-full bg-[#111827]" />
               )}
             </button>
@@ -360,7 +301,7 @@ export default function Shop() {
                   </span>
                 </div>
 
-                {(category !== 'All' || selectedBrand !== 'All' || selectedWatchType !== 'All' || search || inStockOnly || minPrice > 0 || maxPrice < 250000) && (
+                {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly || minPrice > 0 || maxPrice < 250000) && (
                   <button
                     type="button"
                     onClick={clearAllFilters}
@@ -396,61 +337,7 @@ export default function Shop() {
                 })}
               </div>
 
-              {/* 2. WATCH TYPE / QUALITY FILTER (Original, First Copy, Duplicate, Other) */}
-              {(category === 'Watches' || category === 'All') && (
-                <div className="border-t border-gray-100 pt-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 flex items-center gap-1">
-                      <span>⌚</span> Watch Types
-                    </h3>
-                    {selectedWatchType !== 'All' && (
-                      <button
-                        type="button"
-                        onClick={() => handleWatchTypeSelect('All')}
-                        className="text-[10px] text-[#B89758] hover:underline font-semibold"
-                      >
-                        Clear
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="space-y-1">
-                    {['All', ...WATCH_TYPES].map((type) => {
-                      const isSelected = selectedWatchType === type;
-                      const typeCount = type === 'All'
-                        ? (category === 'Watches' ? products.filter(p => p.category === 'Watches').length : products.length)
-                        : products.filter(p => (category === 'All' || p.category === 'Watches') && (p.watchType || 'Original') === type).length;
-
-                      const labelIcon = type === 'Original' ? '✨' : type === 'First Copy' ? '⭐' : type === 'Duplicate' ? '🔄' : type === 'Other' ? '🏷️' : '•';
-
-                      return (
-                        <label
-                          key={type}
-                          onClick={() => handleWatchTypeSelect(type)}
-                          className={`flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1 text-xs transition ${isSelected
-                            ? 'bg-amber-50 text-gray-950 font-semibold border border-amber-200'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-black'
-                            }`}
-                        >
-                          <div className="flex items-center gap-1.5 truncate">
-                            <input
-                              type="radio"
-                              name="watchTypeFilter"
-                              checked={isSelected}
-                              onChange={() => handleWatchTypeSelect(type)}
-                              className="accent-[#111827] h-3 w-3"
-                            />
-                            <span className="text-xs truncate">{labelIcon} {type === 'All' ? 'All Types' : type}</span>
-                          </div>
-                          <span className="text-[9.5px] text-gray-400 font-mono">({typeCount})</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* 3. DYNAMIC CATEGORY-WISE BRAND FILTER */}
+              {/* 2. DYNAMIC CATEGORY-WISE BRAND FILTER */}
               <div className="border-t border-gray-100 pt-3">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950">
@@ -500,7 +387,7 @@ export default function Shop() {
                 </div>
               </div>
 
-              {/* 4. Price Range Filter */}
+              {/* 3. Price Range Filter */}
               <div className="border-t border-gray-100 pt-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 mb-2">
                   Price Range
@@ -555,7 +442,7 @@ export default function Shop() {
                 </div>
               </div>
 
-              {/* 5. Availability Filter */}
+              {/* 4. Availability Filter */}
               <div className="border-t border-gray-100 pt-3">
                 <label className="flex cursor-pointer items-center justify-between">
                   <span className="text-xs text-gray-800 font-semibold">In Stock Only</span>
@@ -575,7 +462,7 @@ export default function Shop() {
           <section>
 
             {/* Active Filters Pill Bar */}
-            {(category !== 'All' || selectedBrand !== 'All' || selectedWatchType !== 'All' || search || inStockOnly) && (
+            {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly) && (
               <div className="mb-4 flex flex-wrap items-center gap-1.5 rounded-xl border border-gray-200/80 bg-white p-2.5 text-xs shadow-2xs animate-fade-in">
                 <span className="text-[10.5px] text-gray-400 font-semibold">Active:</span>
 
@@ -583,13 +470,6 @@ export default function Shop() {
                   <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-0.5 text-[10.5px] font-semibold text-gray-900 border border-gray-200">
                     Category: {category}
                     <button type="button" onClick={() => handleCategorySelect('All')} className="hover:text-black ml-0.5 font-bold">×</button>
-                  </span>
-                )}
-
-                {selectedWatchType !== 'All' && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[10.5px] font-semibold text-amber-900 border border-amber-200">
-                    Watch Type: {selectedWatchType}
-                    <button type="button" onClick={() => handleWatchTypeSelect('All')} className="hover:text-black ml-0.5 font-bold">×</button>
                   </span>
                 )}
 
