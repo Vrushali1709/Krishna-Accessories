@@ -771,7 +771,7 @@ const watchHeroSlides = [
     description:
       'Engineered for absolute accuracy and prestige.',
     image:
-      'https://i.pinimg.com/736x/4e/3c/06/4e3c0664c648762c363e42f2618f7711.jpg'
+      'https://i.pinimg.com/736x/e6/df/98/e6df982c03d41dbf66fe9470007838c2.jpg'
   },
 
   {
