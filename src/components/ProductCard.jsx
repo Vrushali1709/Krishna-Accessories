@@ -87,7 +87,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
       {/* Product Image Stage (Matching Reference Image) */}
       <Link
         to={`/product/${product.id}`}
-        className="relative aspect-square w-full overflow-hidden rounded-lg bg-[#F4F4F6] p-2 sm:p-3 flex items-center justify-center group-hover:bg-[#EFEFF2] transition-colors duration-250"
+        className="relative aspect-square w-full overflow-hidden rounded-lg bg-[#F4F4F6] p-2 sm:p-3 group-hover:bg-[#EFEFF2] transition-colors duration-250"
       >
         {/* Category Pill Tag (Top Right) */}
         <span className="absolute right-1.5 top-1.5 sm:right-2 sm:top-2 z-10 rounded-full bg-white/95 px-1.5 sm:px-2 py-0.5 text-[7.5px] sm:text-[8.5px] font-semibold uppercase tracking-wider text-gray-600 shadow-2xs border border-gray-200/50">
@@ -114,7 +114,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           type="button"
           onClick={handleWishlistToggle}
           aria-label="Toggle Wishlist"
-          className={`absolute ${discount > 0 ? 'top-6 sm:top-7 left-1.5 sm:left-2' : 'top-1.5 sm:top-2 left-1.5 sm:left-2'} z-10 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-white/95 text-[10px] sm:text-[11px] shadow-2xs border border-gray-200/60 transition-transform duration-150 hover:scale-110 active:scale-90 ${inWish ? 'text-rose-500 bg-rose-50/80' : 'text-gray-400 hover:text-rose-500'
+          className={`absolute left-1.5 top-8 sm:left-2 sm:top-9 z-10 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-white/95 text-sm shadow-2xs border border-gray-200/60 transition-transform duration-150 hover:scale-110 active:scale-90 ${inWish ? 'text-rose-500 bg-rose-50/80' : 'text-gray-400 hover:text-rose-500'
             }`}
         >
           {inWish ? '♥' : '♡'}
@@ -123,7 +123,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
         <img
           src={product.image || product.images?.[0]}
           alt={product.name}
-          className="h-full w-full object-contain mix-blend-multiply transition-transform duration-400 ease-out group-hover:scale-104"
+          className="h-full w-full rounded-md object-cover mix-blend-multiply transition-transform duration-400 ease-out group-hover:scale-104"
           loading="lazy"
         />
       </Link>
