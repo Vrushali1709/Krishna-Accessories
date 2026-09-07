@@ -1354,26 +1354,54 @@ export default function Home() {
                 `}
               >
 
-                {/* WATCH IMAGE */}
+                {/* WATCH IMAGE CONTAINER */}
 
-                <img
-                  src={slide.image}
-                  alt={slide.titleLine1}
-                  className="
+                <div className="
+                  absolute
+                  inset-0
+                  lg:left-auto
+                  lg:right-0
+                  lg:w-[54%]
+                  xl:w-[50%]
+                  2xl:w-[46%]
+                  h-full
+                  w-full
+                ">
+                  <img
+                    src={slide.image}
+                    alt={slide.titleLine1}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      object-[72%_center]
+                      sm:object-[68%_center]
+                      lg:object-cover
+                      lg:object-center
+                      scale-[1.02]
+                      lg:scale-100
+                    "
+                  />
+
+                  {/* Left edge luxury gradient blend on desktop */}
+                  <div className="
+                    hidden
+                    lg:block
                     absolute
-                    inset-0
-                    h-full
-                    w-full
-                    object-cover
-                    object-[72%_center]
-                    sm:object-[68%_center]
-                    lg:object-[70%_center]
-                    scale-[1.02]
-                  "
-                />
+                    inset-y-0
+                    left-0
+                    w-36
+                    xl:w-48
+                    bg-gradient-to-r
+                    from-[#070808]
+                    via-[#070808]/75
+                    to-transparent
+                    pointer-events-none
+                  " />
+                </div>
 
 
-                {/* LEFT DARK GRADIENT */}
+                {/* LEFT DARK GRADIENT (Ensures pristine text contrast and luxury negative space) */}
 
                 <div className="
                   absolute
@@ -1382,6 +1410,11 @@ export default function Home() {
                   from-black
                   via-black/65
                   to-black/10
+                  lg:from-[#070808]
+                  lg:via-[#070808]/90
+                  lg:via-[45%]
+                  lg:to-transparent
+                  pointer-events-none
                 " />
 
 
@@ -1391,11 +1424,13 @@ export default function Home() {
                   absolute
                   inset-x-0
                   bottom-0
-                  h-52
+                  h-44
+                  sm:h-52
                   bg-gradient-to-t
-                  from-black/90
-                  via-black/30
+                  from-[#070808]
+                  via-[#070808]/70
                   to-transparent
+                  pointer-events-none
                 " />
 
 
@@ -1405,6 +1440,7 @@ export default function Home() {
                   absolute
                   inset-0
                   bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.08)_45%,rgba(0,0,0,0.35)_100%)]
+                  pointer-events-none
                 " />
 
               </div>
@@ -1426,13 +1462,14 @@ export default function Home() {
           w-full
           min-h-[560px]
           sm:min-h-[590px]
-          lg:min-h-[620px]
+          lg:min-h-[660px]
+          xl:min-h-[680px]
           px-5
           sm:px-8
           lg:px-10
           pt-16
           sm:pt-20
-          lg:pt-24
+          lg:pt-14
           pb-8
           flex
           flex-col
@@ -1443,7 +1480,7 @@ export default function Home() {
               MAIN CONTENT
           -------------------------------------------------- */}
 
-          <div className="max-w-[620px]">
+          <div className="max-w-[620px] lg:my-auto lg:py-6">
 
             {/* COLLECTION LABEL */}
 
@@ -1642,16 +1679,19 @@ export default function Home() {
           -------------------------------------------------- */}
 
           <div className="
-            mt-12
+            mt-10
+            lg:mt-6
             border-t
             border-white/15
             pt-6
+            pb-1
             grid
             grid-cols-2
             gap-y-5
             gap-x-4
             md:grid-cols-4
             md:gap-6
+            lg:gap-8
           ">
 
             {/* FREE SHIPPING */}
