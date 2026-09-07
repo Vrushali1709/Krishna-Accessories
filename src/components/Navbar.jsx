@@ -540,11 +540,11 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="inline-flex h-7 sm:h-8 items-center gap-1 rounded-full bg-[#111827] px-2.5 sm:px-3.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white shadow-2xs transition hover:bg-black shrink-0"
+                aria-label="Login"
+                title="Login"
+                className="inline-flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0"
               >
-                <UserIcon className="w-3 h-3 text-white shrink-0" />
-                <span className="text-white hidden xs:inline">Sign In</span>
-                <span className="text-white xs:hidden">Login</span>
+                <UserIcon className="w-3.5 h-3.5 text-white" />
               </Link>
             )}
 
