@@ -619,6 +619,8 @@
 
 
 
+
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -922,14 +924,14 @@ export default function Home() {
             <img
               src={slide.image}
               alt={slide.titleLine1}
-              className="absolute inset-0 h-full w-full object-cover object-center opacity-70"
+              className="absolute inset-0 h-full w-full object-cover object-[58%_center] opacity-70 sm:object-[64%_center] lg:object-[70%_center]"
             />
             {/* Dark Cinematic Gradient Overlay matching reference image */}
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 lg:via-black/70 to-transparent z-10" />
           </div>
         ))}
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full px-4 pt-12 pb-16 sm:px-6 sm:pt-16 sm:pb-20 lg:px-8 min-h-[480px] lg:min-h-[540px] flex flex-col justify-between">
+        <div className="relative z-20 mx-auto max-w-7xl w-full px-4 pt-12 pb-16 sm:px-6 sm:pt-16 sm:pb-20 lg:px-8 min-h-[520px] lg:min-h-[560px] flex flex-col justify-between">
           <div className="max-w-xl">
             <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] text-neutral-400 uppercase block mb-3">
               {watchHeroSlides[currentSlide].tag}
