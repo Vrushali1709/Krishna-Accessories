@@ -142,21 +142,9 @@ export default function Navbar() {
         <div className="flex h-14 sm:h-16 items-center justify-between gap-1.5 sm:gap-4">
 
           {/* Left: Brand Identity */}
-          <Link to="/" className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 group min-w-0">
+          <Link to="/" aria-label="Krishna Accessories home" className="flex items-center shrink-0 group">
             <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-[#0F172A] text-amber-300 font-serif font-bold text-xs sm:text-sm shadow-2xs border border-amber-500/20 transition-transform group-hover:scale-105">
               K
-            </div>
-            <div className="flex flex-col min-w-0">
-              <div className="flex items-baseline gap-1 truncate">
-                <span className="font-serif text-xs sm:text-base font-bold tracking-tight text-gray-950 truncate">
-                  KA
-                </span>
-                <span className="text-[8px] sm:text-[10px] font-bold tracking-[0.14em] sm:tracking-[0.16em] text-[#B89758] uppercase truncate">
-                </span>
-              </div>
-              <span className="hidden xs:inline text-[7px] sm:text-[8px] font-medium tracking-[0.18em] text-gray-400 uppercase truncate">
-                Luxury Timepieces & Curated Goods
-              </span>
             </div>
           </Link>
 
