@@ -2012,10 +2012,7 @@ export default function Home() {
               "
             >
               <span>View All</span>
-               <ArrowRightIcon className="
-                w-3
-                h-3
-              " />
+              
             </Link>
 
           </div>
