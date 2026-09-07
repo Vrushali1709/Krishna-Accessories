@@ -20,7 +20,7 @@ const defaultCategoryBanners = [
   {
     name: 'Watches',
     description: 'Heritage Swiss & Smart Chronographs',
-    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900',
+    image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg',
     tag: 'Titan, Fossil, Rolex, Casio'
   },
   {
