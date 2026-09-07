@@ -151,31 +151,31 @@ export default function ProductDetails() {
 
       {/* Breadcrumb Navigation */}
       <div className="border-b border-gray-200/80 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-2.5 text-xs text-gray-500 sm:px-6 lg:px-8 flex items-center gap-1.5">
-          <Link to="/" className="hover:text-black">Home</Link>
-          <span className="text-gray-300">/</span>
-          <Link to="/shop" className="hover:text-black">Shop</Link>
-          <span className="text-gray-300">/</span>
-          <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="hover:text-black font-medium text-gray-700">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-2 text-xs text-gray-500 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap">
+          <Link to="/" className="hover:text-black shrink-0">Home</Link>
+          <span className="text-gray-300 shrink-0">/</span>
+          <Link to="/shop" className="hover:text-black shrink-0">Shop</Link>
+          <span className="text-gray-300 shrink-0">/</span>
+          <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="hover:text-black font-medium text-gray-700 shrink-0">
             {product.category}
           </Link>
-          <span className="text-gray-300">/</span>
+          <span className="text-gray-300 shrink-0">/</span>
           <span className="text-gray-900 font-semibold truncate max-w-xs">{product.name}</span>
         </div>
       </div>
 
       {/* Main Product Showcase */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
 
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 items-start">
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-10 items-start">
 
           {/* Left Column: Images Gallery */}
-          <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3">
 
             {/* Main Stage Image */}
-            <div className="relative aspect-square overflow-hidden rounded-2xl border border-gray-200/80 bg-[#F4F4F6] p-6 flex items-center justify-center shadow-2xs">
+            <div className="relative aspect-square overflow-hidden rounded-2xl border border-gray-200/80 bg-[#F4F4F6] p-4 sm:p-6 flex items-center justify-center shadow-2xs">
               {discount > 0 && (
-                <span className="absolute left-3 top-3 z-10 rounded-full bg-[#0F172A] px-2.5 py-0.5 text-[10px] font-bold text-white shadow-2xs">
+                <span className="absolute left-2.5 top-2.5 sm:left-3 sm:top-3 z-10 rounded-full bg-[#0F172A] px-2 sm:px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-white shadow-2xs">
                   {discount}% OFF
                 </span>
               )}
@@ -183,11 +183,11 @@ export default function ProductDetails() {
               <button
                 type="button"
                 onClick={handleWishlistToggle}
-                className={`absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white/95 shadow-2xs transition hover:scale-105 ${inWish ? 'text-rose-500 border-rose-200 bg-rose-50/80' : 'text-gray-500 hover:text-black'
+                className={`absolute right-2.5 top-2.5 sm:right-3 sm:top-3 z-10 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-gray-200 bg-white/95 shadow-2xs transition hover:scale-105 ${inWish ? 'text-rose-500 border-rose-200 bg-rose-50/80' : 'text-gray-500 hover:text-black'
                   }`}
                 title={inWish ? "Remove from Wishlist" : "Add to Wishlist"}
               >
-                <HeartIcon className="w-4 h-4" filled={inWish} />
+                <HeartIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" filled={inWish} />
               </button>
 
               <img
@@ -197,15 +197,15 @@ export default function ProductDetails() {
               />
             </div>
 
-            {/* Thumbnail Strip */}
+            {/* Thumbnail Strip (Horizontal Swipeable on Mobile) */}
             {images.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="flex sm:grid sm:grid-cols-4 gap-2 overflow-x-auto no-scrollbar pb-1">
                 {images.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setSelectedImage(idx)}
-                    className={`aspect-square overflow-hidden rounded-xl border p-1.5 bg-[#F4F4F6] transition ${selectedImage === idx
+                    className={`shrink-0 w-16 sm:w-auto aspect-square overflow-hidden rounded-xl border p-1.5 bg-[#F4F4F6] transition ${selectedImage === idx
                       ? 'border-gray-950 ring-1 ring-gray-950/20'
                       : 'border-gray-200 hover:border-gray-400'
                       }`}
@@ -217,57 +217,57 @@ export default function ProductDetails() {
             )}
 
             {/* Trust Assurances Under Gallery */}
-            <div className="grid grid-cols-3 gap-2 rounded-xl border border-gray-200/80 bg-white p-3 text-center shadow-2xs">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 rounded-xl border border-gray-200/80 bg-white p-2.5 sm:p-3 text-center shadow-2xs">
               <div>
-                <span className="text-emerald-600 text-sm font-bold">✓</span>
-                <p className="text-[11px] font-bold text-gray-900 mt-0.2">100% Genuine</p>
-                <p className="text-[9.5px] text-gray-500">Official Warranty Card</p>
+                <span className="text-emerald-600 text-xs sm:text-sm font-bold">✓</span>
+                <p className="text-[10px] sm:text-[11px] font-bold text-gray-900 mt-0.2">100% Genuine</p>
+                <p className="text-[8.5px] sm:text-[9.5px] text-gray-500 truncate">Official Warranty</p>
               </div>
               <div className="border-x border-gray-100">
-                <span className="text-gray-900 text-sm font-bold">🚚</span>
-                <p className="text-[11px] font-bold text-gray-900 mt-0.2">Free Express</p>
-                <p className="text-[9.5px] text-gray-500">Orders &ge; ₹2,000</p>
+                <span className="text-gray-900 text-xs sm:text-sm font-bold">🚚</span>
+                <p className="text-[10px] sm:text-[11px] font-bold text-gray-900 mt-0.2">Free Express</p>
+                <p className="text-[8.5px] sm:text-[9.5px] text-gray-500 truncate">&ge; ₹2,000</p>
               </div>
               <div>
-                <span className="text-gray-900 text-sm font-bold">🛡️</span>
-                <p className="text-[11px] font-bold text-gray-900 mt-0.2">Warranty</p>
-                <p className="text-[9.5px] text-gray-500">All-India Network</p>
+                <span className="text-gray-900 text-xs sm:text-sm font-bold">🛡️</span>
+                <p className="text-[10px] sm:text-[11px] font-bold text-gray-900 mt-0.2">Warranty</p>
+                <p className="text-[8.5px] sm:text-[9.5px] text-gray-500 truncate">All-India</p>
               </div>
             </div>
 
           </div>
 
           {/* Right Column: Product Info & Buy Box */}
-          <div className="flex flex-col justify-start rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-xs">
+          <div className="flex flex-col justify-start rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-6 shadow-xs">
 
             {/* Header info: Brand, SKU & Supplier */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#B89758]">
+            <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+              <span className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#B89758]">
                 {product.brand}
               </span>
-              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[9.5px] font-mono text-gray-600 border border-gray-200">
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[9px] sm:text-[9.5px] font-mono text-gray-600 border border-gray-200">
                 SKU: {product.sku || `KA-${product.id}`}
               </span>
             </div>
 
-            <h1 className="mt-1.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+            <h1 className="mt-1 sm:mt-1.5 text-lg sm:text-2xl font-bold tracking-tight text-gray-950">
               {product.name}
             </h1>
 
             {/* Rating, Category & Watch Type Status */}
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-              <div className="flex items-center gap-1 font-semibold text-gray-900">
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
+              <div className="flex items-center gap-1 font-semibold text-gray-900 text-[11px] sm:text-xs">
                 <span className="text-amber-500">★ {product.rating || 4.8}</span>
                 <span className="text-gray-400 font-normal">({reviews.length} Reviews)</span>
               </div>
               <span className="text-gray-300">&bull;</span>
-              <span className="text-gray-500">Category: <strong className="text-gray-900">{product.category}</strong></span>
+              <span className="text-gray-500 text-[11px] sm:text-xs">Category: <strong className="text-gray-900">{product.category}</strong></span>
 
               {/* Watch Type Pill */}
               {isWatch && watchMeta && (
                 <>
                   <span className="text-gray-300">&bull;</span>
-                  <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border ${watchMeta.badgeClass}`}>
+                  <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[9.5px] sm:text-[10px] font-bold border ${watchMeta.badgeClass}`}>
                     <span className={`h-1.5 w-1.5 rounded-full ${watchMeta.dotClass || 'bg-current'}`} />
                     {watchMeta.label}
                   </span>
@@ -275,25 +275,25 @@ export default function ProductDetails() {
               )}
 
               <span className="text-gray-300">&bull;</span>
-              <span className="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.2 rounded-full text-[10px]">
+              <span className="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.2 rounded-full text-[9.5px] sm:text-[10px]">
                 In Stock ({product.stock} units)
               </span>
             </div>
 
             {/* Watch Type Notice Banner */}
             {isWatch && watchMeta && (
-              <div className="mt-2.5 flex items-start gap-2 rounded-xl bg-gray-50 border border-gray-200/80 p-2.5 text-xs text-gray-700">
-                <span className="text-sm">⌚</span>
-                <div>
-                  <span className="font-bold text-gray-900 block">{watchMeta.tag}</span>
-                  <p className="text-[11px] text-gray-500 mt-0.5">{watchMeta.description}</p>
+              <div className="mt-2.5 sm:mt-3 flex items-start gap-2.5 rounded-xl bg-gray-50 border border-gray-200/80 p-2.5 sm:p-3 text-xs text-gray-700">
+                <span className="text-base shrink-0 mt-0.5">⌚</span>
+                <div className="min-w-0">
+                  <span className="font-bold text-gray-900 block text-xs">{watchMeta.tag}</span>
+                  <p className="text-[11px] text-gray-600 mt-0.5 leading-relaxed">{watchMeta.description}</p>
                 </div>
               </div>
             )}
 
             {/* Price Box */}
-            <div className="mt-3.5 rounded-xl bg-[#F8F9FA] border border-gray-200 p-3.5">
-              <div className="flex items-baseline gap-2.5">
+            <div className="mt-3 sm:mt-3.5 rounded-xl bg-[#F8F9FA] border border-gray-200 p-3 sm:p-3.5">
+              <div className="flex flex-wrap items-baseline gap-2 sm:gap-2.5">
                 <span className="text-xl sm:text-2xl font-bold text-gray-950">
                   ₹{Number(product.price).toLocaleString('en-IN')}
                 </span>
@@ -303,26 +303,26 @@ export default function ProductDetails() {
                   </span>
                 )}
                 {savings > 0 && (
-                  <span className="rounded-full bg-emerald-100 border border-emerald-200 px-2 py-0.2 text-[10.5px] font-semibold text-emerald-800">
+                  <span className="rounded-full bg-emerald-100 border border-emerald-200 px-2 py-0.2 text-[10px] sm:text-[10.5px] font-semibold text-emerald-800">
                     Save ₹{savings.toLocaleString('en-IN')} ({discount}%)
                   </span>
                 )}
               </div>
-              <p className="mt-0.5 text-[11px] text-gray-500">
+              <p className="mt-0.5 text-[10.5px] sm:text-[11px] text-gray-500">
                 Inclusive of all GST &bull; Insured Express Delivery across India
               </p>
             </div>
 
             {/* Short Description */}
-            <p className="mt-3 text-xs leading-relaxed text-gray-600">
+            <p className="mt-2.5 sm:mt-3 text-xs leading-relaxed text-gray-600">
               {product.description}
             </p>
 
             {/* Color Options */}
             {product.colors && product.colors.length > 0 && (
-              <div className="mt-3.5">
+              <div className="mt-3 sm:mt-3.5">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-700">Finish:</span>
+                  <span className="text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-wider text-gray-700">Finish:</span>
                   <span className="text-[11px] text-gray-900 font-semibold">{selectedColor}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -331,7 +331,7 @@ export default function ProductDetails() {
                       key={color}
                       type="button"
                       onClick={() => setSelectedColor(color)}
-                      className={`rounded-lg border px-3 py-1 text-xs font-medium transition ${selectedColor === color
+                      className={`rounded-lg border px-2.5 sm:px-3 py-1 text-xs font-medium transition ${selectedColor === color
                         ? 'border-gray-950 bg-[#0F172A] text-white shadow-2xs'
                         : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'
                         }`}
@@ -347,7 +347,7 @@ export default function ProductDetails() {
             {product.variants && product.variants.length > 0 && (
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-700">Edition / Size:</span>
+                  <span className="text-[10.5px] sm:text-[11px] font-semibold uppercase tracking-wider text-gray-700">Edition / Size:</span>
                   <span className="text-[11px] text-gray-900 font-semibold">{selectedVariant}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -356,7 +356,7 @@ export default function ProductDetails() {
                       key={v}
                       type="button"
                       onClick={() => setSelectedVariant(v)}
-                      className={`rounded-lg border px-3 py-1 text-xs font-medium transition ${selectedVariant === v
+                      className={`rounded-lg border px-2.5 sm:px-3 py-1 text-xs font-medium transition ${selectedVariant === v
                         ? 'border-gray-950 bg-[#0F172A] text-white shadow-2xs'
                         : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'
                         }`}
@@ -369,7 +369,7 @@ export default function ProductDetails() {
             )}
 
             {/* Quantity Stepper & Actions */}
-            <div className="mt-4 space-y-3 border-t border-gray-100 pt-3.5">
+            <div className="mt-3.5 sm:mt-4 space-y-3 border-t border-gray-100 pt-3.5">
 
               <div className="flex items-center gap-2.5">
                 <span className="text-xs font-semibold text-gray-700">Quantity:</span>
@@ -397,19 +397,19 @@ export default function ProductDetails() {
                 </span>
               </div>
 
-              {/* Action Buttons */}
-              <div className="grid gap-2 sm:grid-cols-2 pt-1">
+              {/* Action Buttons (Full width and prominent on mobile) */}
+              <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 pt-1">
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="rounded-full border border-gray-300 bg-[#F4F4F6] py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-900 transition hover:bg-gray-200"
+                  className="rounded-full border border-gray-300 bg-[#F4F4F6] py-2.5 sm:py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-900 transition hover:bg-gray-200 active:scale-98"
                 >
                   Add to Bag
                 </button>
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="rounded-full bg-[#111827] py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-black shadow-xs border border-gray-900"
+                  className="rounded-full bg-[#111827] py-2.5 sm:py-3 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-black shadow-xs border border-gray-900 active:scale-98"
                 >
                   Buy Now
                 </button>
@@ -422,9 +422,9 @@ export default function ProductDetails() {
         </div>
 
         {/* Tabbed Specifications & Customer Reviews */}
-        <section className="mt-10 rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-xs">
+        <section className="mt-8 sm:mt-10 rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-6 shadow-xs">
 
-          <div className="flex border-b border-gray-200 gap-4 overflow-x-auto">
+          <div className="flex border-b border-gray-200 gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
             <button
               onClick={() => setActiveTab('specs')}
               className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'specs'
@@ -457,39 +457,39 @@ export default function ProductDetails() {
           <div className="mt-4">
             {/* Specs Tab */}
             {activeTab === 'specs' && (
-              <div className="grid gap-4 sm:grid-cols-2 animate-fade-in">
-                <div className="space-y-2">
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
+              <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 animate-fade-in">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs gap-2">
                     <span className="text-gray-500">Brand</span>
                     <span className="font-semibold text-gray-900">{product.brand}</span>
                   </div>
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
+                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs gap-2">
                     <span className="text-gray-500">Category</span>
                     <span className="font-semibold text-gray-900">{product.category}</span>
                   </div>
                   {isWatch && watchMeta && (
-                    <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs items-center">
+                    <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs items-center gap-2">
                       <span className="text-gray-500">Watch Quality Type</span>
                       <span className={`inline-flex items-center gap-1 rounded px-1.5 py-0.2 text-[9.5px] font-bold border ${watchMeta.badgeClass}`}>
                         {watchMeta.label}
                       </span>
                     </div>
                   )}
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
+                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs gap-2">
                     <span className="text-gray-500">SKU Code</span>
                     <span className="font-mono font-semibold text-gray-900">{product.sku}</span>
                   </div>
-                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
+                  <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs gap-2">
                     <span className="text-gray-500">Authorized Vendor</span>
                     <span className="font-semibold text-gray-900">{product.supplier || 'Apex Timepieces Ltd.'}</span>
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5 sm:space-y-2">
                   {product.specifications && Object.entries(product.specifications).map(([key, val]) => (
-                    <div key={key} className="flex justify-between border-b border-gray-100 py-1.5 text-xs">
+                    <div key={key} className="flex justify-between border-b border-gray-100 py-1.5 text-xs gap-2">
                       <span className="text-gray-500">{key}</span>
-                      <span className="font-semibold text-gray-900">{val}</span>
+                      <span className="font-semibold text-gray-900 text-right">{val}</span>
                     </div>
                   ))}
                 </div>
@@ -560,26 +560,29 @@ export default function ProductDetails() {
 
         </section>
 
-        {/* Related Products Showcase */}
+        {/* Related Products Showcase (2-columns on Mobile) */}
         {relatedProducts.length > 0 && (
-          <section className="mt-10">
-            <div className="flex items-center justify-between mb-4">
+          <section className="mt-8 sm:mt-10">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div>
-                <p className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-gray-400">You May Also Like</p>
-                <h3 className="text-lg font-bold tracking-tight text-gray-950">Similar Curated Items</h3>
+                <p className="text-[9px] sm:text-[9.5px] font-semibold uppercase tracking-[0.16em] text-gray-400">You May Also Like</p>
+                <h3 className="text-base sm:text-lg font-bold tracking-tight text-gray-950">Similar Curated Items</h3>
               </div>
               <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="text-xs font-semibold text-gray-900 hover:underline">
                 View All {product.category} &rarr;
               </Link>
             </div>
 
-            <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3.5 lg:grid-cols-4">
               {relatedProducts.map((p) => (
                 <ProductCard
                   key={p.id}
                   product={p}
-                  onAddToCart={handleAddToCart}
-                  onBuyNow={handleBuyNow}
+                  onAddToCart={() => addToCart(p, 1)}
+                  onBuyNow={() => {
+                    addToCart(p, 1);
+                    navigate('/checkout');
+                  }}
                 />
               ))}
             </div>

@@ -613,11 +613,44 @@ export default function Navbar() {
                   <Link
                     key={c}
                     to={`/shop?category=${encodeURIComponent(c)}`}
+                    onClick={() => setMobileMenuOpen(false)}
                     className="rounded-md bg-[#F4F4F6] px-2 py-0.5 text-[10px] text-gray-800 hover:bg-gray-200"
                   >
                     {c}
                   </Link>
                 ))}
+              </div>
+            </div>
+
+            {/* Dedicated Watch Editions & Quality Types on Mobile */}
+            <div className="py-2 px-3 border-b border-gray-100 mb-1">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[8.5px] text-amber-600 block font-bold uppercase tracking-widest">
+                  ⌚ Watch Editions (7 Quality Types)
+                </span>
+                <Link
+                  to="/shop?category=Watches"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-[9px] font-bold text-gray-900 hover:underline normal-case"
+                >
+                  All &rarr;
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 gap-1 normal-case font-medium">
+                {WATCH_TYPES.map(wt => {
+                  const meta = WATCH_TYPE_METADATA[wt];
+                  return (
+                    <Link
+                      key={wt}
+                      to={`/shop?category=Watches&watchType=${encodeURIComponent(wt)}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-1.5 rounded-md bg-[#F4F4F6] px-2 py-1 text-[10px] text-gray-800 hover:bg-gray-200"
+                    >
+                      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${meta?.dotClass || 'bg-gray-400'}`} />
+                      <span className="truncate">{wt}</span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 

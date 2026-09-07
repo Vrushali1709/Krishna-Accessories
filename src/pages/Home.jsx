@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts } from '../utils/productStore';
+import { getProducts, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { ShieldCheckIcon, TruckIcon, StarIcon, ArrowRightIcon, BoxIcon } from '../components/Icons';
@@ -290,8 +290,54 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ================= WATCH QUALITY TYPES (7 EDITIONS) MOBILE-OPTIMIZED SHOWCASE ================= */}
+      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
+        <div className="rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base sm:text-lg">⌚</span>
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-gray-950 uppercase tracking-wider">
+                  Watch Editions & Quality Types
+                </h3>
+                <p className="text-[10px] sm:text-[11px] text-gray-500">
+                  Explore by certified authenticity grade, master replicas, and pre-owned luxury
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/shop?category=Watches"
+              className="text-[10.5px] sm:text-xs font-bold text-[#B89758] hover:underline flex items-center gap-0.5 shrink-0"
+            >
+              <span>Explore All</span>
+              <span>&rarr;</span>
+            </Link>
+          </div>
+
+          {/* Swipable Pill Badges on Mobile */}
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1">
+            {WATCH_TYPES.map((wt) => {
+              const meta = WATCH_TYPE_METADATA[wt];
+              const count = products.filter(p => (p.category === 'Watches' || p.watchType) && (p.watchType || 'Original') === wt).length;
+
+              return (
+                <Link
+                  key={wt}
+                  to={`/shop?category=Watches&watchType=${encodeURIComponent(wt)}`}
+                  className={`shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition border ${meta?.badgeClass || 'bg-gray-100 text-gray-800 border-gray-200'} hover:opacity-90 hover:scale-[1.02]`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${meta?.dotClass || 'bg-current'}`} />
+                  <span className="whitespace-nowrap">{wt}</span>
+                  <span className="text-[10px] opacity-70 font-mono">({count})</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ================= PROMOTIONAL VOUCHER BANNER ================= */}
-      <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
         <div className="rounded-2xl bg-[#0F172A] text-white p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 shadow-sm border border-slate-800">
           <div className="flex items-center gap-3 w-full md:w-auto min-w-0">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-base border border-white/10">
