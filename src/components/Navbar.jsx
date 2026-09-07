@@ -437,13 +437,14 @@ export default function Navbar() {
             {/* Shopping Bag Button */}
             <Link
               to="/cart"
-              className={`relative flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border px-1.5 sm:px-2.5 transition ${location.pathname === '/cart'
+              aria-label="Shopping bag"
+              title="Shopping bag"
+              className={`relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border transition ${location.pathname === '/cart'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
             >
-              <BagIcon className="w-3.5 h-3.5 text-gray-800 shrink-0" />
-              <span className="hidden md:inline text-[11px] font-semibold uppercase tracking-wider text-gray-900">Bag</span>
+              <BagIcon className="w-3.5 h-3.5 text-gray-800" />
               {cartCount > 0 ? (
                 <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#111827] text-[8px] font-bold text-white shadow-2xs">
                   {cartCount}
