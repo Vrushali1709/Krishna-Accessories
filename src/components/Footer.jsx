@@ -68,42 +68,54 @@ export default function Footer() {
       </section>
 
       {/* 2. Main Dark Luxury Footer */}
-      <footer className="border-t border-[#4a4035] bg-[#211f1c] text-[#f4eee4]">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
+      <footer className="border-t border-slate-800 bg-[#090D16] text-white relative overflow-hidden">
+        {/* Subtle background glow effect */}
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 h-48 w-96 rounded-full bg-amber-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 translate-y-1/2 h-48 w-96 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
+
+        <div className="relative mx-auto max-w-7xl px-4 pt-14 pb-8 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
 
             {/* Brand Column */}
-            <div className="lg:col-span-2 space-y-2.5">
-              <Link to="/" className="inline-flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#d5ad70]/40 bg-[#b8874e] font-serif text-sm font-bold text-[#211f1c] shadow-2xs">
+            <div className="lg:col-span-2 space-y-4">
+              <Link to="/" className="inline-flex items-center gap-2.5 group">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 font-serif text-base font-black text-slate-950 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
                   K
                 </div>
-                <span className="text-sm font-bold tracking-tight text-[#f7f0e5]">
-                  Krishna <span className="font-bold text-[#d5ad70]">Accessories</span>
+                <span className="text-lg font-bold tracking-tight text-white">
+                  Krishna <span className="font-bold text-amber-400">Accessories</span>
                 </span>
               </Link>
 
-              <p className="max-w-sm text-xs leading-relaxed text-[#b9aea0]">
-                Ahmedabad's premier destination for certified authentic luxury timepieces, handcrafted leather goods, and lifestyle essentials.
+              <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-300">
+                Ahmedabad's premier luxury destination for certified authentic timepieces, handcrafted leather goods, premium electronics, and curated lifestyle essentials.
               </p>
 
-              <div className="space-y-0.5 pt-1 text-xs text-[#9f9487]">
-                <p><strong className="text-[#e4c89c]">Flagship:</strong> Bodakdev, SG Highway, Ahmedabad 380054</p>
-                <p><strong className="text-[#e4c89c]">Desk:</strong> +91 (079) 4000-5500 &bull; care@krishnaaccessories.com</p>
+              {/* Store & Contact details container */}
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 space-y-2 text-xs text-slate-300 backdrop-blur-xs max-w-md">
+                <p className="flex items-start gap-2">
+                  <span className="text-amber-400 font-semibold shrink-0">📍 Flagship:</span>
+                  <span className="text-slate-200 font-medium">Bodakdev, SG Highway, Ahmedabad 380054</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span className="text-amber-400 font-semibold shrink-0">📞 Desk:</span>
+                  <span className="text-slate-200 font-medium">+91 (079) 4000-5500 &bull; care@krishnaaccessories.com</span>
+                </p>
               </div>
             </div>
 
             {/* Departments */}
             <div>
-              <h4 className="mb-2.5 text-[11px] font-bold uppercase tracking-wider text-[#d5ad70]">
+              <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
                 Departments
               </h4>
-              <ul className="space-y-1.5 text-xs text-[#b9aea0]">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
                 {defaultCategories.slice(0, 6).map((cat) => (
                   <li key={cat}>
                     <Link
                       to={`/shop?category=${encodeURIComponent(cat)}`}
-                      className="transition hover:text-[#f2d7a7]"
+                      className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block"
                     >
                       {cat}
                     </Link>
@@ -114,32 +126,33 @@ export default function Footer() {
 
             {/* Client Assistance */}
             <div>
-              <h4 className="mb-2.5 text-[11px] font-bold uppercase tracking-wider text-[#d5ad70]">
+              <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
                 Client Support
               </h4>
-              <ul className="space-y-1.5 text-xs text-[#b9aea0]">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
                 <li>
-                  <Link to="/tracking" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/tracking" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     Track Consignment
                   </Link>
                 </li>
                 <li>
-                  <Link to="/account" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/account" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     My Orders & Account
                   </Link>
                 </li>
                 <li>
-                  <Link to="/wishlist" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/wishlist" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     Saved Wishlist
                   </Link>
                 </li>
                 <li>
-                  <Link to="/faq" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/faq" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     FAQ & Authenticity
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/contact" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     Contact Concierge
                   </Link>
                 </li>
@@ -148,32 +161,33 @@ export default function Footer() {
 
             {/* Portals & Legal */}
             <div>
-              <h4 className="mb-2.5 text-[11px] font-bold uppercase tracking-wider text-[#d5ad70]">
+              <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
                 Portals & Legal
               </h4>
-              <ul className="space-y-1.5 text-xs text-[#b9aea0]">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
                 <li>
-                  <Link to="/supplier" className="font-semibold text-[#8fc4d1] transition hover:text-[#c6edf2]">
+                  <Link to="/supplier" className="font-semibold text-cyan-400 transition-all duration-200 hover:text-cyan-300 hover:translate-x-1 inline-flex items-center gap-1">
                     Vendor Partner Portal &rarr;
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin" className="font-semibold text-[#f2d7a7] transition hover:text-white">
+                  <Link to="/admin" className="font-semibold text-amber-400 transition-all duration-200 hover:text-amber-300 hover:translate-x-1 inline-flex items-center gap-1">
                     Admin Management &rarr;
                   </Link>
                 </li>
                 <li>
-                  <Link to="/about" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/about" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     Our Heritage & Story
                   </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/privacy" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to="/terms" className="transition hover:text-[#f2d7a7]">
+                  <Link to="/terms" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
                     Terms & Conditions
                   </Link>
                 </li>
@@ -183,22 +197,27 @@ export default function Footer() {
           </div>
 
           {/* Bottom Strip */}
-          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-[#403932] pt-5 text-[10.5px] text-[#9f9487] sm:flex-row">
-            <p>&copy; {new Date().getFullYear()} Krishna Accessories Ltd. 100% Certified Authentic Guarantee.</p>
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800/80 pt-6 text-xs text-slate-400 sm:flex-row">
+            <p className="text-center sm:text-left">
+              &copy; {new Date().getFullYear()} Krishna Accessories Ltd. 100% Certified Authentic Guarantee.
+            </p>
 
+            {/* Social media badges */}
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#65513a] bg-[#302a24] text-[10px] font-bold text-[#d5ad70] transition hover:bg-[#b8874e] hover:text-[#211f1c]">
-                𝕏
-              </span>
-              <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#65513a] bg-[#302a24] text-[10px] font-bold text-[#d5ad70] transition hover:bg-[#b8874e] hover:text-[#211f1c]">
-                f
-              </span>
-              <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#65513a] bg-[#302a24] text-[10px] font-bold text-[#d5ad70] transition hover:bg-[#b8874e] hover:text-[#211f1c]">
-                in
-              </span>
-              <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#65513a] bg-[#302a24] text-[10px] font-bold text-[#d5ad70] transition hover:bg-[#b8874e] hover:text-[#211f1c]">
-                ig
-              </span>
+              {[
+                { name: 'X', icon: '𝕏' },
+                { name: 'Facebook', icon: 'f' },
+                { name: 'LinkedIn', icon: 'in' },
+                { name: 'Instagram', icon: 'ig' }
+              ].map((social) => (
+                <span
+                  key={social.name}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-slate-700/80 bg-slate-800/80 text-xs font-bold text-slate-300 shadow-sm transition-all duration-200 hover:border-amber-400 hover:bg-amber-400 hover:text-slate-950 hover:shadow-[0_0_12px_rgba(251,191,36,0.3)] active:scale-95"
+                  title={social.name}
+                >
+                  {social.icon}
+                </span>
+              ))}
             </div>
           </div>
         </div>
