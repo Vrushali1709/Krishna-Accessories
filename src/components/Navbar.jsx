@@ -134,26 +134,25 @@ export default function Navbar() {
             <span className="text-gray-600">&bull;</span>
             <span className="text-white font-semibold">+91 (079) 4000-5500</span>
           </div>
-        </div>
-      </div> */}
-
       {/* Main Navigation Bar */}
-      <div className="mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8">
-        <div className="flex h-14 sm:h-16 items-center justify-between gap-1.5 sm:gap-4">
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="relative flex h-14 sm:h-16 items-center justify-between">
 
           {/* Left: Brand Identity */}
-          <Link to="/" aria-label="Krishna Accessories home" className="flex items-center shrink-0 group">
-            <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-[#0F172A] text-amber-300 font-serif font-bold text-xs sm:text-sm shadow-2xs border border-amber-500/20 transition-transform group-hover:scale-105">
-              K
-            </div>
-          </Link>
+          <div className="flex items-center shrink-0 z-10">
+            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 group">
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-[#0F172A] text-amber-300 font-serif font-bold text-sm sm:text-base shadow-xs border border-amber-500/20 transition-transform group-hover:scale-105">
+                K
+              </div>
+            </Link>
+          </div>
 
-          {/* Center: Primary Navigation Links (Desktop) */}
-          <nav className="hidden xl:flex items-center gap-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600">
+          {/* Center: Primary Navigation Links (Strictly Centered in Viewport) */}
+          <nav className="hidden xl:flex items-center gap-7 text-[12px] font-semibold uppercase tracking-[0.14em] text-gray-600 absolute left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
             <Link
               to="/"
               className={`relative py-1.5 transition-colors ${location.pathname === '/'
-                ? 'text-gray-950 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                 : 'hover:text-gray-950'
                 }`}
             >
@@ -170,14 +169,14 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className={`flex items-center gap-1 py-1.5 transition-colors uppercase ${location.pathname === '/shop' && !location.search
+                className={`flex items-center gap-1 py-1.5 transition-colors uppercase cursor-pointer ${location.pathname === '/shop' && !location.search
                   ? 'text-gray-950 font-bold'
                   : 'hover:text-gray-950'
                   }`}
               >
                 <span>Collections</span>
                 <ChevronDownIcon
-                  className={`w-3 h-3 transition-transform duration-150 ${categoriesOpen ? 'rotate-180 text-gray-950' : 'text-gray-400'
+                  className={`w-3.5 h-3.5 transition-transform duration-150 ${categoriesOpen ? 'rotate-180 text-gray-950' : 'text-gray-400'
                     }`}
                 />
               </button>
@@ -186,20 +185,20 @@ export default function Navbar() {
                 <div
                   onMouseEnter={handleCatMouseEnter}
                   onMouseLeave={handleCatMouseLeave}
-                  className="absolute left-0 top-full pt-1.5 w-80 z-50 animate-fade-in"
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-84 z-50 animate-fade-in"
                 >
-                  <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-3.5 shadow-2xl">
                     <div className="px-2.5 py-1 border-b border-gray-100 mb-2 flex justify-between items-center">
-                      <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400">Departments</span>
+                      <span className="text-[9.5px] font-semibold uppercase tracking-wider text-gray-400">Departments</span>
                       <Link
                         to="/shop"
                         onClick={() => setCategoriesOpen(false)}
-                        className="text-[9.5px] font-bold text-gray-900 hover:underline"
+                        className="text-[10px] font-bold text-gray-900 hover:underline"
                       >
                         View All &rarr;
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 gap-1">
+                    <div className="grid grid-cols-2 gap-1.5">
                       {defaultCategories.slice(0, 10).map((cat) => (
                         <Link
                           key={cat}
@@ -208,14 +207,14 @@ export default function Navbar() {
                           className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs normal-case text-gray-700 transition hover:bg-gray-100 hover:text-black font-medium"
                         >
                           <span className="truncate">{cat}</span>
-                          <span className="text-[9.5px] text-gray-400">&rarr;</span>
+                          <span className="text-[10px] text-gray-400">&rarr;</span>
                         </Link>
                       ))}
                     </div>
 
                     {/* Dedicated Watch Types Highlight */}
                     <div className="mt-2.5 pt-2 border-t border-gray-100">
-                      <span className="text-[8.5px] font-bold uppercase tracking-wider text-amber-600 block px-1 mb-1">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-amber-600 block px-1 mb-1.5">
                         ⌚ Watch Editions & Quality Types
                       </span>
                       <div className="grid grid-cols-2 gap-1">
@@ -243,7 +242,7 @@ export default function Navbar() {
             <Link
               to="/shop"
               className={`relative py-1.5 transition-colors ${location.pathname === '/shop' && !location.search
-                ? 'text-gray-950 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                 : 'hover:text-gray-950'
                 }`}
             >
@@ -253,7 +252,7 @@ export default function Navbar() {
             <Link
               to="/tracking"
               className={`relative py-1.5 transition-colors ${location.pathname === '/tracking'
-                ? 'text-gray-950 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                 : 'hover:text-gray-950'
                 }`}
             >
@@ -263,7 +262,7 @@ export default function Navbar() {
             <Link
               to="/about"
               className={`relative py-1.5 transition-colors ${location.pathname === '/about'
-                ? 'text-gray-950 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                 : 'hover:text-gray-950'
                 }`}
             >
@@ -291,17 +290,17 @@ export default function Navbar() {
             )}
           </nav>
 
-          {/* Right: Search & Utilities */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          {/* Right: Search & Actions (Pinned to far right end) */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-auto z-10">
 
             {/* Search Input Bar (Desktop) */}
-            <form onSubmit={handleSearchSubmit} className="hidden lg:block relative w-36 xl:w-48 focus-within:w-56 transition-all duration-250">
+            <form onSubmit={handleSearchSubmit} className="hidden lg:block relative w-36 xl:w-44 focus-within:w-56 transition-all duration-250">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search catalog..."
-                className="h-8 w-full rounded-full border border-gray-200 bg-[#F4F4F6] pl-7 pr-9 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-gray-400 focus:bg-white"
+                className="h-8.5 w-full rounded-full border border-gray-200 bg-[#F4F4F6] pl-7 pr-9 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-gray-400 focus:bg-white"
               />
               <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                 <SearchIcon className="w-3 h-3" />
@@ -309,7 +308,7 @@ export default function Navbar() {
               {searchQuery && (
                 <button
                   type="submit"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-[#111827] px-2 py-0.5 text-[8.5px] font-bold text-white hover:bg-black transition"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-[#111827] px-2 py-0.5 text-[8.5px] font-bold text-white hover:bg-black transition cursor-pointer"
                 >
                   Go
                 </button>
@@ -321,7 +320,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setShowSearch(!showSearch)}
               aria-label="Search Catalog"
-              className="lg:hidden flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition"
+              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition cursor-pointer"
             >
               <SearchIcon className="w-3.5 h-3.5" />
             </button>
@@ -332,11 +331,11 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 aria-label="Notifications"
-                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative cursor-pointer"
               >
                 <BellIcon className="w-3.5 h-3.5 text-gray-700" />
                 {unreadNotifsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-600 text-[8px] font-bold text-white shadow-2xs">
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8px] font-bold text-white shadow-2xs">
                     {unreadNotifsCount}
                   </span>
                 )}
@@ -364,7 +363,7 @@ export default function Navbar() {
                           <button
                             type="button"
                             onClick={markAllNotificationsRead}
-                            className="text-[10px] text-gray-500 font-semibold hover:text-black transition"
+                            className="text-[10px] text-gray-500 font-semibold hover:text-black transition cursor-pointer"
                           >
                             Mark all read
                           </button>
@@ -372,7 +371,7 @@ export default function Navbar() {
                         <button
                           type="button"
                           onClick={() => setNotificationsOpen(false)}
-                          className="sm:hidden text-gray-400 hover:text-gray-700 text-xs px-1"
+                          className="sm:hidden text-gray-400 hover:text-gray-700 text-xs px-1 cursor-pointer"
                           aria-label="Close"
                         >
                           ✕
@@ -408,15 +407,16 @@ export default function Navbar() {
             {/* Wishlist Button */}
             <Link
               to="/wishlist"
-              className={`relative flex h-7 sm:h-8 items-center justify-center rounded-lg border px-1.5 sm:px-2.5 transition ${location.pathname === '/wishlist'
+              className={`relative flex h-8 w-8 items-center justify-center rounded-lg border transition cursor-pointer ${location.pathname === '/wishlist'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
               title="Saved Wishlist"
+              aria-label="Wishlist"
             >
               <HeartIcon className="w-3.5 h-3.5 text-gray-700 shrink-0" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-600 text-[8px] font-bold text-white shadow-2xs">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8px] font-bold text-white shadow-2xs">
                   {wishlistCount}
                 </span>
               )}
@@ -427,21 +427,15 @@ export default function Navbar() {
               to="/cart"
               aria-label="Shopping bag"
               title="Shopping bag"
-              className={`relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border transition ${location.pathname === '/cart'
+              className={`relative flex h-8 w-8 items-center justify-center rounded-lg border transition cursor-pointer ${location.pathname === '/cart'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
             >
               <BagIcon className="w-3.5 h-3.5 text-gray-800" />
-              {cartCount > 0 ? (
-                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#111827] text-[8px] font-bold text-white shadow-2xs">
-                  {cartCount}
-                </span>
-              ) : (
-                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#111827] text-[8px] font-bold text-white shadow-2xs">
-                  0
-                </span>
-              )}
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#111827] text-[8px] font-bold text-white shadow-2xs">
+                {cartCount}
+              </span>
             </Link>
 
             {/* User Profile / Menu */}
@@ -450,10 +444,10 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border border-gray-200 bg-white px-1.5 sm:px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 transition"
+                  className="flex h-8 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-800 hover:bg-gray-50 transition cursor-pointer"
                 >
-                  <UserIcon className="w-3 h-3 text-gray-600 shrink-0" />
-                  <span className="hidden md:inline truncate max-w-[85px] text-[11px] text-gray-900">
+                  <UserIcon className="w-3.5 h-3.5 text-gray-600 shrink-0" />
+                  <span className="hidden md:inline truncate max-w-[85px] text-[11px] text-gray-900 font-semibold">
                     {currentUser.name || currentUser.email.split('@')[0]}
                   </span>
                   <ChevronDownIcon className="w-2.5 h-2.5 text-gray-400 shrink-0" />
@@ -517,7 +511,7 @@ export default function Navbar() {
                             setUserMenuOpen(false);
                             handleLogout();
                           }}
-                          className="w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition"
+                          className="w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer"
                         >
                           Sign Out
                         </button>
@@ -531,7 +525,7 @@ export default function Navbar() {
                 to="/login"
                 aria-label="Login"
                 title="Login"
-                className="inline-flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0 cursor-pointer"
               >
                 <UserIcon className="w-3.5 h-3.5 text-white" />
               </Link>
@@ -542,7 +536,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Menu"
-              className="xl:hidden flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0"
+              className="xl:hidden flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
             >
               {mobileMenuOpen ? '✕' : '☰'}
             </button>
