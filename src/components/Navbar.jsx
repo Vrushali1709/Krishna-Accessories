@@ -458,10 +458,12 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex h-8 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-800 hover:bg-gray-50 transition cursor-pointer"
+                  className="flex h-8.5 items-center gap-2 rounded-xl border border-gray-200 bg-white px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
                 >
-                  <UserIcon className="w-3.5 h-3.5 text-gray-600 shrink-0" />
-                  <span className="hidden md:inline truncate max-w-[85px] text-[11px] text-gray-900 font-semibold">
+                  <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-gray-100 text-gray-900 font-bold text-[11px]">
+                    {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                  </div>
+                  <span className="hidden md:inline truncate max-w-[85px] text-[11.5px] text-gray-900 font-semibold">
                     {currentUser.name || currentUser.email.split('@')[0]}
                   </span>
                   <ChevronDownIcon className="w-2.5 h-2.5 text-gray-400 shrink-0" />
@@ -473,61 +475,152 @@ export default function Navbar() {
                       onClick={() => setUserMenuOpen(false)}
                       className="fixed inset-0 z-40 sm:hidden bg-black/20 backdrop-blur-[1px]"
                     />
-                    <div className="fixed right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 w-56 max-w-[calc(100vw-24px)] rounded-2xl border border-gray-200 bg-white p-2 shadow-2xl z-50 animate-fade-in">
-                      <div className="px-2.5 py-1.5 border-b border-gray-100 mb-1">
-                        <p className="text-[11px] font-bold text-gray-900 truncate">{currentUser.name || 'Account'}</p>
-                        <p className="text-[9.5px] text-gray-500 truncate">{currentUser.email}</p>
-                        <span className="mt-0.5 inline-block rounded-full bg-gray-100 px-2 py-0.2 text-[8.5px] font-bold uppercase tracking-wider text-gray-700">
-                          {currentUser.role || 'Customer'}
-                        </span>
+                    <div className="fixed right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 w-64 max-w-[calc(100vw-24px)] rounded-2xl border border-gray-200 bg-white p-2.5 shadow-2xl z-50 animate-fade-in divide-y divide-gray-100">
+                      {/* User Info Header */}
+                      <div className="px-2 pb-2">
+                        <p className="text-xs font-bold text-gray-950 truncate leading-tight">{currentUser.name || 'Account'}</p>
+                        <p className="text-[10px] text-gray-500 truncate mt-0.5">{currentUser.email}</p>
+                        <div className="mt-1.5 flex items-center gap-1.5">
+                          <span className={`inline-block rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                            currentUser.role === 'admin'
+                              ? 'bg-amber-100 text-amber-900 border border-amber-300/60'
+                              : currentUser.role === 'supplier'
+                              ? 'bg-blue-100 text-blue-900 border border-blue-300/60'
+                              : 'bg-gray-100 text-gray-800 border border-gray-200'
+                          }`}>
+                            {currentUser.role || 'Customer'}
+                          </span>
+                        </div>
                       </div>
 
-                      <Link
-                        to="/account"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 hover:bg-gray-100 transition"
-                      >
-                        <span>👤 Account & Orders</span>
-                      </Link>
-
-                      {currentUser.role === 'admin' && (
+                      {/* Customer Navigation Links */}
+                      <div className="py-1.5 space-y-0.5">
                         <Link
-                          to="/admin"
+                          to="/account"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-950 bg-gray-50 hover:bg-gray-100 transition"
+                          className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
                         >
-                          <span>⚙️ Admin Panel</span>
+                          <span className="text-sm">👤</span>
+                          <span>Account & Orders</span>
                         </Link>
-                      )}
 
-                      {currentUser.role === 'supplier' && (
                         <Link
-                          to="/supplier"
+                          to="/wishlist"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 transition"
+                          className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
                         >
-                          <span>🏢 Vendor Portal</span>
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-sm text-rose-500">♥</span>
+                            <span>Saved Wishlist</span>
+                          </div>
+                          {wishlistCount > 0 && (
+                            <span className="rounded-full bg-rose-100 text-rose-700 font-bold px-1.5 py-0.2 text-[9px]">
+                              {wishlistCount}
+                            </span>
+                          )}
                         </Link>
-                      )}
 
-                      <Link
-                        to="/wishlist"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 hover:bg-gray-100 transition"
-                      >
-                        <span>♥ Saved Wishlist</span>
-                      </Link>
+                        <Link
+                          to="/cart"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-sm">🛍️</span>
+                            <span>My Shopping Bag</span>
+                          </div>
+                          {cartCount > 0 && (
+                            <span className="rounded-full bg-gray-900 text-white font-bold px-1.5 py-0.2 text-[9px]">
+                              {cartCount}
+                            </span>
+                          )}
+                        </Link>
+                      </div>
 
-                      <div className="border-t border-gray-100 pt-1 mt-1">
+                      {/* Management Portals & Admin Login Options */}
+                      <div className="py-1.5 space-y-0.5">
+                        <div className="px-2 py-0.5">
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">
+                            Portals & Staff Login
+                          </span>
+                        </div>
+
+                        {/* Admin Portal / Admin Login Link */}
+                        {currentUser.role === 'admin' ? (
+                          <Link
+                            to="/admin"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-amber-950 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition"
+                          >
+                            <span className="text-sm">⚙️</span>
+                            <span>Admin Dashboard</span>
+                          </Link>
+                        ) : (
+                          <Link
+                            to="/login"
+                            state={{ requiredRole: 'admin', from: '/admin', message: 'Enter Administrator ID & Password to access Admin Management.' }}
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-800 hover:bg-amber-50 hover:text-amber-950 hover:border-amber-200 transition"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-sm">🔑</span>
+                              <span>Admin / Staff Login</span>
+                            </div>
+                            <span className="text-[10px] text-gray-400">&rarr;</span>
+                          </Link>
+                        )}
+
+                        {/* Vendor Portal / Vendor Login Link */}
+                        {currentUser.role === 'supplier' ? (
+                          <Link
+                            to="/supplier"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-blue-950 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 transition"
+                          >
+                            <span className="text-sm">🏢</span>
+                            <span>Vendor Partner Portal</span>
+                          </Link>
+                        ) : (
+                          <Link
+                            to="/login"
+                            state={{ requiredRole: 'supplier', from: '/supplier', message: 'Enter Supplier ID & Password to access Vendor Portal.' }}
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-800 hover:bg-blue-50 hover:text-blue-950 hover:border-blue-200 transition"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-sm">🏢</span>
+                              <span>Vendor Partner Portal</span>
+                            </div>
+                            <span className="text-[10px] text-gray-400">&rarr;</span>
+                          </Link>
+                        )}
+
+                        {/* Login Page (Direct access to all roles) */}
+                        <Link
+                          to="/login"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-sm">🔄</span>
+                            <span>Login Page (All Roles)</span>
+                          </div>
+                          <span className="text-[10px] text-gray-400">&rarr;</span>
+                        </Link>
+                      </div>
+
+                      {/* Sign Out */}
+                      <div className="pt-1.5">
                         <button
                           type="button"
                           onClick={() => {
                             setUserMenuOpen(false);
                             handleLogout();
                           }}
-                          className="w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          className="w-full flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer"
                         >
-                          Sign Out
+                          <span>🚪</span>
+                          <span>Sign Out</span>
                         </button>
                       </div>
                     </div>
@@ -662,37 +755,72 @@ export default function Navbar() {
               Contact & Concierge
             </Link>
 
-            {currentUser && currentUser.role === 'admin' && (
-              <Link
-                to="/admin"
-                className="rounded-lg px-3 py-2 font-bold text-gray-900 bg-gray-100 border border-gray-200"
-              >
-                Admin Control Console
-              </Link>
-            )}
+            {/* Portal & Staff Access links on Mobile */}
+            <div className="pt-2 border-t border-gray-100 space-y-1">
+              {currentUser && currentUser.role === 'admin' ? (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 font-bold text-amber-950 bg-amber-50 border border-amber-200 block"
+                >
+                  ⚙️ Admin Control Console
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  state={{ requiredRole: 'admin', from: '/admin', message: 'Enter Administrator ID & Password to access Admin Management.' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 font-semibold text-gray-800 hover:bg-amber-50 hover:text-amber-950 block"
+                >
+                  🔑 Admin / Staff Login &rarr;
+                </Link>
+              )}
 
-            {currentUser && currentUser.role === 'supplier' && (
+              {currentUser && currentUser.role === 'supplier' ? (
+                <Link
+                  to="/supplier"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 font-bold text-blue-700 bg-blue-50 border border-blue-200 block"
+                >
+                  🏢 Vendor Portal
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  state={{ requiredRole: 'supplier', from: '/supplier', message: 'Enter Supplier ID & Password to access Vendor Portal.' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 font-semibold text-gray-800 hover:bg-blue-50 hover:text-blue-950 block"
+                >
+                  🏢 Vendor Partner Portal &rarr;
+                </Link>
+              )}
+
               <Link
-                to="/supplier"
-                className="rounded-lg px-3 py-2 font-bold text-blue-700 bg-blue-50 border border-blue-200"
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg px-3 py-2 font-semibold text-gray-600 hover:bg-gray-100 block"
               >
-                Vendor Portal
+                🔄 Login Page (All Roles) &rarr;
               </Link>
-            )}
+            </div>
 
             <div className="border-t border-gray-100 pt-2.5 mt-1.5">
               {currentUser ? (
                 <div className="space-y-1.5">
                   <Link
                     to="/account"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="block w-full rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200"
                   >
                     My Account ({currentUser.name || currentUser.email})
                   </Link>
                   <button
                     type="button"
-                    onClick={handleLogout}
-                    className="w-full rounded-lg border border-rose-200 bg-rose-50 py-1.5 text-center text-xs font-bold text-rose-700 hover:bg-rose-100"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full rounded-lg border border-rose-200 bg-rose-50 py-1.5 text-center text-xs font-bold text-rose-700 hover:bg-rose-100 cursor-pointer"
                   >
                     Sign Out
                   </button>
@@ -700,6 +828,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="block w-full rounded-full bg-[#111827] py-2 text-center text-xs font-semibold uppercase tracking-wider text-white hover:bg-black"
                 >
                   <span className="text-white">Sign In to Account</span>
