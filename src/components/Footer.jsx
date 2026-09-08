@@ -20,7 +20,7 @@ export default function Footer() {
     <>
       {/* 1. Standalone Newsletter / Curated Releases Section (Outside Footer) */}
       <section className="py-8 sm:py-12 bg-white">
-        <div className="mx-auto max-w-[1560px] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.04)] relative overflow-hidden">
             {/* Subtle ambient luxury light */}
             <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-500/8 blur-3xl pointer-events-none" />
@@ -73,7 +73,7 @@ export default function Footer() {
         <div className="absolute top-0 left-1/4 -translate-y-1/2 h-48 w-96 rounded-full bg-amber-500/5 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 translate-y-1/2 h-48 w-96 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
 
-        <div className="relative mx-auto max-w-[1560px] px-4 pt-14 pb-8 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="relative mx-auto max-w-7xl px-4 pt-14 pb-8 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
 
             {/* Brand Column */}
