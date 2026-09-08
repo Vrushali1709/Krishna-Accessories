@@ -478,7 +478,7 @@ export default function Home() {
       )}
 
       {/* ================= LUXURY WATCH HERO SECTION ================= */}
-      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[670px] lg:min-h-[670px]">
+      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[490px] lg:min-h-[490px]">
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
             <div
@@ -496,34 +496,34 @@ export default function Home() {
               </div>
 
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/10 lg:from-[#070808] lg:via-[#070808]/90 lg:via-45% lg:to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-black/90 via-black/30 to-transparent lg:from-[#070808] lg:via-[#070808]/60 pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/90 via-black/30 to-transparent lg:from-[#070808] lg:via-[#070808]/60 pointer-events-none" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.08)_45%,rgba(0,0,0,0.35)_100%)] lg:bg-[radial-gradient(ellipse_at_75%_50%,transparent_30%,rgba(7,8,8,0.4)_75%,#070808_100%)] pointer-events-none" />
             </div>
           ))}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[560px] sm:min-h-[590px] lg:min-h-[670px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-6 flex flex-col justify-between">
-          <div className="max-w-[620px] lg:my-auto lg:py-6">
-            <div className="mb-5 flex items-center gap-3">
+        <div className="relative z-20 mx-auto max-w-[1560px] w-full min-h-[430px] sm:min-h-[450px] lg:min-h-[490px] lg:h-full px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-10 sm:pt-12 lg:pt-5 pb-5 lg:pb-4 flex flex-col justify-between">
+          <div className="max-w-[620px] lg:my-auto lg:py-2">
+            <div className="mb-3.5 flex items-center gap-3">
               <span className="h-px w-8 bg-[#C5A880]" />
               <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-[#D5C2A5]">
                 {watchHeroSlides[currentSlide].tag}
               </span>
             </div>
 
-            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-semibold sm:text-5xl lg:text-[68px] xl:text-[74px]">
+            <h1 className="text-[34px] leading-[1.06] tracking-[-0.03em] font-semibold sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[58px]">
               <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
               <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
             </h1>
 
-            <p className="mt-5 text-sm sm:text-base text-[#B0B2B8] max-w-md font-light leading-relaxed">
+            <p className="mt-3.5 text-xs sm:text-sm md:text-[15px] text-[#B0B2B8] max-w-md font-light leading-relaxed">
               {watchHeroSlides[currentSlide].description}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-6 flex flex-wrap items-center gap-3.5">
               <Link
                 to="/shop?category=Watches"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-black transition hover:bg-[#E5D7C5]"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-black transition hover:bg-[#E5D7C5]"
               >
                 <span>Shop Watches</span>
                 <ArrowRightIcon className="w-4 h-4 text-black" />
@@ -531,14 +531,14 @@ export default function Home() {
 
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white transition hover:border-neutral-500 hover:bg-black/60"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white transition hover:border-neutral-500 hover:bg-black/60"
               >
                 <span>All Collections</span>
               </Link>
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
+          <div className="flex items-center justify-between border-t border-neutral-800/80 pt-3">
             <div className="flex items-center gap-2">
               {watchHeroSlides.map((_, i) => (
                 <button
@@ -582,7 +582,7 @@ export default function Home() {
 
       {/* ================= FOUR PILLARS GUARANTEE ================= */}
       <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1560px] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
             <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
@@ -628,7 +628,7 @@ export default function Home() {
       </section>
 
       {/* ================= CURATED DEPARTMENTS CAROUSEL ================= */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
+      <section className="mx-auto max-w-[1560px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 xl:px-10 2xl:px-12 relative">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
             <div className="flex items-center gap-2">
@@ -732,7 +732,7 @@ export default function Home() {
       </section>
 
       {/* ================= PROMOTIONAL VOUCHER ================= */}
-      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
+      <section className="mx-auto max-w-[1560px] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pb-6">
         <div className="rounded-2xl bg-[#0F172A] text-white p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 shadow-sm border border-slate-800">
           <div className="flex items-center gap-3 w-full md:w-auto min-w-0">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-base border border-white/10">
@@ -758,7 +758,7 @@ export default function Home() {
 
       {/* ================= FEATURED PRODUCTS ================= */}
       <section className="bg-white border-y border-gray-200/80 py-8 sm:py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1560px] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <div className="flex items-end justify-between gap-3 mb-5">
             <div>
               <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">Top Recommendations</span>
@@ -786,7 +786,7 @@ export default function Home() {
       {/* ======================================================
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
       ====================================================== */}
-      <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8">
+      <section className="mx-auto max-w-[1560px] px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="text-center mb-7 sm:mb-9">
 
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
