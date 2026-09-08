@@ -96,7 +96,7 @@ import {
   exportFullDatabaseBackup,
   restoreDatabaseBackup
 } from '../utils/adminStore';
-import { getAdminUser, setAdminUser, logoutAdmin, isAdmin, getCustomerUser } from '../utils/auth';
+import { getCurrentUser, setCurrentUser, logout, isAdmin } from '../utils/auth';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Authentication State
-  const [currentUser, setCurrentUserState] = useState(() => getAdminUser());
+  const [currentUser, setCurrentUserState] = useState(() => getCurrentUser());
   const authenticatedAsAdmin = isAdmin();
 
   // Core Data Stores State
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
     setPermissionsMatrix(getPermissionsMatrix());
     setShippingCarriers(getShippingCarriers());
     setSystemConfigState(getSystemConfig());
-    setCurrentUserState(getAdminUser());
+    setCurrentUserState(getCurrentUser());
   };
 
   useEffect(() => {
@@ -318,14 +318,14 @@ export default function AdminDashboard() {
     return orders.filter(o => {
       const q = globalSearch.trim().toLowerCase();
       const matchesSearch = !q ||
-        o.id?.toLowerCase().includes(q) ||
-        `${o.customer?.firstName} ${o.customer?.lastName}`.toLowerCase().includes(q) ||
-        o.customer?.city?.toLowerCase().includes(q) ||
-        o.paymentMethod?.toLowerCase().includes(q);
-      const matchesStatus = orderStatusFilter === 'All' || o.status === orderStatusFilter;
+        o.id?.toString().toLowerCase().includes(q) ||
+        o.customer?.name?.toLowerCase().includes(q) ||
+        o.customer?.email?.toLowerCase().includes(q) ||
+        o.items?.some(it => it.name?.toLowerCase().includes(q));
+      const matchesStatus = filterOrderStatus === 'All' || o.status === filterOrderStatus;
       return matchesSearch && matchesStatus;
     });
-  }, [orders, globalSearch, orderStatusFilter]);
+  }, [orders, globalSearch, filterOrderStatus]);
 
   // Metric Computations
   const totalRevenue = useMemo(() => {
@@ -472,20 +472,18 @@ export default function AdminDashboard() {
 
   // Auth Handlers
   const handleQuickAdminLogin = () => {
-    setAdminUser({
+    setCurrentUser({
       email: 'admin@krishna.com',
       role: 'admin',
       name: 'Super Administrator',
       phone: '+91 (079) 4000-5500'
     });
-    showToast('Signed in as Super Administrator');
     refreshAll();
   };
 
   const handleAdminLogout = () => {
-    logoutAdmin();
-    showToast('Admin session signed out');
-    refreshAll();
+    logout();
+    navigate('/login');
   };
 
   // Product Actions

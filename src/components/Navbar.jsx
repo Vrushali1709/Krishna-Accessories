@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCartCount } from '../utils/cart';
 import { defaultCategories, getWishlist, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
-import { getCustomerUser, getAdminUser, getSupplierUser, logoutCustomer, logoutAdmin, logoutSupplier, logoutAll, isAdmin, isSupplier } from '../utils/auth';
+import { getCurrentUser, logout } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import { BagIcon, SearchIcon, UserIcon, ChevronDownIcon, HeartIcon, BellIcon } from './Icons';
 
@@ -13,10 +13,7 @@ export default function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
-  
-  const [customerUser, setCustomerUserState] = useState(() => getCustomerUser());
-  const [adminUser, setAdminUserState] = useState(() => getAdminUser());
-  const [supplierUser, setSupplierUserState] = useState(() => getSupplierUser());
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
@@ -58,9 +55,7 @@ export default function Navbar() {
     setCartCount(getCartCount());
     setWishlistCount(getWishlist().length);
     setNotifications(getNotifications());
-    setCustomerUserState(getCustomerUser());
-    setAdminUserState(getAdminUser());
-    setSupplierUserState(getSupplierUser());
+    setCurrentUser(getCurrentUser());
   };
 
   useEffect(() => {
@@ -124,7 +119,7 @@ export default function Navbar() {
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md border-b border-gray-200 bg-white/98 backdrop-blur-md' : 'border-b border-gray-200/80 bg-white/95 backdrop-blur-md'}`}>
 
       {/* Top Luxury Announcement Strip */}
-      <div className="border-b border-gray-100 bg-[#0F172A] text-white px-2.5 sm:px-4 py-1">
+      {/* <div className="border-b border-gray-100 bg-[#0F172A] text-white px-2.5 sm:px-4 py-1">
         <div className="mx-auto flex max-w-7xl items-center justify-between text-[8px] sm:text-[9.5px] font-medium tracking-[0.12em] uppercase">
           <span className="hidden sm:inline text-gray-300 truncate">
             Free Express Shipping on Orders &ge; ₹2,000
@@ -140,7 +135,7 @@ export default function Navbar() {
             <span className="text-white font-semibold">+91 (079) 4000-5500</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Navigation Bar */}
       <div className="mx-auto max-w-7xl px-2.5 sm:px-6 lg:px-8">
@@ -276,17 +271,17 @@ export default function Navbar() {
             </Link>
 
             {/* Portal Link: Admin */}
-            {adminUser && (
+            {currentUser && currentUser.role === 'admin' && (
               <Link
                 to="/admin"
-                className="rounded-full border border-gray-900 bg-gray-900 px-2.5 py-0.5 text-[9.5px] font-bold text-white hover:bg-black transition flex items-center gap-1 shadow-2xs"
+                className="rounded-full border border-gray-300 bg-gray-100 px-2.5 py-0.5 text-[9.5px] font-bold text-gray-900 hover:bg-gray-200 transition"
               >
-                <span>⚙️ Admin Panel</span>
+                Admin Panel
               </Link>
             )}
 
             {/* Portal Link: Supplier */}
-            {supplierUser && (
+            {currentUser && currentUser.role === 'supplier' && (
               <Link
                 to="/supplier"
                 className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-[9.5px] font-bold text-blue-700 hover:bg-blue-100 transition"
@@ -450,22 +445,17 @@ export default function Navbar() {
             </Link>
 
             {/* User Profile / Menu */}
-            {(customerUser || adminUser || supplierUser) ? (
+            {currentUser ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border border-gray-200 bg-white px-1.5 sm:px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 transition cursor-pointer"
+                  className="flex h-7 sm:h-8 items-center gap-1 sm:gap-1.5 rounded-lg border border-gray-200 bg-white px-1.5 sm:px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 transition"
                 >
                   <UserIcon className="w-3 h-3 text-gray-600 shrink-0" />
-                  <span className="hidden md:inline truncate max-w-[95px] text-[11px] text-gray-900 font-semibold">
-                    {customerUser
-                      ? (customerUser.name || customerUser.email.split('@')[0])
-                      : (adminUser ? 'Super Admin' : (supplierUser?.name || 'Vendor'))}
+                  <span className="hidden md:inline truncate max-w-[85px] text-[11px] text-gray-900">
+                    {currentUser.name || currentUser.email.split('@')[0]}
                   </span>
-                  {adminUser && customerUser && (
-                    <span className="hidden lg:inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" title="Admin Mode Active" />
-                  )}
                   <ChevronDownIcon className="w-2.5 h-2.5 text-gray-400 shrink-0" />
                 </button>
 
@@ -475,128 +465,62 @@ export default function Navbar() {
                       onClick={() => setUserMenuOpen(false)}
                       className="fixed inset-0 z-40 sm:hidden bg-black/20 backdrop-blur-[1px]"
                     />
-                    <div className="fixed right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 w-64 max-w-[calc(100vw-24px)] rounded-2xl border border-gray-200 bg-white p-2 shadow-2xl z-50 animate-fade-in">
-                      
-                      {/* Customer Session Section */}
-                      {customerUser ? (
-                        <div className="px-2.5 py-1.5 border-b border-gray-100 mb-1">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[11px] font-bold text-gray-900 truncate">{customerUser.name || 'Customer'}</p>
-                            <span className="rounded-full bg-blue-50 border border-blue-100 px-1.5 py-0.2 text-[8px] font-bold uppercase tracking-wider text-blue-700">
-                              Customer
-                            </span>
-                          </div>
-                          <p className="text-[9.5px] text-gray-500 truncate">{customerUser.email}</p>
-                        </div>
-                      ) : (
-                        <div className="px-2.5 py-1.5 border-b border-gray-100 mb-1">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[11px] font-bold text-gray-900 truncate">{adminUser?.name || supplierUser?.name || 'Portal User'}</p>
-                            <span className="rounded-full bg-zinc-100 border border-zinc-200 px-1.5 py-0.2 text-[8px] font-bold uppercase tracking-wider text-zinc-800">
-                              {adminUser ? 'Admin' : 'Vendor'}
-                            </span>
-                          </div>
-                          <p className="text-[9.5px] text-gray-500 truncate">{adminUser?.email || supplierUser?.email}</p>
-                        </div>
-                      )}
+                    <div className="fixed right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 w-56 max-w-[calc(100vw-24px)] rounded-2xl border border-gray-200 bg-white p-2 shadow-2xl z-50 animate-fade-in">
+                      <div className="px-2.5 py-1.5 border-b border-gray-100 mb-1">
+                        <p className="text-[11px] font-bold text-gray-900 truncate">{currentUser.name || 'Account'}</p>
+                        <p className="text-[9.5px] text-gray-500 truncate">{currentUser.email}</p>
+                        <span className="mt-0.5 inline-block rounded-full bg-gray-100 px-2 py-0.2 text-[8.5px] font-bold uppercase tracking-wider text-gray-700">
+                          {currentUser.role || 'Customer'}
+                        </span>
+                      </div>
 
-                      {/* Customer Links */}
-                      {customerUser ? (
-                        <>
-                          <Link
-                            to="/account"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 hover:bg-gray-100 transition"
-                          >
-                            <span>👤 Account & Orders</span>
-                          </Link>
-                          <Link
-                            to="/wishlist"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 hover:bg-gray-100 transition"
-                          >
-                            <span>♥ Saved Wishlist</span>
-                          </Link>
-                        </>
-                      ) : (
+                      <Link
+                        to="/account"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 hover:bg-gray-100 transition"
+                      >
+                        <span>👤 Account & Orders</span>
+                      </Link>
+
+                      {currentUser.role === 'admin' && (
                         <Link
-                          to="/login"
+                          to="/admin"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-blue-700 bg-blue-50 hover:bg-blue-100 transition font-semibold"
+                          className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-950 bg-gray-50 hover:bg-gray-100 transition"
                         >
-                          <span>🛍️ Sign in as Customer</span>
+                          <span>⚙️ Admin Panel</span>
                         </Link>
                       )}
 
-                      {/* Admin Portal Shortcut if Admin is Active */}
-                      {adminUser && (
-                        <div className="my-1 border-t border-gray-100 pt-1">
-                          <Link
-                            to="/admin"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-950 bg-gray-100 hover:bg-gray-200 transition"
-                          >
-                            <span>⚙️ Admin Console</span>
-                            <span className="text-[9px] rounded bg-zinc-900 text-white px-1 py-0.2">Active</span>
-                          </Link>
-                        </div>
+                      {currentUser.role === 'supplier' && (
+                        <Link
+                          to="/supplier"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 transition"
+                        >
+                          <span>🏢 Vendor Portal</span>
+                        </Link>
                       )}
 
-                      {/* Supplier Portal Shortcut if Supplier is Active */}
-                      {supplierUser && (
-                        <div className="my-1 border-t border-gray-100 pt-1">
-                          <Link
-                            to="/supplier"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 transition"
-                          >
-                            <span>🏢 Vendor Portal</span>
-                            <span className="text-[9px] rounded bg-blue-600 text-white px-1 py-0.2">Active</span>
-                          </Link>
-                        </div>
-                      )}
+                      <Link
+                        to="/wishlist"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 hover:bg-gray-100 transition"
+                      >
+                        <span>♥ Saved Wishlist</span>
+                      </Link>
 
-                      {/* Independent Sign Out Controls */}
-                      <div className="border-t border-gray-100 pt-1 mt-1 space-y-0.5">
-                        {customerUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setUserMenuOpen(false);
-                              logoutCustomer();
-                              navigate('/');
-                            }}
-                            className="w-full text-left rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                          >
-                            Sign Out Customer ({customerUser.name || 'Account'})
-                          </button>
-                        )}
-
-                        {adminUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setUserMenuOpen(false);
-                              logoutAdmin();
-                            }}
-                            className="w-full text-left rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-zinc-600 hover:bg-zinc-100 transition cursor-pointer"
-                          >
-                            Sign Out Admin Session
-                          </button>
-                        )}
-
-                        {supplierUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setUserMenuOpen(false);
-                              logoutSupplier();
-                            }}
-                            className="w-full text-left rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-zinc-600 hover:bg-zinc-100 transition cursor-pointer"
-                          >
-                            Sign Out Vendor Session
-                          </button>
-                        )}
+                      <div className="border-t border-gray-100 pt-1 mt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            handleLogout();
+                          }}
+                          className="w-full text-left rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition"
+                        >
+                          Sign Out
+                        </button>
                       </div>
                     </div>
                   </>
@@ -618,7 +542,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Menu"
-              className="xl:hidden flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
+              className="xl:hidden flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0"
             >
               {mobileMenuOpen ? '✕' : '☰'}
             </button>
@@ -659,14 +583,12 @@ export default function Navbar() {
           <div className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wider">
             <Link
               to="/"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Home
             </Link>
             <Link
               to="/shop"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Shop All Catalog
@@ -723,14 +645,12 @@ export default function Navbar() {
 
             <Link
               to="/tracking"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Track Consignment
             </Link>
             <Link
               to="/wishlist"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition flex items-center justify-between"
             >
               <span>Saved Wishlist</span>
@@ -740,104 +660,55 @@ export default function Navbar() {
             </Link>
             <Link
               to="/about"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               About Us
             </Link>
             <Link
               to="/contact"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Contact & Concierge
             </Link>
 
-            {adminUser && (
+            {currentUser && currentUser.role === 'admin' && (
               <Link
                 to="/admin"
-                onClick={() => setMobileMenuOpen(false)}
                 className="rounded-lg px-3 py-2 font-bold text-gray-900 bg-gray-100 border border-gray-200"
               >
-                ⚙️ Admin Control Console
+                Admin Control Console
               </Link>
             )}
 
-            {supplierUser && (
+            {currentUser && currentUser.role === 'supplier' && (
               <Link
                 to="/supplier"
-                onClick={() => setMobileMenuOpen(false)}
                 className="rounded-lg px-3 py-2 font-bold text-blue-700 bg-blue-50 border border-blue-200"
               >
-                🏢 Vendor Portal
+                Vendor Portal
               </Link>
             )}
 
             <div className="border-t border-gray-100 pt-2.5 mt-1.5">
-              {customerUser ? (
+              {currentUser ? (
                 <div className="space-y-1.5">
                   <Link
                     to="/account"
-                    onClick={() => setMobileMenuOpen(false)}
                     className="block w-full rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200"
                   >
-                    My Customer Account ({customerUser.name || customerUser.email})
+                    My Account ({currentUser.name || currentUser.email})
                   </Link>
                   <button
                     type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      logoutCustomer();
-                      navigate('/');
-                    }}
-                    className="w-full rounded-lg border border-rose-200 bg-rose-50 py-1.5 text-center text-xs font-bold text-rose-700 hover:bg-rose-100 cursor-pointer"
+                    onClick={handleLogout}
+                    className="w-full rounded-lg border border-rose-200 bg-rose-50 py-1.5 text-center text-xs font-bold text-rose-700 hover:bg-rose-100"
                   >
-                    Sign Out Customer
-                  </button>
-                  {adminUser && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        logoutAdmin();
-                      }}
-                      className="w-full rounded-lg border border-zinc-200 bg-zinc-100 py-1.5 text-center text-xs font-bold text-zinc-800 hover:bg-zinc-200 cursor-pointer"
-                    >
-                      Sign Out Admin
-                    </button>
-                  )}
-                </div>
-              ) : adminUser ? (
-                <div className="space-y-1.5">
-                  <Link
-                    to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full rounded-lg bg-zinc-900 py-2 text-center text-xs font-bold text-white hover:bg-black"
-                  >
-                    Admin Console ({adminUser.name || 'Super Admin'})
-                  </Link>
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full rounded-lg border border-blue-200 bg-blue-50 py-1.5 text-center text-xs font-bold text-blue-700"
-                  >
-                    Sign in as Customer
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      logoutAdmin();
-                    }}
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-100 py-1.5 text-center text-xs font-bold text-zinc-800 hover:bg-zinc-200 cursor-pointer"
-                  >
-                    Sign Out Admin
+                    Sign Out
                   </button>
                 </div>
               ) : (
                 <Link
                   to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
                   className="block w-full rounded-full bg-[#111827] py-2 text-center text-xs font-semibold uppercase tracking-wider text-white hover:bg-black"
                 >
                   <span className="text-white">Sign In to Account</span>

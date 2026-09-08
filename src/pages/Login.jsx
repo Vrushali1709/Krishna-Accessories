@@ -3,17 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { setAdminUser, setCustomerUser, setSupplierUser, getCustomerUser, getAdminUser, getSupplierUser } from '../utils/auth';
+import { setCurrentUser } from '../utils/auth';
 import { getSuppliers } from '../utils/orderStore';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
-import { Eye, EyeOff, ShieldCheck, UserCheck } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const [activeCustomer, setActiveCustomer] = useState(() => getCustomerUser());
-  const [activeAdmin, setActiveAdmin] = useState(() => getAdminUser());
 
   // Determine initial selected role from location state or default
   const [selectedRole, setSelectedRole] = useState(() => {
@@ -41,11 +38,6 @@ export default function Login() {
   const returnPath = typeof location.state?.from === 'string'
     ? location.state.from
     : (location.state?.from?.pathname ? `${location.state.from.pathname}${location.state.from.search || ''}` : null);
-
-  useEffect(() => {
-    setActiveCustomer(getCustomerUser());
-    setActiveAdmin(getAdminUser());
-  }, [location]);
 
   useEffect(() => {
     if (location.state?.requiredRole) {
@@ -80,7 +72,7 @@ export default function Login() {
     // 1. Admin Authentication Check
     if (cleanEmail === 'admin@krishna.com' || cleanEmail === 'admin') {
       if (cleanPassword === 'admin123') {
-        setAdminUser({
+        setCurrentUser({
           email: 'admin@krishna.com',
           role: 'admin',
           name: 'Super Administrator',
@@ -100,7 +92,7 @@ export default function Login() {
 
     if (cleanEmail === 'supplier@krishna.com' || cleanEmail === 'supplier' || matchedSupplier) {
       if (cleanPassword === 'supplier123' || cleanPassword === matchedSupplier?.password) {
-        setSupplierUser({
+        setCurrentUser({
           email: matchedSupplier?.email || 'supplier@krishna.com',
           role: 'supplier',
           name: matchedSupplier?.name || 'Apex Timepieces Ltd.',
@@ -120,7 +112,7 @@ export default function Login() {
         setError('Password is too short.');
         return;
       }
-      setCustomerUser({
+      setCurrentUser({
         email: cleanEmail,
         role: 'customer',
         name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
@@ -181,26 +173,6 @@ export default function Login() {
               <div>
                 <strong className="font-bold block text-amber-950">Authentication Required</strong>
                 <span>{redirectMessage}</span>
-              </div>
-            </div>
-          )}
-
-          {activeCustomer && selectedRole === 'admin' && (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-3 text-xs text-emerald-900 flex items-center gap-2.5 shadow-xs">
-              <UserCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <div>
-                <strong className="font-bold block text-emerald-950">Customer Session Active ({activeCustomer.name || activeCustomer.email})</strong>
-                <span className="text-[11px] text-emerald-800">Signing in as Administrator will run in parallel. Customer session will remain safe & active.</span>
-              </div>
-            </div>
-          )}
-
-          {activeAdmin && selectedRole === 'customer' && (
-            <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-900 flex items-center gap-2.5 shadow-xs">
-              <ShieldCheck className="w-4 h-4 text-zinc-700 shrink-0" />
-              <div>
-                <strong className="font-bold block text-zinc-950">Admin Session Active (Super Admin)</strong>
-                <span className="text-[11px] text-zinc-700">Signing in as Customer will run in parallel without affecting Admin control access.</span>
               </div>
             </div>
           )}

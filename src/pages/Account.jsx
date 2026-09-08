@@ -3,15 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { getCustomerUser, getCurrentUser, logoutCustomer, getAdminUser } from '../utils/auth';
+import { getCurrentUser, logout } from '../utils/auth';
 import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn } from '../utils/orderStore';
 import { getWishlist } from '../utils/productStore';
 import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon } from '../components/Icons';
 
 export default function Account() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(() => getCustomerUser() || getCurrentUser());
-  const [adminUser, setAdminUser] = useState(() => getAdminUser());
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
   const [orders, setOrders] = useState(() => getOrders());
   const [addresses, setAddresses] = useState(() => getUserAddresses());
   const [wishlist, setWishlist] = useState(() => getWishlist());
@@ -49,8 +48,7 @@ export default function Account() {
   const [returnCondition, setReturnCondition] = useState('Unused with Original Packaging & Tags');
 
   const refreshData = () => {
-    setCurrentUser(getCustomerUser() || getCurrentUser());
-    setAdminUser(getAdminUser());
+    setCurrentUser(getCurrentUser());
     setOrders(getOrders());
     setAddresses(getUserAddresses());
     setWishlist(getWishlist());
@@ -71,7 +69,7 @@ export default function Account() {
   }, []);
 
   const handleLogout = () => {
-    logoutCustomer();
+    logout();
     navigate('/');
   };
 
