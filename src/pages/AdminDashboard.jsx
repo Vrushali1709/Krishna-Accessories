@@ -322,10 +322,10 @@ export default function AdminDashboard() {
         o.customer?.name?.toLowerCase().includes(q) ||
         o.customer?.email?.toLowerCase().includes(q) ||
         o.items?.some(it => it.name?.toLowerCase().includes(q));
-      const matchesStatus = filterOrderStatus === 'All' || o.status === filterOrderStatus;
+      const matchesStatus = orderStatusFilter === 'All' || o.status === orderStatusFilter;
       return matchesSearch && matchesStatus;
     });
-  }, [orders, globalSearch, filterOrderStatus]);
+  }, [orders, globalSearch, orderStatusFilter]);
 
   // Metric Computations
   const totalRevenue = useMemo(() => {
