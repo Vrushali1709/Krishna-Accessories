@@ -1,10 +1,11 @@
 // src/pages/SupplierDashboard.jsx
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
+import { getSupplierUser, logoutSupplier, getCurrentUser } from '../utils/auth';
 import {
   Building2,
   Package,
@@ -37,7 +38,7 @@ import {
 
 export default function SupplierDashboard() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
+  const [currentUser, setCurrentUser] = useState(() => getSupplierUser() || getCurrentUser());
   const suppliers = getSuppliers();
   const [activeSupplierName, setActiveSupplierName] = useState(suppliers[0]?.name || 'Apex Timepieces Ltd.');
   const [activeTab, setActiveTab] = useState('overview');

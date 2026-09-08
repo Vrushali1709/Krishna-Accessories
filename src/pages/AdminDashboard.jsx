@@ -96,7 +96,7 @@ import {
   exportFullDatabaseBackup,
   restoreDatabaseBackup
 } from '../utils/adminStore';
-import { getCurrentUser, setCurrentUser, logout, isAdmin } from '../utils/auth';
+import { getAdminUser, setAdminUser, logoutAdmin, isAdmin, getCustomerUser } from '../utils/auth';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Authentication State
-  const [currentUser, setCurrentUserState] = useState(() => getCurrentUser());
+  const [currentUser, setCurrentUserState] = useState(() => getAdminUser());
   const authenticatedAsAdmin = isAdmin();
 
   // Core Data Stores State
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
     setPermissionsMatrix(getPermissionsMatrix());
     setShippingCarriers(getShippingCarriers());
     setSystemConfigState(getSystemConfig());
-    setCurrentUserState(getCurrentUser());
+    setCurrentUserState(getAdminUser());
   };
 
   useEffect(() => {
@@ -472,18 +472,20 @@ export default function AdminDashboard() {
 
   // Auth Handlers
   const handleQuickAdminLogin = () => {
-    setCurrentUser({
+    setAdminUser({
       email: 'admin@krishna.com',
       role: 'admin',
       name: 'Super Administrator',
       phone: '+91 (079) 4000-5500'
     });
+    showToast('Signed in as Super Administrator');
     refreshAll();
   };
 
   const handleAdminLogout = () => {
-    logout();
-    navigate('/login');
+    logoutAdmin();
+    showToast('Admin session signed out');
+    refreshAll();
   };
 
   // Product Actions
