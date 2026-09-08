@@ -2,10 +2,24 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCartCount } from '../utils/cart';
-import { defaultCategories, getWishlist, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
+import { defaultCategories, getCategories, getWishlist } from '../utils/productStore';
 import { getCurrentUser, logout } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import { BagIcon, SearchIcon, UserIcon, ChevronDownIcon, HeartIcon, BellIcon } from './Icons';
+
+const CATEGORY_ICONS = {
+  'Watches': '⌚',
+  'Bags & Wallets': '👜',
+  'Shoes': '👟',
+  'Mobiles': '📱',
+  'Clothes & Fashion': '👔',
+  'Laptops': '💻',
+  'Electronics': '🎧',
+  'Smart Gadgets': '⚡',
+  'Gaming': '🎮',
+  'Fitness': '🏃',
+  'Fashion Accessories': '🕶️'
+};
 
 export default function Navbar() {
   const location = useLocation();
@@ -14,6 +28,7 @@ export default function Navbar() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
+  const [allCategories, setAllCategories] = useState(() => getCategories());
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
@@ -56,6 +71,7 @@ export default function Navbar() {
     setWishlistCount(getWishlist().length);
     setNotifications(getNotifications());
     setCurrentUser(getCurrentUser());
+    setAllCategories(getCategories());
   };
 
   useEffect(() => {
@@ -63,6 +79,7 @@ export default function Navbar() {
     window.addEventListener('cartUpdated', refreshState);
     window.addEventListener('wishlistUpdated', refreshState);
     window.addEventListener('notificationsUpdated', refreshState);
+    window.addEventListener('categoriesUpdated', refreshState);
     window.addEventListener('authUpdated', refreshState);
     window.addEventListener('storage', refreshState);
 
@@ -70,6 +87,7 @@ export default function Navbar() {
       window.removeEventListener('cartUpdated', refreshState);
       window.removeEventListener('wishlistUpdated', refreshState);
       window.removeEventListener('notificationsUpdated', refreshState);
+      window.removeEventListener('categoriesUpdated', refreshState);
       window.removeEventListener('authUpdated', refreshState);
       window.removeEventListener('storage', refreshState);
     };
@@ -118,22 +136,6 @@ export default function Navbar() {
   return (
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md border-b border-gray-200 bg-white/98 backdrop-blur-md' : 'border-b border-gray-200/80 bg-white/95 backdrop-blur-md'}`}>
 
-      {/* Top Luxury Announcement Strip */}
-      {/* <div className="border-b border-gray-100 bg-[#0F172A] text-white px-2.5 sm:px-4 py-1">
-        <div className="mx-auto flex max-w-7xl items-center justify-between text-[8px] sm:text-[9.5px] font-medium tracking-[0.12em] uppercase">
-          <span className="hidden sm:inline text-gray-300 truncate">
-            Free Express Shipping on Orders &ge; ₹2,000
-          </span>
-          <span className="mx-auto sm:mx-0 text-amber-200 font-semibold tracking-wider text-center truncate px-1">
-            ★ 100% Certified Authentic &bull; Brand Warranty
-          </span>
-          <div className="hidden lg:flex items-center gap-3 text-gray-300">
-            <Link to="/about" className="hover:text-white transition">About</Link>
-            <span className="text-gray-600">&bull;</span>
-            <Link to="/contact" className="hover:text-white transition">Concierge</Link>
-            <span className="text-gray-600">&bull;</span>
-            <span className="text-white font-semibold">+91 (079) 4000-5500</span>
-          </div>
       {/* Main Navigation Bar */}
       <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="relative flex h-14 sm:h-16 items-center justify-between">
@@ -169,14 +171,14 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className={`flex items-center gap-1 py-1.5 transition-colors uppercase cursor-pointer ${location.pathname === '/shop' && !location.search
+                className={`flex items-center gap-1.5 py-1.5 transition-colors uppercase cursor-pointer ${location.pathname === '/shop' && !location.search
                   ? 'text-gray-950 font-bold'
                   : 'hover:text-gray-950'
                   }`}
               >
                 <span>Collections</span>
                 <ChevronDownIcon
-                  className={`w-3.5 h-3.5 transition-transform duration-150 ${categoriesOpen ? 'rotate-180 text-gray-950' : 'text-gray-400'
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${categoriesOpen ? 'rotate-180 text-gray-950' : 'text-gray-400'
                     }`}
                 />
               </button>
@@ -185,54 +187,66 @@ export default function Navbar() {
                 <div
                   onMouseEnter={handleCatMouseEnter}
                   onMouseLeave={handleCatMouseLeave}
-                  className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-84 z-50 animate-fade-in"
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[460px] sm:w-[520px] z-50 animate-fade-in"
                 >
-                  <div className="rounded-2xl border border-gray-200 bg-white p-3.5 shadow-2xl">
-                    <div className="px-2.5 py-1 border-b border-gray-100 mb-2 flex justify-between items-center">
-                      <span className="text-[9.5px] font-semibold uppercase tracking-wider text-gray-400">Departments</span>
+                  <div className="rounded-3xl border border-gray-200/90 bg-white/98 backdrop-blur-xl p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.12)]">
+                    {/* Header */}
+                    <div className="px-2 pb-3 mb-2.5 border-b border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400">
+                          All Departments
+                        </span>
+                        <span className="rounded-full bg-amber-50 border border-amber-200/60 px-2 py-0.5 text-[9.5px] font-bold text-amber-900">
+                          {allCategories.length} Collections
+                        </span>
+                      </div>
+
                       <Link
                         to="/shop"
                         onClick={() => setCategoriesOpen(false)}
-                        className="text-[10px] font-bold text-gray-900 hover:underline"
+                        className="text-xs font-bold text-gray-900 hover:text-amber-600 transition flex items-center gap-1"
                       >
-                        View All &rarr;
+                        <span>Explore Catalog</span>
+                        <span>&rarr;</span>
                       </Link>
                     </div>
+
+                    {/* All Categories 2-Column Clean Grid */}
                     <div className="grid grid-cols-2 gap-1.5">
-                      {defaultCategories.slice(0, 10).map((cat) => (
-                        <Link
-                          key={cat}
-                          to={`/shop?category=${encodeURIComponent(cat)}`}
-                          onClick={() => setCategoriesOpen(false)}
-                          className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs normal-case text-gray-700 transition hover:bg-gray-100 hover:text-black font-medium"
-                        >
-                          <span className="truncate">{cat}</span>
-                          <span className="text-[10px] text-gray-400">&rarr;</span>
-                        </Link>
-                      ))}
+                      {allCategories.map((cat) => {
+                        const icon = CATEGORY_ICONS[cat] || '✨';
+                        const isActive = location.search.includes(`category=${encodeURIComponent(cat)}`);
+
+                        return (
+                          <Link
+                            key={cat}
+                            to={`/shop?category=${encodeURIComponent(cat)}`}
+                            onClick={() => setCategoriesOpen(false)}
+                            className={`group/cat flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold normal-case transition-all duration-150 ${
+                              isActive
+                                ? 'bg-gray-950 text-white shadow-xs'
+                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-950'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <span className="text-base shrink-0 transition-transform group-hover/cat:scale-110">{icon}</span>
+                              <span className="truncate">{cat}</span>
+                            </div>
+                            <span className={`text-[11px] transition-transform duration-150 group-hover/cat:translate-x-0.5 shrink-0 ${
+                              isActive ? 'text-amber-300' : 'text-gray-400 group-hover/cat:text-gray-900'
+                            }`}>
+                              &rarr;
+                            </span>
+                          </Link>
+                        );
+                      })}
                     </div>
 
-                    {/* Dedicated Watch Types Highlight */}
-                    <div className="mt-2.5 pt-2 border-t border-gray-100">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-amber-600 block px-1 mb-1.5">
-                        ⌚ Watch Editions & Quality Types
-                      </span>
-                      <div className="grid grid-cols-2 gap-1">
-                        {WATCH_TYPES.slice(0, 6).map((wt) => {
-                          const meta = WATCH_TYPE_METADATA[wt];
-                          return (
-                            <Link
-                              key={wt}
-                              to={`/shop?category=Watches&watchType=${encodeURIComponent(wt)}`}
-                              onClick={() => setCategoriesOpen(false)}
-                              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-medium text-gray-700 hover:bg-gray-100 hover:text-black transition"
-                            >
-                              <span className={`h-1.5 w-1.5 rounded-full ${meta?.dotClass || 'bg-current'}`} />
-                              <span className="truncate">{wt}</span>
-                            </Link>
-                          );
-                        })}
-                      </div>
+                    {/* Bottom strip */}
+                    <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between px-2 text-[10.5px] text-gray-400 font-medium">
+                      <span>★ 100% Certified Authentic Guarantee</span>
+                      <span className="text-gray-300">&bull;</span>
+                      <span>Express Doorstep Delivery</span>
                     </div>
                   </div>
                 </div>
@@ -588,49 +602,32 @@ export default function Navbar() {
               Shop All Catalog
             </Link>
 
-            {/* Quick Category links on mobile */}
-            <div className="py-2 px-3 border-y border-gray-100 my-1">
-              <span className="text-[8.5px] text-gray-400 block mb-1.5 font-bold uppercase tracking-widest">Quick Categories</span>
-              <div className="flex flex-wrap gap-1 normal-case font-medium">
-                {defaultCategories.slice(0, 6).map(c => (
-                  <Link
-                    key={c}
-                    to={`/shop?category=${encodeURIComponent(c)}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-md bg-[#F4F4F6] px-2 py-0.5 text-[10px] text-gray-800 hover:bg-gray-200"
-                  >
-                    {c}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Dedicated Watch Editions & Quality Types on Mobile */}
-            <div className="py-2 px-3 border-b border-gray-100 mb-1">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[8.5px] text-amber-600 block font-bold uppercase tracking-widest">
-                  ⌚ Watch Editions (7 Quality Types)
+            {/* All Departments list on mobile */}
+            <div className="py-2.5 px-3 border-y border-gray-100 my-1">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">
+                  All Departments ({allCategories.length})
                 </span>
                 <Link
-                  to="/shop?category=Watches"
+                  to="/shop"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-[9px] font-bold text-gray-900 hover:underline normal-case"
+                  className="text-[10px] font-bold text-gray-900 hover:underline normal-case"
                 >
-                  All &rarr;
+                  View All &rarr;
                 </Link>
               </div>
-              <div className="grid grid-cols-2 gap-1 normal-case font-medium">
-                {WATCH_TYPES.map(wt => {
-                  const meta = WATCH_TYPE_METADATA[wt];
+              <div className="grid grid-cols-2 gap-1.5 normal-case font-medium">
+                {allCategories.map(c => {
+                  const icon = CATEGORY_ICONS[c] || '✨';
                   return (
                     <Link
-                      key={wt}
-                      to={`/shop?category=Watches&watchType=${encodeURIComponent(wt)}`}
+                      key={c}
+                      to={`/shop?category=${encodeURIComponent(c)}`}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-1.5 rounded-md bg-[#F4F4F6] px-2 py-1 text-[10px] text-gray-800 hover:bg-gray-200"
+                      className="flex items-center gap-2 rounded-lg bg-[#F4F4F6] px-2.5 py-2 text-[11px] text-gray-800 hover:bg-gray-200 transition"
                     >
-                      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${meta?.dotClass || 'bg-gray-400'}`} />
-                      <span className="truncate">{wt}</span>
+                      <span className="text-xs shrink-0">{icon}</span>
+                      <span className="truncate">{c}</span>
                     </Link>
                   );
                 })}
