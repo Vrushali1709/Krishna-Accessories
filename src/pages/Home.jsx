@@ -769,9 +769,7 @@ export default function Home() {
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
             <div>
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#B89758]">
-                ✦ Handpicked Curations
-              </span>
+          
               <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
                 Selected Editions
               </h2>
