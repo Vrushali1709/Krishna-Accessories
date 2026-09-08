@@ -19,11 +19,11 @@ export default function Footer() {
   return (
     <>
       {/* 1. Standalone Newsletter / Curated Releases Section (Outside Footer) */}
-      <section className="bg-gradient-to-b from-gray-50/80 to-white py-12 sm:py-16 border-t border-gray-200/80">
+      <section className="py-8 sm:py-12 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-gray-200/80 bg-white p-7 sm:p-10 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.05)] relative overflow-hidden">
+          <div className="rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.04)] relative overflow-hidden">
             {/* Subtle ambient luxury light */}
-            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-500/8 blur-3xl pointer-events-none" />
             <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
 
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-8">

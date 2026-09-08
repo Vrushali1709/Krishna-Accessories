@@ -786,8 +786,8 @@ export default function Home() {
       {/* ======================================================
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
       ====================================================== */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="text-center mb-8 sm:mb-10">
+      <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8">
+        <div className="text-center mb-7 sm:mb-9">
 
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
             Explore by Brand
@@ -798,7 +798,7 @@ export default function Home() {
         </div>
 
         {/* Dual Capsule Pill Strips */}
-        <div className="space-y-3.5 sm:space-y-4">
+        <div className="space-y-3 sm:space-y-3.5">
 
           {/* Track 1 (Row 1 Brands) */}
           <div className="rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
@@ -841,6 +841,6 @@ export default function Home() {
 
       {/* ================= FOOTER ================= */}
       <Footer />
-      Official Brand Partners    </div>
+    </div>
   );
 }
