@@ -314,16 +314,17 @@ export default function AdminProducts() {
                     </div>
                   </div>
 
-                <div className="mt-4 flex gap-2 border-t border-zinc-100 pt-3">
-                  <button onClick={() => handleEdit(p)} className="flex-1 border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-medium py-1.5 rounded-lg transition cursor-pointer">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(p.id)} className="flex-1 border border-rose-200 bg-rose-50/50 hover:bg-rose-100 text-rose-700 text-xs font-medium py-1.5 rounded-lg transition cursor-pointer">
-                    Delete
-                  </button>
+                  <div className="mt-4 flex gap-2 border-t border-zinc-100 pt-3">
+                    <button onClick={() => handleEdit(p)} className="flex-1 border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-medium py-1.5 rounded-lg transition cursor-pointer">
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(p.id)} className="flex-1 border border-rose-200 bg-rose-50/50 hover:bg-rose-100 text-rose-700 text-xs font-medium py-1.5 rounded-lg transition cursor-pointer">
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

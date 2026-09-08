@@ -63,7 +63,7 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
 export function updateCartQuantity(id, color = '', variantOrQty = 1, maybeQty = 1) {
   const cart = getCart();
   let variant = '';
-  let quantity = 1;
+  let quantity;
 
   if (typeof variantOrQty === 'number') {
     quantity = variantOrQty;

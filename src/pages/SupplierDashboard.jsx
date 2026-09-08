@@ -1,8 +1,9 @@
 // src/pages/SupplierDashboard.jsx
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { getCurrentUser } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
 import {
