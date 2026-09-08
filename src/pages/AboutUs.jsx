@@ -232,7 +232,7 @@ export default function AboutUs() {
                 <div className="relative mx-auto max-w-md lg:max-w-none group">
                   <div className="aspect-[4/4.8] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-xl relative transition-transform duration-500 hover:shadow-2xl">
                     <img
-                      src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop"
+                      src="https://i.pinimg.com/1200x/f2/36/b7/f236b7045be01d7318acf6d2b7b19400.jpg"
                       alt="Authentic Luxury Timepieces & Accessories"
                       className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     />
@@ -469,7 +469,7 @@ export default function AboutUs() {
                 <div className="relative group">
                   <div className="aspect-[4/4.6] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-md">
                     <img
-                      src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1000&auto=format&fit=crop"
+                      src="https://i.pinimg.com/736x/ac/f6/7d/acf67d5d91a1b26246a9f121fdf4b41e.jpg"
                       alt="Authentic Precision & Quality Check"
                       className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-103"
                     />
