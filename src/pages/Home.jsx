@@ -1941,7 +1941,7 @@ export default function Home() {
               gap-2
             ">
 
-              <span className="
+              {/* <span className="
                 text-[9px]
                 font-semibold
                 uppercase
@@ -1957,7 +1957,7 @@ export default function Home() {
                 Explore Categories (
                 {categoryList.length}
                 )
-              </span>
+              </span> */}
 
               <span className="
                 text-[9px]
