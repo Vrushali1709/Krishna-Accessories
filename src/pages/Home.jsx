@@ -469,9 +469,8 @@ export default function Home() {
           {watchHeroSlides.map((slide, index) => (
             <div
               key={slide.titleLine1}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
             >
               <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[56%] xl:w-[50%] 2xl:w-[46%] h-full w-full">
                 <img
@@ -531,9 +530,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setCurrentSlide(i)}
-                  className={`h-1.5 transition-all duration-300 rounded-full ${
-                    i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
-                  }`}
+                  className={`h-1.5 transition-all duration-300 rounded-full ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
+                    }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
               ))}
@@ -598,7 +596,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
             <div className="flex items-center gap-2">
-             
+
             </div>
             <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
               Curated Collections
@@ -618,11 +616,10 @@ export default function Home() {
               onClick={() => scrollCarousel('left')}
               disabled={!canScrollLeft}
               aria-label="Previous categories"
-              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${
-                canScrollLeft
+              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeft
                   ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
                   : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-              }`}
+                }`}
             >
               <ChevronLeftIcon className="w-4 h-4" />
             </button>
@@ -632,11 +629,10 @@ export default function Home() {
               onClick={() => scrollCarousel('right')}
               disabled={!canScrollRight}
               aria-label="Next categories"
-              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${
-                canScrollRight
+              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRight
                   ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
                   : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-              }`}
+                }`}
             >
               <ChevronRightIcon className="w-4 h-4" />
             </button>
@@ -649,9 +645,8 @@ export default function Home() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className={`flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
-            isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
+          className={`flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {categoryList.map((c) => {
@@ -725,36 +720,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURED PRODUCTS (Selected Editions) ================= */}
-      <section className="bg-white border-y border-gray-200/80 py-9 sm:py-12 relative">
+      {/* ================= FEATURED PRODUCTS ================= */}
+      <section className="bg-white border-y border-gray-200/80 py-8 sm:py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between gap-3 mb-6 sm:mb-7">
+          <div className="flex items-end justify-between gap-3 mb-5">
             <div>
-              <div className="flex items-center gap-1.5 mb-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-                <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400">
-                  Top Recommendations
-                </span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-                Selected Editions
-              </h2>
+              <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">Top Recommendations</span>
+              <h2 className="mt-0.5 text-lg sm:text-xl font-bold tracking-tight text-gray-950">Selected Editions</h2>
             </div>
-            <Link 
-              to="/shop" 
-              className="group text-xs sm:text-[13px] font-semibold text-gray-900 hover:text-black flex items-center gap-1.5 shrink-0 py-1 transition-colors"
-            >
+            <Link to="/shop" className="text-xs font-semibold text-gray-900 hover:underline flex items-center gap-1 shrink-0">
               <span>View All</span>
-              <ArrowRightIcon className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1 text-gray-700 group-hover:text-black" />
+              <ArrowRightIcon className="w-3 h-3" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5">
-            {featured.map((product, idx) => (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+            {featured.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                index={idx}
                 onAddToCart={handleAddToCart}
                 onBuyNow={handleBuyNow}
               />
@@ -768,7 +752,7 @@ export default function Home() {
       ====================================================== */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="text-center mb-8 sm:mb-10">
-        
+
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
             Explore by Brand
           </h2>
@@ -779,7 +763,7 @@ export default function Home() {
 
         {/* Dual Capsule Pill Strips */}
         <div className="space-y-3.5 sm:space-y-4">
-          
+
           {/* Track 1 (Row 1 Brands) */}
           <div className="rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-2.5">
@@ -821,6 +805,6 @@ export default function Home() {
 
       {/* ================= FOOTER ================= */}
       <Footer />
-Official Brand Partners    </div>
+      Official Brand Partners    </div>
   );
 }
