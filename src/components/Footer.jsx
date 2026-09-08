@@ -18,82 +18,50 @@ export default function Footer() {
 
   return (
     <>
-      {/* 1. Standalone Minimalist Luxury Newsletter / Privé Invitation */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-stone-200/90 bg-gradient-to-br from-white via-[#FCFBF8] to-[#F6F4EC] p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
-          {/* Ambient luxury light glows */}
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 h-56 w-56 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-56 w-56 rounded-full bg-slate-900/5 blur-3xl pointer-events-none" />
+      {/* 1. Standalone Newsletter / Curated Releases Section (Outside Footer) */}
+      <section className="bg-gradient-to-b from-gray-50/80 to-white py-12 sm:py-16 border-t border-gray-200/80">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl border border-gray-200/80 bg-white p-7 sm:p-10 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.05)] relative overflow-hidden">
+            {/* Subtle ambient luxury light */}
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
+            <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
-            {/* Left: Minimal Luxury Editorial Heading & Copy */}
-            <div className="max-w-xl space-y-2.5">
-              <div className="inline-flex items-center gap-2 rounded-full bg-amber-50/90 border border-amber-200/70 px-3 py-0.5 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-900 shadow-2xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-                <span>Krishna Privé &bull; Curated Releases</span>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-8">
+              <div className="max-w-xl">
+                <span className="inline-block rounded-full bg-amber-50 border border-amber-200/80 px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-amber-900 mb-2.5">
+                  Exclusive Access
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+                  Ready for Curated Releases?
+                </h3>
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-gray-600">
+                  Receive private invitations to limited-edition timepieces, handcrafted essentials, and members-only promotions directly from authorized boutiques.
+                </p>
               </div>
 
-              <h3 className="text-2xl sm:text-[28px] font-bold tracking-tight text-gray-950 leading-snug">
-                Be the First to Access <span className="font-serif italic font-normal text-[#B89758]">Limited Editions</span>
-              </h3>
-
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed max-w-lg">
-                Receive private invitations to rare Swiss timepieces, handcrafted leather essentials, and members-only allocations directly from authorized boutiques.
-              </p>
-
-              {/* Minimal Benefit Badges */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 pt-1 text-[11px] font-medium text-gray-500">
-                <span className="flex items-center gap-1.5 text-gray-700">
-                  <span className="text-amber-600 font-bold">✓</span> 10% Welcome Discount
-                </span>
-                <span className="flex items-center gap-1.5 text-gray-700">
-                  <span className="text-amber-600 font-bold">✓</span> Zero Spam Guarantee
-                </span>
-                <span className="flex items-center gap-1.5 text-gray-700">
-                  <span className="text-amber-600 font-bold">✓</span> Unsubscribe Anytime
-                </span>
-              </div>
-            </div>
-
-            {/* Right: Minimalist, Sleek Subscription Input */}
-            <div className="w-full lg:max-w-md">
-              <form onSubmit={handleSubscribe} className="relative flex items-center">
-                <div className="relative w-full">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-
+              <div className="w-full lg:max-w-md">
+                <form onSubmit={handleSubscribe} className="relative flex items-center">
                   <input
                     type="email"
                     required
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Enter your email address..."
-                    className="w-full rounded-2xl border border-gray-200/90 bg-white py-3.5 pl-11 pr-32 text-xs sm:text-sm text-gray-900 placeholder:text-gray-400 shadow-2xs outline-none transition-all duration-200 focus:border-[#B89758] focus:ring-2 focus:ring-[#B89758]/20"
+                    className="w-full rounded-2xl border border-gray-200 bg-[#F4F4F6] py-3.5 pl-4 sm:pl-5 pr-32 text-xs sm:text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-gray-400 focus:bg-white focus:shadow-xs"
                   />
-
                   <button
                     type="submit"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-gray-950 px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wide text-white shadow-sm transition-all duration-200 hover:bg-[#B89758] hover:text-gray-950 active:scale-97 cursor-pointer"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-gray-950 px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs transition hover:bg-black active:scale-97 cursor-pointer"
                   >
                     Join Privé
                   </button>
-                </div>
-              </form>
-
-              {subscribed ? (
-                <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-700 animate-fade-in bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-xl">
-                  <span>✓ Welcome to Privé! Use code</span>
-                  <strong className="underline font-mono bg-emerald-100/80 px-1 rounded text-emerald-800">KRISHNA10</strong>
-                  <span>for 10% off.</span>
-                </div>
-              ) : (
-                <p className="mt-2 text-[10.5px] text-gray-400 pl-1">
-                  Join 12,500+ luxury connoisseurs across India.
-                </p>
-              )}
+                </form>
+                {subscribed && (
+                  <p className="mt-2 text-xs font-semibold text-emerald-600 animate-fade-in">
+                    ✓ Thank you for subscribing! Use code <strong className="underline">KRISHNA10</strong> for 10% off.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
