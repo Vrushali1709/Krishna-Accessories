@@ -482,6 +482,14 @@ export default function Navbar() {
                         <span>👤 Account & Orders</span>
                       </Link>
 
+                      <Link
+                        to="/login"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition"
+                      >
+                        <span>🔐 Admin Login</span>
+                      </Link>
+
                       {currentUser.role === 'admin' && (
                         <Link
                           to="/admin"
