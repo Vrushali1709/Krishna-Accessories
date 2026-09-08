@@ -1,774 +1,125 @@
-// // src/pages/AboutUs.jsx
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import Navbar from '../components/Navbar';
-// import Footer from '../components/Footer';
-// import { ShieldCheckIcon, TruckIcon, StarIcon, ArrowRightIcon } from '../components/Icons';
-
-// export default function AboutUs() {
-//   return (
-//     <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
-//       <Navbar />
-
-//       {/* Hero Section */}
-//       <section className="bg-white border-b border-gray-200 py-12 sm:py-20">
-//         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-//           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-//             Heritage & Mission
-//           </span>
-//           <h1 className="mt-2 text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight text-gray-950 leading-tight">
-//             Curating Precision, <br />
-//             <span className="font-serif italic font-normal text-gray-500">Authenticity & Luxury</span>
-//           </h1>
-//           <p className="mt-4 sm:mt-5 text-xs sm:text-base leading-relaxed text-gray-600 max-w-2xl mx-auto">
-//             Founded with a passion for horology and refined craftsmanship, Krishna Accessories serves as Gujarat's foremost authorized sanctuary for authentic Swiss and heritage timepieces, leather accessories, and curated essentials.
-//           </p>
-//         </div>
-//       </section>
-
-//       {/* Brand Pillars & Values */}
-//       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8 space-y-12 sm:space-y-16">
-
-//         {/* Story Grid */}
-//         <div className="grid gap-8 lg:grid-cols-2 items-center">
-//           <div className="space-y-4 text-center lg:text-left">
-//             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Our Foundation</span>
-//             <h2 className="text-xl sm:text-3xl font-bold text-gray-950 leading-snug">A Legacy of Uncompromising Standards</h2>
-//             <p className="text-xs sm:text-sm leading-relaxed text-gray-600">
-//               At Krishna Accessories, every timepiece and lifestyle good in our catalog is sourced directly from brand-authorized manufacturers and certified distributors. We reject replicas, parallel imports, and compromised craftsmanship.
-//             </p>
-//             <p className="text-xs sm:text-sm leading-relaxed text-gray-600">
-//               Whether you are acquiring an automatic mechanical caliber from Titan, a solar chronograph from Casio, or tailored leather goods from Hidesign, each parcel arrives with stamped warranty paperwork and official authentication seals.
-//             </p>
-//             <div className="pt-2 flex justify-center lg:justify-start">
-//               <Link
-//                 to="/shop"
-//                 className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-5 sm:px-6 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black shadow-sm transition"
-//               >
-//                 <span>Browse Authenticated Catalog</span>
-//                 <ArrowRightIcon className="w-3.5 h-3.5" />
-//               </Link>
-//             </div>
-//           </div>
-
-//           <div className="aspect-4/3 rounded-3xl overflow-hidden bg-[#F4F4F6] border border-gray-200 p-6 sm:p-8 flex items-center justify-center shadow-inner">
-//             <img
-//               src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900"
-//               alt="Boutique Timepieces"
-//               className="h-full w-full object-contain mix-blend-multiply drop-shadow-md"
-//             />
-//           </div>
-//         </div>
-
-//         {/* 3 Core Principles */}
-//         <div className="grid gap-5 sm:gap-6 sm:grid-cols-3">
-//           <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-2.5">
-//             <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-900">
-//               <ShieldCheckIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-//             </div>
-//             <h3 className="text-sm font-bold text-gray-950">100% Genuine Guarantee</h3>
-//             <p className="text-xs text-gray-600 leading-relaxed">
-//               Direct factory distribution with valid brand warranty cards serviceable at all official brand service centers nationwide.
-//             </p>
-//           </div>
-
-//           <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-2.5">
-//             <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-900">
-//               <TruckIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-//             </div>
-//             <h3 className="text-sm font-bold text-gray-950">Insured Air Logistics</h3>
-//             <p className="text-xs text-gray-600 leading-relaxed">
-//               Every parcel is protected with transit insurance and dispatched via premier partners like BlueDart Express and Delhivery.
-//             </p>
-//           </div>
-
-//           <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-2.5">
-//             <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-900">
-//               <StarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
-//             </div>
-//             <h3 className="text-sm font-bold text-gray-950">Dedicated Concierge</h3>
-//             <p className="text-xs text-gray-600 leading-relaxed">
-//               Personalized client advisors based out of our Ahmedabad flagship boutique assisting with bespoke sizing, gifting, and corporate orders.
-//             </p>
-//           </div>
-//         </div>
-
-//         {/* Flagship Boutique Info */}
-//         <div className="rounded-3xl bg-[#111827] text-white p-6 sm:p-12 shadow-xl">
-//           <div className="grid gap-6 lg:gap-8 lg:grid-cols-2 items-center">
-//             <div>
-//               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Physical Sanctuary</span>
-//               <h3 className="mt-1 text-xl sm:text-3xl font-serif font-bold text-white">Visit Our Ahmedabad Flagship</h3>
-//               <p className="mt-3 text-xs sm:text-sm text-gray-300 leading-relaxed">
-//                 Experience our curated timepieces and leather accessories in person. Our private viewing suites offer bespoke bracelet fitting, movement diagnostics, and luxury hospitality.
-//               </p>
-//               <div className="mt-5 sm:mt-6 space-y-2 text-xs text-gray-300">
-//                 <p className="flex items-start gap-1.5"><span>📍</span> <span><strong>Location:</strong> Bodakdev, SG Highway, Ahmedabad, Gujarat 380054</span></p>
-//                 <p className="flex items-start gap-1.5"><span>🕒</span> <span><strong>Hours:</strong> Mon – Sat: 10:30 AM to 08:30 PM &bull; Sunday by Appointment</span></p>
-//                 <p className="flex items-start gap-1.5"><span>📞</span> <span><strong>Private Desk:</strong> +91 (079) 4000-5500</span></p>
-//               </div>
-//             </div>
-//             <div className="text-center lg:text-right pt-2 lg:pt-0">
-//               <Link
-//                 to="/contact"
-//                 className="inline-block w-full sm:w-auto rounded-full bg-white px-7 sm:px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-gray-100 transition shadow-sm"
-//               >
-//                 Schedule Private Viewing &rarr;
-//               </Link>
-//             </div>
-//           </div>
-//         </div>
-
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
 // src/pages/AboutUs.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import {
-  ShieldCheck,
-  Award,
-  Sparkles,
-  Clock,
-  MapPin,
-  Phone,
-  ArrowRight,
-  ChevronDown,
-  CheckCircle2,
-  PackageCheck,
-  Truck,
-  Check,
-  Watch,
-  Briefcase,
-  Headphones,
-  Glasses
-} from 'lucide-react';
+import { ShieldCheckIcon, TruckIcon, StarIcon, ArrowRightIcon } from '../components/Icons';
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
       <Navbar />
 
-      {/* ========================================================================= */}
-      {/* 1. HERO SECTION (Minimalist, Editorial, Grounded)                         */}
-      {/* ========================================================================= */}
-      <section className="relative bg-white border-b border-neutral-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              
-              {/* Eyebrow */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F2EB] border border-[#C5A880]/40">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734]" />
-                <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#8C6734]">
-                  The Krishna Accessories Story
-                </span>
-              </div>
-
-              {/* Main Heading */}
-              <h1 className="font-serif text-3xl sm:text-5xl lg:text-[52px] font-medium tracking-tight text-neutral-950 leading-[1.15]">
-                Precision, Authenticity, <br />
-                <span className="italic font-normal text-[#8C6734]">Crafted for You.</span>
-              </h1>
-
-              {/* Real, Grounded Brand Story Intro */}
-              <p className="text-sm sm:text-base text-neutral-600 font-normal leading-relaxed max-w-xl">
-                Founded in Ahmedabad, Krishna Accessories is Gujarat’s premier multi-category destination for 100% certified authentic timepieces, handcrafted leather goods, footwear, and curated lifestyle essentials. We connect discerning buyers directly with authorized brand manufacturers and official warranties.
-              </p>
-
-              {/* Real Store Promises */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs text-neutral-700">
-                <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/60">
-                  <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
-                  <span className="font-medium">Direct Authorized Sourcing</span>
-                </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/60">
-                  <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
-                  <span className="font-medium">Official Brand Warranty</span>
-                </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/60">
-                  <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
-                  <span className="font-medium">Ahmedabad Flagship Store</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-                <Link
-                  to="/shop"
-                  className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-semibold tracking-[0.16em] uppercase rounded-sm transition-all shadow-sm hover:shadow-md group"
-                >
-                  <span>Explore Collection</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-[#C5A880]" />
-                </Link>
-
-                <a
-                  href="#our-story"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-neutral-300 hover:border-neutral-900 text-neutral-800 hover:text-neutral-950 text-xs font-medium tracking-[0.16em] uppercase rounded-sm transition-all bg-white"
-                >
-                  <span>Our Story</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-neutral-500" />
-                </a>
-              </div>
-            </div>
-
-            {/* Right Hero Image */}
-            <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="aspect-[4/4.8] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-lg relative group">
-                  <img
-                    src="https://i.pinimg.com/1200x/6a/5f/cf/6a5fcf8a8279baf362270344c55e7705.jpg"
-                    alt="Authentic Luxury Timepieces & Accessories"
-                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-102"
-                  />
-                  
-                  {/* Discreet Bottom Label */}
-                  <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-lg border border-neutral-200/80 flex items-center justify-between text-xs">
-                    <div>
-                      <p className="font-semibold text-neutral-950">100% Certified Authentic</p>
-                      <p className="text-[11px] text-neutral-500">Titan &bull; Casio &bull; Fossil &bull; Hidesign &bull; Apple</p>
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6734] bg-[#F5F2EB] px-2 py-1 rounded">
-                      Verified
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
+      {/* Hero Section */}
+      <section className="bg-white border-b border-gray-200 py-12 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+            Heritage & Mission
+          </span>
+          <h1 className="mt-2 text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight text-gray-950 leading-tight">
+            Curating Precision, <br />
+            <span className="font-serif italic font-normal text-gray-500">Authenticity & Luxury</span>
+          </h1>
+          <p className="mt-4 sm:mt-5 text-xs sm:text-base leading-relaxed text-gray-600 max-w-2xl mx-auto">
+            Founded with a passion for horology and refined craftsmanship, Krishna Accessories serves as Gujarat's foremost authorized sanctuary for authentic Swiss and heritage timepieces, leather accessories, and curated essentials.
+          </p>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 2. REAL CATEGORIES WE CURATE (Direct connection to the actual website)    */}
-      {/* ========================================================================= */}
-      <section className="py-12 bg-[#FAFAFB] border-b border-neutral-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-            <div>
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8C6734]">
-                Curated Categories
-              </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-medium text-neutral-950 mt-1">
-                What We Curate at Krishna Accessories
-              </h2>
+      {/* Brand Pillars & Values */}
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8 space-y-12 sm:space-y-16">
+
+        {/* Story Grid */}
+        <div className="grid gap-8 lg:grid-cols-2 items-center">
+          <div className="space-y-4 text-center lg:text-left">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Our Foundation</span>
+            <h2 className="text-xl sm:text-3xl font-bold text-gray-950 leading-snug">A Legacy of Uncompromising Standards</h2>
+            <p className="text-xs sm:text-sm leading-relaxed text-gray-600">
+              At Krishna Accessories, every timepiece and lifestyle good in our catalog is sourced directly from brand-authorized manufacturers and certified distributors. We reject replicas, parallel imports, and compromised craftsmanship.
+            </p>
+            <p className="text-xs sm:text-sm leading-relaxed text-gray-600">
+              Whether you are acquiring an automatic mechanical caliber from Titan, a solar chronograph from Casio, or tailored leather goods from Hidesign, each parcel arrives with stamped warranty paperwork and official authentication seals.
+            </p>
+            <div className="pt-2 flex justify-center lg:justify-start">
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-5 sm:px-6 py-2.5 sm:py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black shadow-sm transition"
+              >
+                <span>Browse Authenticated Catalog</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </Link>
             </div>
-            <Link
-              to="/shop"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C6734] hover:text-neutral-950 tracking-wider uppercase transition-colors"
-            >
-              <span>View Full Catalog</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-            
-            {/* Watches */}
-            <Link
-              to="/shop?category=Watches"
-              className="p-4 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all hover:shadow-md group text-left"
-            >
-              <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mb-3 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
-                <Watch className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm font-semibold text-neutral-900">Watches</h3>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Titan, Casio, Fossil, Seiko</p>
-            </Link>
-
-            {/* Bags & Leather */}
-            <Link
-              to="/shop?category=Bags%20%26%20Wallets"
-              className="p-4 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all hover:shadow-md group text-left"
-            >
-              <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mb-3 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
-                <Briefcase className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm font-semibold text-neutral-900">Bags & Wallets</h3>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Hidesign, Wildcraft, Tommy</p>
-            </Link>
-
-            {/* Footwear */}
-            <Link
-              to="/shop?category=Shoes"
-              className="p-4 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all hover:shadow-md group text-left"
-            >
-              <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mb-3 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
-                <PackageCheck className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm font-semibold text-neutral-900">Footwear</h3>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Nike, Adidas, Puma, Woodland</p>
-            </Link>
-
-            {/* Audio & Electronics */}
-            <Link
-              to="/shop?category=Electronics"
-              className="p-4 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all hover:shadow-md group text-left"
-            >
-              <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mb-3 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
-                <Headphones className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm font-semibold text-neutral-900">Audio & Tech</h3>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Sony, Bose, Apple, Samsung</p>
-            </Link>
-
-            {/* Fashion Accessories */}
-            <Link
-              to="/shop?category=Fashion%20Accessories"
-              className="p-4 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all hover:shadow-md group text-left col-span-2 sm:col-span-1"
-            >
-              <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mb-3 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
-                <Glasses className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm font-semibold text-neutral-900">Eyewear & Accessories</h3>
-              <p className="text-[11px] text-neutral-500 mt-0.5">Ray-Ban, Police, Fastrack</p>
-            </Link>
-
+          <div className="aspect-4/3 rounded-3xl overflow-hidden bg-[#F4F4F6] border border-gray-200 p-6 sm:p-8 flex items-center justify-center shadow-inner">
+            <img
+              src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900"
+              alt="Boutique Timepieces"
+              className="h-full w-full object-contain mix-blend-multiply drop-shadow-md"
+            />
           </div>
         </div>
-      </section>
 
-      {/* ========================================================================= */}
-      {/* 3. BRAND INTRO / STORY SECTION                                            */}
-      {/* ========================================================================= */}
-      <section id="our-story" className="py-16 sm:py-24 bg-white border-b border-neutral-200/80 scroll-mt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            
-            {/* Left Column: Authentic Craftsmanship Image */}
-            <div className="lg:col-span-5 order-2 lg:order-1">
-              <div className="relative">
-                <div className="aspect-[4/4.6] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-md">
-                  <img
-                    src="https://i.pinimg.com/736x/ac/f6/7d/acf67d5d91a1b26246a9f121fdf4b41e.jpg"
-                    alt="Authentic Precision & Quality Check"
-                    className="w-full h-full object-cover object-center"
-                  />
-                </div>
-
-                {/* Grounded Authenticity Stamp */}
-                <div className="absolute -bottom-4 right-2 sm:-right-4 bg-white border border-neutral-200 p-3.5 rounded-lg shadow-lg max-w-[230px]">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8C6734]">
-                    Authorized Retailer
-                  </p>
-                  <p className="text-xs font-semibold text-neutral-900 mt-0.5">
-                    Authenticated Since Day One
-                  </p>
-                  <p className="text-[11px] text-neutral-500 mt-0.5">
-                    Gujarat's trusted multi-brand store with verified provenance.
-                  </p>
-                </div>
-              </div>
+        {/* 3 Core Principles */}
+        <div className="grid gap-5 sm:gap-6 sm:grid-cols-3">
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-2.5">
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-900">
+              <ShieldCheckIcon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-
-            {/* Right Column: Genuine Narrative Copy */}
-            <div className="lg:col-span-7 order-1 lg:order-2 space-y-5 text-left">
-              
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6734] flex items-center gap-2">
-                  <span className="w-5 h-[1.5px] bg-[#8C6734]" />
-                  Our Foundation
-                </span>
-                <h2 className="font-serif text-2xl sm:text-4xl font-medium text-neutral-950 tracking-tight leading-tight mt-2">
-                  A Legacy Built on Trust & Precision
-                </h2>
-              </div>
-
-              <div className="space-y-3.5 text-neutral-600 text-sm sm:text-base leading-relaxed font-normal">
-                <p>
-                  At Krishna Accessories, every timepiece, leather bag, footwear pair, and tech accessory in our catalog is sourced directly from brand-authorized manufacturers and certified distribution networks. We maintain zero tolerance for replicas, grey-market imports, and compromised quality.
-                </p>
-                <p>
-                  Whether you are ordering an automatic watch from Titan, a rugged chronograph from Casio, handcrafted leather accessories from Hidesign, or premium electronics from Sony and Apple, each item arrives with stamped warranty paperwork, official seals, and original retail packaging.
-                </p>
-              </div>
-
-              {/* Minimal Divider */}
-              <div className="w-12 h-0.5 bg-[#C5A880]" />
-
-              {/* Customer Guarantee Quote Box */}
-              <div className="p-4 rounded-lg bg-[#FAF8F5] border-l-2 border-[#8C6734]">
-                <p className="italic text-xs sm:text-sm text-neutral-800 leading-normal">
-                  “We believe when customers invest in premium accessories, they deserve 100% peace of mind, prompt customer support, and genuine manufacturer-backed warranties.”
-                </p>
-                <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mt-1.5">
-                  — The Krishna Accessories Promise
-                </p>
-              </div>
-
-              <div className="pt-1">
-                <Link
-                  to="/shop"
-                  className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-neutral-950 hover:text-[#8C6734] transition-colors group"
-                >
-                  <span>Browse All Authenticated Products</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-[#8C6734]" />
-                </Link>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 4. VALUES / BRAND PILLARS (Clean, Human, Minimal)                         */}
-      {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 bg-[#FAFAFB] border-b border-neutral-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto space-y-2.5 mb-12 sm:mb-16">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6734]">
-              Values & Distinction
-            </span>
-            <h2 className="font-serif text-2xl sm:text-4xl font-medium text-neutral-950 tracking-tight">
-              Why Krishna Accessories
-            </h2>
-            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
-              Three clear commitments that guide every product we stock and every order we fulfill.
+            <h3 className="text-sm font-bold text-gray-950">100% Genuine Guarantee</h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Direct factory distribution with valid brand warranty cards serviceable at all official brand service centers nationwide.
             </p>
           </div>
 
-          {/* 3 Value Blocks */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            
-            {/* 01 — AUTHENTICITY */}
-            <div className="p-7 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-serif text-3xl sm:text-4xl font-light text-[#C5A880]">
-                    01
-                  </span>
-                  <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8C6734]">
-                  Pillar 01
-                </p>
-                <h3 className="text-base font-bold text-neutral-950 mt-1 mb-2">
-                  100% Authenticity Guarantee
-                </h3>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                  100% genuine products sourced exclusively from authorized distributors with official warranty cards serviceable at certified brand service centers nationwide.
-                </p>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center gap-1.5 text-[11px] font-medium text-neutral-500">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#8C6734]" />
-                <span>Authorized Brand Partnerships</span>
-              </div>
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-2.5">
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-900">
+              <TruckIcon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-
-            {/* 02 — CRAFTSMANSHIP */}
-            <div className="p-7 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-serif text-3xl sm:text-4xl font-light text-[#C5A880]">
-                    02
-                  </span>
-                  <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8C6734]">
-                  Pillar 02
-                </p>
-                <h3 className="text-base font-bold text-neutral-950 mt-1 mb-2">
-                  Curated Quality & Craftsmanship
-                </h3>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                  Every watch, leather wallet, backpack, footwear model, and tech gadget is hand-selected for durability, mechanical accuracy, and timeless aesthetics.
-                </p>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center gap-1.5 text-[11px] font-medium text-neutral-500">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#8C6734]" />
-                <span>Multi-Point Pre-dispatch Inspection</span>
-              </div>
-            </div>
-
-            {/* 03 — CONCIERGE SERVICE */}
-            <div className="p-7 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-serif text-3xl sm:text-4xl font-light text-[#C5A880]">
-                    03
-                  </span>
-                  <div className="w-9 h-9 rounded-lg bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center">
-                    <Award className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8C6734]">
-                  Pillar 03
-                </p>
-                <h3 className="text-base font-bold text-neutral-950 mt-1 mb-2">
-                  Dedicated Client Assistance
-                </h3>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                  Personalized guidance for luxury gifting, watch sizing, corporate bulk requirements, and direct assistance from our Ahmedabad flagship team.
-                </p>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center gap-1.5 text-[11px] font-medium text-neutral-500">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#8C6734]" />
-                <span>In-Store & Online Support</span>
-              </div>
-            </div>
-
+            <h3 className="text-sm font-bold text-gray-950">Insured Air Logistics</h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Every parcel is protected with transit insurance and dispatched via premier partners like BlueDart Express and Delhivery.
+            </p>
           </div>
 
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-2.5">
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-900">
+              <StarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
+            </div>
+            <h3 className="text-sm font-bold text-gray-950">Dedicated Concierge</h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Personalized client advisors based out of our Ahmedabad flagship boutique assisting with bespoke sizing, gifting, and corporate orders.
+            </p>
+          </div>
         </div>
-      </section>
 
-      {/* ========================================================================= */}
-      {/* 5. AUTHENTICITY FEATURE SECTION (Charcoal Luxury, Clean & Trustworthy)     */}
-      {/* ========================================================================= */}
-      <section className="bg-[#111827] text-white py-16 sm:py-20 border-b border-neutral-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            
-            {/* Left Content */}
-            <div className="lg:col-span-6 space-y-5 text-left">
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5A880] flex items-center gap-2">
-                  <span className="w-5 h-[1.5px] bg-[#C5A880]" />
-                  Zero Compromise
-                </span>
-                <h2 className="font-serif text-2xl sm:text-4xl font-medium text-white tracking-tight leading-tight mt-2">
-                  Every Detail, Authenticated.
-                </h2>
-              </div>
-
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal">
-                We believe trust is built on consistency. Every parcel leaving our Ahmedabad fulfillment hub undergoes rigorous packaging and verification, arriving safely at your doorstep with valid manufacturer credentials.
+        {/* Flagship Boutique Info */}
+        <div className="rounded-3xl bg-[#111827] text-white p-6 sm:p-12 shadow-xl">
+          <div className="grid gap-6 lg:gap-8 lg:grid-cols-2 items-center">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Physical Sanctuary</span>
+              <h3 className="mt-1 text-xl sm:text-3xl font-serif font-bold text-white">Visit Our Ahmedabad Flagship</h3>
+              <p className="mt-3 text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Experience our curated timepieces and leather accessories in person. Our private viewing suites offer bespoke bracelet fitting, movement diagnostics, and luxury hospitality.
               </p>
-
-              {/* 3 Trust Indicators */}
-              <div className="space-y-3 pt-1">
-                
-                <div className="flex items-start gap-3.5 p-3.5 rounded-lg bg-white/5 border border-neutral-800">
-                  <div className="w-7 h-7 rounded-md bg-[#C5A880]/15 flex items-center justify-center shrink-0 text-[#C5A880]">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-semibold text-white">Official Warranty</h3>
-                    <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5">
-                      Brand warranty cards honored at all official brand service centers nationwide.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5 p-3.5 rounded-lg bg-white/5 border border-neutral-800">
-                  <div className="w-7 h-7 rounded-md bg-[#C5A880]/15 flex items-center justify-center shrink-0 text-[#C5A880]">
-                    <PackageCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-semibold text-white">Verified Sourcing</h3>
-                    <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5">
-                      Direct factory and certified distributor procurement with genuine batch codes.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5 p-3.5 rounded-lg bg-white/5 border border-neutral-800">
-                  <div className="w-7 h-7 rounded-md bg-[#C5A880]/15 flex items-center justify-center shrink-0 text-[#C5A880]">
-                    <Truck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-semibold text-white">Secure Delivery</h3>
-                    <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5">
-                      Insured transit in tamper-evident sealed packaging via BlueDart Express & Delhivery.
-                    </p>
-                  </div>
-                </div>
-
+              <div className="mt-5 sm:mt-6 space-y-2 text-xs text-gray-300">
+                <p className="flex items-start gap-1.5"><span>📍</span> <span><strong>Location:</strong> Bodakdev, SG Highway, Ahmedabad, Gujarat 380054</span></p>
+                <p className="flex items-start gap-1.5"><span>🕒</span> <span><strong>Hours:</strong> Mon – Sat: 10:30 AM to 08:30 PM &bull; Sunday by Appointment</span></p>
+                <p className="flex items-start gap-1.5"><span>📞</span> <span><strong>Private Desk:</strong> +91 (079) 4000-5500</span></p>
               </div>
             </div>
-
-            {/* Right Visual Image */}
-            <div className="lg:col-span-6">
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=1000&auto=format&fit=crop"
-                  alt="Verified Horology & Accessories Quality"
-                  className="w-full h-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 bg-black/80 backdrop-blur-md p-3 rounded-lg border border-neutral-800 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 text-neutral-200">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                    <span>Direct Factory Authorized</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-[#C5A880] uppercase tracking-wider">
-                    Gujarat Hub
-                  </span>
-                </div>
-              </div>
+            <div className="text-center lg:text-right pt-2 lg:pt-0">
+              <Link
+                to="/contact"
+                className="inline-block w-full sm:w-auto rounded-full bg-white px-7 sm:px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-gray-100 transition shadow-sm"
+              >
+                Schedule Private Viewing &rarr;
+              </Link>
             </div>
-
           </div>
         </div>
-      </section>
 
-      {/* ========================================================================= */}
-      {/* 6. FLAGSHIP BOUTIQUE SECTION (Clean, Realistic, Ahmedabad Store)           */}
-      {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 bg-white border-b border-neutral-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 rounded-2xl overflow-hidden border border-neutral-200/80 shadow-md bg-white">
-            
-            {/* Left Image: Real Store Interior */}
-            <div className="lg:col-span-5 relative min-h-[260px] lg:min-h-full">
-              <img
-                src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=1000&auto=format&fit=crop"
-                alt="Krishna Accessories Ahmedabad Store"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:hidden" />
-              <div className="absolute bottom-3 left-3 text-white lg:hidden">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-[#C5A880]">
-                  Ahmedabad Flagship
-                </span>
-                <p className="font-semibold text-sm">Bodakdev, SG Highway</p>
-              </div>
-            </div>
-
-            {/* Right Information Panel */}
-            <div className="lg:col-span-7 p-7 sm:p-10 lg:p-12 flex flex-col justify-between space-y-6 text-left">
-              
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6734] flex items-center gap-2">
-                  <span className="w-5 h-[1.5px] bg-[#8C6734]" />
-                  Visit Our Flagship
-                </span>
-                <h2 className="font-serif text-2xl sm:text-3xl font-medium text-neutral-950 tracking-tight mt-1.5 mb-3">
-                  Experience Krishna Accessories in person.
-                </h2>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                  Visit our flagship store in Ahmedabad to inspect timepieces, feel genuine leather textures, test audio gear, and receive personalized assistance.
-                </p>
-              </div>
-
-              {/* Clean Location & Hours Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 border-t border-neutral-100">
-                
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-900">
-                    <MapPin className="w-3.5 h-3.5 text-[#8C6734]" />
-                    <span>Store Location</span>
-                  </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed pl-5">
-                    Bodakdev, SG Highway,<br />
-                    Ahmedabad, Gujarat 380054
-                  </p>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-900">
-                    <Clock className="w-3.5 h-3.5 text-[#8C6734]" />
-                    <span>Opening Hours</span>
-                  </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed pl-5">
-                    Mon – Sat: 10:30 AM to 08:30 PM<br />
-                    <span className="text-[#8C6734] font-medium">Sunday by Appointment</span>
-                  </p>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-900">
-                    <Phone className="w-3.5 h-3.5 text-[#8C6734]" />
-                    <span>Private Desk & Enquiries</span>
-                  </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed pl-5">
-                    +91 (079) 4000-5500<br />
-                    <span className="text-neutral-400">concierge@krishnaaccessories.com</span>
-                  </p>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-900">
-                    <Sparkles className="w-3.5 h-3.5 text-[#8C6734]" />
-                    <span>In-Store Services</span>
-                  </div>
-                  <p className="text-xs text-neutral-600 leading-relaxed pl-5">
-                    Complimentary Sizing &bull; Battery Replacement &bull; Gifting Wrap
-                  </p>
-                </div>
-
-              </div>
-
-              {/* Action Button */}
-              <div className="pt-2">
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-semibold tracking-[0.16em] uppercase rounded-sm transition-all shadow-sm hover:shadow-md group"
-                >
-                  <span>Schedule a Private Viewing</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#C5A880] transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 7. FINAL BRAND STATEMENT & SHOP CTA                                       */}
-      {/* ========================================================================= */}
-      <section className="py-20 sm:py-28 bg-white text-center border-t border-neutral-100">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 space-y-5">
-          
-          <div className="w-8 h-0.5 bg-[#8C6734] mx-auto" />
-
-          <h2 className="font-serif text-3xl sm:text-5xl text-neutral-950 font-medium tracking-tight leading-tight">
-            TIMELESS PIECES.<br />
-            <span className="italic font-normal text-neutral-500">LASTING IMPRESSIONS.</span>
-          </h2>
-
-          <p className="text-xs sm:text-sm text-neutral-500 font-normal tracking-wide max-w-md mx-auto">
-            Curated with precision. Chosen with confidence.
-          </p>
-
-          <div className="pt-3">
-            <Link
-              to="/shop"
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 rounded-sm shadow-md hover:shadow-xl group"
-            >
-              <span className="text-[#C5A880] group-hover:text-white transition-colors">Shop the Collection</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-[#C5A880]" />
-            </Link>
-          </div>
-
-        </div>
-      </section>
+      </main>
 
       <Footer />
     </div>
