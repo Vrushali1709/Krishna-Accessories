@@ -478,7 +478,7 @@ export default function Home() {
       )}
 
       {/* ================= LUXURY WATCH HERO SECTION ================= */}
-      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[490px] lg:min-h-[490px]">
+      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[670px] lg:min-h-[670px]">
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
             <div
@@ -496,34 +496,34 @@ export default function Home() {
               </div>
 
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/10 lg:from-[#070808] lg:via-[#070808]/90 lg:via-45% lg:to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/90 via-black/30 to-transparent lg:from-[#070808] lg:via-[#070808]/60 pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-black/90 via-black/30 to-transparent lg:from-[#070808] lg:via-[#070808]/60 pointer-events-none" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.08)_45%,rgba(0,0,0,0.35)_100%)] lg:bg-[radial-gradient(ellipse_at_75%_50%,transparent_30%,rgba(7,8,8,0.4)_75%,#070808_100%)] pointer-events-none" />
             </div>
           ))}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[430px] sm:min-h-[450px] lg:min-h-[490px] lg:h-full px-5 sm:px-8 lg:px-10 pt-10 sm:pt-12 lg:pt-5 pb-5 lg:pb-4 flex flex-col justify-between">
-          <div className="max-w-[620px] lg:my-auto lg:py-2">
-            <div className="mb-3.5 flex items-center gap-3">
+        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[560px] sm:min-h-[590px] lg:min-h-[670px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-6 flex flex-col justify-between">
+          <div className="max-w-[620px] lg:my-auto lg:py-6">
+            <div className="mb-5 flex items-center gap-3">
               <span className="h-px w-8 bg-[#C5A880]" />
               <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-[#D5C2A5]">
                 {watchHeroSlides[currentSlide].tag}
               </span>
             </div>
 
-            <h1 className="text-[34px] leading-[1.06] tracking-[-0.03em] font-semibold sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[58px]">
+            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-semibold sm:text-5xl lg:text-[68px] xl:text-[74px]">
               <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
               <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
             </h1>
 
-            <p className="mt-3.5 text-xs sm:text-sm md:text-[15px] text-[#B0B2B8] max-w-md font-light leading-relaxed">
+            <p className="mt-5 text-sm sm:text-base text-[#B0B2B8] max-w-md font-light leading-relaxed">
               {watchHeroSlides[currentSlide].description}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3.5">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 to="/shop?category=Watches"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-black transition hover:bg-[#E5D7C5]"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-black transition hover:bg-[#E5D7C5]"
               >
                 <span>Shop Watches</span>
                 <ArrowRightIcon className="w-4 h-4 text-black" />
@@ -531,14 +531,14 @@ export default function Home() {
 
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white transition hover:border-neutral-500 hover:bg-black/60"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white transition hover:border-neutral-500 hover:bg-black/60"
               >
                 <span>All Collections</span>
               </Link>
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-neutral-800/80 pt-3">
+          <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
             <div className="flex items-center gap-2">
               {watchHeroSlides.map((_, i) => (
                 <button
@@ -653,8 +653,8 @@ export default function Home() {
               disabled={!canScrollLeft}
               aria-label="Previous categories"
               className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeft
-                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
                 }`}
             >
               <ChevronLeftIcon className="w-4 h-4" />
@@ -666,8 +666,8 @@ export default function Home() {
               disabled={!canScrollRight}
               aria-label="Next categories"
               className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRight
-                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
                 }`}
             >
               <ChevronRightIcon className="w-4 h-4" />
