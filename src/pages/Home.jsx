@@ -126,7 +126,7 @@ const watchHeroSlides = [
     titleLine1: 'TIMELESS.',
     titleLine2: 'MASTERPIECE WATCHES.',
     description: 'Crafted with sapphire crystal and fine leather.',
-    image: 'https://i.pinimg.com/736x/40/5d/cd/405dcd2e9761a554ab112284bb3f7a01.jpg'
+    image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg'
   }
 ];
 
