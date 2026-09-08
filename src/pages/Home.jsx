@@ -598,10 +598,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
-                Explore Categories ({categoryList.length})
-              </span>
-              <span className="text-[9px] text-gray-400 font-medium hidden sm:inline">&bull; Swipe or use arrows</span>
+             
             </div>
             <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
               Curated Collections
@@ -614,7 +611,6 @@ export default function Home() {
               className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
             >
               <span>View All</span>
-              <ArrowRightIcon className="w-3 h-3" />
             </Link>
 
             <button
@@ -761,9 +757,7 @@ export default function Home() {
       ====================================================== */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="text-center mb-8 sm:mb-10">
-          {/* <span className="inline-block rounded-full bg-amber-50 border border-amber-200/80 px-3.5 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-amber-900 mb-2.5 shadow-2xs">
-            Official Brand Partners
-          </span> */}
+        
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
             Explore by Brand
           </h2>
