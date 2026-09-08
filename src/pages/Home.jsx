@@ -1959,15 +1959,7 @@ export default function Home() {
                 )
               </span> */}
 
-              <span className="
-                text-[9px]
-                text-gray-400
-                font-medium
-                hidden
-                sm:inline
-              ">
-                • Swipe or use arrows
-              </span>
+              
 
             </div>
 
