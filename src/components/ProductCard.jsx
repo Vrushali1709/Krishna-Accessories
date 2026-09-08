@@ -6,11 +6,13 @@ import { getCurrentUser } from '../utils/auth';
 import { isInWishlist, toggleWishlist, WATCH_TYPE_METADATA } from '../utils/productStore';
 import { HeartIcon } from './Icons';
 
-export default function ProductCard({ product, onAddToCart, onBuyNow }) {
+export default function ProductCard({ product, onAddToCart, onBuyNow, index = 0 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [justAdded, setJustAdded] = useState(false);
   const [inWish, setInWish] = useState(() => isInWishlist(product.id));
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [heartPopping, setHeartPopping] = useState(false);
 
   useEffect(() => {
     const handleWishlistUpdate = () => {
@@ -78,15 +80,22 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
     e.preventDefault();
     e.stopPropagation();
     if (!requireLogin('wishlist')) return;
+    setHeartPopping(true);
     const active = toggleWishlist(product);
     setInWish(active);
+    setTimeout(() => setHeartPopping(false), 400);
   };
 
   return (
-    <div className="group relative flex flex-col justify-between rounded-2xl border border-gray-200/90 bg-white overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.09)] hover:border-gray-300 hover:-translate-y-1">
+    <div 
+      className="group relative flex flex-col justify-between rounded-2xl border border-gray-200/90 bg-white overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 ease-out hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] hover:border-gray-300 hover:-translate-y-1.5 active:translate-y-0"
+      style={{
+        animationDelay: `${index * 60}ms`
+      }}
+    >
 
-      {/* 1. Full-Bleed Product Image Showcase (No nested inner box) */}
-      <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+      {/* 1. Full-Bleed Product Image Showcase with Smooth Hover Pan */}
+      <div className="relative aspect-square w-full overflow-hidden bg-[#F4F4F6]">
         <Link
           to={`/product/${product.id}`}
           className="block h-full w-full"
@@ -94,40 +103,45 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           <img
             src={product.image || product.images?.[0]}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-106"
+            onLoad={() => setImgLoaded(true)}
+            className={`h-full w-full object-cover transition-all duration-700 ease-out group-hover:scale-106 ${
+              imgLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-xs'
+            }`}
             loading="lazy"
           />
         </Link>
 
         {/* Discount Badge (Top Left Floating) */}
         {discount > 0 && (
-          <span className="absolute left-3 top-3 z-10 rounded-full bg-gray-950/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-md pointer-events-none">
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-gray-950/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-md pointer-events-none transition-transform duration-200 group-hover:scale-105">
             {discount}% OFF
           </span>
         )}
 
-        {/* Wishlist Heart Button (Top Right Floating Circle) */}
+        {/* Wishlist Heart Button (Top Right Floating Circle with Pop Animation) */}
         <button
           type="button"
           onClick={handleWishlistToggle}
           aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
           className={`absolute right-3 top-3 z-10 flex h-8.5 w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer ${
+            heartPopping ? 'scale-125' : ''
+          } ${
             inWish
               ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
               : 'bg-white/95 text-gray-700 hover:text-rose-600 border border-gray-200/60'
           }`}
         >
-          <HeartIcon className="w-4.5 h-4.5 transition-colors" filled={inWish} />
+          <HeartIcon className={`w-4.5 h-4.5 transition-transform duration-200 ${heartPopping ? 'scale-120' : ''}`} filled={inWish} />
         </button>
 
         {/* Watch Edition or Category Tag (Bottom Left Floating) */}
         {isWatch && watchMeta ? (
-          <span className={`absolute bottom-3 left-3 z-10 inline-flex max-w-[85%] items-center gap-1.5 rounded-lg px-2.5 py-1 text-[9.5px] font-bold border shadow-md backdrop-blur-md truncate pointer-events-none ${watchMeta.badgeClass}`}>
+          <span className={`absolute bottom-3 left-3 z-10 inline-flex max-w-[85%] items-center gap-1.5 rounded-lg px-2.5 py-1 text-[9.5px] font-bold border shadow-md backdrop-blur-md truncate pointer-events-none transition-transform duration-200 group-hover:translate-x-0.5 ${watchMeta.badgeClass}`}>
             <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${watchMeta.dotClass || 'bg-current'}`} />
             <span className="truncate">{watchMeta.label}</span>
           </span>
         ) : product.category ? (
-          <span className="absolute bottom-3 left-3 z-10 rounded-lg bg-white/95 backdrop-blur-md px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-gray-700 shadow-sm border border-gray-200/60 pointer-events-none">
+          <span className="absolute bottom-3 left-3 z-10 rounded-lg bg-white/95 backdrop-blur-md px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-gray-700 shadow-sm border border-gray-200/60 pointer-events-none transition-transform duration-200 group-hover:translate-x-0.5">
             {product.category}
           </span>
         ) : null}
@@ -142,17 +156,17 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
               {product.brand || 'Original Brand'}
             </span>
 
-            <div className="flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-950 border border-amber-200/60 shrink-0">
+            <div className="flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-950 border border-amber-200/60 shrink-0 transition-colors duration-200 group-hover:bg-amber-100/80">
               <span className="text-amber-500 text-xs">★</span>
-              <span>{product.rating || '4.8'}</span>
-              <span className="text-gray-400 font-normal text-[9.5px]">({product.reviews || 84})</span>
+              <span>{product.rating || '4.9'}</span>
+              <span className="text-gray-400 font-normal text-[9.5px]">({product.reviews || 50})</span>
             </div>
           </div>
 
           {/* Row B: Clear Bold Title */}
           <Link
             to={`/product/${product.id}`}
-            className="block text-[14px] sm:text-[14.5px] font-semibold text-gray-900 transition-colors duration-150 hover:text-black line-clamp-1 leading-snug mb-2"
+            className="block text-[14px] sm:text-[14.5px] font-semibold text-gray-900 transition-colors duration-200 hover:text-black line-clamp-1 leading-snug mb-2"
             title={product.name}
           >
             {product.name}
@@ -178,15 +192,15 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           </div>
         </div>
 
-        {/* 3. High-End Action Buttons */}
+        {/* 3. High-End Action Buttons with Responsive Micro-Feedback */}
         <div className="grid grid-cols-2 gap-2 pt-3 border-t border-gray-100 mt-auto">
           <button
             type="button"
             onClick={handleQuickAdd}
-            className={`w-full rounded-xl border py-2.5 text-xs font-semibold transition-all duration-150 active:scale-97 cursor-pointer truncate shadow-2xs ${
+            className={`w-full rounded-xl border py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer truncate shadow-2xs ${
               justAdded
-                ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                : 'border-gray-200 bg-[#F4F4F6] text-gray-800 hover:bg-gray-200 hover:text-black'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-600/30'
+                : 'border-gray-200 bg-[#F4F4F6] text-gray-800 hover:bg-gray-200 hover:text-black hover:border-gray-300'
             }`}
           >
             {justAdded ? '✓ Added' : 'Add to Bag'}
@@ -195,7 +209,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           <button
             type="button"
             onClick={handleBuyNowClick}
-            className="w-full rounded-xl bg-gray-950 py-2.5 text-xs font-semibold text-white transition-all duration-150 hover:bg-black hover:shadow-xs active:scale-97 border border-gray-900 cursor-pointer truncate shadow-xs"
+            className="w-full rounded-xl bg-gray-950 py-2.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-black hover:shadow-sm hover:border-black active:scale-95 border border-gray-900 cursor-pointer truncate shadow-2xs"
           >
             Buy Now
           </button>

@@ -725,25 +725,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURED PRODUCTS ================= */}
-      <section className="bg-white border-y border-gray-200/80 py-8 sm:py-10">
+      {/* ================= FEATURED PRODUCTS (Selected Editions) ================= */}
+      <section className="bg-white border-y border-gray-200/80 py-9 sm:py-12 relative">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between gap-3 mb-5">
+          <div className="flex items-end justify-between gap-3 mb-6 sm:mb-7">
             <div>
-              <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">Top Recommendations</span>
-              <h2 className="mt-0.5 text-lg sm:text-xl font-bold tracking-tight text-gray-950">Selected Editions</h2>
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400">
+                  Top Recommendations
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+                Selected Editions
+              </h2>
             </div>
-            <Link to="/shop" className="text-xs font-semibold text-gray-900 hover:underline flex items-center gap-1 shrink-0">
+            <Link 
+              to="/shop" 
+              className="group text-xs sm:text-[13px] font-semibold text-gray-900 hover:text-black flex items-center gap-1.5 shrink-0 py-1 transition-colors"
+            >
               <span>View All</span>
-              <ArrowRightIcon className="w-3 h-3" />
+              <ArrowRightIcon className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1 text-gray-700 group-hover:text-black" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-            {featured.map((product) => (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5">
+            {featured.map((product, idx) => (
               <ProductCard
                 key={product.id}
                 product={product}
+                index={idx}
                 onAddToCart={handleAddToCart}
                 onBuyNow={handleBuyNow}
               />
