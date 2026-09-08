@@ -642,12 +642,12 @@ import {
 } from 'simple-icons';
 
 const brandFallbackPaths = {
-  Fossil: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 3v6l4 2',
-  Titan: 'M5 6h14M8 6v12m8-12v12M5 18h14',
-  Rolex: 'M4 9l2-3 3 2 3-4 3 4 3-2 2 3-2 1v7H6v-7L4 9Z',
-  Casio: 'M7 4h10v16H7V4Zm2 3h6v6H9V7Zm2 9h2',
-  Hidesign: 'M5 8h14l-1 12H6L5 8Zm3 0a4 4 0 0 1 8 0',
-  'Ray-Ban': 'M3 9h7l2 2 2-2h7l-1 7h-6l-2-3-2 3H4L3 9Z'
+  Titan: 'M3 5.5h18V9h-6.8v11H9.8V9H3V5.5zm9-3.5a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6z',
+  Rolex: 'M4.5 11.5L6.8 6.5 10 9.8 12 3.5l2 6.3 3.2-3.3 2.3 5-2.2 2.2H6.7l-2.2-2.2zm1.8 4.2h11.4v2.2H6.3v-2.2zm1.5 3.8h8.4v1.5H7.8v-1.5z',
+  Fossil: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 4h5v2.2h-2.8v1.8h2.4v2h-2.4v3.5H11V6z',
+  Casio: 'M4 6h16v12H4V6zm2 2v8h12V8H6zm2 1.5h8v5H8v-5zm1.5 1.5v2h5v-2h-5z',
+  Hidesign: 'M12 2C7 2 3.5 5.5 3.5 9c0 4.5 5.5 8.5 8.5 13 3-4.5 8.5-8.5 8.5-13 0-3.5-3.5-7-8.5-7zm0 5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z',
+  'Ray-Ban': 'M2.5 10.5C2.5 7.5 5 5 8 5c2.3 0 4.2 1.4 5 3.3.8-1.9 2.7-3.3 5-3.3 3 0 5.5 2.5 5.5 5.5 0 4.5-4.5 9-10.5 9S2.5 15 2.5 10.5zm3.5 0c0 2.2 2 4.5 5 5.3-.2-.8-.3-1.6-.3-2.3 0-1.8 1-3.3 2.5-4-.6-.6-1.5-1-2.7-1-2.5 0-4.5 1-4.5 2zm12 0c0-1-2-2-4.5-2-1.2 0-2.1.4-2.7 1 1.5.7 2.5 2.2 2.5 4 0 .7-.1 1.5-.3 2.3 3-.8 5-3.1 5-5.3z'
 };
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -2491,126 +2491,50 @@ export default function Home() {
           BRAND SHOWCASE
       ====================================================== */}
 
-      <section className="
-        mx-auto
-        max-w-7xl
-        px-4
-        py-8
-        sm:px-6
-        sm:py-10
-        lg:px-8
-      ">
-
-        <div className="
-          text-center
-          mb-5
-        ">
-
-          <span className="
-            text-[9px]
-            font-semibold
-            uppercase
-            tracking-[0.14em]
-            text-gray-400
-          ">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="text-center mb-8 sm:mb-10">
+          <span className="inline-block rounded-full bg-amber-50 border border-amber-200/80 px-3.5 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-amber-900 mb-2">
             Official Brand Partners
           </span>
-
-          <h2 className="
-            mt-0.5
-            text-lg
-            sm:text-xl
-            font-bold
-            tracking-tight
-            text-gray-950
-          ">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
             Explore by Brand
           </h2>
-
+          <p className="mt-1.5 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
+            Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
+          </p>
         </div>
 
+        {/* BRANDS GRID */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-3.5">
+          {partnerBrands.map((b) => (
+            <Link
+              key={b.name}
+              to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
+              className="group relative flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl border border-gray-200/80 bg-white text-center transition-all duration-300 hover:bg-[#0F172A] hover:text-white hover:border-[#0F172A] hover:shadow-xl hover:-translate-y-1"
+            >
+              {/* Brand Logo Container */}
+              <div className="mb-2.5 flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-2xl bg-[#F6F6F8] border border-gray-200/60 text-gray-800 transition-all duration-300 group-hover:border-amber-400/30 group-hover:bg-white/10 group-hover:text-amber-300 group-hover:scale-108 shadow-2xs">
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="h-5 w-5 sm:h-6 sm:w-6 fill-current transition-transform"
+                >
+                  <path d={b.icon?.path || brandFallbackPaths[b.name]} />
+                </svg>
+              </div>
 
-        {/* BRANDS */}
+              {/* Brand Name */}
+              <span className="text-xs sm:text-[13px] font-bold text-gray-950 group-hover:text-white transition-colors truncate max-w-full leading-tight">
+                {b.name}
+              </span>
 
-        <div className="
-          grid
-          grid-cols-2
-          sm:grid-cols-3
-          md:grid-cols-4
-          lg:grid-cols-6
-          gap-2
-        ">
-
-          {partnerBrands.map(
-            (b) => (
-
-              <Link
-                key={b.name}
-                to={`/shop?category=${encodeURIComponent(
-                  b.cat
-                )}&brand=${encodeURIComponent(
-                  b.name
-                )}`}
-                className="
-                  group
-                  flex
-                  flex-col
-                  items-center
-                  justify-center
-                  p-2.5
-                  rounded-xl
-                  border
-                  border-gray-200/80
-                  bg-white
-                  text-center
-                  transition-all
-                  duration-150
-                  hover:bg-[#0F172A]
-                  hover:text-white
-                  hover:border-[#0F172A]
-                "
-              >
-
-                <span className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-gray-800 transition-colors group-hover:border-white/30 group-hover:bg-white/10 group-hover:text-white">
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    className="h-4 w-4 fill-current"
-                  >
-                    <path d={b.icon?.path || brandFallbackPaths[b.name]} />
-                  </svg>
-                </span>
-
-                <span className="
-                  text-xs
-                  font-semibold
-                  text-gray-950
-                  group-hover:text-white
-                  transition-colors
-                  truncate
-                  max-w-full
-                ">
-                  {b.name}
-                </span>
-
-                <span className="
-                  text-[9px]
-                  text-gray-400
-                  group-hover:text-gray-300
-                  transition-colors
-                  truncate
-                  max-w-full
-                ">
-                  {b.cat}
-                </span>
-
-              </Link>
-
-            )
-          )}
-
+              {/* Brand Category */}
+              <span className="text-[9.5px] sm:text-[10px] font-medium text-gray-500 group-hover:text-amber-200/80 transition-colors truncate max-w-full mt-0.5 tracking-tight">
+                {b.cat}
+              </span>
+            </Link>
+          ))}
         </div>
-
       </section>
 
 
