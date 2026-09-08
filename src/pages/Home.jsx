@@ -761,9 +761,9 @@ export default function Home() {
       ====================================================== */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="text-center mb-8 sm:mb-10">
-          <span className="inline-block rounded-full bg-amber-50 border border-amber-200/80 px-3.5 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-amber-900 mb-2.5 shadow-2xs">
+          {/* <span className="inline-block rounded-full bg-amber-50 border border-amber-200/80 px-3.5 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-amber-900 mb-2.5 shadow-2xs">
             Official Brand Partners
-          </span>
+          </span> */}
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
             Explore by Brand
           </h2>
@@ -816,6 +816,6 @@ export default function Home() {
 
       {/* ================= FOOTER ================= */}
       <Footer />
-    </div>
+Official Brand Partners    </div>
   );
 }
