@@ -434,50 +434,13 @@ export default function Home() {
     }
   };
 
-  const [activeCollectionTab, setActiveCollectionTab] = useState('best-sellers'); // 'best-sellers' | 'new-arrivals' | 'top-deals'
   const [selectedEditionCategory, setSelectedEditionCategory] = useState('All');
 
-  const editionCategories = [
-    'All',
-    'Watches',
-    'Bags & Wallets',
-    'Shoes',
-    'Mobiles',
-    'Clothes & Fashion',
-    'Laptops',
-    'Electronics',
-    'Fashion Accessories'
-  ];
+  const editionCategories = ['All', 'Watches', 'Bags & Wallets', 'Shoes', 'Electronics', 'Fashion Accessories'];
 
-  // Dynamically computed & sorted products based on active collection tab & category
-  const filteredProducts = React.useMemo(() => {
-    let list = [...products];
-
-    // 1. Filter by category
-    if (selectedEditionCategory !== 'All') {
-      list = list.filter(
-        (p) => p.category?.toLowerCase() === selectedEditionCategory.toLowerCase()
-      );
-    }
-
-    // 2. Sort according to active collection tab
-    if (activeCollectionTab === 'best-sellers') {
-      // Sort by popularity / sales score (reviews * rating + discount)
-      list.sort((a, b) => {
-        const scoreA = (Number(a.reviews) || 0) * (Number(a.rating) || 4.5) + (Number(a.discount) || 0);
-        const scoreB = (Number(b.reviews) || 0) * (Number(b.rating) || 4.5) + (Number(b.discount) || 0);
-        return scoreB - scoreA;
-      });
-    } else if (activeCollectionTab === 'new-arrivals') {
-      // Sort by ID descending (newest additions first)
-      list.sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
-    } else if (activeCollectionTab === 'top-deals') {
-      // Sort by highest discount %
-      list.sort((a, b) => (Number(b.discount) || 0) - (Number(a.discount) || 0));
-    }
-
-    return list.slice(0, 8);
-  }, [products, activeCollectionTab, selectedEditionCategory]);
+  const filteredFeatured = selectedEditionCategory === 'All'
+    ? products.slice(0, 8)
+    : products.filter((p) => p.category?.toLowerCase() === selectedEditionCategory.toLowerCase()).slice(0, 8);
 
   const getProductCountForCategory = (catName) => {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
@@ -799,122 +762,55 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURED SHOWCASE: BEST SELLERS & NEW ARRIVALS ================= */}
+      {/* ================= FEATURED PRODUCTS (SELECTED EDITIONS) ================= */}
       <section className="bg-white border-y border-gray-200/80 py-10 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header with Segmented Tab Switcher */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-7 sm:mb-9">
+
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                {activeCollectionTab === 'best-sellers' && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/80 px-2.5 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-amber-900 shadow-2xs">
-                    <span className="text-amber-600">🔥</span> Most Loved & Verified
-                  </span>
-                )}
-                {activeCollectionTab === 'new-arrivals' && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 px-2.5 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-indigo-900 shadow-2xs">
-                    <span className="text-indigo-600">✨</span> Fresh 2026 Collection
-                  </span>
-                )}
-                {activeCollectionTab === 'top-deals' && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 border border-rose-200/80 px-2.5 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-rose-900 shadow-2xs">
-                    <span className="text-rose-600">🏷️</span> Special Privileges
-                  </span>
-                )}
-              </div>
 
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-950">
-                {activeCollectionTab === 'best-sellers' && 'Best Sellers & Proven Favorites'}
-                {activeCollectionTab === 'new-arrivals' && 'New Arrivals & Fresh Drops'}
-                {activeCollectionTab === 'top-deals' && 'Curated Deals & Instant Savings'}
+              <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+                Selected Editions
               </h2>
-              <p className="mt-1.5 text-xs sm:text-sm text-gray-500 max-w-xl leading-relaxed">
-                {activeCollectionTab === 'best-sellers' &&
-                  'Iconic timepieces, genuine leathercraft and flagship tech rated 4.8★ by 10,000+ satisfied clients.'}
-                {activeCollectionTab === 'new-arrivals' &&
-                  'Unbox the newest luxury editions, latest streetwear footwear and trending horology pieces.'}
-                {activeCollectionTab === 'top-deals' &&
-                  'Exclusive seasonal discounts up to 55% off with certified original manufacturer warranty.'}
+              <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
+                Certified authentic luxury pieces and trendsetting essentials crafted for distinction.
               </p>
-            </div>
-
-            {/* Primary Tab Switcher (Best Sellers vs New Arrivals vs Flash Deals) */}
-            <div className="flex items-center p-1.5 bg-gray-100/90 rounded-2xl sm:rounded-full border border-gray-200/80 self-start lg:self-auto shadow-2xs overflow-x-auto max-w-full no-scrollbar">
-              <button
-                type="button"
-                onClick={() => setActiveCollectionTab('best-sellers')}
-                className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl sm:rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                  activeCollectionTab === 'best-sellers'
-                    ? 'bg-gray-950 text-white shadow-md scale-[1.02]'
-                    : 'text-gray-600 hover:text-black hover:bg-gray-200/60'
-                }`}
-              >
-                <span>🔥 Best Sellers</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveCollectionTab('new-arrivals')}
-                className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl sm:rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                  activeCollectionTab === 'new-arrivals'
-                    ? 'bg-gray-950 text-white shadow-md scale-[1.02]'
-                    : 'text-gray-600 hover:text-black hover:bg-gray-200/60'
-                }`}
-              >
-                <span>✨ New Arrivals</span>
-                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveCollectionTab('top-deals')}
-                className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl sm:rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                  activeCollectionTab === 'top-deals'
-                    ? 'bg-gray-950 text-white shadow-md scale-[1.02]'
-                    : 'text-gray-600 hover:text-black hover:bg-gray-200/60'
-                }`}
-              >
-                <span>🏷️ Top Deals</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Interactive Category Filter Pills */}
-          <div className="flex items-center justify-between gap-3 overflow-x-auto pb-3 mb-6 sm:mb-8 no-scrollbar border-b border-gray-100">
-            <div className="flex items-center gap-2 shrink-0">
-              {editionCategories.map((cat) => {
-                const isActive = selectedEditionCategory === cat;
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setSelectedEditionCategory(cat)}
-                    className={`rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                      isActive
-                        ? 'bg-amber-100/80 text-amber-950 border border-amber-300 font-bold shadow-2xs'
-                        : 'bg-gray-50 text-gray-600 border border-gray-200/70 hover:bg-gray-100 hover:text-black'
-                    }`}
-                  >
-                    {cat === 'All' ? 'All Categories' : cat}
-                  </button>
-                );
-              })}
             </div>
 
             <Link
               to="/shop"
-              className="hidden md:inline-flex items-center gap-1.5 text-xs font-bold text-gray-900 hover:text-amber-800 hover:underline shrink-0 pl-2 group"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-gray-900 hover:text-black hover:underline self-start md:self-auto group shrink-0"
             >
-              <span>View Full Catalog</span>
-              <ArrowRightIcon className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <span>Explore All Catalog</span>
+              <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
+          {/* Interactive Category Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 sm:mb-8 no-scrollbar">
+            {editionCategories.map((cat) => {
+              const isActive = selectedEditionCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedEditionCategory(cat)}
+                  className={`rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${isActive
+                    ? 'bg-gray-950 text-white shadow-sm scale-102'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-black'
+                    }`}
+                >
+                  {cat === 'All' ? 'All Editions' : cat}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Spacious Products Grid */}
-          {filteredProducts.length > 0 ? (
+          {filteredFeatured.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
-              {filteredProducts.map((product) => (
+              {filteredFeatured.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -924,43 +820,17 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-14 rounded-3xl bg-gray-50/80 border border-dashed border-gray-300">
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
               <p className="text-sm font-semibold text-gray-700">No products found in this category.</p>
               <button
                 type="button"
                 onClick={() => setSelectedEditionCategory('All')}
-                className="mt-3 inline-flex items-center gap-1 rounded-full bg-gray-950 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-black transition cursor-pointer"
+                className="mt-3 text-xs font-bold text-black underline cursor-pointer"
               >
-                Reset to All Categories
+                View all editions
               </button>
             </div>
           )}
-
-          {/* Bottom Quick-Action Catalog Banner */}
-          <div className="mt-10 sm:mt-12 rounded-2xl bg-[#F8F9FA] border border-gray-200/80 p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-center sm:text-left">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-200 shadow-2xs text-lg">
-                🛡️
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-gray-900">
-                  Official Brand Assurance & 7-Day Replacement
-                </h4>
-                <p className="text-xs text-gray-500">
-                  Every piece is quality-inspected before express insured dispatch from Ahmedabad.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0">
-              <Link
-                to="/shop"
-                className="rounded-full bg-gray-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition shadow-xs"
-              >
-                Explore All {products.length}+ Items →
-              </Link>
-            </div>
-          </div>
 
         </div>
       </section>
