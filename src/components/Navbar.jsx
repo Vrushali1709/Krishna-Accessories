@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCartCount } from '../utils/cart';
 import { defaultCategories, getCategories, getWishlist } from '../utils/productStore';
-import { getCurrentUser, logout } from '../utils/auth';
+import { getCurrentUser, logout, isAdmin, isSupplier, getAdminUser } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import { BagIcon, SearchIcon, UserIcon, ChevronDownIcon, HeartIcon, BellIcon } from './Icons';
 
@@ -284,22 +284,22 @@ export default function Navbar() {
             </Link>
 
             {/* Portal Link: Admin */}
-            {currentUser && currentUser.role === 'admin' && (
+            {isAdmin() && (
               <Link
                 to="/admin"
-                className="rounded-full border border-gray-300 bg-gray-100 px-2.5 py-0.5 text-[9.5px] font-bold text-gray-900 hover:bg-gray-200 transition"
+                className="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[9.5px] font-bold text-amber-900 hover:bg-amber-100 transition shadow-2xs"
               >
-                Admin Panel
+                ⚙️ Admin Panel
               </Link>
             )}
 
             {/* Portal Link: Supplier */}
-            {currentUser && currentUser.role === 'supplier' && (
+            {isSupplier() && (
               <Link
                 to="/supplier"
                 className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-[9.5px] font-bold text-blue-700 hover:bg-blue-100 transition"
               >
-                Vendor Portal
+                🏢 Vendor Portal
               </Link>
             )}
           </nav>
@@ -546,14 +546,17 @@ export default function Navbar() {
                         </div>
 
                         {/* Admin Portal / Admin Login Link */}
-                        {currentUser.role === 'admin' ? (
+                        {isAdmin() ? (
                           <Link
                             to="/admin"
                             onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-amber-950 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition"
+                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-bold text-amber-950 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition"
                           >
-                            <span className="text-sm">⚙️</span>
-                            <span>Admin Dashboard</span>
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-sm">⚙️</span>
+                              <span>Admin Dashboard</span>
+                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full">Active</span>
                           </Link>
                         ) : (
                           <Link
@@ -571,14 +574,17 @@ export default function Navbar() {
                         )}
 
                         {/* Vendor Portal / Vendor Login Link */}
-                        {currentUser.role === 'supplier' ? (
+                        {isSupplier() ? (
                           <Link
                             to="/supplier"
                             onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-blue-950 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 transition"
+                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-bold text-blue-950 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 transition"
                           >
-                            <span className="text-sm">🏢</span>
-                            <span>Vendor Partner Portal</span>
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-sm">🏢</span>
+                              <span>Vendor Partner Portal</span>
+                            </div>
+                            <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full">Active</span>
                           </Link>
                         ) : (
                           <Link

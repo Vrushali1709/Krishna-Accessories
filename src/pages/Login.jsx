@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { setCurrentUser } from '../utils/auth';
+import { setAdminUser, setSupplierUser, setCustomerUser } from '../utils/auth';
 import { getSuppliers } from '../utils/orderStore';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 import { Eye, EyeOff } from 'lucide-react';
@@ -72,7 +72,7 @@ export default function Login() {
     // 1. Admin Authentication Check
     if (cleanEmail === 'admin@krishna.com' || cleanEmail === 'admin') {
       if (cleanPassword === 'admin123') {
-        setCurrentUser({
+        setAdminUser({
           email: 'admin@krishna.com',
           role: 'admin',
           name: 'Super Administrator',
@@ -92,7 +92,7 @@ export default function Login() {
 
     if (cleanEmail === 'supplier@krishna.com' || cleanEmail === 'supplier' || matchedSupplier) {
       if (cleanPassword === 'supplier123' || cleanPassword === matchedSupplier?.password) {
-        setCurrentUser({
+        setSupplierUser({
           email: matchedSupplier?.email || 'supplier@krishna.com',
           role: 'supplier',
           name: matchedSupplier?.name || 'Apex Timepieces Ltd.',
@@ -112,7 +112,7 @@ export default function Login() {
         setError('Password is too short.');
         return;
       }
-      setCurrentUser({
+      setCustomerUser({
         email: cleanEmail,
         role: 'customer',
         name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],

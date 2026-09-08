@@ -96,7 +96,7 @@ import {
   exportFullDatabaseBackup,
   restoreDatabaseBackup
 } from '../utils/adminStore';
-import { getCurrentUser, setCurrentUser, logout, isAdmin } from '../utils/auth';
+import { getCurrentUser, setCurrentUser, logout, logoutAdmin, isAdmin, getAdminUser } from '../utils/auth';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -482,8 +482,13 @@ export default function AdminDashboard() {
   };
 
   const handleAdminLogout = () => {
-    logout();
-    navigate('/login');
+    logoutAdmin();
+    navigate('/login', {
+      state: {
+        message: 'Admin session signed out successfully. Customer account remains active.',
+        requiredRole: 'admin'
+      }
+    });
   };
 
   // Product Actions
