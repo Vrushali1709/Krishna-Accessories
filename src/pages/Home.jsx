@@ -131,6 +131,20 @@ const watchHeroSlides = [
 ];
 
 // ============================================================
+// CONTINUOUS SCROLLING TICKER ITEMS (STORE HIGHLIGHTS)
+// ============================================================
+const storeTickerItems = [
+  { title: "100% CERTIFIED AUTHENTIC", subtitle: "Official Brand Warranty" },
+  { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Seiko • Apple" },
+  { title: "AHMEDABAD FLAGSHIP SANCTUARY", subtitle: "Bodakdev, SG Highway" },
+  { title: "INSURED EXPRESS LOGISTICS", subtitle: "BlueDart & Delhivery" },
+  { title: "HANDCRAFTED LEATHER GOODS", subtitle: "Hidesign • Wildcraft • Tommy" },
+  { title: "7-DAY REPLACEMENT GUARANTEE", subtitle: "100% Client Peace of Mind" },
+  { title: "PREMIUM AUDIO & FLAGSHIP TECH", subtitle: "Sony • Bose • Samsung • boAt" },
+  { title: "POLARIZED & LUXURY EYEWEAR", subtitle: "Ray-Ban • Police • Fastrack" },
+];
+
+// ============================================================
 // PARTNER BRANDS WITH CLEAN VECTOR LOGOS
 // ============================================================
 const brandRow1 = [
@@ -543,6 +557,28 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ================= CONTINUOUS TICKER LINE (INFINITE MARQUEE) ================= */}
+      <div className="relative bg-[#07090E] text-white border-y border-neutral-800/90 py-3 sm:py-3.5 overflow-hidden select-none">
+        {/* Left & Right subtle gradient masks for smooth fade edge */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-24 bg-gradient-to-r from-[#07090E] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-24 bg-gradient-to-l from-[#07090E] to-transparent z-10" />
+
+        <div className="animate-marquee flex items-center gap-6 sm:gap-8">
+          {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
+            <div key={idx} className="inline-flex items-center gap-3 sm:gap-4 shrink-0">
+              <span className="text-amber-400 text-xs">✦</span>
+              <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.2em] text-neutral-100">
+                {item.title}
+              </span>
+              <span className="hidden sm:inline-block text-[10.5px] font-normal text-amber-200/70 tracking-wider">
+                ({item.subtitle})
+              </span>
+              <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1" />
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* ================= FOUR PILLARS GUARANTEE ================= */}
       <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
