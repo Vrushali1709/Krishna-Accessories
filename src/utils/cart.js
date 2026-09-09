@@ -7,7 +7,6 @@ export const FREE_SHIPPING_THRESHOLD = 2000;
 export const STANDARD_SHIPPING_FEE = 99;
 
 export const AVAILABLE_COUPONS = {
-  'WELCOME15': { code: 'WELCOME15', discountPercent: 15, minSpend: 0, description: '15% OFF on your next order' },
   'KRISHNA10': { code: 'KRISHNA10', discountPercent: 10, minSpend: 1000, description: '10% OFF on orders above ₹1,000' },
   'LUXURY500': { code: 'LUXURY500', discountAmount: 500, minSpend: 4000, description: '₹500 Flat OFF on orders above ₹4,000' },
   'FESTIVE15': { code: 'FESTIVE15', discountPercent: 15, minSpend: 2500, description: '15% Festive OFF on orders above ₹2,500' }
@@ -165,7 +164,7 @@ export function calculateCartSummary() {
   const cart = getCart();
   const subtotal = getCartSubtotal();
   const coupon = getAppliedCoupon();
-  
+
   let discount = 0;
   if (coupon && subtotal >= coupon.minSpend) {
     if (coupon.discountPercent) {
