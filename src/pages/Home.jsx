@@ -21,6 +21,7 @@ import ProductCard from '../components/ProductCard';
 import NewArrivalsSection from '../components/NewArrivalsSection';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
+import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -854,6 +855,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* ================= WHY CHOOSE US (THE DIFFERENCE) ================= */}
+      <WhyChooseUsSection />
 
       {/* ================= CUSTOMER REVIEWS (CAROUSEL) ================= */}
       <CustomerReviewsSection />
