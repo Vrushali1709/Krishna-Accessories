@@ -20,8 +20,6 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import NewArrivalsSection from '../components/NewArrivalsSection';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
-import WhyShopWithUs from '../components/WhyShopWithUs';
-import LovedByCustomers from '../components/LovedByCustomers';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -598,7 +596,7 @@ export default function Home() {
 
             </div>
             <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-              Shop by Category 
+              Shop by Category
             </h2>
           </div>
 
@@ -789,12 +787,6 @@ export default function Home() {
       </section>
 
       <NewArrivalsSection products={products} onToast={setToastMessage} />
-
-      {/* ================= WHY SHOP WITH US? ================= */}
-      <WhyShopWithUs />
-
-      {/* ================= LOVED BY OUR CUSTOMERS ================= */}
-      <LovedByCustomers onToast={setToastMessage} />
 
       {/* ======================================================
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
