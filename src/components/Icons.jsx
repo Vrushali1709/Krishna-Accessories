@@ -49,6 +49,22 @@ export function TruckIcon({ className = "w-5 h-5" }) {
   );
 }
 
+export function RefreshIcon({ className = "w-5 h-5" }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 12a8.25 8.25 0 01-14.47 5.43M3.75 12A8.25 8.25 0 0118.22 6.57M3.75 12V7.5m0 4.5h4.5M20.25 12v4.5m0-4.5h-4.5" />
+    </svg>
+  );
+}
+
+export function HeadphonesIcon({ className = "w-5 h-5" }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75V12a7.5 7.5 0 0115 0v3.75M4.5 15.75a2.25 2.25 0 002.25 2.25h.75v-6H6.75A2.25 2.25 0 004.5 14.25v1.5zm15 0a2.25 2.25 0 01-2.25 2.25h-.75v-6h.75a2.25 2.25 0 012.25 2.25v1.5z" />
+    </svg>
+  );
+}
+
 export function ShieldCheckIcon({ className = "w-5 h-5" }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">

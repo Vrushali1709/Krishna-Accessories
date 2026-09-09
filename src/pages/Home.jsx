@@ -19,6 +19,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import NewArrivalsSection from '../components/NewArrivalsSection';
+import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -586,6 +587,8 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      <HomeDiscoveryStrip categories={categoryList} />
 
       {/* ================= FOUR PILLARS GUARANTEE ================= */}
       <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
