@@ -596,7 +596,7 @@ export default function Home() {
 
             </div>
             <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-              Curated Collections
+              Shop by Category 
             </h2>
           </div>
 
