@@ -608,9 +608,9 @@ export default function Home() {
               <span>View All</span>
             </Link>
 
-           
 
-          
+
+
           </div>
         </div>
 
@@ -791,71 +791,64 @@ export default function Home() {
       {/* ======================================================
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
       ====================================================== */}
-      <section className="w-full bg-[#EEF2F6] border-y border-slate-200/90 py-12 sm:py-16 relative overflow-hidden">
-        {/* Subtle ambient light glow */}
-        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-gradient-to-b from-blue-100/40 via-amber-100/20 to-transparent blur-3xl" />
+      <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8">
+        <div className="text-center mb-7 sm:mb-9">
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-7 sm:mb-9">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-[0.18em] bg-white text-gray-800 border border-gray-200/80 shadow-2xs mb-2.5">
-              ✦ Official Partners
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
-              Explore by Brand
-            </h2>
-            <p className="mt-1.5 text-xs sm:text-sm text-gray-600 max-w-lg mx-auto leading-relaxed">
-              Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
-            </p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+            Explore by Brand
+          </h2>
+          <p className="mt-1.5 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
+            Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
+          </p>
+        </div>
+
+        {/* Dual Capsule Infinite Scrolling Carousel Strips */}
+        <div className="space-y-3 sm:space-y-3.5">
+
+          {/* Track 1 (Row 1 Brands - Scrolling Left) */}
+          <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            {/* Left & Right fade masks */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
+
+            <div className="animate-marquee flex items-center gap-2.5 sm:gap-3 py-0.5">
+              {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
+                <Link
+                  key={`${b.name}-t1-${idx}`}
+                  to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
+                  className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
+                  title={`${b.name} • ${b.cat}`}
+                >
+                  <div className="transition-transform duration-200 group-hover:scale-105">
+                    {b.renderLogo()}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
-          {/* Dual Capsule Infinite Scrolling Carousel Strips */}
-          <div className="space-y-3 sm:space-y-3.5">
+          {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
+          <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            {/* Left & Right fade masks */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
 
-            {/* Track 1 (Row 1 Brands - Scrolling Left) */}
-            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-white/80 backdrop-blur-xs p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
-              {/* Left & Right fade masks */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-white via-white/80 to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-white via-white/80 to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
-
-              <div className="animate-marquee flex items-center gap-2.5 sm:gap-3 py-0.5">
-                {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
-                  <Link
-                    key={`${b.name}-t1-${idx}`}
-                    to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                    className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/90 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
-                    title={`${b.name} • ${b.cat}`}
-                  >
-                    <div className="transition-transform duration-200 group-hover:scale-105">
-                      {b.renderLogo()}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+            <div className="animate-marquee-reverse flex items-center gap-2.5 sm:gap-3 py-0.5">
+              {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
+                <Link
+                  key={`${b.name}-t2-${idx}`}
+                  to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
+                  className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
+                  title={`${b.name} • ${b.cat}`}
+                >
+                  <div className="transition-transform duration-200 group-hover:scale-105">
+                    {b.renderLogo()}
+                  </div>
+                </Link>
+              ))}
             </div>
-
-            {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
-            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-white/80 backdrop-blur-xs p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
-              {/* Left & Right fade masks */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-white via-white/80 to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-white via-white/80 to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
-
-              <div className="animate-marquee-reverse flex items-center gap-2.5 sm:gap-3 py-0.5">
-                {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
-                  <Link
-                    key={`${b.name}-t2-${idx}`}
-                    to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                    className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/90 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
-                    title={`${b.name} • ${b.cat}`}
-                  >
-                    <div className="transition-transform duration-200 group-hover:scale-105">
-                      {b.renderLogo()}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
           </div>
+
         </div>
       </section>
 
