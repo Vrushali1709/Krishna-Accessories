@@ -20,6 +20,7 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import NewArrivalsSection from '../components/NewArrivalsSection';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
+import OfferBanner from '../components/OfferBanner';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -586,7 +587,8 @@ export default function Home() {
 
       <HomeDiscoveryStrip categories={categoryList} />
 
-
+      {/* ================= SPECIAL SEASONAL OFFER BANNER ================= */}
+      <OfferBanner />
 
       {/* ================= CURATED DEPARTMENTS CAROUSEL ================= */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
