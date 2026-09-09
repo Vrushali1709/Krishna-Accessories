@@ -698,38 +698,56 @@ export default function Home() {
                 key={c.name}
                 to={`/shop?category=${encodeURIComponent(c.name)}`}
                 onClick={handleCategoryClick}
-                className="group relative flex-shrink-0 w-[165px] sm:w-[195px] md:w-[215px] lg:w-[225px] aspect-[0.82] overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:border-gray-300 hover:-translate-y-1 snap-start"
+                className="group relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[250px] lg:w-[260px] p-2.5 sm:p-3 rounded-[24px] bg-white border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.10)] transition-all duration-300 hover:-translate-y-1 snap-start flex flex-col justify-between"
               >
-                <img
-                  src={c.image}
-                  alt={c.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-108 pointer-events-none"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+                {/* Image Container with Inset Badges */}
+                <div className="relative w-full aspect-[1/0.95] overflow-hidden rounded-[18px] bg-gray-100">
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-106 pointer-events-none"
+                  />
 
-                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
-                  {count > 0 ? (
-                    <span className="rounded-full bg-black/40 backdrop-blur-md px-2 py-0.5 text-[8.5px] font-semibold text-white/90 border border-white/10 shadow-2xs">
-                      {count} {count === 1 ? 'Item' : 'Items'}
+                  {/* Top Left Badge */}
+                  <div className="absolute top-2.5 left-2.5 pointer-events-none">
+                    <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-md px-2.5 py-1 text-[10px] sm:text-[10.5px] font-medium text-white border border-white/15 shadow-2xs">
+                      {count > 0 ? `${count} ${count === 1 ? 'item' : 'items'}` : 'Top rated'}
                     </span>
-                  ) : (
-                    <span className="rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[8.5px] font-medium text-white/90 border border-white/10">
-                      Curated
+                  </div>
+
+                  {/* Top Right Action Icon */}
+                  <div className="absolute top-2.5 right-2.5 pointer-events-none">
+                    <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-2xs transition-all duration-300 group-hover:bg-black group-hover:scale-110">
+                      <svg
+                        className="w-3.5 h-3.5 text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5L19.5 4.5m0 0H8.25m11.25 0v11.25" />
+                      </svg>
                     </span>
-                  )}
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <ArrowRightIcon className="w-2.5 h-2.5" />
-                  </span>
+                  </div>
                 </div>
 
-                <div className="absolute inset-x-2.5 bottom-2.5 pointer-events-none">
-                  <h3 className="text-xs sm:text-[13px] font-bold text-white transition-colors group-hover:text-amber-300 truncate leading-snug">
-                    {c.name}
-                  </h3>
-                  <p className="text-[9px] sm:text-[9.5px] text-gray-300 truncate mt-0.5 opacity-90 leading-tight">
-                    {c.tag || c.description}
-                  </p>
+                {/* Bottom Card Content */}
+                <div className="pt-3 pb-1 px-1 flex flex-col gap-2.5">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h3 className="text-[14px] sm:text-[15px] font-bold text-gray-900 tracking-tight group-hover:text-black transition-colors truncate">
+                      {c.name}
+                    </h3>
+                    <span className="text-[10.5px] sm:text-[11px] text-gray-400 font-normal truncate max-w-[48%] text-right">
+                      {c.tag || c.description}
+                    </span>
+                  </div>
+
+                  {/* Pill Action Button */}
+                  <div className="w-full py-2 sm:py-2.5 rounded-full bg-[#181a1f] group-hover:bg-black text-white text-[11px] sm:text-xs font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] shadow-2xs">
+                    <span>Explore Now</span>
+                    <ArrowRightIcon className="w-3 h-3 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </div>
                 </div>
               </Link>
             );
