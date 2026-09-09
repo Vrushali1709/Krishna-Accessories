@@ -867,17 +867,21 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Dual Capsule Pill Strips */}
+        {/* Dual Capsule Infinite Scrolling Carousel Strips */}
         <div className="space-y-3 sm:space-y-3.5">
 
-          {/* Track 1 (Row 1 Brands) */}
-          <div className="rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-2.5">
-              {brandRow1.map((b) => (
+          {/* Track 1 (Row 1 Brands - Scrolling Left) */}
+          <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            {/* Left & Right fade masks */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
+
+            <div className="animate-marquee flex items-center gap-2.5 sm:gap-3 py-0.5">
+              {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
                 <Link
-                  key={b.name}
+                  key={`${b.name}-t1-${idx}`}
                   to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                  className="group relative flex items-center justify-center h-16 sm:h-18 lg:h-20 px-2.5 sm:px-3 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.02] active:scale-98"
+                  className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
                   title={`${b.name} • ${b.cat}`}
                 >
                   <div className="transition-transform duration-200 group-hover:scale-105">
@@ -888,14 +892,18 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Track 2 (Row 2 Brands) */}
-          <div className="rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-2.5">
-              {brandRow2.map((b) => (
+          {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
+          <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            {/* Left & Right fade masks */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
+
+            <div className="animate-marquee-reverse flex items-center gap-2.5 sm:gap-3 py-0.5">
+              {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
                 <Link
-                  key={b.name}
+                  key={`${b.name}-t2-${idx}`}
                   to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                  className="group relative flex items-center justify-center h-16 sm:h-18 lg:h-20 px-2.5 sm:px-3 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.02] active:scale-98"
+                  className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
                   title={`${b.name} • ${b.cat}`}
                 >
                   <div className="transition-transform duration-200 group-hover:scale-105">
