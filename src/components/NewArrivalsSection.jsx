@@ -29,6 +29,27 @@ const COLOR_MAP = {
   gray: '#9CA3AF'
 };
 
+const CARD_STYLES = [
+  {
+    canvas: 'bg-[#F1EEE8] border-[#E5DED2]',
+    image: 'rounded-[24px] rounded-br-[52px]',
+    number: 'text-[#B9AA94]',
+    accent: 'bg-[#25231F]'
+  },
+  {
+    canvas: 'bg-[#E9F0F2] border-[#D5E2E5]',
+    image: 'rounded-[24px] rounded-bl-[52px]',
+    number: 'text-[#9AB3BA]',
+    accent: 'bg-[#16434D]'
+  },
+  {
+    canvas: 'bg-[#202124] border-[#34363A]',
+    image: 'rounded-[24px] rounded-tl-[52px]',
+    number: 'text-[#66686C]',
+    accent: 'bg-[#D4AF37]'
+  }
+];
+
 function getMinimalColorDots(product) {
   if (Array.isArray(product.colors) && product.colors.length > 0) {
     const dots = product.colors.slice(0, 3).map((c) => {
@@ -256,14 +277,15 @@ export default function NewArrivalsSection({ products = [], onToast }) {
               const isAdded = Boolean(addedMap[product.id]);
               const isWish = Boolean(wishlistMap[product.id]);
               const colorDots = getMinimalColorDots(product);
+              const cardStyle = CARD_STYLES[idx % CARD_STYLES.length];
+              const isDarkCard = idx % CARD_STYLES.length === 2;
 
               return (
                 <div
                   key={product.id}
-                  className="group flex-shrink-0 w-[240px] sm:w-[270px] md:w-[290px] lg:w-[305px] snap-start flex flex-col justify-between"
+                  className={`group flex-shrink-0 w-[240px] sm:w-[270px] md:w-[290px] lg:w-[305px] snap-start flex flex-col justify-between rounded-[28px] border p-2.5 sm:p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(15,23,42,0.12)] ${cardStyle.canvas}`}
                 >
-                  {/* 2A. FLOATING FULL-IMAGE CANVAS (FRAMELESS LUXURY) */}
-                  <div className="relative aspect-[3/3.8] w-full overflow-hidden rounded-[22px] bg-[#F2F3F5] mb-3.5">
+                  <div className={`relative aspect-[3/3.8] w-full overflow-hidden ${cardStyle.image} bg-[#F2F3F5] mb-3`}>
                     <Link
                       to={`/product/${product.id}`}
                       className="block h-full w-full"
@@ -276,10 +298,12 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                       />
                     </Link>
 
-                    {/* Minimal Top-Left Edition Monospace Stamp */}
-                    <div className="absolute top-3 left-3 pointer-events-none">
-                      <span className="inline-flex items-center rounded-full bg-white/85 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-mono tracking-wider text-neutral-700 shadow-2xs border border-white/40">
-                        № {String(idx + 1).padStart(2, '0')}
+                    <div className="absolute inset-x-3 top-3 flex items-start justify-between pointer-events-none">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/70 text-[11px] font-mono font-semibold backdrop-blur-md ${cardStyle.number}`}>
+                        {String(idx + 1).padStart(2, '0')}
+                      </div>
+                      <span className="rounded-full bg-white/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-700 backdrop-blur-md">
+                        Just in
                       </span>
                     </div>
 
@@ -288,7 +312,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                       type="button"
                       onClick={(e) => handleWishlistToggle(e, product)}
                       aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                      className={`absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md shadow-2xs transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer ${
+                        className={`absolute top-[58px] right-3 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md shadow-2xs transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer ${
                         isWish
                           ? 'bg-rose-50 text-rose-600 border border-rose-200'
                           : 'bg-white/80 text-neutral-800 hover:text-rose-600 hover:bg-white border border-white/40'
@@ -317,16 +341,13 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                     </div>
                   </div>
 
-                  {/* 2B. AIRY UNDER-IMAGE EDITORIAL TYPOGRAPHY */}
-                  <div className="px-0.5 flex flex-col justify-between flex-1">
+                  <div className={`px-1 flex flex-col justify-between flex-1 ${isDarkCard ? 'text-white' : ''}`}>
                     <div>
-                      {/* Brand & Swatches */}
                       <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 truncate">
+                        <span className={`text-[10px] font-bold uppercase tracking-[0.2em] truncate ${isDarkCard ? 'text-white/50' : 'text-neutral-500'}`}>
                           {product.brand || 'ESSENTIAL'}
                         </span>
 
-                        {/* Minimal Color Swatch Micro-Dots */}
                         <div className="flex items-center gap-1">
                           {colorDots.map((hex, dIdx) => (
                             <span
@@ -341,7 +362,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                       {/* Product Title */}
                       <Link
                         to={`/product/${product.id}`}
-                        className="block text-[14.5px] font-medium text-neutral-950 hover:text-neutral-600 transition-colors line-clamp-1 leading-snug mb-1"
+                        className={`block text-[14.5px] font-semibold transition-colors line-clamp-1 leading-snug mb-1 ${isDarkCard ? 'text-white hover:text-amber-200' : 'text-neutral-950 hover:text-neutral-600'}`}
                         title={product.name}
                       >
                         {product.name}
@@ -349,19 +370,19 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                     </div>
 
                     {/* Price & Savings */}
-                    <div className="flex items-baseline justify-between gap-2 mt-1">
+                    <div className={`flex items-end justify-between gap-2 mt-2 pt-2 border-t ${isDarkCard ? 'border-white/10' : 'border-black/10'}`}>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-[15px] font-semibold text-neutral-950 tabular-nums">
+                        <span className={`text-[15px] font-bold tabular-nums ${isDarkCard ? 'text-white' : 'text-neutral-950'}`}>
                           ₹{Number(product.price).toLocaleString('en-IN')}
                         </span>
                         {product.oldPrice && product.oldPrice > product.price && (
-                          <span className="text-xs text-neutral-400 line-through tabular-nums">
+                          <span className={`text-xs line-through tabular-nums ${isDarkCard ? 'text-white/40' : 'text-neutral-400'}`}>
                             ₹{Number(product.oldPrice).toLocaleString('en-IN')}
                           </span>
                         )}
                       </div>
 
-                      <span className="text-[11px] font-mono text-neutral-400">
+                      <span className={`rounded-full px-2 py-1 text-[9px] font-semibold uppercase tracking-wide ${isDarkCard ? 'bg-white/10 text-white/60' : 'bg-black/5 text-neutral-500'}`}>
                         {product.category}
                       </span>
                     </div>
@@ -371,10 +392,10 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                       <button
                         type="button"
                         onClick={(e) => handleQuickAdd(e, product)}
-                        className={`w-full py-2 rounded-full text-xs font-medium transition-all active:scale-95 ${
+                        className={`w-full py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 ${
                           isAdded
                             ? 'bg-emerald-600 text-white'
-                            : 'bg-neutral-900 text-white'
+                            : `${cardStyle.accent} text-white`
                         }`}
                       >
                         {isAdded ? '✓ Added to Bag' : '+ Quick Add to Bag'}
