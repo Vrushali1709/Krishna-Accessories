@@ -18,7 +18,7 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts, getCategories, isInWishlist, toggleWishlist, getWishlist } from '../utils/productStore';
+import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import {
@@ -28,8 +28,7 @@ import {
   ArrowRightIcon,
   BoxIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
-  HeartIcon
+  ChevronRightIcon
 } from '../components/Icons';
 
 // ============================================================
@@ -447,120 +446,6 @@ export default function Home() {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
   };
 
-  // Featured Products Carousel State
-  const featuredScrollRef = useRef(null);
-  const [canScrollLeftFeatured, setCanScrollLeftFeatured] = useState(false);
-  const [canScrollRightFeatured, setCanScrollRightFeatured] = useState(true);
-  const [isDraggingFeatured, setIsDraggingFeatured] = useState(false);
-  const [startFeaturedX, setStartFeaturedX] = useState(0);
-  const [scrollLeftFeatured, setScrollLeftFeatured] = useState(0);
-  const [hasMovedFeatured, setHasMovedFeatured] = useState(false);
-  const [wishlistIds, setWishlistIds] = useState(() => new Set(getWishlist().map((i) => Number(i.id))));
-  const [addedItemMap, setAddedItemMap] = useState({});
-
-  const checkFeaturedScroll = useCallback(() => {
-    if (!featuredScrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = featuredScrollRef.current;
-    setCanScrollLeftFeatured(scrollLeft > 10);
-    setCanScrollRightFeatured(scrollLeft < scrollWidth - clientWidth - 10);
-  }, []);
-
-  useEffect(() => {
-    const el = featuredScrollRef.current;
-    if (!el) return;
-    checkFeaturedScroll();
-    el.addEventListener('scroll', checkFeaturedScroll, { passive: true });
-    window.addEventListener('resize', checkFeaturedScroll);
-    return () => {
-      el.removeEventListener('scroll', checkFeaturedScroll);
-      window.removeEventListener('resize', checkFeaturedScroll);
-    };
-  }, [checkFeaturedScroll, filteredFeatured]);
-
-  const scrollFeatured = (direction) => {
-    if (!featuredScrollRef.current) return;
-    const container = featuredScrollRef.current;
-    const cardWidth = container.firstElementChild?.clientWidth || 270;
-    const scrollAmount = (cardWidth + 18) * 2;
-    container.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    });
-  };
-
-  const handleFeaturedMouseDown = (e) => {
-    if (!featuredScrollRef.current) return;
-    setIsDraggingFeatured(true);
-    setHasMovedFeatured(false);
-    setStartFeaturedX(e.pageX - featuredScrollRef.current.offsetLeft);
-    setScrollLeftFeatured(featuredScrollRef.current.scrollLeft);
-  };
-
-  const handleFeaturedMouseMove = (e) => {
-    if (!isDraggingFeatured || !featuredScrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - featuredScrollRef.current.offsetLeft;
-    const walk = (x - startFeaturedX) * 1.5;
-    if (Math.abs(walk) > 5) setHasMovedFeatured(true);
-    featuredScrollRef.current.scrollLeft = scrollLeftFeatured - walk;
-  };
-
-  const handleFeaturedMouseUp = () => {
-    setIsDraggingFeatured(false);
-  };
-
-  useEffect(() => {
-    const handleWishSync = () => {
-      setWishlistIds(new Set(getWishlist().map((i) => Number(i.id))));
-    };
-    window.addEventListener('wishlistUpdated', handleWishSync);
-    return () => window.removeEventListener('wishlistUpdated', handleWishSync);
-  }, []);
-
-  const handleToggleWishlist = (e, product) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!getCurrentUser()) {
-      navigate('/login', {
-        state: {
-          from: window.location.pathname + (window.location.search || ''),
-          message: 'Please sign in to save items to your wishlist.',
-          requiredRole: 'customer'
-        }
-      });
-      return;
-    }
-    const inWish = toggleWishlist(product);
-    setWishlistIds((prev) => {
-      const next = new Set(prev);
-      if (inWish) next.add(Number(product.id));
-      else next.delete(Number(product.id));
-      return next;
-    });
-    setToastMessage(inWish ? `♥ Added "${product.name}" to wishlist` : `Removed "${product.name}" from wishlist`);
-    setTimeout(() => setToastMessage(''), 3000);
-  };
-
-  const handleFeaturedAddToCart = (e, product) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!getCurrentUser()) {
-      navigate('/login', {
-        state: {
-          from: window.location.pathname + (window.location.search || ''),
-          message: 'Please sign in to add items to your shopping bag.',
-          requiredRole: 'customer'
-        }
-      });
-      return;
-    }
-    handleAddToCart(product);
-    setAddedItemMap((prev) => ({ ...prev, [product.id]: true }));
-    setTimeout(() => {
-      setAddedItemMap((prev) => ({ ...prev, [product.id]: false }));
-    }, 1500);
-  };
-
   const handleAddToCart = (product) => {
     if (!getCurrentUser()) {
       navigate('/login');
@@ -895,59 +780,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= LUXURY FEATURED PRODUCTS (SMOOTH HORIZONTAL CAROUSEL) ================= */}
+      {/* ================= FEATURED PRODUCTS (SELECTED EDITIONS) ================= */}
       <section className="bg-white border-y border-gray-200/80 py-10 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
             <div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.24em] text-gray-500 block mb-1">
-                OUR COLLECTION
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
-                Featured Products
+
+              <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+                Selected Editions
               </h2>
               <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
                 Certified authentic luxury pieces and trendsetting essentials crafted for distinction.
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 self-end sm:self-auto">
-              <Link
-                to="/shop"
-                className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
-              >
-                <span>Explore All</span>
-                <ArrowRightIcon className="w-3.5 h-3.5" />
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => scrollFeatured('left')}
-                disabled={!canScrollLeftFeatured}
-                aria-label="Previous products"
-                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeftFeatured
-                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                  }`}
-              >
-                <ChevronLeftIcon className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => scrollFeatured('right')}
-                disabled={!canScrollRightFeatured}
-                aria-label="Next products"
-                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRightFeatured
-                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                  }`}
-              >
-                <ChevronRightIcon className="w-4 h-4" />
-              </button>
-            </div>
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-gray-900 hover:text-black hover:underline self-start md:self-auto group shrink-0"
+            >
+              <span>Explore All Catalog</span>
+              <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
 
           {/* Interactive Category Filter Pills */}
@@ -960,7 +815,7 @@ export default function Home() {
                   type="button"
                   onClick={() => setSelectedEditionCategory(cat)}
                   className={`rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${isActive
-                    ? 'bg-gray-950 text-white shadow-sm scale-102 font-bold'
+                    ? 'bg-gray-950 text-white shadow-sm scale-102'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-black'
                     }`}
                 >
@@ -970,128 +825,17 @@ export default function Home() {
             })}
           </div>
 
-          {/* Smooth Scrolling Products Viewport */}
+          {/* Spacious Products Grid */}
           {filteredFeatured.length > 0 ? (
-            <div
-              ref={featuredScrollRef}
-              onMouseDown={handleFeaturedMouseDown}
-              onMouseMove={handleFeaturedMouseMove}
-              onMouseUp={handleFeaturedMouseUp}
-              onMouseLeave={handleFeaturedMouseUp}
-              className={`flex gap-3.5 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
-                isDraggingFeatured ? 'cursor-grabbing' : 'cursor-grab'
-              }`}
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {filteredFeatured.map((product, idx) => {
-                const inWish = wishlistIds.has(Number(product.id));
-                const badgeText = product.discount > 0
-                  ? `${product.discount}% OFF`
-                  : idx === 0
-                    ? 'BEST SELLER'
-                    : idx === 1
-                      ? 'TRENDING'
-                      : idx === 2
-                        ? 'POPULAR'
-                        : 'NEW';
-
-                return (
-                  <div
-                    key={product.id}
-                    className="group relative flex-shrink-0 w-[235px] sm:w-[260px] md:w-[280px] lg:w-[290px] rounded-[26px] p-4 sm:p-5 flex flex-col justify-between bg-white border border-gray-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.10)] hover:border-gray-300 hover:-translate-y-1.5 transition-all duration-300 snap-start select-none"
-                  >
-                    {/* Top Row: Pill Badge & Wishlist Heart */}
-                    <div className="flex items-center justify-between pointer-events-none">
-                      <span className="rounded-full bg-gray-100 border border-gray-200/80 text-gray-900 text-[10px] sm:text-[10.5px] font-bold px-3 py-1 uppercase tracking-wider shadow-2xs truncate max-w-[65%]">
-                        {badgeText}
-                      </span>
-
-                      <button
-                        type="button"
-                        onClick={(e) => handleToggleWishlist(e, product)}
-                        aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
-                        className={`pointer-events-auto h-8 w-8 rounded-full border border-gray-200/80 bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors flex items-center justify-center ${
-                          inWish ? 'text-rose-600 bg-rose-50 border-rose-200 shadow-rose-100 shadow-2xs' : 'text-gray-600'
-                        }`}
-                      >
-                        <HeartIcon className="w-4 h-4 transition-colors" filled={inWish} />
-                      </button>
-                    </div>
-
-                    {/* Centered Product Image */}
-                    <Link
-                      to={`/product/${product.id}`}
-                      onClick={(e) => {
-                        if (hasMovedFeatured) e.preventDefault();
-                      }}
-                      className="block my-2"
-                    >
-                      <img
-                        src={product.image || product.images?.[0]}
-                        alt={product.name}
-                        className="h-44 sm:h-48 md:h-52 w-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none"
-                        loading="lazy"
-                      />
-                    </Link>
-
-                    {/* Micro Dots Indicator */}
-                    <div className="flex items-center justify-center gap-1.5 py-1 pointer-events-none">
-                      <span className="h-1.5 w-1.5 rounded-full bg-gray-950" />
-                      <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                      <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                    </div>
-
-                    {/* Product Details */}
-                    <div className="mt-1">
-                      <Link
-                        to={`/product/${product.id}`}
-                        onClick={(e) => {
-                          if (hasMovedFeatured) e.preventDefault();
-                        }}
-                        className="block"
-                      >
-                        <h3 className="font-bold text-gray-950 text-sm sm:text-base md:text-[16px] truncate group-hover:text-black transition-colors">
-                          {product.name}
-                        </h3>
-                      </Link>
-
-                      <p className="text-[11px] sm:text-xs text-gray-500 line-clamp-2 mt-1 leading-relaxed">
-                        {product.description || 'Crafted with premium materials and signature design excellence.'}
-                      </p>
-
-                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-600 font-medium">
-                        <StarIcon className="w-3.5 h-3.5 text-amber-500" filled={true} />
-                        <span>{product.rating || '4.9'} ({product.reviewsCount || 85 + (idx % 5) * 15})</span>
-                      </div>
-                    </div>
-
-                    {/* Bottom Price & Add to Cart Button */}
-                    <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-gray-100">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-base sm:text-lg font-bold text-gray-950">
-                          ₹{product.price.toLocaleString('en-IN')}
-                        </span>
-                        {product.oldPrice && product.oldPrice > product.price && (
-                          <span className="text-xs text-gray-400 line-through">
-                            ₹{product.oldPrice.toLocaleString('en-IN')}
-                          </span>
-                        )}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={(e) => handleFeaturedAddToCart(e, product)}
-                        className="rounded-full bg-[#111827] hover:bg-black text-white px-3.5 sm:px-4 py-2 text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
-                      >
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span>{addedItemMap[product.id] ? '✓ Added' : 'Add to Cart'}</span>
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
+              {filteredFeatured.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
+                />
+              ))}
             </div>
           ) : (
             <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
