@@ -30,6 +30,63 @@ import {
 } from '../components/Icons';
 
 // ============================================================
+// OFFER BANNER DECORATIVE ACCENTS & ICONS (MATCHING CUSTOM UI)
+// ============================================================
+function OfferSparkBurst({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 32 64"
+      className={`h-10 sm:h-12 md:h-14 w-auto shrink-0 select-none pointer-events-none ${className}`}
+      fill="none"
+      aria-hidden="true"
+    >
+      {/* Top slanted yellow bar */}
+      <rect
+        x="6"
+        y="6"
+        width="14"
+        height="4"
+        rx="2"
+        transform="rotate(35 6 6)"
+        fill="#F59E0B"
+      />
+      {/* Center white diamond */}
+      <rect
+        x="12"
+        y="28"
+        width="7"
+        height="7"
+        rx="1"
+        transform="rotate(45 15.5 31.5)"
+        fill="#FFFFFF"
+      />
+      {/* Bottom slanted yellow bar */}
+      <rect
+        x="4"
+        y="52"
+        width="14"
+        height="4"
+        rx="2"
+        transform="rotate(-35 4 52)"
+        fill="#F59E0B"
+      />
+    </svg>
+  );
+}
+
+function OfferTagIcon({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      className={`shrink-0 fill-current text-white ${className}`}
+      aria-hidden="true"
+    >
+      <path d="M57.8 28.9L35.1 6.2C33.6 4.7 31.6 3.8 29.5 3.8H11C7 3.8 3.8 7 3.8 11v18.5c0 2.1 0.9 4.1 2.4 5.6l22.7 22.7c3.1 3.1 8.2 3.1 11.3 0l17.6-17.6c3.1-3.1 3.1-8.2 0-11.3zM16 20c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" />
+    </svg>
+  );
+}
+
+// ============================================================
 // DEFAULT CATEGORY BANNERS
 // ============================================================
 const defaultCategoryBanners = [
@@ -313,6 +370,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState(() => getProducts());
   const [toastMessage, setToastMessage] = useState('');
+  const [copiedCoupon, setCopiedCoupon] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Category Carousel State
@@ -461,6 +519,14 @@ export default function Home() {
     }
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     navigate('/checkout');
+  };
+
+  const handleCopyCoupon = (e) => {
+    e?.preventDefault?.();
+    navigator.clipboard?.writeText('WELCOME15');
+    setCopiedCoupon(true);
+    setToastMessage('🎉 Promo code WELCOME15 copied to clipboard!');
+    setTimeout(() => setCopiedCoupon(false), 2500);
   };
 
   return (
@@ -710,28 +776,64 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= PROMOTIONAL VOUCHER ================= */}
-      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
-        <div className="rounded-2xl bg-[#0F172A] text-white p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 shadow-sm border border-slate-800">
-          <div className="flex items-center gap-3 w-full md:w-auto min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-base border border-white/10">
-              🎁
+      {/* ================= EXCLUSIVE PROMOTIONAL OFFER BANNER ================= */}
+      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-8 pt-1">
+        <div className="relative overflow-hidden rounded-2xl bg-[#092c1c] text-white py-5 px-4 sm:py-6 sm:px-6 md:px-8 lg:px-12 shadow-md border border-[#14482f] flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6">
+          
+          {/* Left Group (Left Burst + Tag Icon + Texts) */}
+          <div className="flex items-center gap-3.5 sm:gap-5 md:gap-6 w-full md:w-auto justify-center md:justify-start">
+            {/* Far Left Spark Burst */}
+            <OfferSparkBurst className="shrink-0" />
+
+            {/* Discount Tag Icon */}
+            <div className="flex items-center justify-center shrink-0">
+              <OfferTagIcon className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16" />
             </div>
-            <div className="min-w-0">
-              <span className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-amber-300">Exclusive Privé</span>
-              <h3 className="text-sm sm:text-base font-bold text-white leading-snug truncate">Save 10% Instant Discount &gt; ₹1,000</h3>
-              <p className="text-[10px] sm:text-[10.5px] text-gray-400 truncate">
-                Coupon code:{' '}
-                <strong className="text-white font-mono bg-white/10 px-1 py-0.2 rounded border border-white/10">KRISHNA10</strong>
+
+            {/* Offer Texts */}
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] sm:text-[11px] md:text-xs font-bold uppercase tracking-[0.16em] text-white/90">
+                EXCLUSIVE OFFER JUST FOR YOU!
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-serif font-black tracking-tight text-white leading-tight mt-0.5 sm:mt-1">
+                GET 15% OFF
+              </h2>
+              <p className="text-xs sm:text-sm md:text-base font-normal text-white/85 mt-0.5">
+                On your next order
               </p>
             </div>
           </div>
-          <Link
-            to="/shop"
-            className="w-full md:w-auto text-center rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-gray-100 transition shrink-0 shadow-2xs"
-          >
-            Claim Offer →
-          </Link>
+
+          {/* Right Group (Middle Burst + Coupon Code Card + Right Burst) */}
+          <div className="flex items-center gap-3.5 sm:gap-5 md:gap-6 w-full md:w-auto justify-center md:justify-end">
+            {/* Center/Middle Spark Burst */}
+            <OfferSparkBurst className="shrink-0" />
+
+            {/* Coupon Code Block */}
+            <div className="flex flex-col items-center">
+              <button
+                type="button"
+                onClick={handleCopyCoupon}
+                title="Click to copy promo code"
+                className="group relative flex flex-col items-center justify-center min-w-[165px] sm:min-w-[195px] md:min-w-[215px] px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-dashed border-white/50 bg-white/[0.04] hover:bg-white/[0.1] hover:border-white/80 transition-all duration-200 cursor-pointer text-center select-none active:scale-98"
+              >
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-white/80">
+                  USE CODE:
+                </span>
+                <span className="text-base sm:text-lg md:text-xl font-black font-mono tracking-widest text-white mt-0.5">
+                  {copiedCoupon ? 'COPIED! ✓' : 'WELCOME15'}
+                </span>
+              </button>
+
+              <span className="text-[10px] sm:text-[11px] text-white/75 text-center mt-1.5 font-normal">
+                Offer valid for the next 7 days only.
+              </span>
+            </div>
+
+            {/* Far Right Spark Burst */}
+            <OfferSparkBurst className="shrink-0" />
+          </div>
+
         </div>
       </section>
 
