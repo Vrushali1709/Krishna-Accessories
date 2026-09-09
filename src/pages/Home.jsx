@@ -827,78 +827,7 @@ export default function Home() {
             </div>
           </div>
 
-
-
-          {/* ======================================================
-          CUSTOMER REVIEWS
-      ====================================================== */}
-
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-
-        <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-
-          <div>
-
-            <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-gray-400">
-              Customer Stories
-            </span>
-
-            <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl">
-              Loved by Our Customers
-            </h2>
-
-          </div>
-
-          <div className="text-xs font-semibold text-gray-500">
-            4.9 / 5 customer experience
-          </div>
-
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-
-          {reviews.map((review) => (
-
-            <div
-              key={review.name}
-              className="rounded-[22px] border border-gray-200 bg-white p-6"
-            >
-
-              <div className="flex items-center gap-1 text-sm text-[#B48A4A]">
-                {'★'.repeat(review.rating)}
-              </div>
-
-              <p className="mt-5 text-sm leading-6 text-gray-600">
-                “{review.text}”
-              </p>
-
-              <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-
-                <div>
-
-                  <h3 className="text-xs font-bold text-gray-950">
-                    {review.name}
-                  </h3>
-
-                  <p className="mt-0.5 text-[10px] text-gray-400">
-                    {review.location}
-                  </p>
-
-                </div>
-
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-xs font-bold">
-                  {review.name.charAt(0)}
-                </span>
-
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-      </section>
+          
 
           {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
           <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
