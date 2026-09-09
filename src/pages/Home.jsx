@@ -20,6 +20,7 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import NewArrivalsSection from '../components/NewArrivalsSection';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
+import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -853,6 +854,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* ================= CUSTOMER REVIEWS (CAROUSEL) ================= */}
+      <CustomerReviewsSection />
 
       {/* ================= FOOTER ================= */}
       <Footer />
