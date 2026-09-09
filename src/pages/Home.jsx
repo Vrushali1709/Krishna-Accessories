@@ -937,7 +937,7 @@ export default function Home() {
             })}
           </div>
 
-          {/* 3D Coverflow Carousel Section */}
+          {/* 3D Circular Coverflow Carousel Section */}
           {filteredFeatured.length > 0 ? (
             <div className="relative w-full">
 
@@ -946,7 +946,7 @@ export default function Home() {
                 type="button"
                 onClick={handlePrevFeatured}
                 aria-label="Previous product"
-                className="absolute left-1 sm:left-4 lg:left-8 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/95 border border-[#E8DFD3] text-[#2B231D] shadow-[0_6px_22px_rgba(0,0,0,0.08)] hover:bg-white hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                className="absolute left-1 sm:left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-full bg-white/95 border border-[#E8DFD3] text-[#2B231D] shadow-[0_6px_22px_rgba(0,0,0,0.10)] hover:bg-white hover:scale-110 active:scale-95 transition-all cursor-pointer"
               >
                 <ChevronLeftIcon className="w-5 h-5 text-[#2B231D]" />
               </button>
@@ -955,158 +955,169 @@ export default function Home() {
                 type="button"
                 onClick={handleNextFeatured}
                 aria-label="Next product"
-                className="absolute right-1 sm:right-4 lg:right-8 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/95 border border-[#E8DFD3] text-[#2B231D] shadow-[0_6px_22px_rgba(0,0,0,0.08)] hover:bg-white hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                className="absolute right-1 sm:right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-full bg-white/95 border border-[#E8DFD3] text-[#2B231D] shadow-[0_6px_22px_rgba(0,0,0,0.10)] hover:bg-white hover:scale-110 active:scale-95 transition-all cursor-pointer"
               >
                 <ChevronRightIcon className="w-5 h-5 text-[#2B231D]" />
               </button>
 
-              {/* Coverflow Cards Viewport */}
-              <div className="relative w-full overflow-hidden py-8 sm:py-12 select-none">
-                <div
-                  onMouseDown={handleFMouseDown}
-                  onMouseMove={handleFMouseMove}
-                  onMouseUp={handleFMouseUp}
-                  onMouseLeave={handleFMouseUp}
-                  onTouchStart={handleFTouchStart}
-                  onTouchEnd={handleFTouchEnd}
-                  className="flex items-center transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing"
-                  style={{
-                    transform: `translateX(calc(50% - ${(featuredIndex * 300) + 150}px))`
-                  }}
-                >
-                  {filteredFeatured.map((product, idx) => {
-                    const isCenter = idx === featuredIndex;
-                    const inWish = wishlistIds.has(Number(product.id));
-                    const badgeText = product.discount > 0
-                      ? `${product.discount}% OFF`
-                      : idx === 0
-                        ? 'BEST SELLER'
-                        : idx === 1
-                          ? 'TRENDING'
-                          : idx === 2
-                            ? 'POPULAR'
-                            : 'NEW';
+              {/* 5-Card Circular Coverflow Viewport */}
+              <div
+                onMouseDown={handleFMouseDown}
+                onMouseMove={handleFMouseMove}
+                onMouseUp={handleFMouseUp}
+                onTouchStart={handleFTouchStart}
+                onTouchEnd={handleFTouchEnd}
+                className="flex items-center justify-center gap-2.5 sm:gap-3.5 lg:gap-5 py-6 sm:py-10 select-none overflow-hidden min-h-[460px] sm:min-h-[500px]"
+              >
+                {[-2, -1, 0, 1, 2].map((offset) => {
+                  const N = filteredFeatured.length;
+                  const productIndex = (featuredIndex + offset + N * 100) % N;
+                  const product = filteredFeatured[productIndex];
+                  if (!product) return null;
 
-                    return (
-                      <div
-                        key={product.id}
-                        onClick={() => {
-                          if (!fHasMoved && !isCenter) setFeaturedIndex(idx);
+                  const isCenter = offset === 0;
+                  const isNear = Math.abs(offset) === 1;
+                  const inWish = wishlistIds.has(Number(product.id));
+
+                  const badgeText = product.discount > 0
+                    ? `${product.discount}% OFF`
+                    : productIndex === 0
+                      ? 'BEST SELLER'
+                      : productIndex === 1
+                        ? 'TRENDING'
+                        : productIndex === 2
+                          ? 'POPULAR'
+                          : 'NEW';
+
+                  return (
+                    <div
+                      key={`slot-${offset}-${product.id}`}
+                      onClick={() => {
+                        if (offset !== 0) {
+                          setFeaturedIndex((prev) => (prev + offset + N * 100) % N);
+                        }
+                      }}
+                      className={`group relative rounded-[30px] sm:rounded-[34px] p-3.5 sm:p-5 flex flex-col justify-between transition-all duration-500 select-none ${
+                        isCenter
+                          ? 'w-[265px] sm:w-[290px] md:w-[310px] scale-100 sm:scale-105 z-30 bg-white shadow-[0_24px_55px_rgba(175,140,105,0.22)] border-2 border-[#E5D7C5] ring-4 ring-[#B89B7D]/15 opacity-100'
+                          : isNear
+                            ? 'w-[220px] sm:w-[250px] md:w-[270px] scale-90 sm:scale-95 z-20 bg-white/95 shadow-[0_10px_30px_rgba(0,0,0,0.06)] border border-[#EFE8DC] opacity-80 sm:opacity-90 hover:opacity-100 hover:scale-[0.98] cursor-pointer'
+                            : 'w-[190px] sm:w-[220px] md:w-[240px] scale-80 sm:scale-85 z-10 bg-white/90 shadow-[0_6px_20px_rgba(0,0,0,0.04)] border border-[#EFE8DC] opacity-50 sm:opacity-70 hover:opacity-85 hover:scale-90 cursor-pointer hidden md:flex'
+                      }`}
+                    >
+                      {/* Top Badge & Wishlist Heart */}
+                      <div className="flex items-center justify-between pointer-events-none">
+                        <span className="rounded-full bg-[#F6EFE6] text-[#947350] text-[9.5px] sm:text-[10.5px] font-bold px-2.5 sm:px-3 py-0.5 sm:py-1 uppercase tracking-wider shadow-2xs truncate max-w-[65%]">
+                          {badgeText}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={(e) => handleToggleWishlist(e, product)}
+                          aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
+                          className={`pointer-events-auto h-7 w-7 sm:h-8 sm:w-8 rounded-full border flex items-center justify-center transition-all ${
+                            inWish
+                              ? 'bg-rose-50 border-rose-200 text-rose-600 shadow-rose-100 shadow-xs'
+                              : 'border-[#EAE2D5] bg-white/90 text-[#8C8276] hover:text-rose-600 hover:border-rose-200'
+                          }`}
+                        >
+                          <HeartIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors" filled={inWish} />
+                        </button>
+                      </div>
+
+                      {/* Product Centered Image */}
+                      <Link
+                        to={`/product/${product.id}`}
+                        onClick={(e) => {
+                          if (!isCenter) {
+                            e.preventDefault();
+                            setFeaturedIndex((prev) => (prev + offset + N * 100) % N);
+                          }
                         }}
-                        className={`group relative flex-shrink-0 w-[276px] mx-3 rounded-[32px] p-4 sm:p-5 flex flex-col justify-between transition-all duration-500 select-none ${
-                          isCenter
-                            ? 'bg-white scale-105 sm:scale-110 z-20 shadow-[0_24px_50px_rgba(175,140,105,0.22)] border-2 border-[#E5D7C5] ring-4 ring-[#B89B7D]/15 opacity-100'
-                            : 'bg-white/95 scale-90 sm:scale-95 z-10 shadow-[0_8px_25px_rgba(0,0,0,0.05)] border border-[#EFE8DC] opacity-75 sm:opacity-85 hover:opacity-100 hover:scale-[0.98] cursor-pointer'
-                        }`}
+                        className="block my-1.5 sm:my-2"
                       >
-                        {/* Top Badge & Wishlist Heart */}
-                        <div className="flex items-center justify-between pointer-events-none">
-                          <span className="rounded-full bg-[#F6EFE6] text-[#947350] text-[10px] sm:text-[10.5px] font-bold px-3 py-1 uppercase tracking-wider shadow-2xs">
-                            {badgeText}
-                          </span>
+                        <img
+                          src={product.image || product.images?.[0]}
+                          alt={product.name}
+                          className="h-36 sm:h-44 md:h-48 w-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none"
+                          loading="lazy"
+                        />
+                      </Link>
 
-                          <button
-                            type="button"
-                            onClick={(e) => handleToggleWishlist(e, product)}
-                            aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
-                            className={`pointer-events-auto h-8 w-8 rounded-full border flex items-center justify-center transition-all ${
-                              inWish
-                                ? 'bg-rose-50 border-rose-200 text-rose-600 shadow-rose-100 shadow-xs'
-                                : 'border-[#EAE2D5] bg-white/90 text-[#8C8276] hover:text-rose-600 hover:border-rose-200'
-                            }`}
-                          >
-                            <HeartIcon className="w-4 h-4 transition-colors" filled={inWish} />
-                          </button>
-                        </div>
+                      {/* Micro Dots Indicator */}
+                      <div className="flex items-center justify-center gap-1.5 py-0.5 sm:py-1 pointer-events-none">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#AC8C6B]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#DCD1C3]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#DCD1C3]" />
+                      </div>
 
-                        {/* Product Centered Image */}
+                      {/* Product Title & Details */}
+                      <div className="mt-1">
                         <Link
                           to={`/product/${product.id}`}
                           onClick={(e) => {
-                            if (fHasMoved) e.preventDefault();
+                            if (!isCenter) {
+                              e.preventDefault();
+                              setFeaturedIndex((prev) => (prev + offset + N * 100) % N);
+                            }
                           }}
-                          className="block my-2"
+                          className="block"
                         >
-                          <img
-                            src={product.image || product.images?.[0]}
-                            alt={product.name}
-                            className="h-44 sm:h-48 w-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none"
-                            loading="lazy"
-                          />
+                          <h3 className="font-serif font-bold text-[#241F1A] text-sm sm:text-base md:text-[17px] truncate hover:text-[#947350] transition-colors">
+                            {product.name}
+                          </h3>
                         </Link>
 
-                        {/* Micro Dots Indicator */}
-                        <div className="flex items-center justify-center gap-1.5 py-1 pointer-events-none">
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#AC8C6B]" />
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#DCD1C3]" />
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#DCD1C3]" />
-                        </div>
+                        <p className="text-[10.5px] sm:text-xs text-[#8A8277] line-clamp-2 mt-0.5 sm:mt-1 leading-relaxed">
+                          {product.description || 'Crafted with premium materials and signature design excellence.'}
+                        </p>
 
-                        {/* Product Title & Details */}
-                        <div className="mt-1">
-                          <Link
-                            to={`/product/${product.id}`}
-                            onClick={(e) => {
-                              if (fHasMoved) e.preventDefault();
-                            }}
-                            className="block"
-                          >
-                            <h3 className="font-serif font-bold text-[#241F1A] text-base sm:text-[17px] truncate hover:text-[#947350] transition-colors">
-                              {product.name}
-                            </h3>
-                          </Link>
-
-                          <p className="text-xs text-[#8A8277] line-clamp-2 mt-1 leading-relaxed">
-                            {product.description || 'Crafted with premium materials and signature design excellence.'}
-                          </p>
-
-                          <div className="flex items-center gap-1 mt-2 text-xs text-[#7A7267] font-medium">
-                            <StarIcon className="w-3.5 h-3.5 text-amber-500" filled={true} />
-                            <span>{product.rating || '4.8'} ({product.reviewsCount || 85 + (idx % 5) * 15})</span>
-                          </div>
-                        </div>
-
-                        {/* Bottom Price & Action Row */}
-                        <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-[#F5EFE6]">
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-base sm:text-lg font-bold text-[#241F1A]">
-                              ₹{product.price.toLocaleString('en-IN')}
-                            </span>
-                            {product.oldPrice && product.oldPrice > product.price && (
-                              <span className="text-xs text-gray-400 line-through">
-                                ₹{product.oldPrice.toLocaleString('en-IN')}
-                              </span>
-                            )}
-                          </div>
-
-                          {isCenter ? (
-                            <button
-                              type="button"
-                              onClick={(e) => handleFeaturedAddToCart(e, product)}
-                              className="rounded-full bg-[#AC8C6B] hover:bg-[#967655] text-white px-3.5 py-1.5 sm:py-2 text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
-                            >
-                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                              </svg>
-                              <span>{addedItemMap[product.id] ? '✓ Added' : 'Add to Cart'}</span>
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={(e) => handleFeaturedAddToCart(e, product)}
-                              className="rounded-full bg-[#F5ECE0] hover:bg-[#AC8C6B] text-[#8C6B47] hover:text-white h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center transition-all shadow-2xs active:scale-95 cursor-pointer shrink-0"
-                              title="Add to Cart"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                              </svg>
-                            </button>
-                          )}
+                        <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10.5px] sm:text-xs text-[#7A7267] font-medium">
+                          <StarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" filled={true} />
+                          <span>{product.rating || '4.9'} ({product.reviewsCount || 85 + (productIndex % 5) * 15})</span>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+
+                      {/* Bottom Price & Action Row */}
+                      <div className="flex items-center justify-between gap-1.5 sm:gap-2 mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-[#F5EFE6]">
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-sm sm:text-base md:text-lg font-bold text-[#241F1A]">
+                            ₹{product.price.toLocaleString('en-IN')}
+                          </span>
+                          {product.oldPrice && product.oldPrice > product.price && (
+                            <span className="text-[10px] sm:text-xs text-gray-400 line-through">
+                              ₹{product.oldPrice.toLocaleString('en-IN')}
+                            </span>
+                          )}
+                        </div>
+
+                        {isCenter ? (
+                          <button
+                            type="button"
+                            onClick={(e) => handleFeaturedAddToCart(e, product)}
+                            className="rounded-full bg-[#AC8C6B] hover:bg-[#967655] text-white px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold flex items-center gap-1 sm:gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>{addedItemMap[product.id] ? '✓ Added' : 'Add to Cart'}</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={(e) => handleFeaturedAddToCart(e, product)}
+                            className="rounded-full bg-[#F5ECE0] hover:bg-[#AC8C6B] text-[#8C6B47] hover:text-white h-7.5 w-7.5 sm:h-9 sm:w-9 flex items-center justify-center transition-all shadow-2xs active:scale-95 cursor-pointer shrink-0"
+                            title="Add to Cart"
+                          >
+                            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Pagination Dots */}
