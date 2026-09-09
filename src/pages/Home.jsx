@@ -24,11 +24,7 @@ import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import {
-  ShieldCheckIcon,
-  TruckIcon,
-  StarIcon,
   ArrowRightIcon,
-  BoxIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from '../components/Icons';
@@ -590,52 +586,7 @@ export default function Home() {
 
       <HomeDiscoveryStrip categories={categoryList} />
 
-      {/* ================= FOUR PILLARS GUARANTEE ================= */}
-      <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <ShieldCheckIcon className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Certified Authentic</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Official brand warranty</p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <TruckIcon className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Express Dispatch</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Free on orders &ge; ₹2,000</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <BoxIcon className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Secure Packaging</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Multi-point inspected</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
-                <StarIcon className="w-3.5 h-3.5 text-gray-900" />
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Concierge Desk</h4>
-                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Ahmedabad flagship</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ================= CURATED DEPARTMENTS CAROUSEL ================= */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
