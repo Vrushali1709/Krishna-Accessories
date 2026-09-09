@@ -18,6 +18,7 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+import NewArrivalsSection from '../components/NewArrivalsSection';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -852,6 +853,8 @@ export default function Home() {
 
         </div>
       </section>
+
+      <NewArrivalsSection products={products} onToast={setToastMessage} />
 
       {/* ======================================================
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
