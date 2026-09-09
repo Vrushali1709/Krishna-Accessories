@@ -19,8 +19,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import NewArrivalsSection from '../components/NewArrivalsSection';
-import TrustFeaturesBar from '../components/TrustFeaturesBar';
-import QuickCategoryStrip from '../components/QuickCategoryStrip';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -29,46 +27,15 @@ import {
   TruckIcon,
   StarIcon,
   ArrowRightIcon,
-  ArrowUpRightIcon,
   BoxIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from '../components/Icons';
 
 // ============================================================
-// DEFAULT CATEGORY BANNERS (Matching Reference Design)
+// DEFAULT CATEGORY BANNERS
 // ============================================================
 const defaultCategoryBanners = [
-  {
-    name: 'Mobiles',
-    description: 'Flagship Titanium Handsets & Gear',
-    image: 'https://i.pinimg.com/736x/00/9b/91/009b91eaa9c50df8e5d5681cbde9a9c3.jpg',
-    tag: 'Apple, Samsung, OnePlus'
-  },
-  {
-    name: 'Clothes & Fashion',
-    description: 'Tailored Suits, Denim & Luxury Apparel',
-    image: 'https://i.pinimg.com/1200x/7e/e0/55/7ee055c1c667557a592fa716eb5005fc.jpg',
-    tag: 'Levis, Zara, Tommy, CK'
-  },
-  {
-    name: 'Laptops',
-    description: 'High-Performance OLED Workstations',
-    image: 'https://i.pinimg.com/1200x/fe/f7/b3/fef7b3cbaeb59afc974ab04dd20741e6.jpg',
-    tag: 'Apple, Dell, HP, Asus'
-  },
-  {
-    name: 'Electronics',
-    description: 'Audiophile Noise-Cancelling Sound',
-    image: 'https://i.pinimg.com/1200x/db/6c/da/db6cdaadde558a889e0c812ea679d8e1.jpg',
-    tag: 'Sony, Bose, JBL, Marshall'
-  },
-  {
-    name: 'Smart Gadgets',
-    description: 'Smart Rings, AI Devices & Wearables',
-    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900',
-    tag: 'Apple, Samsung, boAt'
-  },
   {
     name: 'Watches',
     description: 'Heritage Swiss & Smart Chronographs',
@@ -88,22 +55,52 @@ const defaultCategoryBanners = [
     tag: 'Nike, Adidas, Puma, Jordan'
   },
   {
+    name: 'Mobiles',
+    description: 'Flagship Titanium Handsets & Gear',
+    image: 'https://i.pinimg.com/736x/00/9b/91/009b91eaa9c50df8e5d5681cbde9a9c3.jpg',
+    tag: 'Apple, Samsung, OnePlus'
+  },
+  {
+    name: 'Clothes & Fashion',
+    description: 'Tailored Suits, Denim & Luxury Apparel',
+    image: 'https://i.pinimg.com/1200x/7e/e0/55/7ee055c1c667557a592fa716eb5005fc.jpg',
+    tag: 'Levis, Zara, Tommy, Calvin Klein'
+  },
+  {
+    name: 'Laptops',
+    description: 'High-Performance OLED Workstations',
+    image: 'https://i.pinimg.com/1200x/fe/f7/b3/fef7b3cbaeb59afc974ab04dd20741e6.jpg',
+    tag: 'Apple, Dell, HP, Asus'
+  },
+  {
+    name: 'Electronics',
+    description: 'Audiophile Noise-Cancelling Sound',
+    image: 'https://i.pinimg.com/1200x/db/6c/da/db6cdaadde558a889e0c812ea679d8e1.jpg',
+    tag: 'Sony, Bose, JBL, Marshall'
+  },
+  {
+    name: 'Smart Gadgets',
+    description: 'Smart Rings, AI Devices & Wearables',
+    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900',
+    tag: 'Apple, Samsung, Google, boAt'
+  },
+  {
     name: 'Gaming',
     description: 'RGB Mechanical Gear & Consoles',
     image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=900',
-    tag: 'Razer, Sony PS5, Logitech'
+    tag: 'Razer, Sony PS5, Logitech, Asus'
   },
   {
     name: 'Fitness',
     description: 'GPS Multi-Sport Trackers & Health',
     image: 'https://i.pinimg.com/736x/ce/b4/1d/ceb41df7737b5918904522051f1f56f5.jpg',
-    tag: 'Garmin, Fitbit, Apple'
+    tag: 'Garmin, Fitbit, Apple, Noise'
   },
   {
     name: 'Fashion Accessories',
     description: 'Polarized Eyewear & Belts',
     image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900',
-    tag: 'Ray-Ban, Police, Fastrack'
+    tag: 'Ray-Ban, Police, Titan, Fossil'
   }
 ];
 
@@ -590,54 +587,98 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ================= TRUST / FEATURE HIGHLIGHTS BAR (MATCHING USER SCREENSHOT TOP BAR) ================= */}
-      <TrustFeaturesBar />
+      {/* ================= FOUR PILLARS GUARANTEE ================= */}
+      <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
+                <ShieldCheckIcon className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Certified Authentic</h4>
+                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Official brand warranty</p>
+              </div>
+            </div>
 
-      {/* ================= QUICK CATEGORY CIRCLES STRIP (MATCHING USER SCREENSHOT BOTTOM BAR) ================= */}
-      <QuickCategoryStrip />
+            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
+                <TruckIcon className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Express Dispatch</h4>
+                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Free on orders &ge; ₹2,000</p>
+              </div>
+            </div>
 
-      {/* ================= CURATED COLLECTIONS CAROUSEL (EXACT REFERENCE UI) ================= */}
+            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
+                <BoxIcon className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Secure Packaging</h4>
+                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Multi-point inspected</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/70 bg-[#F8F9FA] p-3 transition hover:border-gray-300 min-w-0">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200/80 text-gray-900">
+                <StarIcon className="w-3.5 h-3.5 text-gray-900" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-[10.5px] sm:text-[11px] font-semibold text-gray-950 uppercase tracking-wider truncate">Concierge Desk</h4>
+                <p className="text-[9px] sm:text-[9.5px] text-gray-500 truncate">Ahmedabad flagship</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CURATED DEPARTMENTS CAROUSEL ================= */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
-        <div className="flex items-center justify-between gap-4 mb-5">
-          <h2 className="text-xl sm:text-2xl lg:text-[26px] font-bold tracking-tight text-gray-950">
-            Curated Collections
-          </h2>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
+          <div>
+            <div className="flex items-center gap-2">
 
-          <div className="flex items-center gap-3">
+            </div>
+            <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+              Curated Collections
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2.5 self-end sm:self-auto">
             <Link
               to="/shop"
-              className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-black transition-colors"
+              className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
             >
-              View All
+              <span>View All</span>
             </Link>
 
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => scrollCarousel('left')}
-                disabled={!canScrollLeft}
-                aria-label="Previous categories"
-                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeft
-                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                  }`}
-              >
-                <ChevronLeftIcon className="w-4 h-4" />
-              </button>
+            <button
+              type="button"
+              onClick={() => scrollCarousel('left')}
+              disabled={!canScrollLeft}
+              aria-label="Previous categories"
+              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeft
+                ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                }`}
+            >
+              <ChevronLeftIcon className="w-4 h-4" />
+            </button>
 
-              <button
-                type="button"
-                onClick={() => scrollCarousel('right')}
-                disabled={!canScrollRight}
-                aria-label="Next categories"
-                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRight
-                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                  }`}
-              >
-                <ChevronRightIcon className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => scrollCarousel('right')}
+              disabled={!canScrollRight}
+              aria-label="Next categories"
+              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRight
+                ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                }`}
+            >
+              <ChevronRightIcon className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -647,7 +688,7 @@ export default function Home() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className={`flex gap-3.5 sm:gap-4.5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          className={`flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
             }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
@@ -658,10 +699,10 @@ export default function Home() {
                 key={c.name}
                 to={`/shop?category=${encodeURIComponent(c.name)}`}
                 onClick={handleCategoryClick}
-                className="group relative flex-shrink-0 w-[220px] sm:w-[245px] md:w-[265px] lg:w-[275px] p-3 sm:p-3.5 rounded-[26px] bg-white border border-gray-200/85 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.09)] transition-all duration-300 hover:-translate-y-1 snap-start flex flex-col justify-between"
+                className="group relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[250px] lg:w-[260px] p-2.5 sm:p-3 rounded-[24px] bg-white border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.10)] transition-all duration-300 hover:-translate-y-1 snap-start flex flex-col justify-between"
               >
                 {/* Image Container with Inset Badges */}
-                <div className="relative w-full aspect-[1/0.95] overflow-hidden rounded-[18px] bg-[#F3F4F6]">
+                <div className="relative w-full aspect-[1/0.95] overflow-hidden rounded-[18px] bg-gray-100">
                   <img
                     src={c.image}
                     alt={c.name}
@@ -671,15 +712,23 @@ export default function Home() {
 
                   {/* Top Left Badge */}
                   <div className="absolute top-2.5 left-2.5 pointer-events-none">
-                    <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-md px-3 py-1 text-[10.5px] sm:text-[11px] font-medium text-white border border-white/15 shadow-2xs">
+                    <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-md px-2.5 py-1 text-[10px] sm:text-[10.5px] font-medium text-white border border-white/15 shadow-2xs">
                       {count > 0 ? `${count} ${count === 1 ? 'item' : 'items'}` : 'Top rated'}
                     </span>
                   </div>
 
                   {/* Top Right Action Icon */}
                   <div className="absolute top-2.5 right-2.5 pointer-events-none">
-                    <span className="flex h-7.5 w-7.5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 shadow-2xs transition-all duration-300 group-hover:bg-black group-hover:scale-110">
-                      <ArrowUpRightIcon className="w-3.5 h-3.5 text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-2xs transition-all duration-300 group-hover:bg-black group-hover:scale-110">
+                      <svg
+                        className="w-3.5 h-3.5 text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5L19.5 4.5m0 0H8.25m11.25 0v11.25" />
+                      </svg>
                     </span>
                   </div>
                 </div>
@@ -687,16 +736,16 @@ export default function Home() {
                 {/* Bottom Card Content */}
                 <div className="pt-3 pb-1 px-1 flex flex-col gap-2.5">
                   <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="text-[14.5px] sm:text-[15.5px] font-bold text-gray-900 tracking-tight group-hover:text-black transition-colors truncate">
+                    <h3 className="text-[14px] sm:text-[15px] font-bold text-gray-900 tracking-tight group-hover:text-black transition-colors truncate">
                       {c.name}
                     </h3>
-                    <span className="text-[10.5px] sm:text-[11.5px] text-gray-400 font-normal truncate max-w-[48%] text-right">
+                    <span className="text-[10.5px] sm:text-[11px] text-gray-400 font-normal truncate max-w-[48%] text-right">
                       {c.tag || c.description}
                     </span>
                   </div>
 
                   {/* Pill Action Button */}
-                  <div className="w-full py-2.5 sm:py-2.75 rounded-full bg-[#181a1f] group-hover:bg-black text-white text-[11.5px] sm:text-xs font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] shadow-2xs">
+                  <div className="w-full py-2 sm:py-2.5 rounded-full bg-[#181a1f] group-hover:bg-black text-white text-[11px] sm:text-xs font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] shadow-2xs">
                     <span>Explore Now</span>
                     <ArrowRightIcon className="w-3 h-3 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </div>
