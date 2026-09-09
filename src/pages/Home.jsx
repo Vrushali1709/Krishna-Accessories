@@ -18,7 +18,6 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import NewArrivalsSection from '../components/NewArrivalsSection';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -755,15 +754,6 @@ export default function Home() {
           })}
         </div>
       </section>
-
-      {/* ================= NEW ARRIVALS (LATEST DROP) ================= */}
-      <NewArrivalsSection
-        products={products}
-        onToast={(msg) => {
-          setToastMessage(msg);
-          setTimeout(() => setToastMessage(''), 3000);
-        }}
-      />
 
       {/* ================= PROMOTIONAL VOUCHER ================= */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
