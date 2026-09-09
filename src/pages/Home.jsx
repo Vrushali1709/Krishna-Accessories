@@ -447,17 +447,67 @@ export default function Home() {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
   };
 
-  // Coverflow Featured Carousel State
-  const [featuredIndex, setFeaturedIndex] = useState(0);
+  // Featured Products Carousel State
+  const featuredScrollRef = useRef(null);
+  const [canScrollLeftFeatured, setCanScrollLeftFeatured] = useState(false);
+  const [canScrollRightFeatured, setCanScrollRightFeatured] = useState(true);
+  const [isDraggingFeatured, setIsDraggingFeatured] = useState(false);
+  const [startFeaturedX, setStartFeaturedX] = useState(0);
+  const [scrollLeftFeatured, setScrollLeftFeatured] = useState(0);
+  const [hasMovedFeatured, setHasMovedFeatured] = useState(false);
   const [wishlistIds, setWishlistIds] = useState(() => new Set(getWishlist().map((i) => Number(i.id))));
   const [addedItemMap, setAddedItemMap] = useState({});
-  const [fStartX, setFStartX] = useState(0);
-  const [fIsDragging, setFIsDragging] = useState(false);
-  const [fHasMoved, setFHasMoved] = useState(false);
+
+  const checkFeaturedScroll = useCallback(() => {
+    if (!featuredScrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = featuredScrollRef.current;
+    setCanScrollLeftFeatured(scrollLeft > 10);
+    setCanScrollRightFeatured(scrollLeft < scrollWidth - clientWidth - 10);
+  }, []);
 
   useEffect(() => {
-    setFeaturedIndex(0);
-  }, [selectedEditionCategory]);
+    const el = featuredScrollRef.current;
+    if (!el) return;
+    checkFeaturedScroll();
+    el.addEventListener('scroll', checkFeaturedScroll, { passive: true });
+    window.addEventListener('resize', checkFeaturedScroll);
+    return () => {
+      el.removeEventListener('scroll', checkFeaturedScroll);
+      window.removeEventListener('resize', checkFeaturedScroll);
+    };
+  }, [checkFeaturedScroll, filteredFeatured]);
+
+  const scrollFeatured = (direction) => {
+    if (!featuredScrollRef.current) return;
+    const container = featuredScrollRef.current;
+    const cardWidth = container.firstElementChild?.clientWidth || 270;
+    const scrollAmount = (cardWidth + 18) * 2;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleFeaturedMouseDown = (e) => {
+    if (!featuredScrollRef.current) return;
+    setIsDraggingFeatured(true);
+    setHasMovedFeatured(false);
+    setStartFeaturedX(e.pageX - featuredScrollRef.current.offsetLeft);
+    setScrollLeftFeatured(featuredScrollRef.current.scrollLeft);
+  };
+
+  const handleFeaturedMouseMove = (e) => {
+    if (!isDraggingFeatured || !featuredScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - featuredScrollRef.current.offsetLeft;
+    const walk = (x - startFeaturedX) * 1.5;
+    if (Math.abs(walk) > 5) setHasMovedFeatured(true);
+    featuredScrollRef.current.scrollLeft = scrollLeftFeatured - walk;
+  };
+
+  const handleFeaturedMouseUp = () => {
+    setIsDraggingFeatured(false);
+  };
 
   useEffect(() => {
     const handleWishSync = () => {
@@ -509,57 +559,6 @@ export default function Home() {
     setTimeout(() => {
       setAddedItemMap((prev) => ({ ...prev, [product.id]: false }));
     }, 1500);
-  };
-
-  const handlePrevFeatured = () => {
-    if (filteredFeatured.length === 0) return;
-    setFeaturedIndex((prev) => (prev > 0 ? prev - 1 : filteredFeatured.length - 1));
-  };
-
-  const handleNextFeatured = () => {
-    if (filteredFeatured.length === 0) return;
-    setFeaturedIndex((prev) => (prev < filteredFeatured.length - 1 ? prev + 1 : 0));
-  };
-
-  const handleFMouseDown = (e) => {
-    setFStartX(e.pageX);
-    setFIsDragging(true);
-    setFHasMoved(false);
-  };
-
-  const handleFMouseMove = (e) => {
-    if (!fIsDragging) return;
-    if (Math.abs(e.pageX - fStartX) > 8) {
-      setFHasMoved(true);
-    }
-  };
-
-  const handleFMouseUp = (e) => {
-    if (!fIsDragging) return;
-    setFIsDragging(false);
-    const diff = e.pageX - fStartX;
-    if (diff > 50) {
-      handlePrevFeatured();
-    } else if (diff < -50) {
-      handleNextFeatured();
-    }
-  };
-
-  const handleFTouchStart = (e) => {
-    setFStartX(e.touches[0].clientX);
-    setFIsDragging(true);
-    setFHasMoved(false);
-  };
-
-  const handleFTouchEnd = (e) => {
-    if (!fIsDragging) return;
-    setFIsDragging(false);
-    const diff = e.changedTouches[0].clientX - fStartX;
-    if (diff > 45) {
-      handlePrevFeatured();
-    } else if (diff < -45) {
-      handleNextFeatured();
-    }
   };
 
   const handleAddToCart = (product) => {
@@ -896,29 +895,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= LUXURY FEATURED PRODUCTS (3D COVERFLOW CAROUSEL) ================= */}
-      <section className="bg-gradient-to-b from-[#F9F6F0] via-[#FAF7F2] to-[#F9F6F0] border-y border-[#EFE8DC]/80 py-12 sm:py-16 lg:py-20 relative overflow-hidden">
-        {/* Soft Ambient Glows */}
-        <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-[#F3ECE2] blur-3xl opacity-60" />
-        <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-[#EDE4D8] blur-3xl opacity-60" />
+      {/* ================= LUXURY FEATURED PRODUCTS (SMOOTH HORIZONTAL CAROUSEL) ================= */}
+      <section className="bg-white border-y border-gray-200/80 py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
+            <div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.24em] text-gray-500 block mb-1">
+                OUR COLLECTION
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+                Featured Products
+              </h2>
+              <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
+                Certified authentic luxury pieces and trendsetting essentials crafted for distinction.
+              </p>
+            </div>
 
-          {/* Section Header (Centered Luxury Typography) */}
-          <div className="text-center mb-6 sm:mb-8">
-            <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.26em] text-[#9E8262] block mb-2 font-sans">
-              OUR COLLECTION
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-serif font-bold tracking-tight text-[#2B231D]">
-              Featured Products
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-[#7D756C] max-w-md mx-auto font-light leading-relaxed">
-              Explore our most popular items loved by customers
-            </p>
+            <div className="flex items-center gap-2.5 self-end sm:self-auto">
+              <Link
+                to="/shop"
+                className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
+              >
+                <span>Explore All</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => scrollFeatured('left')}
+                disabled={!canScrollLeftFeatured}
+                aria-label="Previous products"
+                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeftFeatured
+                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                  }`}
+              >
+                <ChevronLeftIcon className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scrollFeatured('right')}
+                disabled={!canScrollRightFeatured}
+                aria-label="Next products"
+                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRightFeatured
+                  ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                  }`}
+              >
+                <ChevronRightIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Interactive Category Filter Pills */}
-          <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 mb-4 sm:mb-6 no-scrollbar">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 sm:mb-8 no-scrollbar">
             {editionCategories.map((cat) => {
               const isActive = selectedEditionCategory === cat;
               return (
@@ -927,8 +960,8 @@ export default function Home() {
                   type="button"
                   onClick={() => setSelectedEditionCategory(cat)}
                   className={`rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${isActive
-                    ? 'bg-[#2B231D] text-white shadow-md scale-102 font-bold'
-                    : 'bg-white/85 text-[#7D756C] border border-[#EAE2D5] hover:bg-white hover:text-[#2B231D] shadow-2xs'
+                    ? 'bg-gray-950 text-white shadow-sm scale-102 font-bold'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-black'
                     }`}
                 >
                   {cat === 'All' ? 'All Editions' : cat}
@@ -937,230 +970,141 @@ export default function Home() {
             })}
           </div>
 
-          {/* 3D Circular Coverflow Carousel Section */}
+          {/* Smooth Scrolling Products Viewport */}
           {filteredFeatured.length > 0 ? (
-            <div className="relative w-full">
+            <div
+              ref={featuredScrollRef}
+              onMouseDown={handleFeaturedMouseDown}
+              onMouseMove={handleFeaturedMouseMove}
+              onMouseUp={handleFeaturedMouseUp}
+              onMouseLeave={handleFeaturedMouseUp}
+              className={`flex gap-3.5 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
+                isDraggingFeatured ? 'cursor-grabbing' : 'cursor-grab'
+              }`}
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {filteredFeatured.map((product, idx) => {
+                const inWish = wishlistIds.has(Number(product.id));
+                const badgeText = product.discount > 0
+                  ? `${product.discount}% OFF`
+                  : idx === 0
+                    ? 'BEST SELLER'
+                    : idx === 1
+                      ? 'TRENDING'
+                      : idx === 2
+                        ? 'POPULAR'
+                        : 'NEW';
 
-              {/* Floating Navigation Arrows */}
-              <button
-                type="button"
-                onClick={handlePrevFeatured}
-                aria-label="Previous product"
-                className="absolute left-1 sm:left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-full bg-white/95 border border-[#E8DFD3] text-[#2B231D] shadow-[0_6px_22px_rgba(0,0,0,0.10)] hover:bg-white hover:scale-110 active:scale-95 transition-all cursor-pointer"
-              >
-                <ChevronLeftIcon className="w-5 h-5 text-[#2B231D]" />
-              </button>
+                return (
+                  <div
+                    key={product.id}
+                    className="group relative flex-shrink-0 w-[235px] sm:w-[260px] md:w-[280px] lg:w-[290px] rounded-[26px] p-4 sm:p-5 flex flex-col justify-between bg-white border border-gray-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.10)] hover:border-gray-300 hover:-translate-y-1.5 transition-all duration-300 snap-start select-none"
+                  >
+                    {/* Top Row: Pill Badge & Wishlist Heart */}
+                    <div className="flex items-center justify-between pointer-events-none">
+                      <span className="rounded-full bg-gray-100 border border-gray-200/80 text-gray-900 text-[10px] sm:text-[10.5px] font-bold px-3 py-1 uppercase tracking-wider shadow-2xs truncate max-w-[65%]">
+                        {badgeText}
+                      </span>
 
-              <button
-                type="button"
-                onClick={handleNextFeatured}
-                aria-label="Next product"
-                className="absolute right-1 sm:right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-full bg-white/95 border border-[#E8DFD3] text-[#2B231D] shadow-[0_6px_22px_rgba(0,0,0,0.10)] hover:bg-white hover:scale-110 active:scale-95 transition-all cursor-pointer"
-              >
-                <ChevronRightIcon className="w-5 h-5 text-[#2B231D]" />
-              </button>
+                      <button
+                        type="button"
+                        onClick={(e) => handleToggleWishlist(e, product)}
+                        aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
+                        className={`pointer-events-auto h-8 w-8 rounded-full border border-gray-200/80 bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors flex items-center justify-center ${
+                          inWish ? 'text-rose-600 bg-rose-50 border-rose-200 shadow-rose-100 shadow-2xs' : 'text-gray-600'
+                        }`}
+                      >
+                        <HeartIcon className="w-4 h-4 transition-colors" filled={inWish} />
+                      </button>
+                    </div>
 
-              {/* 5-Card Circular Coverflow Viewport */}
-              <div
-                onMouseDown={handleFMouseDown}
-                onMouseMove={handleFMouseMove}
-                onMouseUp={handleFMouseUp}
-                onTouchStart={handleFTouchStart}
-                onTouchEnd={handleFTouchEnd}
-                className="flex items-center justify-center gap-2.5 sm:gap-3.5 lg:gap-5 py-6 sm:py-10 select-none overflow-hidden min-h-[460px] sm:min-h-[500px]"
-              >
-                {[-2, -1, 0, 1, 2].map((offset) => {
-                  const N = filteredFeatured.length;
-                  const productIndex = (featuredIndex + offset + N * 100) % N;
-                  const product = filteredFeatured[productIndex];
-                  if (!product) return null;
-
-                  const isCenter = offset === 0;
-                  const isNear = Math.abs(offset) === 1;
-                  const inWish = wishlistIds.has(Number(product.id));
-
-                  const badgeText = product.discount > 0
-                    ? `${product.discount}% OFF`
-                    : productIndex === 0
-                      ? 'BEST SELLER'
-                      : productIndex === 1
-                        ? 'TRENDING'
-                        : productIndex === 2
-                          ? 'POPULAR'
-                          : 'NEW';
-
-                  return (
-                    <div
-                      key={`slot-${offset}-${product.id}`}
-                      onClick={() => {
-                        if (offset !== 0) {
-                          setFeaturedIndex((prev) => (prev + offset + N * 100) % N);
-                        }
+                    {/* Centered Product Image */}
+                    <Link
+                      to={`/product/${product.id}`}
+                      onClick={(e) => {
+                        if (hasMovedFeatured) e.preventDefault();
                       }}
-                      className={`group relative rounded-[30px] sm:rounded-[34px] p-3.5 sm:p-5 flex flex-col justify-between transition-all duration-500 select-none ${
-                        isCenter
-                          ? 'w-[265px] sm:w-[290px] md:w-[310px] scale-100 sm:scale-105 z-30 bg-white shadow-[0_24px_55px_rgba(175,140,105,0.22)] border-2 border-[#E5D7C5] ring-4 ring-[#B89B7D]/15 opacity-100'
-                          : isNear
-                            ? 'w-[220px] sm:w-[250px] md:w-[270px] scale-90 sm:scale-95 z-20 bg-white/95 shadow-[0_10px_30px_rgba(0,0,0,0.06)] border border-[#EFE8DC] opacity-80 sm:opacity-90 hover:opacity-100 hover:scale-[0.98] cursor-pointer'
-                            : 'w-[190px] sm:w-[220px] md:w-[240px] scale-80 sm:scale-85 z-10 bg-white/90 shadow-[0_6px_20px_rgba(0,0,0,0.04)] border border-[#EFE8DC] opacity-50 sm:opacity-70 hover:opacity-85 hover:scale-90 cursor-pointer hidden md:flex'
-                      }`}
+                      className="block my-2"
                     >
-                      {/* Top Badge & Wishlist Heart */}
-                      <div className="flex items-center justify-between pointer-events-none">
-                        <span className="rounded-full bg-[#F6EFE6] text-[#947350] text-[9.5px] sm:text-[10.5px] font-bold px-2.5 sm:px-3 py-0.5 sm:py-1 uppercase tracking-wider shadow-2xs truncate max-w-[65%]">
-                          {badgeText}
-                        </span>
+                      <img
+                        src={product.image || product.images?.[0]}
+                        alt={product.name}
+                        className="h-44 sm:h-48 md:h-52 w-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none"
+                        loading="lazy"
+                      />
+                    </Link>
 
-                        <button
-                          type="button"
-                          onClick={(e) => handleToggleWishlist(e, product)}
-                          aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
-                          className={`pointer-events-auto h-7 w-7 sm:h-8 sm:w-8 rounded-full border flex items-center justify-center transition-all ${
-                            inWish
-                              ? 'bg-rose-50 border-rose-200 text-rose-600 shadow-rose-100 shadow-xs'
-                              : 'border-[#EAE2D5] bg-white/90 text-[#8C8276] hover:text-rose-600 hover:border-rose-200'
-                          }`}
-                        >
-                          <HeartIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors" filled={inWish} />
-                        </button>
-                      </div>
+                    {/* Micro Dots Indicator */}
+                    <div className="flex items-center justify-center gap-1.5 py-1 pointer-events-none">
+                      <span className="h-1.5 w-1.5 rounded-full bg-gray-950" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />
+                    </div>
 
-                      {/* Product Centered Image */}
+                    {/* Product Details */}
+                    <div className="mt-1">
                       <Link
                         to={`/product/${product.id}`}
                         onClick={(e) => {
-                          if (!isCenter) {
-                            e.preventDefault();
-                            setFeaturedIndex((prev) => (prev + offset + N * 100) % N);
-                          }
+                          if (hasMovedFeatured) e.preventDefault();
                         }}
-                        className="block my-1.5 sm:my-2"
+                        className="block"
                       >
-                        <img
-                          src={product.image || product.images?.[0]}
-                          alt={product.name}
-                          className="h-36 sm:h-44 md:h-48 w-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none"
-                          loading="lazy"
-                        />
+                        <h3 className="font-bold text-gray-950 text-sm sm:text-base md:text-[16px] truncate group-hover:text-black transition-colors">
+                          {product.name}
+                        </h3>
                       </Link>
 
-                      {/* Micro Dots Indicator */}
-                      <div className="flex items-center justify-center gap-1.5 py-0.5 sm:py-1 pointer-events-none">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#AC8C6B]" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#DCD1C3]" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#DCD1C3]" />
-                      </div>
+                      <p className="text-[11px] sm:text-xs text-gray-500 line-clamp-2 mt-1 leading-relaxed">
+                        {product.description || 'Crafted with premium materials and signature design excellence.'}
+                      </p>
 
-                      {/* Product Title & Details */}
-                      <div className="mt-1">
-                        <Link
-                          to={`/product/${product.id}`}
-                          onClick={(e) => {
-                            if (!isCenter) {
-                              e.preventDefault();
-                              setFeaturedIndex((prev) => (prev + offset + N * 100) % N);
-                            }
-                          }}
-                          className="block"
-                        >
-                          <h3 className="font-serif font-bold text-[#241F1A] text-sm sm:text-base md:text-[17px] truncate hover:text-[#947350] transition-colors">
-                            {product.name}
-                          </h3>
-                        </Link>
-
-                        <p className="text-[10.5px] sm:text-xs text-[#8A8277] line-clamp-2 mt-0.5 sm:mt-1 leading-relaxed">
-                          {product.description || 'Crafted with premium materials and signature design excellence.'}
-                        </p>
-
-                        <div className="flex items-center gap-1 mt-1.5 sm:mt-2 text-[10.5px] sm:text-xs text-[#7A7267] font-medium">
-                          <StarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" filled={true} />
-                          <span>{product.rating || '4.9'} ({product.reviewsCount || 85 + (productIndex % 5) * 15})</span>
-                        </div>
-                      </div>
-
-                      {/* Bottom Price & Action Row */}
-                      <div className="flex items-center justify-between gap-1.5 sm:gap-2 mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-[#F5EFE6]">
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-sm sm:text-base md:text-lg font-bold text-[#241F1A]">
-                            ₹{product.price.toLocaleString('en-IN')}
-                          </span>
-                          {product.oldPrice && product.oldPrice > product.price && (
-                            <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                              ₹{product.oldPrice.toLocaleString('en-IN')}
-                            </span>
-                          )}
-                        </div>
-
-                        {isCenter ? (
-                          <button
-                            type="button"
-                            onClick={(e) => handleFeaturedAddToCart(e, product)}
-                            className="rounded-full bg-[#AC8C6B] hover:bg-[#967655] text-white px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold flex items-center gap-1 sm:gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
-                          >
-                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            <span>{addedItemMap[product.id] ? '✓ Added' : 'Add to Cart'}</span>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={(e) => handleFeaturedAddToCart(e, product)}
-                            className="rounded-full bg-[#F5ECE0] hover:bg-[#AC8C6B] text-[#8C6B47] hover:text-white h-7.5 w-7.5 sm:h-9 sm:w-9 flex items-center justify-center transition-all shadow-2xs active:scale-95 cursor-pointer shrink-0"
-                            title="Add to Cart"
-                          >
-                            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                          </button>
-                        )}
+                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-600 font-medium">
+                        <StarIcon className="w-3.5 h-3.5 text-amber-500" filled={true} />
+                        <span>{product.rating || '4.9'} ({product.reviewsCount || 85 + (idx % 5) * 15})</span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
 
-              {/* Pagination Dots */}
-              <div className="flex items-center justify-center gap-2 mt-2 sm:mt-4">
-                {filteredFeatured.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setFeaturedIndex(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                    className={`transition-all duration-300 cursor-pointer ${
-                      i === featuredIndex
-                        ? 'h-2.5 w-7 rounded-full bg-[#AC8C6B] shadow-xs'
-                        : 'h-2.5 w-2.5 rounded-full border-2 border-[#D8CCC0] hover:border-[#AC8C6B]'
-                    }`}
-                  />
-                ))}
-              </div>
+                    {/* Bottom Price & Add to Cart Button */}
+                    <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-gray-100">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-base sm:text-lg font-bold text-gray-950">
+                          ₹{product.price.toLocaleString('en-IN')}
+                        </span>
+                        {product.oldPrice && product.oldPrice > product.price && (
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{product.oldPrice.toLocaleString('en-IN')}
+                          </span>
+                        )}
+                      </div>
 
+                      <button
+                        type="button"
+                        onClick={(e) => handleFeaturedAddToCart(e, product)}
+                        className="rounded-full bg-[#111827] hover:bg-black text-white px-3.5 sm:px-4 py-2 text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span>{addedItemMap[product.id] ? '✓ Added' : 'Add to Cart'}</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ) : (
-            <div className="text-center py-12 rounded-3xl bg-white/60 border border-[#EFE8DC]">
-              <p className="text-sm font-semibold text-[#7D756C]">No products found in this category.</p>
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
+              <p className="text-sm font-semibold text-gray-700">No products found in this category.</p>
               <button
                 type="button"
                 onClick={() => setSelectedEditionCategory('All')}
-                className="mt-3 text-xs font-bold text-[#2B231D] underline cursor-pointer"
+                className="mt-3 text-xs font-bold text-black underline cursor-pointer"
               >
                 View all editions
               </button>
             </div>
           )}
-
-          {/* Bottom Link to Shop */}
-          <div className="text-center mt-8">
-            <Link
-              to="/shop"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#8C6B47] hover:text-[#2B231D] hover:underline group"
-            >
-              <span>Explore All Catalog</span>
-              <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
 
         </div>
       </section>
