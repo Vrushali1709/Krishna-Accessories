@@ -608,31 +608,9 @@ export default function Home() {
               <span>View All</span>
             </Link>
 
-            <button
-              type="button"
-              onClick={() => scrollCarousel('left')}
-              disabled={!canScrollLeft}
-              aria-label="Previous categories"
-              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollLeft
-                ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                }`}
-            >
-              <ChevronLeftIcon className="w-4 h-4" />
-            </button>
+           
 
-            <button
-              type="button"
-              onClick={() => scrollCarousel('right')}
-              disabled={!canScrollRight}
-              aria-label="Next categories"
-              className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-200 shadow-2xs ${canScrollRight
-                ? 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 cursor-pointer'
-                : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                }`}
-            >
-              <ChevronRightIcon className="w-4 h-4" />
-            </button>
+          
           </div>
         </div>
 
