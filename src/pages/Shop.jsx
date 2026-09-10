@@ -5,7 +5,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { ProductCardSkeleton } from '../components/SkeletonLoader';
-import Reveal from '../components/Reveal';
 import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
 import { getCurrentUser } from '../utils/auth';
 import { addToCart } from '../utils/cart';
@@ -187,12 +186,12 @@ export default function Shop() {
       {/* Minimalist Luxury Catalog Header */}
       <section className="bg-white border-b border-gray-200/80 py-4 sm:py-7">
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-          <Reveal direction="up" className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 sm:gap-4">
             <div>
-              <span className="text-[9px] sm:text-[9.5px] font-semibold uppercase tracking-[0.18em] text-[#8C6734]">
+              <span className="text-[9px] sm:text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
                 Authorized Luxury Catalog
               </span>
-              <h1 className="mt-0.5 text-lg sm:text-2xl font-bold tracking-tight text-gray-950 font-serif">
+              <h1 className="mt-0.5 text-lg sm:text-2xl font-bold tracking-tight text-gray-950">
                 {category === 'All' ? 'Shop All Products' : `${category} Collection`}
               </h1>
               <p className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-gray-500 max-w-md">
@@ -206,7 +205,7 @@ export default function Shop() {
                 <button
                   key={cat}
                   onClick={() => handleCategorySelect(cat)}
-                  className={`shrink-0 rounded-full px-3 py-1 text-[10.5px] sm:text-[11px] font-medium transition-all duration-150 active:scale-97 cursor-pointer ${category === cat
+                  className={`shrink-0 rounded-full px-3 py-1 text-[10.5px] sm:text-[11px] font-medium transition-all duration-150 active:scale-97 ${category === cat
                     ? 'bg-[#0F172A] text-amber-200 shadow-2xs font-semibold'
                     : 'bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 hover:text-black'
                     }`}
@@ -215,7 +214,7 @@ export default function Shop() {
                 </button>
               ))}
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 

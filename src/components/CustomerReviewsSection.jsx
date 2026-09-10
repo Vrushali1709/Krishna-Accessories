@@ -26,7 +26,7 @@ const DEFAULT_REVIEWS = [
   {
     id: 3,
     name: 'Rohan Patel',
-    location: 'Bandra, Mumbai',
+    location: 'Surat, Gujarat',
     rating: 5,
     category: 'Audio & Gadgets',
     product: 'Sony WH-1000XM5 Noise Cancelling',
@@ -66,7 +66,7 @@ const DEFAULT_REVIEWS = [
   {
     id: 7,
     name: 'Harsh Joshi',
-    location: 'Pune, Maharashtra',
+    location: 'Vadodara, Gujarat',
     rating: 5,
     category: 'Chronograph Watches',
     product: 'Casio Edifice Sapphire Chronograph',
@@ -284,8 +284,8 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
             className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
-                ? 'w-7 bg-gray-950'
-                : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+              ? 'w-7 bg-gray-950'
+              : 'w-1.5 bg-gray-300 hover:bg-gray-400'
               }`}
           />
         ))}

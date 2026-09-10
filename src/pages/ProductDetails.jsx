@@ -7,11 +7,8 @@ import ProductCard from '../components/ProductCard';
 import { getProducts, getProductById, getProductReviews, addProductReview, isInWishlist, toggleWishlist } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import Reveal from '../components/Reveal';
-import { SHOP_INFO } from '../utils/shopInfo';
-import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon, WhatsAppIcon, MapPinIcon } from '../components/Icons';
+import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon } from '../components/Icons';
 import BrandSpinner from '../components/BrandSpinner';
-import { Sparkles, ShieldCheck, Award } from 'lucide-react';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -382,41 +379,17 @@ export default function ProductDetails() {
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="rounded-full border border-gray-300 bg-[#F4F4F6] py-2.5 sm:py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-900 transition hover:bg-gray-200 active:scale-98 cursor-pointer"
+                  className="rounded-full border border-gray-300 bg-[#F4F4F6] py-2.5 sm:py-3 text-center text-xs font-bold uppercase tracking-wider text-gray-900 transition hover:bg-gray-200 active:scale-98"
                 >
                   Add to Bag
                 </button>
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="rounded-full bg-[#111827] py-2.5 sm:py-3 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-black shadow-xs border border-gray-900 active:scale-98 cursor-pointer"
+                  className="rounded-full bg-[#111827] py-2.5 sm:py-3 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-black shadow-xs border border-gray-900 active:scale-98"
                 >
                   Buy Now
                 </button>
-              </div>
-
-              {/* Direct WhatsApp Concierge CTA */}
-              <a
-                href={`https://wa.me/${SHOP_INFO.whatsappNumber}?text=${encodeURIComponent(`Hello Krishna Accessories Mumbai Concierge, I would like to inquire about ${product.name} (SKU: ${product.sku || product.id}) priced at ₹${product.price}.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-emerald-300 bg-emerald-50/80 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold py-2.5 px-4 transition shadow-2xs"
-              >
-                <WhatsAppIcon className="w-4 h-4 text-emerald-600" />
-                <span>Inquire with Mumbai Concierge on WhatsApp</span>
-              </a>
-
-              {/* Mumbai Dispatch Guarantee */}
-              <div className="rounded-xl border border-amber-200/70 bg-amber-50/50 p-3 flex items-start gap-2.5 text-xs text-amber-950">
-                <MapPinIcon className="w-4 h-4 text-[#8C6734] shrink-0 mt-0.5" />
-                <div>
-                  <strong className="block text-[11px] uppercase tracking-wider text-[#8C6734]">
-                    Dispatched from Mumbai Flagship Sanctuary
-                  </strong>
-                  <span className="text-[11px] text-gray-600 leading-snug">
-                    {SHOP_INFO.address}. Insured BlueDart & Delhivery dispatch with tamper-proof seal.
-                  </span>
-                </div>
               </div>
 
             </div>
@@ -431,8 +404,8 @@ export default function ProductDetails() {
           <div className="flex border-b border-gray-200 gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
             <button
               onClick={() => setActiveTab('specs')}
-              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap cursor-pointer ${activeTab === 'specs'
-                ? 'border-b-2 border-[#111827] text-gray-950 font-bold'
+              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'specs'
+                ? 'border-b-2 border-[#111827] text-gray-950'
                 : 'text-gray-400 hover:text-black'
                 }`}
             >
@@ -440,8 +413,8 @@ export default function ProductDetails() {
             </button>
             <button
               onClick={() => setActiveTab('reviews')}
-              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap cursor-pointer ${activeTab === 'reviews'
-                ? 'border-b-2 border-[#111827] text-gray-950 font-bold'
+              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'reviews'
+                ? 'border-b-2 border-[#111827] text-gray-950'
                 : 'text-gray-400 hover:text-black'
                 }`}
             >
@@ -449,8 +422,8 @@ export default function ProductDetails() {
             </button>
             <button
               onClick={() => setActiveTab('delivery')}
-              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap cursor-pointer ${activeTab === 'delivery'
-                ? 'border-b-2 border-[#111827] text-gray-950 font-bold'
+              className={`pb-2.5 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${activeTab === 'delivery'
+                ? 'border-b-2 border-[#111827] text-gray-950'
                 : 'text-gray-400 hover:text-black'
                 }`}
             >
@@ -506,7 +479,7 @@ export default function ProductDetails() {
                   <button
                     type="button"
                     onClick={() => setReviewModalOpen(true)}
-                    className="rounded-full bg-[#111827] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer"
+                    className="rounded-full bg-[#111827] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black transition"
                   >
                     Write a Review
                   </button>
@@ -546,30 +519,10 @@ export default function ProductDetails() {
 
             {/* Delivery Tab */}
             {activeTab === 'delivery' && (
-              <div className="space-y-3 text-xs text-gray-700 leading-relaxed animate-fade-in">
-                <div className="flex items-start gap-2.5">
-                  <span className="text-base">📦</span>
-                  <div>
-                    <strong className="text-gray-950 block font-semibold">Express Logistics & Pan-India Dispatch:</strong>
-                    <span>All orders are fulfilled from our Mumbai Flagship hub ({SHOP_INFO.address}) within 24 hours. Complimentary express air delivery applies to orders above ₹2,000 via BlueDart and Delhivery.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <span className="text-base">🔄</span>
-                  <div>
-                    <strong className="text-gray-950 block font-semibold">7-Day Return & Replacement Privilege:</strong>
-                    <span>If you are not completely delighted with your purchase, initiate a return from your profile within 7 days for an immediate refund or replacement.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <span className="text-base">🛡️</span>
-                  <div>
-                    <strong className="text-gray-950 block font-semibold">100% Certified Authentic Guarantee:</strong>
-                    <span>Every timepiece and accessory arrives with stamped manufacturer warranty cards, verified serial numbers, and authentic brand packaging.</span>
-                  </div>
-                </div>
+              <div className="space-y-2 text-xs text-gray-700 leading-relaxed animate-fade-in">
+                <p>📦 <strong>Express Shipping:</strong> Orders are dispatched within 24 hours via BlueDart or Delhivery. Complimentary express delivery applies to orders above ₹2,000.</p>
+                <p>🔄 <strong>7-Day Returns:</strong> If you are not completely satisfied, return unopened goods in original pristine packaging with tags intact for an immediate refund.</p>
+                <p>🛡️ <strong>Certified Authentic Guarantee:</strong> Every item is verified by our boutique inspection specialists prior to dispatch with official warranty cards.</p>
               </div>
             )}
           </div>

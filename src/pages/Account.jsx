@@ -90,9 +90,9 @@ export default function Account() {
       lastName: currentUser?.name?.split(' ')[1] || 'Patel',
       phone: currentUser?.phone || '9876512345',
       address: '',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400026',
+      city: 'Ahmedabad',
+      state: 'Gujarat',
+      pincode: '380054',
       isDefault: addresses.length === 0
     });
     setAddrModalOpen(true);
@@ -624,8 +624,8 @@ export default function Account() {
                           type="button"
                           onClick={() => handleSelectOrderToTrack(ord.id)}
                           className={`flex items-center gap-2 rounded-xs border px-3 py-1.5 text-xs transition cursor-pointer ${isSelected
-                              ? 'border-[#121316] bg-[#121316] text-white shadow-xs'
-                              : 'border-stone-200 bg-[#FAF9F5] text-stone-700 hover:border-stone-400 hover:bg-white'
+                            ? 'border-[#121316] bg-[#121316] text-white shadow-xs'
+                            : 'border-stone-200 bg-[#FAF9F5] text-stone-700 hover:border-stone-400 hover:bg-white'
                             }`}
                         >
                           <span className="font-mono font-bold">{ord.id}</span>
@@ -823,12 +823,12 @@ export default function Account() {
                             {/* Step Indicator Node */}
                             <span
                               className={`absolute -left-[31px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 bg-white ${isCancelledNode
-                                  ? 'border-rose-600 bg-rose-600 text-white'
-                                  : isRefundNode
+                                ? 'border-rose-600 bg-rose-600 text-white'
+                                : isRefundNode
+                                  ? 'border-emerald-600 bg-emerald-600 text-white'
+                                  : isDone
                                     ? 'border-emerald-600 bg-emerald-600 text-white'
-                                    : isDone
-                                      ? 'border-emerald-600 bg-emerald-600 text-white'
-                                      : 'border-stone-300 bg-white'
+                                    : 'border-stone-300 bg-white'
                                 }`}
                             >
                               {isCancelledNode ? (

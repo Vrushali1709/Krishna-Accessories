@@ -146,21 +146,21 @@ export default function AboutUs() {
       {/* ========================================================================= */}
       <section className="relative bg-white border-b border-neutral-200/80 overflow-hidden">
         {/* Subtle decorative background lines */}
-        <div 
-          className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
             backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
             backgroundSize: '24px 24px'
           }}
-          aria-hidden="true" 
+          aria-hidden="true"
         />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            
+
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              
+
               {/* Eyebrow with Gentle Pulse */}
               <Reveal delay={0} direction="up">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 shadow-2xs">
@@ -236,7 +236,7 @@ export default function AboutUs() {
                       alt="Authentic Luxury Timepieces & Accessories"
                       className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    
+
                     {/* Discreet Bottom Label with subtle glassmorphism */}
                     <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-lg border border-neutral-200/80 flex items-center justify-between text-xs shadow-md transition-all duration-300 group-hover:bg-white">
                       <div>
@@ -262,7 +262,7 @@ export default function AboutUs() {
       <section className="bg-[#FAF8F5] border-b border-neutral-200/80 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            
+
             <Reveal delay={50} direction="up" className="text-center md:text-left">
               <div className="space-y-1">
                 <p className="font-serif text-3xl sm:text-4xl font-semibold text-neutral-950 tracking-tight text-[#8C6734]">
@@ -300,7 +300,7 @@ export default function AboutUs() {
                   Orders Fulfilled
                 </p>
                 <p className="text-[11px] text-neutral-500">
-                  Across Mumbai & nationwide delivery
+                  Across Gujarat & nationwide delivery
                 </p>
               </div>
             </Reveal>
@@ -328,7 +328,7 @@ export default function AboutUs() {
       {/* ========================================================================= */}
       <section className="py-14 sm:py-16 bg-white border-b border-neutral-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
+
           <Reveal delay={0} direction="up">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div>
@@ -350,7 +350,7 @@ export default function AboutUs() {
           </Reveal>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            
+
             {/* Watches */}
             <Reveal delay={50} direction="up">
               <Link
@@ -460,9 +460,9 @@ export default function AboutUs() {
       {/* ========================================================================= */}
       <section id="our-story" className="py-16 sm:py-24 bg-[#FAFAFB] border-b border-neutral-200/80 scroll-mt-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            
+
             {/* Left Column: Authentic Craftsmanship Image */}
             <div className="lg:col-span-5 order-2 lg:order-1">
               <Reveal delay={100} direction="right">
@@ -484,7 +484,7 @@ export default function AboutUs() {
                       Authenticated Since Day One
                     </p>
                     <p className="text-[11px] text-neutral-500 mt-0.5">
-                      Mumbai's trusted multi-brand store with verified provenance.
+                      Gujarat's trusted multi-brand store with verified provenance.
                     </p>
                   </div>
                 </div>
@@ -493,7 +493,7 @@ export default function AboutUs() {
 
             {/* Right Column: Genuine Narrative Copy */}
             <div className="lg:col-span-7 order-1 lg:order-2 space-y-5 text-left">
-              
+
               <Reveal delay={0} direction="left">
                 <div>
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6734] flex items-center gap-2">
@@ -558,7 +558,7 @@ export default function AboutUs() {
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 bg-white border-b border-neutral-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
+
           {/* Section Header */}
           <Reveal delay={0} direction="up">
             <div className="text-center max-w-2xl mx-auto space-y-2.5 mb-12 sm:mb-16">
@@ -576,7 +576,7 @@ export default function AboutUs() {
 
           {/* 3 Value Blocks */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            
+
             {/* 01 — AUTHENTICITY */}
             <Reveal delay={80} direction="up">
               <div className="h-full p-7 rounded-xl bg-[#FAFAFB] border border-neutral-200/80 hover:border-[#C5A880] hover:bg-white transition-all duration-300 shadow-2xs hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between text-left group">
@@ -681,7 +681,7 @@ export default function AboutUs() {
       <section className="bg-[#111827] text-white py-16 sm:py-20 border-b border-neutral-800 relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            
+
             {/* Left Content */}
             <div className="lg:col-span-6 space-y-5 text-left">
               <Reveal delay={0} direction="up">
@@ -704,7 +704,7 @@ export default function AboutUs() {
 
               {/* 3 Trust Indicators */}
               <div className="space-y-3 pt-1">
-                
+
                 <Reveal delay={180} direction="up">
                   <div className="flex items-start gap-3.5 p-3.5 rounded-lg bg-white/5 border border-neutral-800 hover:border-[#C5A880]/50 transition-all duration-200">
                     <div className="w-7 h-7 rounded-md bg-[#C5A880]/15 flex items-center justify-center shrink-0 text-[#C5A880]">
@@ -782,10 +782,10 @@ export default function AboutUs() {
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 bg-[#FAFAFB] border-b border-neutral-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
+
           <Reveal delay={50} direction="up">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 rounded-2xl overflow-hidden border border-neutral-200/80 shadow-md bg-white">
-              
+
               {/* Left Image: Real Store Interior */}
               <div className="lg:col-span-5 relative min-h-[260px] lg:min-h-full group">
                 <img
@@ -804,7 +804,7 @@ export default function AboutUs() {
 
               {/* Right Information Panel */}
               <div className="lg:col-span-7 p-7 sm:p-10 lg:p-12 flex flex-col justify-between space-y-6 text-left">
-                
+
                 <div>
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6734] flex items-center gap-2">
                     <span className="w-5 h-[1.5px] bg-[#8C6734]" />
@@ -820,7 +820,7 @@ export default function AboutUs() {
 
                 {/* Clean Location & Hours Details */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 border-t border-neutral-100">
-                  
+
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-900">
                       <MapPin className="w-3.5 h-3.5 text-[#8C6734]" />
@@ -890,7 +890,7 @@ export default function AboutUs() {
       {/* ========================================================================= */}
       <section className="py-20 sm:py-28 bg-white text-center border-t border-neutral-100">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 space-y-5">
-          
+
           <Reveal delay={0} direction="up">
             <div className="w-8 h-0.5 bg-[#8C6734] mx-auto" />
           </Reveal>

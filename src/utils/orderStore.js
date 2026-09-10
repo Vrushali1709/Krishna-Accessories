@@ -18,7 +18,7 @@ const defaultSuppliers = [
     rating: 4.9,
     productsCount: 6,
     totalEarnings: 148500,
-    address: "Shop No. 64, Heera Panna Shopping Center, Haji Ali, Mumbai - 400026"
+    address: "Unit 402, Time Center, Ring Road, Surat, Gujarat"
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const defaultSuppliers = [
     rating: 4.8,
     productsCount: 8,
     totalEarnings: 284000,
-    address: "Unit 12, Phoenix Palladium, Lower Parel, Mumbai, Maharashtra - 400013"
+    address: "Tech Park, SG Highway, Ahmedabad, Gujarat"
   },
   {
     id: 3,
@@ -44,7 +44,7 @@ const defaultSuppliers = [
     rating: 4.7,
     productsCount: 4,
     totalEarnings: 89400,
-    address: "Linking Road, Bandra West, Mumbai, Maharashtra - 400050"
+    address: "Industrial Area Phase 2, Rajkot, Gujarat"
   },
   {
     id: 4,
@@ -57,7 +57,7 @@ const defaultSuppliers = [
     rating: 4.5,
     productsCount: 3,
     totalEarnings: 0,
-    address: "Colaba Causeway, Fort, South Mumbai, Maharashtra - 400001"
+    address: "Textile Market, Ring Road, Surat, Gujarat"
   },
   {
     id: 5,
@@ -70,7 +70,7 @@ const defaultSuppliers = [
     rating: 4.6,
     productsCount: 2,
     totalEarnings: 0,
-    address: "BKC Commercial Hub, Bandra Kurla Complex, Mumbai, Maharashtra - 400051"
+    address: "Infocity, Gandhinagar, Gujarat"
   }
 ];
 
@@ -140,10 +140,10 @@ const defaultOrders = [
       lastName: "Patel",
       email: "rahul.patel@example.com",
       phone: "9876512345",
-      address: "Flat 1402, Sea Green Towers, Worli Sea Face",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400018"
+      address: "B-402, Shivalik Heights, Judges Bungalow Road, Bodakdev",
+      city: "Ahmedabad",
+      state: "Gujarat",
+      pincode: "380054"
     },
     items: [
       {
@@ -173,7 +173,7 @@ const defaultOrders = [
       { status: "Payment Confirmed", date: "31 Aug 2026, 10:16 AM", done: true, completed: true, stage: "Payment Confirmed", time: "31 Aug 2026, 10:16 AM", description: "256-bit SSL transaction verified" },
       { status: "Processing & Packing", date: "31 Aug 2026, 01:45 PM", done: true, completed: true, stage: "Processing & Packing", time: "31 Aug 2026, 01:45 PM", description: "Quality verified & tamper-proof sealed" },
       { status: "Shipped", date: "31 Aug 2026, 05:30 PM", done: true, completed: true, stage: "Shipped", time: "31 Aug 2026, 05:30 PM", description: "Handed over to BlueDart courier hub" },
-      { status: "Out for Delivery", date: "Expected Tomorrow", done: false, completed: false, stage: "Out for Delivery", time: "Expected Tomorrow", description: "Courier dispatch for final mile" },
+      { status: "Out for Delivery", date: "Expected Tomorrow", done: false, completed: false, stage: "Out for Delivery", time: "Expected Tomorrow", description: "Courier courier dispatch for final mile" },
       { status: "Delivered", date: "Expected 02 Sep 2026", done: false, completed: false, stage: "Delivered", time: "Expected 02 Sep 2026", description: "Delivery to customer" }
     ]
   },
@@ -184,10 +184,10 @@ const defaultOrders = [
       lastName: "Shah",
       email: "priya.shah@example.com",
       phone: "9723456789",
-      address: "402, Altamount Road, Cumballa Hill",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400026"
+      address: "12, Royal Palms Society, Alkapuri",
+      city: "Vadodara",
+      state: "Gujarat",
+      pincode: "390007"
     },
     items: [
       {
@@ -228,10 +228,10 @@ const defaultOrders = [
       lastName: "Mehta",
       email: "amit.mehta@example.com",
       phone: "9632145678",
-      address: "12B, Juhu Tara Road, Juhu",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400049"
+      address: "405, Silicon Valley, Near Pal RTO, Adajan",
+      city: "Surat",
+      state: "Gujarat",
+      pincode: "395009"
     },
     items: [
       {
@@ -271,7 +271,7 @@ const defaultNotifications = [
   {
     id: 1,
     title: "Welcome to Krishna Accessories",
-    message: "Thank you for choosing Mumbai's premier curated boutique for authenticated timepieces and essentials.",
+    message: "Thank you for choosing Ahmedabad's premier curated boutique for authenticated timepieces and essentials.",
     date: "Just now",
     unread: true,
     type: "info"

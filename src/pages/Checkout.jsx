@@ -7,7 +7,6 @@ import { clearCart, calculateCartSummary } from '../utils/cart';
 import { createOrder, getUserAddresses } from '../utils/orderStore';
 import { getCurrentUser } from '../utils/auth';
 import { ShieldCheckIcon, LockClosedIcon, BagIcon, ArrowRightIcon } from '../components/Icons';
-import Reveal from '../components/Reveal';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
@@ -151,39 +150,37 @@ export default function Checkout() {
 
       {/* Checkout Header */}
       <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal direction="up" className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-[#8C6734]">
-                Encrypted 256-Bit Transaction
-              </span>
-              <h1 className="mt-0.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950 font-serif">
-                Express Checkout
-              </h1>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Enter your client contact details & shipping address below to confirm your order.
-              </p>
-            </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
+              Encrypted 256-Bit Transaction
+            </span>
+            <h1 className="mt-0.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+              Express Checkout
+            </h1>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Enter your client contact details & shipping address below to confirm your order.
+            </p>
+          </div>
 
-            <div className="flex items-center gap-2">
-              {user && (
-                <button
-                  type="button"
-                  onClick={handleAutofillProfile}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 px-3.5 py-1.5 text-xs font-semibold text-gray-800 transition shadow-2xs cursor-pointer"
-                >
-                  <span>⚡ Autofill from Profile</span>
-                </button>
-              )}
+          <div className="flex items-center gap-2">
+            {user && (
               <button
                 type="button"
-                onClick={handleClearForm}
-                className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white hover:bg-gray-50 px-3.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-rose-600 transition shadow-2xs cursor-pointer"
+                onClick={handleAutofillProfile}
+                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 px-3.5 py-1.5 text-xs font-semibold text-gray-800 transition shadow-2xs"
               >
-                <span>Clear Form</span>
+                <span>⚡ Autofill from Profile</span>
               </button>
-            </div>
-          </Reveal>
+            )}
+            <button
+              type="button"
+              onClick={handleClearForm}
+              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white hover:bg-gray-50 px-3.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-rose-600 transition shadow-2xs"
+            >
+              <span>Clear Form</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -312,7 +309,7 @@ export default function Checkout() {
                       type="text"
                       name="city"
                       required
-                      placeholder="e.g. Mumbai"
+                      placeholder="e.g. Ahmedabad"
                       value={form.city}
                       onChange={handleChange}
                       className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
@@ -325,7 +322,7 @@ export default function Checkout() {
                       type="text"
                       name="state"
                       required
-                      placeholder="e.g. Maharashtra"
+                      placeholder="e.g. Gujarat"
                       value={form.state}
                       onChange={handleChange}
                       className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
