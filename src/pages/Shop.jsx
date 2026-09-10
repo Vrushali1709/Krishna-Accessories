@@ -15,21 +15,17 @@ export default function Shop() {
   const urlCategory = searchParams.get('category') || 'All';
   const urlBrand = searchParams.get('brand') || 'All';
   const urlSearch = searchParams.get('search') || '';
-  const urlSort = searchParams.get('sort') || 'featured';
-  const urlMinPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 0;
-  const urlMaxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 250000;
-  const urlInStock = searchParams.get('inStock') === 'true';
 
   const [products, setProducts] = useState(() => getProducts());
   const [categories, setCategories] = useState(() => ['All', ...getCategories()]);
 
   const [category, setCategory] = useState(urlCategory);
   const [selectedBrand, setSelectedBrand] = useState(urlBrand);
-  const [sort, setSort] = useState(urlSort);
+  const [sort, setSort] = useState('featured');
   const [search, setSearch] = useState(urlSearch);
-  const [minPrice, setMinPrice] = useState(urlMinPrice);
-  const [maxPrice, setMaxPrice] = useState(urlMaxPrice);
-  const [inStockOnly, setInStockOnly] = useState(urlInStock);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(250000);
+  const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFilters, setMobileFilters] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -57,34 +53,10 @@ export default function Shop() {
   }, [urlBrand]);
 
   useEffect(() => {
-    if (urlSearch !== search) {
+    if (urlSearch && urlSearch !== search) {
       setSearch(urlSearch);
     }
   }, [urlSearch]);
-
-  useEffect(() => {
-    if (urlSort && urlSort !== sort) {
-      setSort(urlSort);
-    }
-  }, [urlSort]);
-
-  useEffect(() => {
-    if (urlMinPrice !== minPrice) {
-      setMinPrice(urlMinPrice);
-    }
-  }, [urlMinPrice]);
-
-  useEffect(() => {
-    if (urlMaxPrice !== maxPrice) {
-      setMaxPrice(urlMaxPrice);
-    }
-  }, [urlMaxPrice]);
-
-  useEffect(() => {
-    if (urlInStock !== inStockOnly) {
-      setInStockOnly(urlInStock);
-    }
-  }, [urlInStock]);
 
   // Dynamic Brands based on selected category
   const dynamicBrands = useMemo(() => {
