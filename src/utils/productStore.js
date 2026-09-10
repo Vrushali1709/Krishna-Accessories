@@ -102,84 +102,17 @@ export const categoryBrandMap = {
   "Fashion Accessories": ["Ray-Ban", "Fossil", "Tommy Hilfiger", "Titan", "Calvin Klein", "Police"],
 };
 
-export const WATCH_TYPES = [
-  "Original",
-  "Duplicate / Replica",
-  "First Copy",
-  "Second Copy",
-  "Refurbished",
-  "Pre-Owned / Used",
-  "Custom / Homage"
-];
-
-export const WATCH_TYPE_METADATA = {
-  "Original": {
-    label: "Original",
-    shortLabel: "Original",
-    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
-    dotClass: "bg-emerald-500",
-    tag: "✨ 100% Original",
-    description: "100% Brand Certified Original with official brand warranty & certificate"
-  },
-  "Duplicate / Replica": {
-    label: "Duplicate / Replica",
-    shortLabel: "Replica",
-    badgeClass: "bg-amber-50 text-amber-800 border-amber-200/80",
-    dotClass: "bg-amber-500",
-    tag: "🔄 Replica Edition",
-    description: "Budget replica crafted with look-alike aesthetic detailing"
-  },
-  "First Copy": {
-    label: "First Copy",
-    shortLabel: "1st Copy",
-    badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200/80",
-    dotClass: "bg-indigo-500",
-    tag: "⭐ Master 1st Copy",
-    description: "High-grade 1:1 master copy with superior finish, weight & mechanics"
-  },
-  "Second Copy": {
-    label: "Second Copy",
-    shortLabel: "2nd Copy",
-    badgeClass: "bg-stone-100 text-stone-700 border-stone-300/80",
-    dotClass: "bg-stone-500",
-    tag: "🏷️ 2nd Copy",
-    description: "Entry-grade replica with standard everyday materials"
-  },
-  "Refurbished": {
-    label: "Refurbished",
-    shortLabel: "Refurbished",
-    badgeClass: "bg-teal-50 text-teal-700 border-teal-200/80",
-    dotClass: "bg-teal-500",
-    tag: "🛠️ Factory Refurbished",
-    description: "Factory restored, tested & quality-certified with warranty coverage"
-  },
-  "Pre-Owned / Used": {
-    label: "Pre-Owned / Used",
-    shortLabel: "Pre-Owned",
-    badgeClass: "bg-sky-50 text-sky-700 border-sky-200/80",
-    dotClass: "bg-sky-500",
-    tag: "⏳ Certified Pre-Owned",
-    description: "Verified pre-owned authentic timepiece in tested working condition"
-  },
-  "Custom / Homage": {
-    label: "Custom / Homage",
-    shortLabel: "Custom/Homage",
-    badgeClass: "bg-purple-50 text-purple-700 border-purple-200/80",
-    dotClass: "bg-purple-500",
-    tag: "🎨 Custom Homage",
-    description: "Custom modified or homage timepiece paying tribute to iconic horology"
-  }
-};
+export const WATCH_TYPES = [];
+export const WATCH_TYPE_METADATA = {};
 
 export const defaultProducts = [
-  // ================= WATCHES (Covering All 7 Types) =================
+  // ================= WATCHES (100% Genuine Branded Luxury Collection) =================
   {
     id: 1,
     name: "Classic Luxury Automatic Watch",
     brand: "Titan",
     category: "Watches",
     subcategory: "Analog Watches",
-    watchType: "Original",
     sku: "KA-TIT-001",
     price: 4999,
     oldPrice: 6999,
@@ -201,8 +134,7 @@ export const defaultProducts = [
       Movement: "Japanese Automatic Quartz",
       Glass: "Sapphire Crystal",
       WaterResistance: "50m / 5 ATM",
-      Warranty: "2 Years International",
-      "Quality Type": "Original Brand Certified"
+      Warranty: "2 Years International Warranty"
     },
     colors: ["Gold", "Silver", "Midnight Black"],
     variants: ["Gold Dial", "Silver Dial", "Black Mesh"]
@@ -213,7 +145,6 @@ export const defaultProducts = [
     brand: "Fossil",
     category: "Watches",
     subcategory: "Chronograph Watches",
-    watchType: "Original",
     sku: "KA-FOS-002",
     price: 8999,
     oldPrice: 11999,
@@ -234,19 +165,17 @@ export const defaultProducts = [
       Movement: "Multi-Function Chronograph",
       Glass: "Mineral Glass",
       WaterResistance: "50m",
-      Warranty: "2 Years",
-      "Quality Type": "Original Brand Certified"
+      Warranty: "2 Years International Warranty"
     },
     colors: ["Royal Blue", "Deep Black"],
     variants: ["Leather Strap", "Steel Bracelet"]
   },
   {
     id: 3,
-    name: "Edifice Tough Solar Chronograph (Certified)",
+    name: "Edifice Tough Solar Chronograph",
     brand: "Casio",
     category: "Watches",
     subcategory: "Solar Watches",
-    watchType: "Refurbished",
     sku: "KA-CAS-003",
     price: 6499,
     oldPrice: 12999,
@@ -261,30 +190,28 @@ export const defaultProducts = [
       "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
     ],
-    description: "Factory refurbished & multi-point tested solar chronograph powered by light and solar energy with Bluetooth mobile link and 100m water resistance.",
+    description: "High-precision solar chronograph powered by light energy with Bluetooth mobile link and 100m water resistance.",
     specifications: {
       Material: "Solid Stainless Steel",
       Movement: "Tough Solar Quartz",
       Glass: "Sapphire Anti-Reflective",
       WaterResistance: "100m / 10 ATM",
-      Warranty: "1 Year Refurbished Warranty",
-      "Quality Type": "Factory Refurbished (Grade A)"
+      Warranty: "2 Years International Warranty"
     },
     colors: ["Carbon Black", "Silver"],
     variants: ["Solar Steel", "Carbon Edition"]
   },
   {
     id: 4,
-    name: "Submariner Luxury Tribute 1:1 Edition",
+    name: "Submariner Date 41mm Oystersteel",
     brand: "Rolex",
     category: "Watches",
     subcategory: "Luxury Watches",
-    watchType: "First Copy",
     sku: "KA-ROL-004",
-    price: 9999,
-    oldPrice: 18999,
-    discount: 47,
-    stock: 12,
+    price: 49999,
+    oldPrice: 65999,
+    discount: 24,
+    stock: 8,
     rating: 4.9,
     reviews: 115,
     status: "Active",
@@ -294,14 +221,13 @@ export const defaultProducts = [
       "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700",
       "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
     ],
-    description: "Master 1st Copy luxury diver aesthetic with ceramic rotating bezel, luminescent hour markers, sapphire glass, and sweeping automatic self-winding movement.",
+    description: "Iconic luxury diver timepiece with black Cerachrom unidirectional rotating bezel, Chromalight display, scratch-resistant sapphire crystal, and Calibre 3235 automatic movement.",
     specifications: {
-      Material: "316L High-Grade Stainless Steel",
-      Movement: "Automatic Sweeping Movement",
+      Material: "Oystersteel (904L Stainless Steel)",
+      Movement: "Perpetual Mechanical Self-Winding (Calibre 3235)",
       Glass: "Cyclops Sapphire Glass",
-      WaterResistance: "30m",
-      Warranty: "1 Year Store Warranty",
-      "Quality Type": "First Copy (1:1 Master Grade)"
+      WaterResistance: "300m / 30 ATM",
+      Warranty: "5 Years International Warranty"
     },
     colors: ["Emerald Green", "Onyx Black", "Gold Two-Tone"],
     variants: ["Emerald Green Bezel", "Onyx Black"]
@@ -312,7 +238,6 @@ export const defaultProducts = [
     brand: "Fastrack",
     category: "Watches",
     subcategory: "Smart Watches",
-    watchType: "Original",
     sku: "KA-FAS-005",
     price: 2499,
     oldPrice: 3999,
@@ -332,23 +257,21 @@ export const defaultProducts = [
       Battery: "7 Days Typical Usage",
       Connectivity: "Bluetooth 5.3",
       WaterResistance: "IP68 Water & Dust Resistant",
-      Warranty: "1 Year",
-      "Quality Type": "Original Brand Certified"
+      Warranty: "1 Year Manufacturer Warranty"
     },
     colors: ["Pitch Black", "Teal Blue", "Olive Green"],
     variants: ["Standard Strap", "Magnetic Strap"]
   },
   {
     id: 6,
-    name: "Heritage Chrono Automatic Custom Homage",
+    name: "Heritage Visodate Automatic Chronograph",
     brand: "Tissot",
     category: "Watches",
     subcategory: "Swiss Made Watches",
-    watchType: "Custom / Homage",
     sku: "KA-TIS-006",
-    price: 14999,
+    price: 18999,
     oldPrice: 24999,
-    discount: 40,
+    discount: 24,
     stock: 8,
     rating: 4.9,
     reviews: 58,
@@ -359,31 +282,29 @@ export const defaultProducts = [
       "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
     ],
-    description: "Custom homage vintage automatic caliber featuring domed sapphire crystal, customized rotor engraving, and alligator embossed leather strap.",
+    description: "Prestigious Swiss-made vintage automatic timepiece featuring domed sapphire crystal, exhibition case back with engraved rotor, and genuine embossed leather strap.",
     specifications: {
-      Material: "316L Stainless Steel & Alligator Embossed Leather",
-      Movement: "Customized Automatic Caliber",
+      Material: "316L Stainless Steel & Embossed Calfskin Leather",
+      Movement: "Swiss Automatic Powermatic 80",
       Glass: "Domed Scratch-Resistant Sapphire",
-      WaterResistance: "50m",
-      Warranty: "1 Year Warranty",
-      "Quality Type": "Custom / Homage Tribute"
+      WaterResistance: "100m / 10 ATM",
+      Warranty: "2 Years International Warranty"
     },
     colors: ["Silver Dial / Brown Strap", "Black Dial / Black Strap"],
     variants: ["Leather Strap", "Steel Bracelet"]
   },
   {
     id: 101,
-    name: "Cosmograph Daytona Replica Lookalike",
+    name: "Cosmograph Daytona Chronograph",
     brand: "Rolex",
     category: "Watches",
     subcategory: "Chronograph Watches",
-    watchType: "Duplicate / Replica",
-    sku: "KA-ROL-REP01",
-    price: 3499,
-    oldPrice: 6999,
-    discount: 50,
-    stock: 20,
-    rating: 4.5,
+    sku: "KA-ROL-DAY01",
+    price: 64999,
+    oldPrice: 79999,
+    discount: 19,
+    stock: 6,
+    rating: 4.9,
     reviews: 62,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
@@ -391,31 +312,29 @@ export const defaultProducts = [
     images: [
       "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
     ],
-    description: "Budget-friendly duplicate replica styled after classic racing chronographs with steel bracelet and quartz multi-dial look.",
+    description: "High-precision luxury chronograph with engraved tachymetric scale bezel, triple sub-dials, Oystersteel bracelet, and certified chronometer mechanical movement.",
     specifications: {
-      Material: "Alloy Steel Case & Bracelet",
-      Movement: "Quartz Multi-Hand",
-      Glass: "Hardened Mineral Glass",
-      WaterResistance: "Daily Splash Proof",
-      Warranty: "6 Months",
-      "Quality Type": "Duplicate / Replica"
+      Material: "Oystersteel 904L & Cerachrom",
+      Movement: "Calibre 4130 Perpetual Chronograph",
+      Glass: "Scratch-Resistant Sapphire Crystal",
+      WaterResistance: "100m / 10 ATM",
+      Warranty: "5 Years International Warranty"
     },
     colors: ["Panda White", "Onyx Black"],
     variants: ["Panda White Dial", "All Black"]
   },
   {
     id: 102,
-    name: "Speedmaster Racing Edition Quartz",
+    name: "Speedmaster Professional Co-Axial Chronograph",
     brand: "Omega",
     category: "Watches",
     subcategory: "Chronograph Watches",
-    watchType: "Second Copy",
-    sku: "KA-OMG-2ND02",
-    price: 1999,
-    oldPrice: 4499,
-    discount: 55,
-    stock: 30,
-    rating: 4.2,
+    sku: "KA-OMG-SPD02",
+    price: 45999,
+    oldPrice: 59999,
+    discount: 23,
+    stock: 10,
+    rating: 4.8,
     reviews: 44,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
@@ -423,30 +342,28 @@ export const defaultProducts = [
     images: [
       "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700"
     ],
-    description: "Entry-level second copy racing style chronograph featuring lightweight metal alloy casing and comfortable silicone strap.",
+    description: "Legendary Speedmaster Moonwatch chronograph featuring a black step dial, sapphire crystal, and Master Chronometer certified co-axial movement.",
     specifications: {
-      Material: "Zinc Alloy & Silicone",
-      Movement: "Standard Quartz",
-      Glass: "Mineral Glass",
-      WaterResistance: "Splash Resistant",
-      Warranty: "3 Months",
-      "Quality Type": "Second Copy"
+      Material: "Stainless Steel Case & Bracelet",
+      Movement: "Co-Axial Master Chronometer Calibre 3861",
+      Glass: "Sapphire Crystal with Anti-Reflective Treatment",
+      WaterResistance: "50m / 5 ATM",
+      Warranty: "5 Years International Warranty"
     },
     colors: ["Racing Black", "Blue Accent"],
-    variants: ["Black Silicone", "Blue Silicone"]
+    variants: ["Steel Bracelet", "Leather Strap"]
   },
   {
     id: 103,
-    name: "Vintage Seiko 5 Automatic Day-Date",
+    name: "Seiko 5 Sports Automatic Day-Date",
     brand: "Seiko",
     category: "Watches",
     subcategory: "Analog Watches",
-    watchType: "Pre-Owned / Used",
-    sku: "KA-SEI-PO03",
-    price: 4299,
-    oldPrice: 7999,
-    discount: 46,
-    stock: 5,
+    sku: "KA-SEI-SPO03",
+    price: 14299,
+    oldPrice: 19999,
+    discount: 28,
+    stock: 15,
     rating: 4.8,
     reviews: 36,
     status: "Active",
@@ -455,17 +372,16 @@ export const defaultProducts = [
     images: [
       "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700"
     ],
-    description: "Authentic pre-owned vintage Seiko 5 automatic watch, thoroughly serviced, polished, and tested for accurate timekeeping.",
+    description: "Authentic Seiko 5 Sports automatic timepiece, thoroughly crafted with LumiBrite hands, exhibition case back, and tested for precise timekeeping.",
     specifications: {
-      Material: "Vintage Stainless Steel",
-      Movement: "Genuine Seiko 21-Jewel Automatic",
+      Material: "Solid Stainless Steel",
+      Movement: "Genuine Seiko 4R36 24-Jewel Automatic",
       Glass: "Hardlex Crystal",
-      WaterResistance: "30m",
-      Warranty: "6 Months Movement Warranty",
-      "Quality Type": "Verified Pre-Owned (Grade A)"
+      WaterResistance: "100m / 10 ATM",
+      Warranty: "2 Years International Warranty"
     },
     colors: ["Sunburst Silver", "Champagne Gold"],
-    variants: ["Original Steel Jubilee", "Leather Strap"]
+    variants: ["Steel Jubilee", "Leather Strap"]
   },
 
   // ================= BAGS & WALLETS =================
@@ -1092,7 +1008,7 @@ const defaultProductReviews = {
 };
 
 export function getWatchTypes() {
-  return WATCH_TYPES;
+  return [];
 }
 
 export function getProducts() {
@@ -1102,13 +1018,7 @@ export function getProducts() {
     try {
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        // Merge missing default watch types if needed
-        const hasRep = parsed.some(p => p.id === 101);
-        if (!hasRep) {
-          list = [...parsed, ...defaultProducts.filter(dp => [101, 102, 103].includes(dp.id))];
-        } else {
-          list = parsed;
-        }
+        list = parsed;
       }
     } catch {
       list = defaultProducts;
@@ -1118,15 +1028,29 @@ export function getProducts() {
     return defaultProducts;
   }
 
-  // Normalize watch products to always have a valid watchType
-  const normalized = list.map(p => {
-    if (p.category === 'Watches' && !p.watchType) {
-      return { ...p, watchType: 'Original' };
+  // Clean up any legacy replica data or watchType properties
+  const sanitized = list.map(p => {
+    const clean = { ...p };
+    delete clean.watchType;
+    if (clean.specifications && clean.specifications["Quality Type"]) {
+      const specs = { ...clean.specifications };
+      delete specs["Quality Type"];
+      clean.specifications = specs;
     }
-    return p;
+    // Fix any old replica product names if stored in localStorage
+    if (clean.id === 4 && clean.name?.includes("Tribute")) {
+      clean.name = "Submariner Date 41mm Oystersteel";
+    }
+    if (clean.id === 101 && (clean.name?.includes("Replica") || clean.name?.includes("Lookalike"))) {
+      clean.name = "Cosmograph Daytona Chronograph";
+    }
+    if (clean.id === 102 && clean.name?.includes("Racing Edition Quartz")) {
+      clean.name = "Speedmaster Professional Co-Axial Chronograph";
+    }
+    return clean;
   });
 
-  return normalized;
+  return sanitized;
 }
 
 export const getStoredProducts = getProducts;

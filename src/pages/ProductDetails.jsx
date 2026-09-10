@@ -4,7 +4,7 @@ import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts, getProductById, getProductReviews, addProductReview, isInWishlist, toggleWishlist, WATCH_TYPE_METADATA } from '../utils/productStore';
+import { getProducts, getProductById, getProductReviews, addProductReview, isInWishlist, toggleWishlist } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon } from '../components/Icons';
@@ -72,10 +72,6 @@ export default function ProductDetails() {
       </div>
     );
   }
-
-  const isWatch = product.category === 'Watches' || Boolean(product.watchType);
-  const currentWatchType = product.watchType || (isWatch ? 'Original' : null);
-  const watchMeta = currentWatchType ? WATCH_TYPE_METADATA[currentWatchType] : null;
 
   const images = product.images && product.images.length > 0 ? product.images : [product.image];
   const discount = product.discount || (product.oldPrice && product.oldPrice > product.price ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0);
@@ -254,7 +250,7 @@ export default function ProductDetails() {
               {product.name}
             </h1>
 
-            {/* Rating, Category & Watch Type Status */}
+            {/* Rating, Category & Stock Status */}
             <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
               <div className="flex items-center gap-1 font-semibold text-gray-900 text-[11px] sm:text-xs">
                 <span className="text-amber-500">★ {product.rating || 4.8}</span>
@@ -263,33 +259,11 @@ export default function ProductDetails() {
               <span className="text-gray-300">&bull;</span>
               <span className="text-gray-500 text-[11px] sm:text-xs">Category: <strong className="text-gray-900">{product.category}</strong></span>
 
-              {/* Watch Type Pill */}
-              {isWatch && watchMeta && (
-                <>
-                  <span className="text-gray-300">&bull;</span>
-                  <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[9.5px] sm:text-[10px] font-bold border ${watchMeta.badgeClass}`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${watchMeta.dotClass || 'bg-current'}`} />
-                    {watchMeta.label}
-                  </span>
-                </>
-              )}
-
               <span className="text-gray-300">&bull;</span>
               <span className="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.2 rounded-full text-[9.5px] sm:text-[10px]">
                 In Stock ({product.stock} units)
               </span>
             </div>
-
-            {/* Watch Type Notice Banner */}
-            {isWatch && watchMeta && (
-              <div className="mt-2.5 sm:mt-3 flex items-start gap-2.5 rounded-xl bg-gray-50 border border-gray-200/80 p-2.5 sm:p-3 text-xs text-gray-700">
-                <span className="text-base shrink-0 mt-0.5">⌚</span>
-                <div className="min-w-0">
-                  <span className="font-bold text-gray-900 block text-xs">{watchMeta.tag}</span>
-                  <p className="text-[11px] text-gray-600 mt-0.5 leading-relaxed">{watchMeta.description}</p>
-                </div>
-              </div>
-            )}
 
             {/* Price Box */}
             <div className="mt-3 sm:mt-3.5 rounded-xl bg-[#F8F9FA] border border-gray-200 p-3 sm:p-3.5">
@@ -467,14 +441,6 @@ export default function ProductDetails() {
                     <span className="text-gray-500">Category</span>
                     <span className="font-semibold text-gray-900">{product.category}</span>
                   </div>
-                  {isWatch && watchMeta && (
-                    <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs items-center gap-2">
-                      <span className="text-gray-500">Watch Quality Type</span>
-                      <span className={`inline-flex items-center gap-1 rounded px-1.5 py-0.2 text-[9.5px] font-bold border ${watchMeta.badgeClass}`}>
-                        {watchMeta.label}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex justify-between border-b border-gray-100 py-1.5 text-xs gap-2">
                     <span className="text-gray-500">SKU Code</span>
                     <span className="font-mono font-semibold text-gray-900">{product.sku}</span>

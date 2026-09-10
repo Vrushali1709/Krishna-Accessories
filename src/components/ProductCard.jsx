@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import { isInWishlist, toggleWishlist, WATCH_TYPE_METADATA } from '../utils/productStore';
+import { isInWishlist, toggleWishlist } from '../utils/productStore';
 import { HeartIcon } from './Icons';
 
 export default function ProductCard({ product, onAddToCart, onBuyNow }) {
@@ -25,9 +25,6 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
       ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : 0
   );
-
-  const isWatch = product.category === 'Watches' || Boolean(product.watchType);
-  const watchMeta = product.watchType ? WATCH_TYPE_METADATA[product.watchType] : (isWatch ? WATCH_TYPE_METADATA['Original'] : null);
 
   const requireLogin = (action = 'continue') => {
     if (!getCurrentUser()) {
@@ -107,13 +104,6 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
                 {discount}% OFF
               </span>
             )}
-
-            {isWatch && watchMeta ? (
-              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold border shadow-xs backdrop-blur-md truncate ${watchMeta.badgeClass}`}>
-                <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${watchMeta.dotClass || 'bg-current'}`} />
-                <span className="truncate">{watchMeta.label}</span>
-              </span>
-            ) : null}
           </div>
 
           {/* Floating Wishlist Heart */}

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getCurrentUser } from '../utils/auth';
-import { getProducts, saveProduct, deleteProduct, getCategories, getBrands, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
+import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
 import {
   Building2,
@@ -62,7 +62,6 @@ export default function SupplierDashboard() {
     brand: 'Titan',
     category: 'Watches',
     subcategory: '',
-    watchType: 'Original',
     sku: '',
     price: '',
     oldPrice: '',
@@ -135,7 +134,6 @@ export default function SupplierDashboard() {
       brand: brands[0] || 'Titan',
       category: categories[0] || 'Watches',
       subcategory: '',
-      watchType: 'Original',
       sku: `KA-${activeSupplierName.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`,
       price: '',
       oldPrice: '',
@@ -155,7 +153,6 @@ export default function SupplierDashboard() {
       brand: product.brand || brands[0],
       category: product.category || categories[0],
       subcategory: product.subcategory || '',
-      watchType: product.watchType || (product.category === 'Watches' ? 'Original' : 'Original'),
       sku: product.sku || '',
       price: product.price || '',
       oldPrice: product.oldPrice || '',
@@ -182,7 +179,6 @@ export default function SupplierDashboard() {
       brand: form.brand,
       category: form.category,
       subcategory: form.subcategory || 'General',
-      watchType: form.category === 'Watches' ? (form.watchType || 'Original') : undefined,
       sku: form.sku.trim() || `KA-SKU-${Date.now().toString().slice(-4)}`,
       price,
       oldPrice,
@@ -195,8 +191,7 @@ export default function SupplierDashboard() {
       description: form.description || 'Luxury product provided by verified supplier.',
       specifications: {
         Material: form.material || 'Premium',
-        Warranty: form.warranty || '2 Years',
-        ...(form.category === 'Watches' ? { "Quality Type": form.watchType || 'Original' } : {})
+        Warranty: form.warranty || '2 Years'
       }
     };
 
@@ -609,13 +604,6 @@ export default function SupplierDashboard() {
                             <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-800">
                               {p.category}
                             </span>
-                            {(p.category === 'Watches' || p.watchType) && (
-                              <span className={`inline-flex items-center rounded px-1.5 py-0.2 text-[8.5px] font-bold border ${
-                                (WATCH_TYPE_METADATA[p.watchType || 'Original']?.badgeClass) || 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              }`}>
-                                {p.watchType || 'Original'}
-                              </span>
-                            )}
                           </div>
                           <p className="text-[11px] text-zinc-500 font-medium mt-1">{p.brand}</p>
                         </td>
@@ -941,23 +929,6 @@ export default function SupplierDashboard() {
                     ))}
                   </select>
                 </div>
-
-                {form.category === 'Watches' && (
-                  <div>
-                    <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Watch Quality / Type *</label>
-                    <select
-                      value={form.watchType || 'Original'}
-                      onChange={e => setForm({ ...form, watchType: e.target.value })}
-                      className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition font-medium"
-                    >
-                      {WATCH_TYPES.map(t => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
 
                 <div>
                   <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">SKU Code</label>

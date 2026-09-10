@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { getProducts, saveProduct, deleteProduct, getCategories, getBrands, WATCH_TYPES, WATCH_TYPE_METADATA } from "../utils/productStore";
+import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from "../utils/productStore";
 import { isAdmin } from '../utils/auth';
 
 export default function AdminProducts() {
@@ -30,7 +30,6 @@ export default function AdminProducts() {
     oldPrice: '',
     category: '',
     brand: '',
-    watchType: 'Original',
     image: '',
     description: '',
     stock: '25',
@@ -61,7 +60,6 @@ export default function AdminProducts() {
 
     const updatedList = saveProduct({
       ...formData,
-      watchType: formData.category === 'Watches' ? (formData.watchType || 'Original') : undefined,
       price,
       oldPrice,
       discount,
@@ -70,14 +68,13 @@ export default function AdminProducts() {
     });
 
     setProducts(updatedList);
-    setFormData({ id: null, name: '', price: '', oldPrice: '', category: '', brand: '', watchType: 'Original', image: '', description: '', stock: '25', sku: '' });
+    setFormData({ id: null, name: '', price: '', oldPrice: '', category: '', brand: '', image: '', description: '', stock: '25', sku: '' });
     alert("Product saved successfully and published to Shop UI!");
   };
 
   const handleEdit = (product) => {
     setFormData({
-      ...product,
-      watchType: product.watchType || (product.category === 'Watches' ? 'Original' : 'Original')
+      ...product
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -201,23 +198,7 @@ export default function AdminProducts() {
             </select>
           </div>
 
-          {formData.category === 'Watches' && (
-            <div>
-              <label className="text-xs font-medium text-zinc-700 block mb-1">Watch Quality / Type *</label>
-              <select
-                name="watchType"
-                value={formData.watchType || 'Original'}
-                onChange={handleChange}
-                className="w-full bg-zinc-50 px-3.5 py-2 border border-zinc-200 rounded-lg text-zinc-900 text-xs outline-none focus:border-zinc-400 font-medium cursor-pointer"
-              >
-                {WATCH_TYPES.map(t => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+
 
           <div>
             <label className="text-xs font-medium text-zinc-700 block mb-1">Brand *</label>
@@ -267,7 +248,7 @@ export default function AdminProducts() {
             {formData.id && (
               <button
                 type="button"
-                onClick={() => setFormData({ id: null, name: '', price: '', oldPrice: '', category: '', brand: '', watchType: 'Original', image: '', description: '', stock: '25', sku: '' })}
+                onClick={() => setFormData({ id: null, name: '', price: '', oldPrice: '', category: '', brand: '', image: '', description: '', stock: '25', sku: '' })}
                 className="rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-4 py-2 text-xs font-medium text-zinc-700 cursor-pointer"
               >
                 Cancel Edit
@@ -285,9 +266,6 @@ export default function AdminProducts() {
 
           <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((p) => {
-              const isWatch = p.category === 'Watches' || Boolean(p.watchType);
-              const wMeta = isWatch ? WATCH_TYPE_METADATA[p.watchType || 'Original'] : null;
-
               return (
                 <div key={p.id} className="bg-white p-4 rounded-xl border border-zinc-200/80 flex flex-col justify-between shadow-2xs">
                   <div>
@@ -296,11 +274,6 @@ export default function AdminProducts() {
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
                           <span className="text-[10px] font-semibold uppercase text-zinc-400">{p.brand}</span>
-                          {isWatch && wMeta && (
-                            <span className={`inline-flex items-center rounded px-1.5 py-0.2 text-[8.5px] font-bold border ${wMeta.badgeClass}`}>
-                              {wMeta.label}
-                            </span>
-                          )}
                         </div>
                         <h3 className="font-semibold text-zinc-900 text-xs truncate">{p.name}</h3>
                         <p className="text-[10.5px] text-zinc-500 flex items-center gap-1.5 mt-0.5">
