@@ -5,7 +5,20 @@ import { getCartCount } from '../utils/cart';
 import { defaultCategories, getCategories, getWishlist } from '../utils/productStore';
 import { getCurrentUser, logout, isAdmin, isSupplier, getAdminUser } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
-import { BagIcon, SearchIcon, UserIcon, ChevronDownIcon, HeartIcon, BellIcon } from './Icons';
+import { SHOP_INFO } from '../utils/shopInfo';
+import {
+  BagIcon,
+  SearchIcon,
+  UserIcon,
+  ChevronDownIcon,
+  HeartIcon,
+  BellIcon,
+  FacebookIcon,
+  InstagramIcon,
+  WhatsAppIcon,
+  PhoneIcon,
+  MailIcon
+} from './Icons';
 
 const CATEGORY_ICONS = {
   'Watches': '⌚',
@@ -134,10 +147,82 @@ export default function Navbar() {
   const unreadNotifsCount = notifications.filter(n => n.unread).length;
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md border-b border-gray-200 bg-white/98 backdrop-blur-md' : 'border-b border-gray-200/80 bg-white/95 backdrop-blur-md'}`}>
+    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md bg-white/98 backdrop-blur-md' : 'bg-white/95 backdrop-blur-md'}`}>
+
+      {/* Top Luxury Announcement & Quick Contact Bar */}
+      <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-6 lg:px-8 xl:px-10">
+        <div className="mx-auto flex items-center justify-between gap-4">
+          
+          {/* Store Location Snippet */}
+          <div className="flex items-center gap-2 truncate text-slate-300">
+            <span className="text-amber-400 font-bold shrink-0">📍 Mumbai Boutique:</span>
+            <span className="truncate hidden sm:inline text-slate-200">{SHOP_INFO.address}</span>
+            <span className="truncate sm:hidden text-slate-200">Heera Panna, Haji Ali, Mumbai</span>
+          </div>
+
+          {/* Quick Direct Contacts & Social Icons */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* Phone */}
+            <a
+              href={`tel:+91${SHOP_INFO.rawPhone}`}
+              className="hidden md:inline-flex items-center gap-1 text-slate-200 hover:text-amber-300 transition"
+              title="Direct Concierge Line"
+            >
+              <PhoneIcon className="w-3 h-3 text-amber-400" />
+              <span>{SHOP_INFO.phone}</span>
+            </a>
+
+            {/* Email */}
+            <a
+              href={`mailto:${SHOP_INFO.email}`}
+              className="hidden lg:inline-flex items-center gap-1 text-slate-200 hover:text-amber-300 transition"
+              title="Official Support Email"
+            >
+              <MailIcon className="w-3 h-3 text-amber-400" />
+              <span>{SHOP_INFO.email}</span>
+            </a>
+
+            {/* Social Icons Strip */}
+            <div className="flex items-center gap-2 border-l border-slate-700/80 pl-3">
+              <a
+                href={SHOP_INFO.socials.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Facebook"
+                aria-label="Facebook"
+                className="text-slate-400 hover:text-[#1877F2] transition hover:scale-110"
+              >
+                <FacebookIcon className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href={SHOP_INFO.socials.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram"
+                aria-label="Instagram"
+                className="text-slate-400 hover:text-pink-400 transition hover:scale-110"
+              >
+                <InstagramIcon className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href={SHOP_INFO.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="WhatsApp Concierge"
+                aria-label="WhatsApp Concierge"
+                className="text-slate-400 hover:text-emerald-400 transition hover:scale-110"
+              >
+                <WhatsAppIcon className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
 
       {/* Main Navigation Bar */}
-      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 border-b border-gray-200/80">
         <div className="relative flex h-14 sm:h-16 items-center justify-between">
 
           {/* Left: Brand Identity */}
@@ -841,6 +926,57 @@ export default function Navbar() {
                 </Link>
               )}
             </div>
+
+            {/* Mobile Boutique Info & Social Links */}
+            <div className="border-t border-gray-100 pt-3 mt-1 text-[11px] text-gray-500 space-y-2">
+              <p className="text-gray-900 font-semibold flex items-center gap-1.5">
+                <span>📍</span>
+                <span className="truncate">{SHOP_INFO.shortAddress}</span>
+              </p>
+              
+              <div className="flex flex-col gap-1 text-gray-600">
+                <a href={`tel:+91${SHOP_INFO.rawPhone}`} className="hover:text-black flex items-center gap-1.5">
+                  <span>📞</span>
+                  <span>{SHOP_INFO.phone}</span>
+                </a>
+                <a href={`mailto:${SHOP_INFO.email}`} className="hover:text-black flex items-center gap-1.5 break-all">
+                  <span>✉️</span>
+                  <span>{SHOP_INFO.email}</span>
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Social:</span>
+                <a
+                  href={SHOP_INFO.socials.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-[#1877F2] hover:bg-gray-200 transition"
+                  aria-label="Facebook"
+                >
+                  <FacebookIcon className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href={SHOP_INFO.socials.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-pink-600 hover:bg-gray-200 transition"
+                  aria-label="Instagram"
+                >
+                  <InstagramIcon className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href={SHOP_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-emerald-600 hover:bg-gray-200 transition"
+                  aria-label="WhatsApp"
+                >
+                  <WhatsAppIcon className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
       )}

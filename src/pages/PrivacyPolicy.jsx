@@ -54,7 +54,7 @@ export default function PrivacyPolicy() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-gray-950">5. Contact Our Privacy Officer</h2>
             <p>
-              If you have any questions regarding your data privacy, write to our Data Protection Officer at <strong className="break-all">privacy@krishnaaccessories.com</strong>.
+              If you have any questions regarding your data privacy, write to our Data Protection Officer at <strong className="break-all">shantilal6186@gmail.com</strong>.
             </p>
           </section>
         </div>

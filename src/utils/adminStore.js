@@ -325,8 +325,8 @@ export function toggleCarrierStatus(id) {
 export const defaultSystemConfig = {
   storeName: "Krishna Accessories",
   legalEntity: "Krishna Luxury Goods Private Limited",
-  supportEmail: "concierge@krishnaaccessories.com",
-  supportPhone: "+91 (079) 4000-5500",
+  supportEmail: "shantilal6186@gmail.com",
+  supportPhone: "+91 93213 22761",
   currency: "INR (₹)",
   freeShippingThreshold: 2000,
   taxGSTRate: 18,

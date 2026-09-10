@@ -470,7 +470,7 @@ export default function AdminDashboard() {
       email: 'admin@krishna.com',
       role: 'admin',
       name: 'Super Administrator',
-      phone: '+91 (079) 4000-5500'
+      phone: '+91 93213 22761'
     });
     refreshAll();
   };

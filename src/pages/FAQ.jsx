@@ -133,7 +133,7 @@ export default function FAQ() {
         <div className="rounded-3xl bg-white border border-gray-200 p-6 sm:p-8 text-center shadow-sm space-y-3">
           <h3 className="text-base font-bold text-gray-950">Have a specific question not covered here?</h3>
           <p className="text-xs text-gray-500 max-w-md mx-auto">
-            Our concierge advisors in Ahmedabad are ready to assist you via WhatsApp, phone, or private email.
+            Our concierge advisors in Mumbai are ready to assist you via WhatsApp (+91 93213 22761), phone, or direct email (shantilal6186@gmail.com).
           </p>
           <div className="pt-2 flex flex-wrap justify-center gap-3">
             <Link

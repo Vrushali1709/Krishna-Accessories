@@ -6,10 +6,10 @@ const DEFAULT_REVIEWS = [
   {
     id: 1,
     name: 'Aarav Mehta',
-    location: 'Ahmedabad, Gujarat',
+    location: 'Mumbai, Maharashtra',
     rating: 5,
     product: 'Titan Edge Ceramic Chronograph',
-    text: 'Ordered the Titan Edge Ceramic. The packaging was immaculate with the official warranty card stamped. Genuine showroom experience delivered directly to my doorstep in Bodakdev!',
+    text: 'Ordered the Titan Edge Ceramic. The packaging was immaculate with the official warranty card stamped. Genuine showroom experience delivered directly to my doorstep in South Mumbai!',
     date: 'Verified Buyer • 2 days ago'
   },
   {
@@ -18,7 +18,7 @@ const DEFAULT_REVIEWS = [
     location: 'Mumbai, Maharashtra',
     rating: 5,
     product: 'Hidesign Genuine Leather Tote',
-    text: 'The quality of the leather bag is absolutely top-notch. Fast 2-day delivery to Mumbai. 100% authentic product and the support team was super helpful with live tracking.',
+    text: 'The quality of the leather bag is absolutely top-notch. Fast same-day pickup from their Haji Ali store. 100% authentic product and the support team was super helpful with live tracking.',
     date: 'Verified Buyer • 4 days ago'
   },
   {
@@ -42,10 +42,10 @@ const DEFAULT_REVIEWS = [
   {
     id: 5,
     name: 'Vikram Desai',
-    location: 'Ahmedabad, Gujarat',
+    location: 'Mumbai, Maharashtra',
     rating: 5,
     product: 'Fossil Automatic Masterpiece',
-    text: 'Visited their Bodakdev store first, then ordered online for an anniversary gift. Seamless checkout, insured express logistics, and truly premium curation.',
+    text: 'Visited their Heera Panna store in Haji Ali first, then ordered online for an anniversary gift. Seamless checkout, insured express logistics, and truly premium curation.',
     date: 'Verified Buyer • 2 weeks ago'
   },
   {

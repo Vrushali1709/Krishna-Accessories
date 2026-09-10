@@ -2,7 +2,16 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ShieldCheckIcon } from '../components/Icons';
+import { SHOP_INFO } from '../utils/shopInfo';
+import {
+  ShieldCheckIcon,
+  FacebookIcon,
+  InstagramIcon,
+  WhatsAppIcon,
+  PhoneIcon,
+  MailIcon,
+  MapPinIcon
+} from '../components/Icons';
 
 export default function ContactUs() {
   const [form, setForm] = useState({
@@ -90,7 +99,7 @@ export default function ContactUs() {
                     type="tel"
                     value={form.phone}
                     onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))}
-                    placeholder="+91 98765 12345"
+                    placeholder="+91 93213 22761"
                     className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 outline-none focus:border-gray-400 focus:bg-white"
                   />
                 </div>
@@ -124,7 +133,7 @@ export default function ContactUs() {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto rounded-full bg-[#111827] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition shadow-sm text-center"
+                className="w-full sm:w-auto rounded-full bg-[#111827] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition shadow-sm text-center cursor-pointer"
               >
                 Send Concierge Message &rarr;
               </button>
@@ -139,15 +148,16 @@ export default function ContactUs() {
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Instant Chat</span>
               <h3 className="text-base font-bold text-gray-950">WhatsApp Concierge Desk</h3>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Connect directly with our senior horologist for immediate product photos, wrist shots, and size guidance.
+                Connect directly with our senior advisor for immediate product photos, wrist shots, and size guidance.
               </p>
               <a
-                href="https://wa.me/919876543210"
+                href={SHOP_INFO.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-emerald-700 transition shadow-sm"
               >
-                <span>💬 Open WhatsApp Chat</span>
+                <WhatsAppIcon className="w-4 h-4" />
+                <span>Open WhatsApp Chat</span>
               </a>
             </div>
 
@@ -157,26 +167,75 @@ export default function ContactUs() {
                 Flagship Boutique Contact
               </h3>
 
-              <div className="space-y-3 text-gray-600 leading-relaxed">
-                <div>
-                  <strong className="text-gray-950 block">Flagship Boutique:</strong>
-                  <span>Bodakdev, SG Highway, Ahmedabad, Gujarat 380054, India</span>
+              <div className="space-y-3.5 text-gray-600 leading-relaxed">
+                <div className="flex items-start gap-2.5">
+                  <MapPinIcon className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-gray-950 block">Flagship Boutique:</strong>
+                    <span>{SHOP_INFO.address}, India</span>
+                  </div>
                 </div>
 
-                <div>
-                  <strong className="text-gray-950 block">Direct Concierge Phone:</strong>
-                  <span>+91 (079) 4000-5500</span>
+                <div className="flex items-start gap-2.5">
+                  <PhoneIcon className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-gray-950 block">Direct Concierge Phone:</strong>
+                    <a href={`tel:+91${SHOP_INFO.rawPhone}`} className="text-gray-900 font-semibold hover:text-amber-600 transition">
+                      {SHOP_INFO.phone}
+                    </a>
+                  </div>
                 </div>
 
-                <div>
-                  <strong className="text-gray-950 block">Official Support Email:</strong>
-                  <span className="break-all">care@krishnaaccessories.com</span>
+                <div className="flex items-start gap-2.5">
+                  <MailIcon className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-gray-950 block">Official Support Email:</strong>
+                    <a href={`mailto:${SHOP_INFO.email}`} className="text-gray-900 font-semibold hover:text-amber-600 transition break-all">
+                      {SHOP_INFO.email}
+                    </a>
+                  </div>
                 </div>
 
-                <div>
-                  <strong className="text-gray-950 block">Boutique Operating Hours:</strong>
-                  <span>Monday – Saturday: 10:30 AM – 08:30 PM (IST)</span>
+                <div className="pt-1 border-t border-gray-100">
+                  <strong className="text-gray-950 block mb-0.5">Boutique Operating Hours:</strong>
+                  <span>{SHOP_INFO.workingHours}</span>
                 </div>
+              </div>
+            </div>
+
+            {/* Social Media Connect Card */}
+            <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-3.5 text-xs">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 border-b border-gray-100 pb-2.5">
+                Official Social Media Channels
+              </h3>
+              <p className="text-xs text-gray-500">
+                Follow Krishna Accessories for daily luxury new arrivals, customer reviews, unboxings, and private client specials.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                <a
+                  href={SHOP_INFO.socials.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 rounded-2xl border border-gray-200 bg-[#F4F4F6] p-2.5 text-xs font-semibold text-gray-800 hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition group"
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#1877F2] group-hover:bg-white/20 group-hover:text-white transition shadow-2xs">
+                    <FacebookIcon className="w-3.5 h-3.5" />
+                  </div>
+                  <span>Facebook</span>
+                </a>
+
+                <a
+                  href={SHOP_INFO.socials.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 rounded-2xl border border-gray-200 bg-[#F4F4F6] p-2.5 text-xs font-semibold text-gray-800 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-white hover:border-pink-500 transition group"
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white text-pink-600 group-hover:bg-white/20 group-hover:text-white transition shadow-2xs">
+                    <InstagramIcon className="w-3.5 h-3.5" />
+                  </div>
+                  <span>Instagram</span>
+                </a>
               </div>
             </div>
 

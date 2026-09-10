@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { defaultCategories } from '../utils/productStore';
+import { SHOP_INFO } from '../utils/shopInfo';
+import { FacebookIcon, InstagramIcon, WhatsAppIcon, PhoneIcon, MailIcon, MapPinIcon } from './Icons';
 
 export default function Footer() {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -15,6 +17,27 @@ export default function Footer() {
       setTimeout(() => setSubscribed(false), 4000);
     }
   };
+
+  const socialLinks = [
+    {
+      name: 'Facebook',
+      url: SHOP_INFO.socials.facebook,
+      icon: <FacebookIcon className="w-4 h-4" />,
+      colorHover: 'hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white'
+    },
+    {
+      name: 'Instagram',
+      url: SHOP_INFO.socials.instagram,
+      icon: <InstagramIcon className="w-4 h-4" />,
+      colorHover: 'hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:border-pink-500 hover:text-white'
+    },
+    {
+      name: 'WhatsApp Concierge',
+      url: SHOP_INFO.whatsappUrl,
+      icon: <WhatsAppIcon className="w-4 h-4" />,
+      colorHover: 'hover:bg-emerald-600 hover:border-emerald-500 hover:text-white'
+    }
+  ];
 
   return (
     <>
@@ -88,19 +111,38 @@ export default function Footer() {
               </Link>
 
               <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-300">
-                Ahmedabad's premier luxury destination for certified authentic timepieces, handcrafted leather goods, premium electronics, and curated lifestyle essentials.
+                Mumbai's premier luxury destination for certified authentic timepieces, handcrafted leather goods, premium electronics, and curated lifestyle essentials.
               </p>
 
               {/* Store & Contact details container */}
-              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 space-y-2 text-xs text-slate-300 backdrop-blur-xs max-w-md">
-                <p className="flex items-start gap-2">
-                  <span className="text-amber-400 font-semibold shrink-0">📍 Flagship:</span>
-                  <span className="text-slate-200 font-medium">Bodakdev, SG Highway, Ahmedabad 380054</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-amber-400 font-semibold shrink-0">📞 Desk:</span>
-                  <span className="text-slate-200 font-medium">+91 (079) 4000-5500 &bull; care@krishnaaccessories.com</span>
-                </p>
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 space-y-2.5 text-xs text-slate-300 backdrop-blur-xs max-w-md">
+                <div className="flex items-start gap-2.5">
+                  <MapPinIcon className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-amber-400 font-semibold block text-[11px] uppercase tracking-wider">Flagship Boutique:</span>
+                    <span className="text-slate-200 font-medium leading-relaxed">{SHOP_INFO.address}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2.5 pt-1 border-t border-slate-800/60">
+                  <PhoneIcon className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-amber-400 font-semibold block text-[11px] uppercase tracking-wider">Direct Concierge:</span>
+                    <a href={`tel:+91${SHOP_INFO.rawPhone}`} className="text-slate-200 font-medium hover:text-amber-300 transition">
+                      {SHOP_INFO.phone}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-2.5 pt-1 border-t border-slate-800/60">
+                  <MailIcon className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-amber-400 font-semibold block text-[11px] uppercase tracking-wider">Official Email:</span>
+                    <a href={`mailto:${SHOP_INFO.email}`} className="text-slate-200 font-medium hover:text-amber-300 transition break-all">
+                      {SHOP_INFO.email}
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -196,27 +238,27 @@ export default function Footer() {
 
           </div>
 
-          {/* Bottom Strip */}
+          {/* Bottom Strip with clickable Social Media Links */}
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800/80 pt-6 text-xs text-slate-400 sm:flex-row">
             <p className="text-center sm:text-left">
               &copy; {new Date().getFullYear()} Krishna Accessories Ltd. 100% Certified Authentic Guarantee.
             </p>
 
-            {/* Social media badges */}
-            <div className="flex items-center gap-2">
-              {[
-                { name: 'X', icon: '𝕏' },
-                { name: 'Facebook', icon: 'f' },
-                { name: 'LinkedIn', icon: 'in' },
-                { name: 'Instagram', icon: 'ig' }
-              ].map((social) => (
-                <span
+            {/* Social media clickable icons */}
+            <div className="flex items-center gap-2.5">
+              <span className="text-[11px] text-slate-400 mr-1 hidden md:inline">Connect With Us:</span>
+              {socialLinks.map((social) => (
+                <a
                   key={social.name}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-slate-700/80 bg-slate-800/80 text-xs font-bold text-slate-300 shadow-sm transition-all duration-200 hover:border-amber-400 hover:bg-amber-400 hover:text-slate-950 hover:shadow-[0_0_12px_rgba(251,191,36,0.3)] active:scale-95"
-                  title={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  title={`Follow Krishna Accessories on ${social.name}`}
+                  className={`flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-800/80 text-slate-300 shadow-sm transition-all duration-200 ${social.colorHover} hover:shadow-[0_0_12px_rgba(251,191,36,0.3)] active:scale-95`}
                 >
                   {social.icon}
-                </span>
+                </a>
               ))}
             </div>
           </div>

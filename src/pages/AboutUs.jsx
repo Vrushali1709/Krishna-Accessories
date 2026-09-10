@@ -182,7 +182,7 @@ export default function AboutUs() {
               {/* Real, Grounded Brand Story Intro */}
               <Reveal delay={220} direction="up">
                 <p className="text-sm sm:text-base text-neutral-600 font-normal leading-relaxed max-w-xl">
-                  Founded in Ahmedabad, Krishna Accessories is Gujarat’s premier multi-category destination for 100% certified authentic timepieces, handcrafted leather goods, footwear, and curated lifestyle essentials. We connect discerning buyers directly with authorized brand manufacturers and official warranties.
+                  Located at Mumbai’s iconic Heera Panna Shopping Center in Haji Ali, Krishna Accessories is India’s premier multi-category destination for 100% certified authentic timepieces, handcrafted leather goods, footwear, and curated lifestyle essentials. We connect discerning buyers directly with authorized brand manufacturers and official warranties.
                 </p>
               </Reveal>
 
@@ -199,7 +199,7 @@ export default function AboutUs() {
                   </div>
                   <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/80 hover:border-[#C5A880] transition-colors duration-200">
                     <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
-                    <span className="font-medium">Ahmedabad Flagship Store</span>
+                    <span className="font-medium">Mumbai Flagship Boutique</span>
                   </div>
                 </div>
               </Reveal>
@@ -659,7 +659,7 @@ export default function AboutUs() {
                     Dedicated Client Assistance
                   </h3>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                    Personalized guidance for luxury gifting, watch sizing, corporate bulk requirements, and direct assistance from our Ahmedabad flagship team.
+                    Personalized guidance for luxury gifting, watch sizing, corporate bulk requirements, and direct assistance from our Mumbai flagship team.
                   </p>
                 </div>
 
@@ -698,7 +698,7 @@ export default function AboutUs() {
 
               <Reveal delay={100} direction="up">
                 <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal">
-                  We believe trust is built on consistency. Every parcel leaving our Ahmedabad fulfillment hub undergoes rigorous packaging and verification, arriving safely at your doorstep with valid manufacturer credentials.
+                  We believe trust is built on consistency. Every parcel leaving our Mumbai fulfillment hub undergoes rigorous packaging and verification, arriving safely at your doorstep with valid manufacturer credentials.
                 </p>
               </Reveal>
 
@@ -766,7 +766,7 @@ export default function AboutUs() {
                       <span>Direct Factory Authorized</span>
                     </div>
                     <span className="text-[10px] font-mono text-[#C5A880] uppercase tracking-wider">
-                      Gujarat Hub
+                      Mumbai Hub
                     </span>
                   </div>
                 </div>
@@ -778,7 +778,7 @@ export default function AboutUs() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 7. FLAGSHIP BOUTIQUE SECTION (Clean, Realistic, Ahmedabad Store)           */}
+      {/* 7. FLAGSHIP BOUTIQUE SECTION (Clean, Realistic, Mumbai Store)             */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 bg-[#FAFAFB] border-b border-neutral-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -790,15 +790,15 @@ export default function AboutUs() {
               <div className="lg:col-span-5 relative min-h-[260px] lg:min-h-full group">
                 <img
                   src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=1000&auto=format&fit=crop"
-                  alt="Krishna Accessories Ahmedabad Store"
+                  alt="Krishna Accessories Mumbai Store"
                   className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-103"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:hidden" />
                 <div className="absolute bottom-3 left-3 text-white lg:hidden">
                   <span className="text-[10px] uppercase font-bold tracking-wider text-[#C5A880]">
-                    Ahmedabad Flagship
+                    Mumbai Flagship
                   </span>
-                  <p className="font-semibold text-sm">Bodakdev, SG Highway</p>
+                  <p className="font-semibold text-sm">Heera Panna Shopping Center</p>
                 </div>
               </div>
 
@@ -814,7 +814,7 @@ export default function AboutUs() {
                     Experience Krishna Accessories in person.
                   </h2>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                    Visit our flagship store in Ahmedabad to inspect timepieces, feel genuine leather textures, test audio gear, and receive personalized assistance.
+                    Visit our flagship store in Mumbai to inspect timepieces, feel genuine leather textures, test audio gear, and receive personalized assistance.
                   </p>
                 </div>
 
@@ -827,8 +827,8 @@ export default function AboutUs() {
                       <span>Store Location</span>
                     </div>
                     <p className="text-xs text-neutral-600 leading-relaxed pl-5">
-                      Bodakdev, SG Highway,<br />
-                      Ahmedabad, Gujarat 380054
+                      Shop No. 64, Heera Panna Shopping Center,<br />
+                      Haji Ali, Mumbai 400026
                     </p>
                   </div>
 
@@ -849,8 +849,8 @@ export default function AboutUs() {
                       <span>Private Desk & Enquiries</span>
                     </div>
                     <p className="text-xs text-neutral-600 leading-relaxed pl-5">
-                      +91 (079) 4000-5500<br />
-                      <span className="text-neutral-400">concierge@krishnaaccessories.com</span>
+                      +91 93213 22761<br />
+                      <span className="text-neutral-500">shantilal6186@gmail.com</span>
                     </p>
                   </div>
 

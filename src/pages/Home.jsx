@@ -136,7 +136,7 @@ const watchHeroSlides = [
 const storeTickerItems = [
   { title: "100% CERTIFIED AUTHENTIC", subtitle: "Official Brand Warranty" },
   { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Seiko • Apple" },
-  { title: "AHMEDABAD FLAGSHIP SANCTUARY", subtitle: "Bodakdev, SG Highway" },
+  { title: "MUMBAI FLAGSHIP SANCTUARY", subtitle: "Heera Panna Shopping Center, Haji Ali" },
   { title: "INSURED EXPRESS LOGISTICS", subtitle: "BlueDart & Delhivery" },
   { title: "HANDCRAFTED LEATHER GOODS", subtitle: "Hidesign • Wildcraft • Tommy" },
   { title: "7-DAY REPLACEMENT GUARANTEE", subtitle: "100% Client Peace of Mind" },

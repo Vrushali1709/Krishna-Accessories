@@ -49,7 +49,7 @@ export default function TermsConditions() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-gray-950">5. Jurisdiction</h2>
             <p>
-              These terms shall be governed by and construed in accordance with the laws of the State of Gujarat, India, with exclusive jurisdiction in the courts of Ahmedabad.
+              These terms shall be governed by and construed in accordance with the laws of the State of Maharashtra, India, with exclusive jurisdiction in the courts of Mumbai.
             </p>
           </section>
         </div>
