@@ -34,6 +34,8 @@ const CATEGORY_ICONS = {
   'Fashion Accessories': '🕶️'
 };
 
+const POPULAR_SEARCHES = ['Watches', 'Leather Bag', 'Sneakers', 'Smartwatch', 'Perfume'];
+
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,7 +56,6 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
   const notifRef = useRef(null);
   const userMenuRef = useRef(null);
-  const searchInputRef = useRef(null);
   const catTimeoutRef = useRef(null);
 
   const handleCatMouseEnter = () => {
@@ -78,6 +79,18 @@ export default function Navbar() {
       if (catTimeoutRef.current) clearTimeout(catTimeoutRef.current);
     };
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   const refreshState = () => {
     setCartCount(getCartCount());
@@ -106,6 +119,7 @@ export default function Navbar() {
     };
   }, [location.pathname]);
 
+  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
     setCategoriesOpen(false);
@@ -114,6 +128,7 @@ export default function Navbar() {
     setShowSearch(false);
   }, [location.pathname]);
 
+  // Click & Touch outside handlers
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -126,21 +141,34 @@ export default function Navbar() {
         setUserMenuOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
       setShowSearch(false);
+      setMobileMenuOpen(false);
       setSearchQuery('');
     }
   };
 
+  const handleQuickSearch = (term) => {
+    navigate(`/shop?search=${encodeURIComponent(term)}`);
+    setShowSearch(false);
+    setMobileMenuOpen(false);
+  };
+
   const handleLogout = () => {
     logout();
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
     navigate('/');
   };
 
@@ -150,19 +178,19 @@ export default function Navbar() {
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md bg-white/98 backdrop-blur-md' : 'bg-white/95 backdrop-blur-md'}`}>
 
       {/* Top Luxury Announcement & Quick Contact Bar */}
-      <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-6 lg:px-8 xl:px-10">
-        <div className="mx-auto flex items-center justify-between gap-4">
+      <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[10.5px] sm:text-[11px] py-1.5 px-3 sm:px-6 lg:px-8 xl:px-10">
+        <div className="mx-auto flex items-center justify-between gap-2 sm:gap-4 overflow-hidden">
 
           {/* Store Location Snippet */}
-          <div className="flex items-center gap-2 truncate text-slate-300">
-            <span className="text-amber-400 font-bold shrink-0">📍 Mumbai Boutique:</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 truncate text-slate-300 min-w-0">
+            <span className="text-amber-400 font-bold shrink-0">📍 Boutique:</span>
             <span className="truncate hidden sm:inline text-slate-200">{SHOP_INFO.address}</span>
             <span className="truncate sm:hidden text-slate-200">Heera Panna, Haji Ali, Mumbai</span>
           </div>
 
           {/* Quick Direct Contacts & Social Icons */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-            {/* Phone */}
+          <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
+            {/* Phone (Desktop) */}
             <a
               href={`tel:+91${SHOP_INFO.rawPhone}`}
               className="hidden md:inline-flex items-center gap-1 text-slate-200 hover:text-amber-300 transition"
@@ -172,7 +200,7 @@ export default function Navbar() {
               <span>{SHOP_INFO.phone}</span>
             </a>
 
-            {/* Email */}
+            {/* Email (Large Screens) */}
             <a
               href={`mailto:${SHOP_INFO.email}`}
               className="hidden lg:inline-flex items-center gap-1 text-slate-200 hover:text-amber-300 transition"
@@ -183,7 +211,7 @@ export default function Navbar() {
             </a>
 
             {/* Social Icons Strip */}
-            <div className="flex items-center gap-2 border-l border-slate-700/80 pl-3">
+            <div className="flex items-center gap-2 border-l border-slate-700/80 pl-2 sm:pl-3">
               <a
                 href={SHOP_INFO.socials.facebook}
                 target="_blank"
@@ -192,7 +220,7 @@ export default function Navbar() {
                 aria-label="Facebook"
                 className="text-slate-400 hover:text-[#1877F2] transition hover:scale-110"
               >
-                <FacebookIcon className="w-3.5 h-3.5" />
+                <FacebookIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </a>
               <a
                 href={SHOP_INFO.socials.instagram}
@@ -202,7 +230,7 @@ export default function Navbar() {
                 aria-label="Instagram"
                 className="text-slate-400 hover:text-pink-400 transition hover:scale-110"
               >
-                <InstagramIcon className="w-3.5 h-3.5" />
+                <InstagramIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </a>
               <a
                 href={SHOP_INFO.whatsappUrl}
@@ -212,7 +240,7 @@ export default function Navbar() {
                 aria-label="WhatsApp Concierge"
                 className="text-slate-400 hover:text-emerald-400 transition hover:scale-110"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5" />
+                <WhatsAppIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </a>
             </div>
 
@@ -222,29 +250,29 @@ export default function Navbar() {
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 border-b border-gray-200/80">
+      <div className="w-full px-2.5 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 border-b border-gray-200/80">
         <div className="relative flex h-14 sm:h-16 items-center justify-between">
 
           {/* Left: Brand Identity */}
           <div className="flex items-center shrink-0 z-10">
-            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2.5 sm:gap-3 group">
+            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 sm:gap-3 group">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105"
+                className="h-8.5 w-8.5 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105"
               />
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors">
+                <span className="font-serif font-bold text-[13.5px] sm:text-base tracking-tight text-gray-950 leading-tight group-hover:text-amber-950 transition-colors">
                   Krishna <span className="text-amber-700 font-extrabold">Accessories</span>
                 </span>
-                <span className="text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5">
+                <span className="text-[8px] sm:text-[9.5px] uppercase tracking-[0.18em] text-gray-400 font-medium hidden xs:block">
                   Curated Luxury
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Center: Primary Navigation Links (Strictly Centered in Viewport) */}
+          {/* Center: Primary Navigation Links (Strictly Centered in Viewport on Desktop) */}
           <nav className="hidden xl:flex items-center gap-7 text-[12px] font-semibold uppercase tracking-[0.14em] text-gray-600 absolute left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
             <Link
               to="/"
@@ -318,8 +346,8 @@ export default function Navbar() {
                             to={`/shop?category=${encodeURIComponent(cat)}`}
                             onClick={() => setCategoriesOpen(false)}
                             className={`group/cat flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold normal-case transition-all duration-150 ${isActive
-                                ? 'bg-gray-950 text-white shadow-xs'
-                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-950'
+                              ? 'bg-gray-950 text-white shadow-xs'
+                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-950'
                               }`}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -356,7 +384,15 @@ export default function Navbar() {
               Shop All
             </Link>
 
-
+            <Link
+              to="/new-arrivals"
+              className={`relative py-1.5 transition-colors ${location.pathname === '/new-arrivals'
+                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                : 'hover:text-gray-950'
+                }`}
+            >
+              New Arrivals
+            </Link>
 
             <Link
               to="/about"
@@ -389,10 +425,10 @@ export default function Navbar() {
             )}
           </nav>
 
-          {/* Right: Search & Actions (Pinned to far right end) */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-auto z-10">
+          {/* Right: Actions & Buttons */}
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto z-10">
 
-            {/* Search Input Bar (Desktop) */}
+            {/* Desktop Search Bar */}
             <form onSubmit={handleSearchSubmit} className="hidden lg:block relative w-36 xl:w-44 focus-within:w-56 transition-all duration-250">
               <input
                 type="text"
@@ -414,23 +450,23 @@ export default function Navbar() {
               )}
             </form>
 
-            {/* Mobile Search Button */}
+            {/* Mobile Search Toggle Button */}
             <button
               type="button"
               onClick={() => setShowSearch(!showSearch)}
               aria-label="Search Catalog"
-              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition cursor-pointer"
+              className={`lg:hidden flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${showSearch ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'}`}
             >
               <SearchIcon className="w-3.5 h-3.5" />
             </button>
 
-            {/* Notifications Popover */}
+            {/* Notifications Popover Button */}
             <div className="relative" ref={notifRef}>
               <button
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 aria-label="Notifications"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative cursor-pointer"
+                className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative cursor-pointer"
               >
                 <BellIcon className="w-3.5 h-3.5 text-gray-700" />
                 {unreadNotifsCount > 0 && (
@@ -442,12 +478,11 @@ export default function Navbar() {
 
               {notificationsOpen && (
                 <>
-                  {/* Mobile backdrop for easy dismissal */}
                   <div
                     onClick={() => setNotificationsOpen(false)}
                     className="fixed inset-0 z-40 sm:hidden bg-black/20 backdrop-blur-[1px]"
                   />
-                  <div className="fixed left-3 right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-80 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-2xl z-50 animate-fade-in">
+                  <div className="fixed inset-x-3 top-16 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-80 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-2xl z-50 animate-fade-in">
                     <div className="flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs font-bold text-gray-950 uppercase tracking-wider">Notifications</span>
@@ -506,7 +541,7 @@ export default function Navbar() {
             {/* Wishlist Button */}
             <Link
               to="/wishlist"
-              className={`relative flex h-8 w-8 items-center justify-center rounded-lg border transition cursor-pointer ${location.pathname === '/wishlist'
+              className={`relative flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${location.pathname === '/wishlist'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
@@ -526,7 +561,7 @@ export default function Navbar() {
               to="/cart"
               aria-label="Shopping bag"
               title="Shopping bag"
-              className={`relative flex h-8 w-8 items-center justify-center rounded-lg border transition cursor-pointer ${location.pathname === '/cart'
+              className={`relative flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${location.pathname === '/cart'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
@@ -537,16 +572,17 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* User Profile / Menu */}
+            {/* User Profile / Menu (Desktop & Mobile Popover) */}
             {currentUser ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex h-8.5 items-center gap-2 rounded-xl border border-gray-200 bg-white px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
+                  aria-label="User Account Menu"
+                  className="flex h-8 sm:h-8.5 items-center gap-1.5 sm:gap-2 rounded-xl border border-gray-200 bg-white px-2 sm:px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
                 >
-                  <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-gray-100 text-gray-900 font-bold text-[11px]">
-                    {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                  <div className="flex h-5 w-5 sm:h-5.5 sm:w-5.5 items-center justify-center rounded-lg bg-amber-100 text-amber-950 font-bold text-[10.5px] sm:text-[11px]">
+                    {currentUser.name ? currentUser.name[0].toUpperCase() : (currentUser.email ? currentUser.email[0].toUpperCase() : 'U')}
                   </div>
                   <span className="hidden md:inline truncate max-w-[85px] text-[11.5px] text-gray-900 font-semibold">
                     {currentUser.name || currentUser.email.split('@')[0]}
@@ -560,47 +596,55 @@ export default function Navbar() {
                       onClick={() => setUserMenuOpen(false)}
                       className="fixed inset-0 z-40 sm:hidden bg-black/20 backdrop-blur-[1px]"
                     />
-                    <div className="fixed right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 w-64 max-w-[calc(100vw-24px)] rounded-2xl border border-gray-200 bg-white p-2.5 shadow-2xl z-50 animate-fade-in divide-y divide-gray-100">
+                    <div className="fixed inset-x-3 top-16 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-72 rounded-2xl border border-gray-200 bg-white p-3 shadow-2xl z-50 animate-fade-in divide-y divide-gray-100">
                       {/* User Info Header */}
-                      <div className="px-2 pb-2">
-                        <p className="text-xs font-bold text-gray-950 truncate leading-tight">{currentUser.name || 'Account'}</p>
-                        <p className="text-[10px] text-gray-500 truncate mt-0.5">{currentUser.email}</p>
-                        <div className="mt-1.5 flex items-center gap-1.5">
+                      <div className="px-2 pb-2.5">
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-950 font-bold text-sm">
+                            {currentUser.name ? currentUser.name[0].toUpperCase() : (currentUser.email ? currentUser.email[0].toUpperCase() : 'U')}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-gray-950 truncate leading-tight">{currentUser.name || 'Valued Client'}</p>
+                            <p className="text-[10.5px] text-gray-500 truncate mt-0.5">{currentUser.email}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-2 flex items-center gap-1.5">
                           <span className={`inline-block rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${currentUser.role === 'admin'
-                              ? 'bg-amber-100 text-amber-900 border border-amber-300/60'
-                              : currentUser.role === 'supplier'
-                                ? 'bg-blue-100 text-blue-900 border border-blue-300/60'
-                                : 'bg-gray-100 text-gray-800 border border-gray-200'
+                            ? 'bg-amber-100 text-amber-900 border border-amber-300/60'
+                            : currentUser.role === 'supplier'
+                              ? 'bg-blue-100 text-blue-900 border border-blue-300/60'
+                              : 'bg-gray-100 text-gray-800 border border-gray-200'
                             }`}>
-                            {currentUser.role || 'Customer'}
+                            {currentUser.role === 'admin' ? 'Super Admin' : (currentUser.role === 'supplier' ? 'Vendor Partner' : 'Customer')}
                           </span>
                         </div>
                       </div>
 
-                      {/* Customer Navigation Links */}
-                      <div className="py-1.5 space-y-0.5">
+                      {/* Navigation Links */}
+                      <div className="py-2 space-y-0.5 text-xs">
                         <Link
                           to="/account"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                          className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
                         >
                           <span className="text-sm">👤</span>
-                          <span>Account & Orders</span>
+                          <span>My Account & Orders</span>
                         </Link>
 
                         <Link
                           to="/account?tab=tracking"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                          className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
                         >
                           <span className="text-sm">🚚</span>
-                          <span>Track Order</span>
+                          <span>Track Live Order</span>
                         </Link>
 
                         <Link
                           to="/wishlist"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                          className="flex items-center justify-between rounded-xl px-2.5 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
                         >
                           <div className="flex items-center gap-2.5">
                             <span className="text-sm text-rose-500">♥</span>
@@ -616,7 +660,7 @@ export default function Navbar() {
                         <Link
                           to="/cart"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                          className="flex items-center justify-between rounded-xl px-2.5 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
                         >
                           <div className="flex items-center gap-2.5">
                             <span className="text-sm">🛍️</span>
@@ -630,93 +674,45 @@ export default function Navbar() {
                         </Link>
                       </div>
 
-                      {/* Management Portals & Admin Login Options */}
-                      <div className="py-1.5 space-y-0.5">
-                        <div className="px-2 py-0.5">
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">
-                            Portals & Staff Login
-                          </span>
+                      {/* Management Portals */}
+                      {(isAdmin() || isSupplier()) && (
+                        <div className="py-2 space-y-1">
+                          {isAdmin() && (
+                            <Link
+                              to="/admin"
+                              onClick={() => setUserMenuOpen(false)}
+                              className="flex items-center justify-between rounded-xl px-2.5 py-2 text-xs font-bold text-amber-950 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">⚙️</span>
+                                <span>Admin Dashboard</span>
+                              </div>
+                              <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full">Active</span>
+                            </Link>
+                          )}
+
+                          {isSupplier() && (
+                            <Link
+                              to="/supplier"
+                              onClick={() => setUserMenuOpen(false)}
+                              className="flex items-center justify-between rounded-xl px-2.5 py-2 text-xs font-bold text-blue-950 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 transition"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">🏢</span>
+                                <span>Vendor Portal</span>
+                              </div>
+                              <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full">Active</span>
+                            </Link>
+                          )}
                         </div>
+                      )}
 
-                        {/* Admin Portal / Admin Login Link */}
-                        {isAdmin() ? (
-                          <Link
-                            to="/admin"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-bold text-amber-950 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm">⚙️</span>
-                              <span>Admin Dashboard</span>
-                            </div>
-                            <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full">Active</span>
-                          </Link>
-                        ) : (
-                          <Link
-                            to="/login"
-                            state={{ requiredRole: 'admin', from: '/admin', message: 'Enter Administrator ID & Password to access Admin Management.' }}
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-800 hover:bg-amber-50 hover:text-amber-950 hover:border-amber-200 transition"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm">🔑</span>
-                              <span>Admin / Staff Login</span>
-                            </div>
-                            <span className="text-[10px] text-gray-400">&rarr;</span>
-                          </Link>
-                        )}
-
-                        {/* Vendor Portal / Vendor Login Link */}
-                        {isSupplier() ? (
-                          <Link
-                            to="/supplier"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-bold text-blue-950 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 transition"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm">🏢</span>
-                              <span>Vendor Partner Portal</span>
-                            </div>
-                            <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full">Active</span>
-                          </Link>
-                        ) : (
-                          <Link
-                            to="/login"
-                            state={{ requiredRole: 'supplier', from: '/supplier', message: 'Enter Supplier ID & Password to access Vendor Portal.' }}
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-800 hover:bg-blue-50 hover:text-blue-950 hover:border-blue-200 transition"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm">🏢</span>
-                              <span>Vendor Partner Portal</span>
-                            </div>
-                            <span className="text-[10px] text-gray-400">&rarr;</span>
-                          </Link>
-                        )}
-
-                        {/* Login Page (Direct access to all roles) */}
-                        <Link
-                          to="/login"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="text-sm">🔄</span>
-                            <span>Login Page (All Roles)</span>
-                          </div>
-                          <span className="text-[10px] text-gray-400">&rarr;</span>
-                        </Link>
-                      </div>
-
-                      {/* Sign Out */}
-                      <div className="pt-1.5">
+                      {/* Sign Out Button */}
+                      <div className="pt-2">
                         <button
                           type="button"
-                          onClick={() => {
-                            setUserMenuOpen(false);
-                            handleLogout();
-                          }}
-                          className="w-full flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                          onClick={handleLogout}
+                          className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-50 border border-rose-200 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 active:scale-98 transition shadow-2xs cursor-pointer"
                         >
                           <span>🚪</span>
                           <span>Sign Out</span>
@@ -730,8 +726,8 @@ export default function Navbar() {
               <Link
                 to="/login"
                 aria-label="Login"
-                title="Login"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0 cursor-pointer"
+                title="Sign In / Register"
+                className="inline-flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0 cursor-pointer"
               >
                 <UserIcon className="w-3.5 h-3.5 text-white" />
               </Link>
@@ -741,8 +737,8 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle Menu"
-              className="xl:hidden flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
+              aria-label="Toggle Navigation Menu"
+              className="xl:hidden flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border border-gray-200 bg-[#F4F4F6] text-gray-800 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
             >
               {mobileMenuOpen ? '✕' : '☰'}
             </button>
@@ -754,276 +750,402 @@ export default function Navbar() {
 
       {/* Mobile Search Bar Overlay */}
       {showSearch && (
-        <div className="lg:hidden border-t border-gray-200 bg-white p-2.5 animate-fade-in">
+        <div className="lg:hidden border-t border-gray-200 bg-white p-3 shadow-md animate-fade-in">
           <form onSubmit={handleSearchSubmit} className="relative">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search timepieces, footwear, bags..."
+              placeholder="Search timepieces, bags, footwear, accessories..."
               autoFocus
-              className="w-full rounded-lg border border-gray-300 bg-[#F4F4F6] py-1.5 pl-8 pr-12 text-xs text-gray-900 outline-none"
+              className="w-full rounded-xl border border-gray-300 bg-[#F4F4F6] py-2 pl-9 pr-16 text-xs text-gray-900 outline-none focus:border-gray-900 focus:bg-white transition"
             />
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
-              <SearchIcon className="w-3 h-3" />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+              <SearchIcon className="w-3.5 h-3.5" />
             </span>
             <button
               type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 rounded-md bg-[#111827] px-2.5 py-0.5 text-[10px] font-bold text-white"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-[#111827] px-3 py-1 text-[10px] font-bold text-white hover:bg-black transition cursor-pointer"
             >
-              Find
+              Search
             </button>
           </form>
+
+          {/* Quick Keyword Pills */}
+          <div className="mt-2 flex items-center gap-1.5 overflow-x-auto pb-1 text-[10.5px]">
+            <span className="text-gray-400 font-semibold shrink-0">Popular:</span>
+            {POPULAR_SEARCHES.map(tag => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => handleQuickSearch(tag)}
+                className="shrink-0 rounded-full bg-gray-100 hover:bg-gray-200 px-2.5 py-0.5 text-gray-700 font-medium transition cursor-pointer"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Mobile Drawer */}
+      {/* Full Mobile Slide-Over Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-gray-200 bg-white px-3.5 py-3.5 shadow-xl max-h-[80vh] overflow-y-auto animate-fade-in">
-          {/* Mobile Drawer Brand Identity */}
-          <div className="flex items-center gap-2.5 pb-3 mb-2 border-b border-gray-100">
-            <img
-              src="/images/krishna-logo.png"
-              alt="Krishna Accessories"
-              className="h-10 w-10 object-contain rounded-xl bg-white p-0.5 border border-amber-500/30 shadow-2xs"
-            />
-            <div className="flex flex-col">
-              <span className="font-serif font-bold text-sm text-gray-950 leading-tight">
-                Krishna <span className="text-amber-700">Accessories</span>
-              </span>
-              <span className="text-[9px] uppercase tracking-widest text-gray-400 font-semibold">
-                Mumbai Boutique
-              </span>
-            </div>
-          </div>
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs animate-fade-in xl:hidden"
+          />
 
-          <div className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wider">
-            <Link
-              to="/"
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
-            >
-              Home
-            </Link>
-            <Link
-              to="/shop"
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
-            >
-              Shop All Catalog
-            </Link>
+          {/* Slide-In Drawer */}
+          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-[340px] sm:max-w-[380px] bg-white shadow-2xl flex flex-col animate-slide-in-right xl:hidden overflow-hidden">
 
-            {/* All Departments list on mobile */}
-            <div className="py-2.5 px-3 border-y border-gray-100 my-1">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">
-                  All Departments ({allCategories.length})
-                </span>
-                <Link
-                  to="/shop"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-[10px] font-bold text-gray-900 hover:underline normal-case"
-                >
-                  View All &rarr;
-                </Link>
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100 bg-white">
+              <div className="flex items-center gap-2.5">
+                <img
+                  src="/images/krishna-logo.png"
+                  alt="Krishna Accessories"
+                  className="h-8.5 w-8.5 object-contain rounded-xl bg-white p-0.5 border border-amber-500/30 shadow-2xs"
+                />
+                <div className="flex flex-col">
+                  <span className="font-serif font-bold text-sm text-gray-950 leading-tight">
+                    Krishna <span className="text-amber-700">Accessories</span>
+                  </span>
+                  <span className="text-[9px] uppercase tracking-widest text-gray-400 font-semibold">
+                    Mumbai Boutique
+                  </span>
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-1.5 normal-case font-medium">
-                {allCategories.map(c => {
-                  const icon = CATEGORY_ICONS[c] || '✨';
-                  return (
-                    <Link
-                      key={c}
-                      to={`/shop?category=${encodeURIComponent(c)}`}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 rounded-lg bg-[#F4F4F6] px-2.5 py-2 text-[11px] text-gray-800 hover:bg-gray-200 transition"
-                    >
-                      <span className="text-xs shrink-0">{icon}</span>
-                      <span className="truncate">{c}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
 
-            <Link
-              to="/cart"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-gray-900 bg-gray-50 hover:bg-gray-100 transition flex items-center justify-between font-bold"
-            >
-              <div className="flex items-center gap-2">
-                <span>🛍️</span>
-                <span>My Shopping Bag</span>
-              </div>
-              <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold text-white ${cartCount > 0 ? 'bg-[#111827]' : 'bg-gray-400'}`}>
-                {cartCount} {cartCount === 1 ? 'item' : 'items'}
-              </span>
-            </Link>
-            <Link
-              to="/wishlist"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition flex items-center justify-between"
-            >
-              <span>Saved Wishlist</span>
-              {wishlistCount > 0 && (
-                <span className="rounded-full bg-rose-600 px-1.5 py-0.2 text-[8.5px] text-white font-bold">{wishlistCount}</span>
-              )}
-            </Link>
-            <Link
-              to="/about"
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
-            >
-              About Us
-            </Link>
-            <Link
-              to="/contact"
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
-            >
-              Contact & Concierge
-            </Link>
-
-            {/* Portal & Staff Access links on Mobile */}
-            <div className="pt-2 border-t border-gray-100 space-y-1">
-              {currentUser && currentUser.role === 'admin' ? (
-                <Link
-                  to="/admin"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 font-bold text-amber-950 bg-amber-50 border border-amber-200 block"
-                >
-                  ⚙️ Admin Control Console
-                </Link>
-              ) : (
-                <Link
-                  to="/login"
-                  state={{ requiredRole: 'admin', from: '/admin', message: 'Enter Administrator ID & Password to access Admin Management.' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 font-semibold text-gray-800 hover:bg-amber-50 hover:text-amber-950 block"
-                >
-                  🔑 Admin / Staff Login &rarr;
-                </Link>
-              )}
-
-              {currentUser && currentUser.role === 'supplier' ? (
-                <Link
-                  to="/supplier"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 font-bold text-blue-700 bg-blue-50 border border-blue-200 block"
-                >
-                  🏢 Vendor Portal
-                </Link>
-              ) : (
-                <Link
-                  to="/login"
-                  state={{ requiredRole: 'supplier', from: '/supplier', message: 'Enter Supplier ID & Password to access Vendor Portal.' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 font-semibold text-gray-800 hover:bg-blue-50 hover:text-blue-950 block"
-                >
-                  🏢 Vendor Partner Portal &rarr;
-                </Link>
-              )}
-
-              <Link
-                to="/login"
+              <button
+                type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-3 py-2 font-semibold text-gray-600 hover:bg-gray-100 block"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition cursor-pointer text-sm font-bold"
+                aria-label="Close navigation"
               >
-                🔄 Login Page (All Roles) &rarr;
-              </Link>
+                ✕
+              </button>
             </div>
 
-            <div className="border-t border-gray-100 pt-2.5 mt-1.5">
+            {/* Drawer Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+
+              {/* 1. Account Section (Prominently placed at TOP) */}
               {currentUser ? (
-                <div className="space-y-1.5">
-                  <div className="grid grid-cols-2 gap-1.5">
+                <div className="rounded-2xl border border-amber-200/70 bg-gradient-to-br from-amber-50/80 via-white to-slate-50 p-3.5 shadow-2xs space-y-3">
+                  {/* User Profile Header */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-200/80 text-amber-950 font-bold text-sm shadow-xs shrink-0">
+                      {currentUser.name ? currentUser.name[0].toUpperCase() : (currentUser.email ? currentUser.email[0].toUpperCase() : 'U')}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <p className="text-xs font-bold text-gray-950 truncate leading-tight">
+                          {currentUser.name || 'Valued Client'}
+                        </p>
+                        <span className={`rounded-full px-2 py-0.5 text-[8.5px] font-bold uppercase tracking-wider shrink-0 ${currentUser.role === 'admin'
+                          ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                          : currentUser.role === 'supplier'
+                            ? 'bg-blue-100 text-blue-900 border border-blue-300'
+                            : 'bg-gray-100 text-gray-800'
+                          }`}>
+                          {currentUser.role === 'admin' ? 'Super Admin' : (currentUser.role === 'supplier' ? 'Vendor' : 'Customer')}
+                        </span>
+                      </div>
+                      <p className="text-[10.5px] text-gray-500 truncate mt-0.5">{currentUser.email}</p>
+                    </div>
+                  </div>
+
+                  {/* 2x2 Quick Link Grid */}
+                  <div className="grid grid-cols-2 gap-1.5 text-xs font-semibold">
                     <Link
                       to="/account"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200 truncate px-2"
+                      className="flex items-center gap-2 rounded-xl bg-white border border-gray-200/80 px-2.5 py-2 text-gray-800 hover:bg-gray-50 shadow-2xs transition truncate"
                     >
-                      👤 Account
+                      <span>👤</span>
+                      <span className="truncate">My Account</span>
                     </Link>
+
                     <Link
                       to="/account?tab=tracking"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200 truncate px-2"
+                      className="flex items-center gap-2 rounded-xl bg-white border border-gray-200/80 px-2.5 py-2 text-gray-800 hover:bg-gray-50 shadow-2xs transition truncate"
                     >
-                      🚚 Track Order
+                      <span>🚚</span>
+                      <span className="truncate">Track Order</span>
+                    </Link>
+
+                    <Link
+                      to="/wishlist"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between rounded-xl bg-white border border-gray-200/80 px-2.5 py-2 text-gray-800 hover:bg-gray-50 shadow-2xs transition truncate"
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0 truncate">
+                        <span className="text-rose-500">♥</span>
+                        <span className="truncate">Wishlist</span>
+                      </div>
+                      {wishlistCount > 0 && (
+                        <span className="rounded-full bg-rose-100 text-rose-700 font-bold px-1.5 py-0.2 text-[8.5px] shrink-0">
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </Link>
+
+                    <Link
+                      to="/cart"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between rounded-xl bg-white border border-gray-200/80 px-2.5 py-2 text-gray-800 hover:bg-gray-50 shadow-2xs transition truncate"
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0 truncate">
+                        <span>🛍️</span>
+                        <span className="truncate">Bag</span>
+                      </div>
+                      <span className="rounded-full bg-gray-900 text-white font-bold px-1.5 py-0.2 text-[8.5px] shrink-0">
+                        {cartCount}
+                      </span>
                     </Link>
                   </div>
+
+                  {/* Portals if Admin or Supplier */}
+                  {currentUser.role === 'admin' && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between rounded-xl bg-amber-100/70 border border-amber-300 px-3 py-2 text-xs font-bold text-amber-950 hover:bg-amber-100 transition"
+                    >
+                      <span>⚙️ Admin Control Center</span>
+                      <span>&rarr;</span>
+                    </Link>
+                  )}
+
+                  {currentUser.role === 'supplier' && (
+                    <Link
+                      to="/supplier"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between rounded-xl bg-blue-100/70 border border-blue-300 px-3 py-2 text-xs font-bold text-blue-950 hover:bg-blue-100 transition"
+                    >
+                      <span>🏢 Vendor Partner Portal</span>
+                      <span>&rarr;</span>
+                    </Link>
+                  )}
+
+                  {/* PROMINENT MOBILE SIGN OUT BUTTON */}
                   <button
                     type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full rounded-lg border border-rose-200 bg-rose-50 py-1.5 text-center text-xs font-bold text-rose-700 hover:bg-rose-100 cursor-pointer"
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-50 border border-rose-200/90 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 active:scale-98 transition shadow-2xs cursor-pointer"
                   >
-                    Sign Out
+                    <span>🚪</span>
+                    <span>Sign Out</span>
                   </button>
                 </div>
               ) : (
-                <div className="space-y-1.5">
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full rounded-full bg-[#111827] py-2 text-center text-xs font-semibold uppercase tracking-wider text-white hover:bg-black"
-                  >
-                    <span className="text-white">Sign In to Account</span>
-                  </Link>
+                <div className="rounded-2xl border border-gray-200 bg-gray-50/70 p-3.5 space-y-2.5">
+                  <div>
+                    <p className="text-xs font-bold text-gray-950">Welcome to Krishna Accessories</p>
+                    <p className="text-[10.5px] text-gray-500 mt-0.5">Sign in to track orders, manage wishlist & checkout fast.</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center rounded-xl bg-[#111827] text-white py-2 text-xs font-semibold hover:bg-black transition shadow-2xs"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center rounded-xl border border-gray-300 bg-white text-gray-800 py-2 text-xs font-semibold hover:bg-gray-100 transition shadow-2xs"
+                    >
+                      Register
+                    </Link>
+                  </div>
                 </div>
               )}
-            </div>
 
-            {/* Mobile Boutique Info & Social Links */}
-            <div className="border-t border-gray-100 pt-3 mt-1 text-[11px] text-gray-500 space-y-2">
-              <p className="text-gray-900 font-semibold flex items-center gap-1.5">
-                <span>📍</span>
-                <span className="truncate">{SHOP_INFO.shortAddress}</span>
-              </p>
+              {/* 2. Primary Navigation Links */}
+              <div className="space-y-1 text-xs font-semibold">
+                <Link
+                  to="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/' ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>🏠</span>
+                    <span>Home</span>
+                  </span>
+                  <span className="text-xs">&rarr;</span>
+                </Link>
 
-              <div className="flex flex-col gap-1 text-gray-600">
-                <a href={`tel:+91${SHOP_INFO.rawPhone}`} className="hover:text-black flex items-center gap-1.5">
-                  <span>📞</span>
-                  <span>{SHOP_INFO.phone}</span>
-                </a>
-                <a href={`mailto:${SHOP_INFO.email}`} className="hover:text-black flex items-center gap-1.5 break-all">
-                  <span>✉️</span>
-                  <span>{SHOP_INFO.email}</span>
-                </a>
+                <Link
+                  to="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/shop' && !location.search ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>🛍️</span>
+                    <span>Shop All Catalog</span>
+                  </span>
+                  <span className="text-xs">&rarr;</span>
+                </Link>
+
+                <Link
+                  to="/new-arrivals"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/new-arrivals' ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>✨</span>
+                    <span>New Arrivals</span>
+                  </span>
+                  <span className="rounded-full bg-amber-100 text-amber-900 font-bold px-2 py-0.2 text-[9px]">Hot</span>
+                </Link>
+
+                <Link
+                  to="/about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/about' ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>🏛️</span>
+                    <span>About Boutique & Heritage</span>
+                  </span>
+                  <span className="text-xs">&rarr;</span>
+                </Link>
+
+                <Link
+                  to="/contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/contact' ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>📞</span>
+                    <span>Contact & Concierge</span>
+                  </span>
+                  <span className="text-xs">&rarr;</span>
+                </Link>
+
+                <Link
+                  to="/faq"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/faq' ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>❓</span>
+                    <span>FAQ & Authenticity Guarantee</span>
+                  </span>
+                  <span className="text-xs">&rarr;</span>
+                </Link>
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Social:</span>
-                <a
-                  href={SHOP_INFO.socials.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-[#1877F2] hover:bg-gray-200 transition"
-                  aria-label="Facebook"
-                >
-                  <FacebookIcon className="w-3.5 h-3.5" />
-                </a>
-                <a
-                  href={SHOP_INFO.socials.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-pink-600 hover:bg-gray-200 transition"
-                  aria-label="Instagram"
-                >
-                  <InstagramIcon className="w-3.5 h-3.5" />
-                </a>
+              {/* 3. All Departments & Categories Grid */}
+              <div className="pt-2 border-t border-gray-100">
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                    All Collections ({allCategories.length})
+                  </span>
+                  <Link
+                    to="/shop"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-[10.5px] font-bold text-gray-900 hover:text-amber-700 transition"
+                  >
+                    View All &rarr;
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  {allCategories.map((c) => {
+                    const icon = CATEGORY_ICONS[c] || '✨';
+                    const isActive = location.search.includes(`category=${encodeURIComponent(c)}`);
+                    return (
+                      <Link
+                        key={c}
+                        to={`/shop?category=${encodeURIComponent(c)}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center justify-between rounded-xl px-2.5 py-2 text-[11px] font-medium transition ${isActive
+                          ? 'bg-gray-900 text-white shadow-xs font-semibold'
+                          : 'bg-[#F4F4F6] text-gray-800 hover:bg-gray-200'
+                          }`}
+                      >
+                        <div className="flex items-center gap-1.5 min-w-0 truncate">
+                          <span className="text-xs shrink-0">{icon}</span>
+                          <span className="truncate">{c}</span>
+                        </div>
+                        <span className={`text-[10px] shrink-0 ${isActive ? 'text-amber-300' : 'text-gray-400'}`}>&rarr;</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4. Boutique Quick Concierge & Socials */}
+              <div className="pt-3 border-t border-gray-100 space-y-2.5 pb-2">
                 <a
                   href={SHOP_INFO.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-emerald-600 hover:bg-gray-200 transition"
-                  aria-label="WhatsApp"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-xs font-bold shadow-xs transition"
                 >
                   <WhatsAppIcon className="w-3.5 h-3.5" />
+                  <span>Chat on WhatsApp VIP Concierge</span>
                 </a>
+
+                <div className="bg-gray-50 rounded-xl p-2.5 text-[11px] text-gray-600 space-y-1 border border-gray-100">
+                  <p className="text-gray-900 font-semibold flex items-center gap-1.5">
+                    <span>📍</span>
+                    <span className="truncate">{SHOP_INFO.address}</span>
+                  </p>
+                  <a href={`tel:+91${SHOP_INFO.rawPhone}`} className="hover:text-black flex items-center gap-1.5">
+                    <span>📞</span>
+                    <span>{SHOP_INFO.phone}</span>
+                  </a>
+                </div>
+
+                <div className="flex items-center justify-between pt-1 px-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Connect With Us:</span>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={SHOP_INFO.socials.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-[#1877F2] hover:bg-gray-200 transition"
+                      aria-label="Facebook"
+                    >
+                      <FacebookIcon className="w-3.5 h-3.5" />
+                    </a>
+                    <a
+                      href={SHOP_INFO.socials.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-pink-600 hover:bg-gray-200 transition"
+                      aria-label="Instagram"
+                    >
+                      <InstagramIcon className="w-3.5 h-3.5" />
+                    </a>
+                    <a
+                      href={SHOP_INFO.whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-emerald-600 hover:bg-gray-200 transition"
+                      aria-label="WhatsApp"
+                    >
+                      <WhatsAppIcon className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
               </div>
+
             </div>
 
           </div>
-        </div>
+        </>
       )}
+
     </header>
   );
 }
