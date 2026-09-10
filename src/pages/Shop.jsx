@@ -16,6 +16,8 @@ export default function Shop() {
   const urlCategory = searchParams.get('category') || 'All';
   const urlBrand = searchParams.get('brand') || 'All';
   const urlSearch = searchParams.get('search') || '';
+  const urlMaxPrice = searchParams.get('maxPrice');
+  const urlMinPrice = searchParams.get('minPrice');
 
   const [products, setProducts] = useState(() => getProducts());
   const [categories, setCategories] = useState(() => ['All', ...getCategories()]);
@@ -24,8 +26,8 @@ export default function Shop() {
   const [selectedBrand, setSelectedBrand] = useState(urlBrand);
   const [sort, setSort] = useState('featured');
   const [search, setSearch] = useState(urlSearch);
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(250000);
+  const [minPrice, setMinPrice] = useState(() => (urlMinPrice ? Number(urlMinPrice) : 0));
+  const [maxPrice, setMaxPrice] = useState(() => (urlMaxPrice ? Number(urlMaxPrice) : 250000));
   const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFilters, setMobileFilters] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -59,6 +61,18 @@ export default function Shop() {
       setSearch(urlSearch);
     }
   }, [urlSearch]);
+
+  useEffect(() => {
+    if (urlMaxPrice) {
+      setMaxPrice(Number(urlMaxPrice));
+    }
+  }, [urlMaxPrice]);
+
+  useEffect(() => {
+    if (urlMinPrice) {
+      setMinPrice(Number(urlMinPrice));
+    }
+  }, [urlMinPrice]);
 
   // Dynamic Brands based on selected category
   const dynamicBrands = useMemo(() => {
