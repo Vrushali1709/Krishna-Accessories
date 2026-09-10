@@ -250,22 +250,22 @@ export default function Navbar() {
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="w-full px-2.5 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 border-b border-gray-200/80">
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 border-b border-gray-200/80">
         <div className="relative flex h-14 sm:h-16 items-center justify-between">
 
           {/* Left: Brand Identity */}
           <div className="flex items-center shrink-0 z-10">
-            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 sm:gap-3 group">
+            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2.5 sm:gap-3 group">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                className="h-8.5 w-8.5 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105"
+                className="h-9 w-9 sm:h-10 sm:w-10 min-w-[36px] object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105 shrink-0"
               />
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-[13.5px] sm:text-base tracking-tight text-gray-950 leading-tight group-hover:text-amber-950 transition-colors">
+                <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-gray-950 leading-tight group-hover:text-amber-950 transition-colors">
                   Krishna <span className="text-amber-700 font-extrabold">Accessories</span>
                 </span>
-                <span className="text-[8px] sm:text-[9.5px] uppercase tracking-[0.18em] text-gray-400 font-medium hidden xs:block">
+                <span className="text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.18em] text-gray-400 font-medium hidden xs:block">
                   Curated Luxury
                 </span>
               </div>
@@ -425,8 +425,8 @@ export default function Navbar() {
             )}
           </nav>
 
-          {/* Right: Actions & Buttons */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto z-10">
+          {/* Right Actions: Balanced for Mobile & Desktop */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto z-10">
 
             {/* Desktop Search Bar */}
             <form onSubmit={handleSearchSubmit} className="hidden lg:block relative w-36 xl:w-44 focus-within:w-56 transition-all duration-250">
@@ -455,18 +455,18 @@ export default function Navbar() {
               type="button"
               onClick={() => setShowSearch(!showSearch)}
               aria-label="Search Catalog"
-              className={`lg:hidden flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${showSearch ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'}`}
+              className={`flex h-8.5 w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${showSearch ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'}`}
             >
               <SearchIcon className="w-3.5 h-3.5" />
             </button>
 
-            {/* Notifications Popover Button */}
-            <div className="relative" ref={notifRef}>
+            {/* Notifications Popover Button (Hidden on small mobile to prevent clutter, accessible in drawer) */}
+            <div className="hidden sm:block relative" ref={notifRef}>
               <button
                 type="button"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 aria-label="Notifications"
-                className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative cursor-pointer"
+                className="flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative cursor-pointer"
               >
                 <BellIcon className="w-3.5 h-3.5 text-gray-700" />
                 {unreadNotifsCount > 0 && (
@@ -538,10 +538,10 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Wishlist Button */}
+            {/* Wishlist Button (Desktop & Tablet) */}
             <Link
               to="/wishlist"
-              className={`relative flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${location.pathname === '/wishlist'
+              className={`hidden md:flex relative h-8.5 w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${location.pathname === '/wishlist'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
@@ -556,12 +556,12 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Shopping Bag Button */}
+            {/* Shopping Bag Button (Always Visible) */}
             <Link
               to="/cart"
               aria-label="Shopping bag"
               title="Shopping bag"
-              className={`relative flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${location.pathname === '/cart'
+              className={`relative flex h-8.5 w-8.5 items-center justify-center rounded-xl border transition cursor-pointer ${location.pathname === '/cart'
                 ? 'border-gray-900 bg-gray-100 text-gray-950 font-bold'
                 : 'border-gray-200 bg-[#F4F4F6] text-gray-700 hover:border-gray-300 hover:bg-gray-200'
                 }`}
@@ -572,16 +572,16 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* User Profile / Menu (Desktop & Mobile Popover) */}
+            {/* User Profile / Menu (Desktop & Tablet) */}
             {currentUser ? (
-              <div className="relative" ref={userMenuRef}>
+              <div className="hidden sm:block relative" ref={userMenuRef}>
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   aria-label="User Account Menu"
-                  className="flex h-8 sm:h-8.5 items-center gap-1.5 sm:gap-2 rounded-xl border border-gray-200 bg-white px-2 sm:px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
+                  className="flex h-8.5 items-center gap-1.5 sm:gap-2 rounded-xl border border-gray-200 bg-white px-2 sm:px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
                 >
-                  <div className="flex h-5 w-5 sm:h-5.5 sm:w-5.5 items-center justify-center rounded-lg bg-amber-100 text-amber-950 font-bold text-[10.5px] sm:text-[11px]">
+                  <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-amber-100 text-amber-950 font-bold text-[11px]">
                     {currentUser.name ? currentUser.name[0].toUpperCase() : (currentUser.email ? currentUser.email[0].toUpperCase() : 'U')}
                   </div>
                   <span className="hidden md:inline truncate max-w-[85px] text-[11.5px] text-gray-900 font-semibold">
@@ -727,18 +727,18 @@ export default function Navbar() {
                 to="/login"
                 aria-label="Login"
                 title="Sign In / Register"
-                className="inline-flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0 cursor-pointer"
+                className="hidden sm:inline-flex h-8.5 w-8.5 items-center justify-center rounded-xl bg-[#111827] text-white shadow-2xs transition hover:bg-black shrink-0 cursor-pointer"
               >
                 <UserIcon className="w-3.5 h-3.5 text-white" />
               </Link>
             )}
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile Menu 3-Lines (Hamburger) Toggle Button */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Navigation Menu"
-              className="xl:hidden flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl border border-gray-200 bg-[#F4F4F6] text-gray-800 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
+              className="xl:hidden flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-gray-200 bg-[#F4F4F6] text-gray-900 hover:bg-gray-200 transition text-base font-bold shrink-0 cursor-pointer"
             >
               {mobileMenuOpen ? '✕' : '☰'}
             </button>
@@ -797,16 +797,16 @@ export default function Navbar() {
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs animate-fade-in xl:hidden"
           />
 
-          {/* Slide-In Drawer */}
-          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-[340px] sm:max-w-[380px] bg-white shadow-2xl flex flex-col animate-slide-in-right xl:hidden overflow-hidden">
+          {/* Full Height Slide-In Drawer */}
+          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-[340px] sm:max-w-[380px] h-[100dvh] bg-white shadow-2xl flex flex-col animate-slide-in-right xl:hidden overflow-hidden">
 
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100 bg-white">
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100 bg-white shrink-0">
               <div className="flex items-center gap-2.5">
                 <img
                   src="/images/krishna-logo.png"
-                  alt="Krishna Accessories"
-                  className="h-8.5 w-8.5 object-contain rounded-xl bg-white p-0.5 border border-amber-500/30 shadow-2xs"
+                  alt="Krishna Accessories Logo"
+                  className="h-10 w-10 min-w-[40px] object-contain rounded-xl bg-white p-0.5 border border-amber-500/30 shadow-xs shrink-0"
                 />
                 <div className="flex flex-col">
                   <span className="font-serif font-bold text-sm text-gray-950 leading-tight">
@@ -821,7 +821,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition cursor-pointer text-sm font-bold"
+                className="flex h-8.5 w-8.5 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition cursor-pointer text-sm font-bold shrink-0"
                 aria-label="Close navigation"
               >
                 ✕
@@ -829,7 +829,7 @@ export default function Navbar() {
             </div>
 
             {/* Drawer Scrollable Content */}
-            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+            <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-3 space-y-4 pb-20">
 
               {/* 1. Account Section (Prominently placed at TOP) */}
               {currentUser ? (
@@ -935,7 +935,7 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-50 border border-rose-200/90 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 active:scale-98 transition shadow-2xs cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-50 border border-rose-200/90 py-2.5 text-xs font-bold text-rose-700 hover:bg-rose-100 active:scale-98 transition shadow-2xs cursor-pointer"
                   >
                     <span>🚪</span>
                     <span>Sign Out</span>
@@ -1003,6 +1003,22 @@ export default function Navbar() {
                     <span>New Arrivals</span>
                   </span>
                   <span className="rounded-full bg-amber-100 text-amber-900 font-bold px-2 py-0.2 text-[9px]">Hot</span>
+                </Link>
+
+                <Link
+                  to="/wishlist"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/wishlist' ? 'bg-gray-950 text-white font-bold' : 'text-gray-800 hover:bg-gray-100'}`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span>♥</span>
+                    <span>Saved Wishlist</span>
+                  </span>
+                  {wishlistCount > 0 && (
+                    <span className="rounded-full bg-rose-600 text-white font-bold px-2 py-0.2 text-[9px]">
+                      {wishlistCount}
+                    </span>
+                  )}
                 </Link>
 
                 <Link
