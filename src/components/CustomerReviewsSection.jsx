@@ -211,33 +211,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
           </div>
 
           {/* Carousel Arrow Controls */}
-          <div className="hidden sm:flex items-center gap-1.5 shrink-0 pl-1">
-            <button
-              type="button"
-              onClick={() => scrollCarousel('left')}
-              disabled={!canScrollLeft}
-              aria-label="Previous reviews"
-              className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${canScrollLeft
-                ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
-                : 'border border-neutral-200 bg-neutral-50 text-neutral-300 cursor-not-allowed'
-                }`}
-            >
-              <ChevronLeftIcon className="w-3.5 h-3.5" />
-            </button>
 
-            <button
-              type="button"
-              onClick={() => scrollCarousel('right')}
-              disabled={!canScrollRight}
-              aria-label="Next reviews"
-              className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${canScrollRight
-                ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
-                : 'border border-neutral-200 bg-neutral-50 text-neutral-300 cursor-not-allowed'
-                }`}
-            >
-              <ChevronRightIcon className="w-3.5 h-3.5" />
-            </button>
-          </div>
         </div>
       </div>
 
@@ -248,9 +222,8 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        className={`flex gap-4 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
-        }`}
+        className={`flex gap-4 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {reviews.map((review, idx) => (
@@ -310,11 +283,10 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             type="button"
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
-            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
-              i === activeIndex
+            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
                 ? 'w-7 bg-gray-950'
                 : 'w-1.5 bg-gray-300 hover:bg-gray-400'
-            }`}
+              }`}
           />
         ))}
       </div>
