@@ -18,7 +18,7 @@ const benefits = [
     title: 'Easy Returns',
     subtitle: '7 days return policy',
     icon: RefreshIcon,
-    to: '/terms-conditions'
+    to: '/terms'
   },
   {
     title: 'Secure Payments',
@@ -30,7 +30,7 @@ const benefits = [
     title: '24/7 Support',
     subtitle: "We're here to help",
     icon: HeadphonesIcon,
-    to: '/contact-us'
+    to: '/contact'
   }
 ];
 

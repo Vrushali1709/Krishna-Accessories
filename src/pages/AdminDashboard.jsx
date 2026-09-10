@@ -40,6 +40,7 @@ import {
   SlidersHorizontal,
   CheckCircle2
 } from 'lucide-react';
+import Logo, { LogoIcon } from '../components/Logo';
 import {
   getProducts,
   saveProduct,
@@ -864,16 +865,19 @@ export default function AdminDashboard() {
         {/* Sidebar Brand Header */}
         <div className="flex flex-col min-h-0 flex-1">
           <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
-            <Link to="/admin" className="flex items-center gap-3 overflow-hidden min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-100 font-serif font-bold text-xs border border-zinc-700/60 shadow-xs">
-                KA
-              </div>
+            <Link to="/admin" className="flex items-center gap-3 overflow-hidden min-w-0 group">
+              <LogoIcon size={32} />
               {!sidebarCollapsed && (
-                <div className="flex flex-col min-w-0">
-                  <span className="font-semibold text-zinc-100 tracking-tight text-xs truncate">
-                    Krishna Accessories
-                  </span>
-                  <span className="text-[9.5px] font-medium tracking-widest text-zinc-400 uppercase truncate">
+                <div className="flex flex-col min-w-0 text-left">
+                  <div className="flex items-center gap-1">
+                    <span className="font-serif font-bold text-white tracking-tight text-xs truncate group-hover:text-amber-400 transition-colors">
+                      Krishna
+                    </span>
+                    <span className="font-sans font-extrabold text-amber-400 text-xs truncate">
+                      Accessories
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-medium tracking-widest text-zinc-400 uppercase truncate">
                     Admin Governance
                   </span>
                 </div>
