@@ -348,15 +348,7 @@ export default function Navbar() {
               Shop All
             </Link>
 
-            <Link
-              to="/tracking"
-              className={`relative py-1.5 transition-colors ${location.pathname === '/tracking'
-                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
-                : 'hover:text-gray-950'
-                }`}
-            >
-              Track Order
-            </Link>
+
 
             <Link
               to="/about"
@@ -590,6 +582,15 @@ export default function Navbar() {
                         </Link>
 
                         <Link
+                          to="/account?tab=tracking"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                        >
+                          <span className="text-sm">🚚</span>
+                          <span>Track Order</span>
+                        </Link>
+
+                        <Link
                           to="/wishlist"
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
@@ -819,12 +820,6 @@ export default function Navbar() {
             </div>
 
             <Link
-              to="/tracking"
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
-            >
-              Track Consignment
-            </Link>
-            <Link
               to="/wishlist"
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition flex items-center justify-between"
             >
@@ -898,13 +893,22 @@ export default function Navbar() {
             <div className="border-t border-gray-100 pt-2.5 mt-1.5">
               {currentUser ? (
                 <div className="space-y-1.5">
-                  <Link
-                    to="/account"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200"
-                  >
-                    My Account ({currentUser.name || currentUser.email})
-                  </Link>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <Link
+                      to="/account"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200 truncate px-2"
+                    >
+                      👤 Account
+                    </Link>
+                    <Link
+                      to="/account?tab=tracking"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block rounded-lg bg-gray-100 py-2 text-center text-xs font-bold text-gray-900 hover:bg-gray-200 truncate px-2"
+                    >
+                      🚚 Track Order
+                    </Link>
+                  </div>
                   <button
                     type="button"
                     onClick={() => {
@@ -917,13 +921,15 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full rounded-full bg-[#111827] py-2 text-center text-xs font-semibold uppercase tracking-wider text-white hover:bg-black"
-                >
-                  <span className="text-white">Sign In to Account</span>
-                </Link>
+                <div className="space-y-1.5">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full rounded-full bg-[#111827] py-2 text-center text-xs font-semibold uppercase tracking-wider text-white hover:bg-black"
+                  >
+                    <span className="text-white">Sign In to Account</span>
+                  </Link>
+                </div>
               )}
             </div>
 

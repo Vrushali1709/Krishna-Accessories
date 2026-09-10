@@ -47,10 +47,10 @@ export default function OrderSuccess() {
           {/* Action CTAs */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
             <Link
-              to={`/tracking?id=${order.id}`}
+              to={`/account?tab=tracking&id=${order.id}`}
               className="inline-flex items-center gap-1.5 rounded-full bg-[#111827] px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-xs transition hover:bg-black"
             >
-              <span>Track Consignment</span>
+              <span>Track in Profile</span>
               <ArrowRightIcon className="w-3 h-3" />
             </Link>
 

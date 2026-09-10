@@ -1,20 +1,29 @@
 // src/pages/Account.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getCurrentUser, logout } from '../utils/auth';
-import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn } from '../utils/orderStore';
+import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn, getOrderById } from '../utils/orderStore';
 import { getWishlist } from '../utils/productStore';
-import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon } from '../components/Icons';
+import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon, SearchIcon, CheckCircleIcon } from '../components/Icons';
 
 export default function Account() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'orders';
+  const initialOrderId = searchParams.get('id') || '';
+
   const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
   const [orders, setOrders] = useState(() => getOrders());
   const [addresses, setAddresses] = useState(() => getUserAddresses());
   const [wishlist, setWishlist] = useState(() => getWishlist());
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Tracking state inside profile
+  const [trackingIdInput, setTrackingIdInput] = useState(initialOrderId);
+  const [activeTrackingOrder, setActiveTrackingOrder] = useState(null);
+  const [trackingNotFound, setTrackingNotFound] = useState(false);
 
   // Address Modal state
   const [addrModalOpen, setAddrModalOpen] = useState(false);
@@ -221,8 +230,68 @@ export default function Account() {
   }
 
   const userOrders = orders.filter(
-    o => !o.customer?.email || o.customer?.email?.toLowerCase() === currentUser.email?.toLowerCase() || orders.length > 0
+    o => !o.customer?.email || o.customer?.email?.toLowerCase() === currentUser?.email?.toLowerCase() || orders.length > 0
   );
+
+  const lookupOrder = (id) => {
+    if (!id || !id.trim()) {
+      setActiveTrackingOrder(null);
+      setTrackingNotFound(false);
+      return;
+    }
+    const cleanId = id.trim();
+    const allOrders = getOrders();
+    const found = getOrderById(cleanId) || allOrders.find(o => 
+      o.id?.toLowerCase() === cleanId.toLowerCase() || 
+      (o.trackingNumber && o.trackingNumber.toLowerCase() === cleanId.toLowerCase())
+    );
+    if (found) {
+      setActiveTrackingOrder(found);
+      setTrackingNotFound(false);
+    } else {
+      setActiveTrackingOrder(null);
+      setTrackingNotFound(true);
+    }
+  };
+
+  // Sync tab and id with URL search params
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    const idParam = searchParams.get('id');
+    if (tabParam && ['orders', 'tracking', 'addresses', 'wishlist', 'profile'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+    if (idParam) {
+      setTrackingIdInput(idParam);
+      lookupOrder(idParam);
+    }
+  }, [searchParams]);
+
+  // When activeTab is set to tracking and no specific order is loaded, auto-load first order or test reference
+  useEffect(() => {
+    if (activeTab === 'tracking') {
+      const idToLookup = trackingIdInput || searchParams.get('id') || (userOrders.length > 0 ? userOrders[0].id : 'KA-98421');
+      if (idToLookup && (!activeTrackingOrder || activeTrackingOrder.id !== idToLookup)) {
+        setTrackingIdInput(idToLookup);
+        lookupOrder(idToLookup);
+      }
+    }
+  }, [activeTab, orders]);
+
+  const handleTrackSearch = (e) => {
+    e.preventDefault();
+    if (trackingIdInput && trackingIdInput.trim()) {
+      setSearchParams({ tab: 'tracking', id: trackingIdInput.trim() });
+      lookupOrder(trackingIdInput.trim());
+    }
+  };
+
+  const handleSelectOrderToTrack = (orderId) => {
+    setTrackingIdInput(orderId);
+    setActiveTab('tracking');
+    setSearchParams({ tab: 'tracking', id: orderId });
+    lookupOrder(orderId);
+  };
 
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-[#1A1A1A] overflow-x-clip">
@@ -285,19 +354,35 @@ export default function Account() {
         <div className="flex border-b border-stone-200 gap-6 mb-8 overflow-x-auto">
           {[
             { id: 'orders', label: `Consignments (${userOrders.length})` },
+            { id: 'tracking', label: `Track Order` },
             { id: 'addresses', label: `Address Book (${addresses.length})` },
             { id: 'wishlist', label: `Saved Wishlist (${wishlist.length})` },
             { id: 'profile', label: `Profile Preferences` }
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`pb-3 text-xs font-bold uppercase tracking-[0.16em] transition border-b-2 whitespace-nowrap ${activeTab === tab.id
+              onClick={() => {
+                setActiveTab(tab.id);
+                if (tab.id === 'tracking') {
+                  const targetId = activeTrackingOrder?.id || trackingIdInput || (userOrders[0]?.id || 'KA-98421');
+                  setSearchParams({ tab: 'tracking', id: targetId });
+                } else {
+                  setSearchParams({ tab: tab.id });
+                }
+              }}
+              className={`pb-3 text-xs font-bold uppercase tracking-[0.16em] transition border-b-2 whitespace-nowrap cursor-pointer ${activeTab === tab.id
                 ? 'border-[#121316] text-[#121316]'
                 : 'border-transparent text-stone-400 hover:text-stone-900'
                 }`}
             >
-              {tab.label}
+              {tab.id === 'tracking' ? (
+                <span className="flex items-center gap-1.5">
+                  <TruckIcon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                </span>
+              ) : (
+                tab.label
+              )}
             </button>
           ))}
         </div>
@@ -353,12 +438,13 @@ export default function Account() {
                           </button>
                         )}
 
-                        <Link
-                          to={`/tracking?id=${order.id}`}
-                          className="rounded-xs bg-[#121316] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B] shadow-2xs transition"
+                        <button
+                          type="button"
+                          onClick={() => handleSelectOrderToTrack(order.id)}
+                          className="rounded-xs bg-[#121316] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B] shadow-2xs transition cursor-pointer"
                         >
                           Track Status &rarr;
-                        </Link>
+                        </button>
                       </div>
                     </div>
 
@@ -469,6 +555,348 @@ export default function Account() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ================= TAB: LIVE TRACK ORDER & CONSIGNMENT ================= */}
+        {activeTab === 'tracking' && (
+          <div className="space-y-6 animate-fade-in">
+            {/* Top Search & Lookup Banner */}
+            <div className="rounded-xs border border-stone-200 bg-white p-6 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 pb-3">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">
+                    Live Logistics & Milestone Tracking
+                  </span>
+                  <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-stone-950 mt-0.5">
+                    Track Consignment
+                  </h3>
+                </div>
+                <p className="text-xs text-stone-500">
+                  Real-time status updates synced directly with courier hubs and boutique dispatch.
+                </p>
+              </div>
+
+              {/* Order ID Search Form */}
+              <form onSubmit={handleTrackSearch} className="flex flex-col sm:flex-row gap-2 max-w-2xl">
+                <div className="relative flex-1 min-w-0">
+                  <input
+                    type="text"
+                    value={trackingIdInput}
+                    onChange={(e) => setTrackingIdInput(e.target.value)}
+                    placeholder="Enter Consignment ID (e.g. KA-98421) or Courier AWB..."
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] pl-8 pr-4 py-2.5 text-xs font-mono uppercase text-stone-900 outline-none focus:border-stone-400 focus:bg-white"
+                  />
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none">
+                    <SearchIcon className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xs bg-[#121316] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B] transition shadow-xs cursor-pointer shrink-0"
+                >
+                  <TruckIcon className="w-4 h-4 shrink-0 text-[#CBB080]" />
+                  <span>Track Consignment</span>
+                </button>
+              </form>
+
+              {/* Quick-Select Your Orders Chips */}
+              <div className="pt-2">
+                <div className="flex items-center justify-between text-xs text-stone-500 mb-2 font-medium">
+                  <span>Select from your placed consignments:</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('orders')}
+                    className="text-[11px] font-bold text-stone-700 hover:text-black uppercase tracking-wider cursor-pointer"
+                  >
+                    View All Consignments &rarr;
+                  </button>
+                </div>
+                {userOrders.length === 0 ? (
+                  <p className="text-xs text-stone-400 italic">No orders placed yet in this account.</p>
+                ) : (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {userOrders.map((ord) => {
+                      const isSelected = activeTrackingOrder?.id === ord.id;
+                      return (
+                        <button
+                          key={ord.id}
+                          type="button"
+                          onClick={() => handleSelectOrderToTrack(ord.id)}
+                          className={`flex items-center gap-2 rounded-xs border px-3 py-1.5 text-xs transition cursor-pointer ${
+                            isSelected
+                              ? 'border-[#121316] bg-[#121316] text-white shadow-xs'
+                              : 'border-stone-200 bg-[#FAF9F5] text-stone-700 hover:border-stone-400 hover:bg-white'
+                          }`}
+                        >
+                          <span className="font-mono font-bold">{ord.id}</span>
+                          <span className={`text-[9.5px] font-semibold px-1.5 py-0.2 rounded-2xs ${
+                            isSelected ? 'bg-white/20 text-white' : getStatusBadge(ord.status)
+                          }`}>
+                            {ord.status}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Tracking Result View */}
+            {trackingNotFound ? (
+              <div className="rounded-xs border border-rose-200 bg-white p-8 text-center shadow-xs space-y-3">
+                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                  <span className="text-base font-bold">✕</span>
+                </div>
+                <h3 className="font-editorial-serif text-lg font-normal text-stone-950">
+                  Consignment Reference Not Found
+                </h3>
+                <p className="text-xs text-stone-500 max-w-md mx-auto">
+                  No active shipment was found matching <strong className="font-mono text-stone-900">{trackingIdInput}</strong>. Please verify the consignment code or select one of your placed orders above.
+                </p>
+                {userOrders.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => handleSelectOrderToTrack(userOrders[0].id)}
+                    className="inline-block rounded-xs bg-[#121316] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#25262B] cursor-pointer"
+                  >
+                    Track Latest Order ({userOrders[0].id}) &rarr;
+                  </button>
+                )}
+              </div>
+            ) : activeTrackingOrder ? (
+              <div className="space-y-6">
+
+                {/* Overview Card */}
+                <div className="rounded-xs border border-stone-200 bg-white p-6 shadow-xs space-y-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-4">
+                    <div>
+                      <span className="text-[9.5px] font-bold uppercase tracking-wider text-stone-400">
+                        Consignment Reference ID
+                      </span>
+                      <h2 className="font-mono text-xl sm:text-2xl font-bold text-stone-950 mt-0.5">
+                        {activeTrackingOrder.id}
+                      </h2>
+                      <p className="text-xs text-stone-500 mt-0.5">
+                        Placed on {activeTrackingOrder.date} &bull; Payment: {activeTrackingOrder.paymentMethod}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className={`rounded-xs border px-3 py-1 text-xs font-bold ${getStatusBadge(activeTrackingOrder.status)}`}>
+                        Status: {activeTrackingOrder.status}
+                      </span>
+
+                      {/* Cancel Order Action */}
+                      {(activeTrackingOrder.status === 'Confirmed' || activeTrackingOrder.status === 'Processing') && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenCancelModal(activeTrackingOrder)}
+                          className="rounded-xs border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 transition cursor-pointer"
+                        >
+                          Cancel Consignment
+                        </button>
+                      )}
+
+                      {/* Return Order Action */}
+                      {activeTrackingOrder.status === 'Delivered' && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenReturnModal(activeTrackingOrder)}
+                          className="rounded-xs border border-amber-300 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-900 transition flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>↩</span> Return / Refund
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Special Status Notices */}
+                  {activeTrackingOrder.status === 'Cancelled' && (
+                    <div className="rounded-xs border border-rose-200 bg-rose-50/70 p-3.5 text-xs text-rose-900 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <span>🚫</span> Consignment Cancelled ({activeTrackingOrder.cancellation?.date || activeTrackingOrder.date})
+                      </p>
+                      <p className="text-[11px] text-rose-700">
+                        Reason: {activeTrackingOrder.cancellation?.reason || 'Cancelled upon customer request.'}
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Return Requested' && (
+                    <div className="rounded-xs border border-purple-200 bg-purple-50/70 p-3.5 text-xs text-purple-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <span>⏳</span> Return & Refund Request Under Concierge Review
+                      </p>
+                      <p className="text-[11px] text-purple-800">
+                        Reason: {activeTrackingOrder.returnRequest?.reason} &bull; Mode: {activeTrackingOrder.returnRequest?.refundPreference}
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Return Approved' && (
+                    <div className="rounded-xs border border-teal-200 bg-teal-50/70 p-3.5 text-xs text-teal-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <span>📦</span> Return Authorized & Reverse Courier Pickup Scheduled
+                      </p>
+                      <p className="text-[11px] text-teal-800">
+                        Please keep the item inside original box with warranty cards intact. BlueDart courier will collect it within 24-48 hours.
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Refunded' && (
+                    <div className="rounded-xs border border-emerald-300 bg-emerald-50/80 p-3.5 text-xs text-emerald-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5 text-emerald-900">
+                        <span>✅</span> Refund of ₹{(activeTrackingOrder.refundDetails?.amount || activeTrackingOrder.total)?.toLocaleString('en-IN')} Settled
+                      </p>
+                      <p className="text-[11px] text-emerald-700">
+                        Transaction ID: <span className="font-mono font-bold">{activeTrackingOrder.refundDetails?.transactionId || 'REF-CONFIRMED'}</span> &bull; {activeTrackingOrder.refundDetails?.date || activeTrackingOrder.date}
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Return Rejected' && (
+                    <div className="rounded-xs border border-red-200 bg-red-50/70 p-3.5 text-xs text-red-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5 text-red-900">
+                        <span>⚠️</span> Return Request Declined
+                      </p>
+                      <p className="text-[11px] text-red-700">
+                        Notes: {activeTrackingOrder.returnRequest?.adminNotes || 'Does not meet return quality verification conditions.'}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Carrier & Delivery Destination Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-3 border-y border-stone-100 text-xs">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        Courier Partner
+                      </span>
+                      <span className="font-bold text-stone-900 mt-1 block">
+                        {activeTrackingOrder.courier || 'BlueDart Express Air'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        AWB Airway Bill Code
+                      </span>
+                      <span className="font-mono font-bold text-stone-900 mt-1 block">
+                        {activeTrackingOrder.trackingNumber || 'Pending Dispatch'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        Recipient Patron
+                      </span>
+                      <span className="font-bold text-stone-900 mt-1 block truncate">
+                        {activeTrackingOrder.customer?.firstName} {activeTrackingOrder.customer?.lastName}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        Destination City
+                      </span>
+                      <span className="font-bold text-stone-900 mt-1 block truncate">
+                        {activeTrackingOrder.customer?.city}, {activeTrackingOrder.customer?.state}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Live Transit Milestone Timeline */}
+                  <div className="pt-2 space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-stone-950 flex items-center gap-1.5">
+                      <TruckIcon className="w-4 h-4 text-stone-700" />
+                      <span>Shipment Transit Milestones</span>
+                    </h4>
+
+                    <div className="relative pl-6 space-y-6 border-l-2 border-stone-200 ml-2 py-1">
+                      {activeTrackingOrder.timeline && activeTrackingOrder.timeline.map((step, idx) => {
+                        const isDone = step.done ?? step.completed ?? false;
+                        const stageLabel = step.status ?? step.stage ?? "Milestone";
+                        const timeStamp = step.date ?? step.time ?? "--";
+                        const description = step.description || (isDone ? "Milestone verified" : "Pending transit update");
+                        const isCancelledNode = stageLabel === "Cancelled";
+                        const isRefundNode = stageLabel === "Refunded";
+
+                        return (
+                          <div key={idx} className="relative">
+                            {/* Step Indicator Node */}
+                            <span
+                              className={`absolute -left-[31px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 bg-white ${
+                                isCancelledNode
+                                  ? 'border-rose-600 bg-rose-600 text-white'
+                                  : isRefundNode
+                                  ? 'border-emerald-600 bg-emerald-600 text-white'
+                                  : isDone
+                                  ? 'border-emerald-600 bg-emerald-600 text-white'
+                                  : 'border-stone-300 bg-white'
+                              }`}
+                            >
+                              {isCancelledNode ? (
+                                <span className="text-[8px] font-bold">✕</span>
+                              ) : isDone ? (
+                                <span className="text-[8px] font-bold">✓</span>
+                              ) : null}
+                            </span>
+
+                            <div className="min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <h5 className={`text-xs font-bold truncate ${
+                                  isCancelledNode ? 'text-rose-600' : isDone ? 'text-stone-950' : 'text-stone-400'
+                                }`}>
+                                  {stageLabel}
+                                </h5>
+                                {isDone && (
+                                  <span className="text-[10px] text-stone-400 font-mono shrink-0">{timeStamp}</span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
+                                {description}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Consignment Items in this shipment */}
+                  <div className="border-t border-stone-100 pt-4 space-y-3">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-stone-950">
+                      Consignment Items ({activeTrackingOrder.items?.length || 0})
+                    </h4>
+
+                    <div className="divide-y divide-stone-100">
+                      {activeTrackingOrder.items?.map((it, idx) => (
+                        <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="flex items-center gap-3">
+                            <img src={it.image} alt="" className="h-11 w-11 rounded-xs object-contain bg-[#FAF9F5] border border-stone-200 p-1" />
+                            <div>
+                              <p className="font-bold text-stone-950">{it.name}</p>
+                              <span className="text-[10px] text-stone-400">
+                                {it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="font-bold text-stone-950">
+                            ₹{(it.price * it.quantity).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center pt-2 border-t border-stone-100 text-xs font-bold text-stone-900">
+                      <span>Total Amount Settled:</span>
+                      <span className="text-sm">₹{activeTrackingOrder.total?.toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            ) : null}
           </div>
         )}
 
