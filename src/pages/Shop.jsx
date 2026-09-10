@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+import { ProductCardSkeleton } from '../components/SkeletonLoader';
 import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
 import { getCurrentUser } from '../utils/auth';
 import { addToCart } from '../utils/cart';
@@ -28,6 +29,7 @@ export default function Shop() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFilters, setMobileFilters] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [isFiltering, setIsFiltering] = useState(false);
 
   // Sync when storage or search params change
   useEffect(() => {
@@ -65,6 +67,7 @@ export default function Shop() {
   }, [category, products]);
 
   const handleCategorySelect = (cat) => {
+    setIsFiltering(true);
     setCategory(cat);
     setSelectedBrand('All');
 
@@ -76,9 +79,11 @@ export default function Shop() {
     }
     params.delete('brand');
     setSearchParams(params);
+    setTimeout(() => setIsFiltering(false), 200);
   };
 
   const handleBrandSelect = (brand) => {
+    setIsFiltering(true);
     setSelectedBrand(brand);
     const params = new URLSearchParams(searchParams);
     if (brand === 'All') {
@@ -87,6 +92,7 @@ export default function Shop() {
       params.set('brand', brand);
     }
     setSearchParams(params);
+    setTimeout(() => setIsFiltering(false), 200);
   };
 
   // Filtered and Sorted Products
@@ -656,7 +662,13 @@ export default function Shop() {
             )}
 
             {/* Products Grid (2 Columns on Mobile, 3 on Desktop) */}
-            {filteredProducts.length > 0 ? (
+            {isFiltering ? (
+              <div className="grid grid-cols-2 gap-2 sm:gap-3.5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-2 sm:gap-3.5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                 {filteredProducts.map((product) => (
                   <ProductCard

@@ -22,12 +22,18 @@ import AdminDashboard from './pages/AdminDashboard';
 import SupplierDashboard from './pages/SupplierDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
+import { LoadingProvider } from './context/LoadingContext';
+import WebsiteLoader from './components/WebsiteLoader';
+import TopProgressBar from './components/TopProgressBar';
 
 export default function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <Routes>
+      <LoadingProvider>
+        <ScrollToTop />
+        <TopProgressBar />
+        <WebsiteLoader />
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/new-arrivals" element={<NewArrivals />} />
@@ -84,6 +90,7 @@ export default function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Router>
-  );
+    </LoadingProvider>
+  </Router>
+);
 }

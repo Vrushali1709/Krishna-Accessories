@@ -7,9 +7,12 @@ import { clearCart, calculateCartSummary } from '../utils/cart';
 import { createOrder, getUserAddresses } from '../utils/orderStore';
 import { getCurrentUser } from '../utils/auth';
 import { ShieldCheckIcon, LockClosedIcon, BagIcon, ArrowRightIcon } from '../components/Icons';
+import { useLoading } from '../context/LoadingContext';
+import BrandSpinner from '../components/BrandSpinner';
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
   const [cartSummary, setCartSummary] = useState(() => calculateCartSummary());
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('Online Gateway (UPI / Credit & Debit Cards / NetBanking)');
@@ -91,6 +94,7 @@ export default function Checkout() {
     }
 
     setLoading(true);
+    showLoading('Securing your order & generating invoice...');
 
     setTimeout(() => {
       const orderPayload = {
@@ -106,11 +110,12 @@ export default function Checkout() {
       const newOrder = createOrder(orderPayload);
       clearCart();
       setLoading(false);
+      hideLoading();
 
       navigate('/order-success', {
         state: { order: newOrder }
       });
-    }, 800);
+    }, 850);
   };
 
   if (cart.length === 0) {
@@ -445,10 +450,19 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-xs transition hover:bg-black disabled:opacity-50 flex items-center justify-center gap-1.5"
+                className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-xs transition hover:bg-black disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                <LockClosedIcon className="w-3 h-3" />
-                <span>{loading ? 'Confirming...' : `Place Order (₹${total.toLocaleString('en-IN')})`}</span>
+                {loading ? (
+                  <>
+                    <BrandSpinner size="xs" variant="gold" inline={true} />
+                    <span>Processing Order...</span>
+                  </>
+                ) : (
+                  <>
+                    <LockClosedIcon className="w-3 h-3 text-amber-400" />
+                    <span>Place Order (₹{total.toLocaleString('en-IN')})</span>
+                  </>
+                )}
               </button>
 
               <div className="rounded-xl bg-gray-50 border border-gray-100 p-2.5 text-[9.5px] text-gray-500 space-y-0.5">

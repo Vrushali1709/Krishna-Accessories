@@ -6,6 +6,8 @@ import Footer from '../components/Footer';
 import { setCurrentUser } from '../utils/auth';
 import { addSupplier } from '../utils/orderStore';
 import { ArrowRightIcon, LockClosedIcon, ShieldCheckIcon } from '../components/Icons';
+import { useLoading } from '../context/LoadingContext';
+import BrandSpinner from '../components/BrandSpinner';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -15,9 +17,11 @@ export default function Register() {
   const [role, setRole] = useState('Customer');
   const [supplierCategory, setSupplierCategory] = useState('Watches');
   const [success, setSuccess] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { showLoading, hideLoading } = useLoading();
 
   const returnPath = typeof location.state?.from === 'string'
     ? location.state.from
@@ -31,30 +35,39 @@ export default function Register() {
       return;
     }
 
-    const newUser = {
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      role: role.toLowerCase(),
-      phone: phone.trim()
-    };
+    setSubmitting(true);
+    showLoading(role === 'Supplier' ? 'Registering Supplier Partner...' : 'Creating Krishna Privé Account...');
 
-    setCurrentUser(newUser);
-
-    if (role === 'Supplier') {
-      addSupplier({
+    setTimeout(() => {
+      const newUser = {
         name: name.trim(),
         email: email.trim().toLowerCase(),
-        phone: phone.trim(),
-        category: supplierCategory,
-        address: "Gujarat, India",
-        status: "Pending Approval"
-      });
-      setSuccess('Supplier registered! Directing to vendor portal...');
-      setTimeout(() => navigate('/supplier'), 1200);
-    } else {
-      setSuccess('Account created successfully! Directing you back...');
-      setTimeout(() => navigate(returnPath || '/account'), 1200);
-    }
+        role: role.toLowerCase(),
+        phone: phone.trim()
+      };
+
+      setCurrentUser(newUser);
+
+      if (role === 'Supplier') {
+        addSupplier({
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          phone: phone.trim(),
+          category: supplierCategory,
+          address: "Gujarat, India",
+          status: "Pending Approval"
+        });
+        setSubmitting(false);
+        hideLoading();
+        setSuccess('Supplier registered! Directing to vendor portal...');
+        setTimeout(() => navigate('/supplier'), 600);
+      } else {
+        setSubmitting(false);
+        hideLoading();
+        setSuccess('Account created successfully! Directing you back...');
+        setTimeout(() => navigate(returnPath || '/account'), 600);
+      }
+    }, 500);
   };
 
   return (
@@ -168,10 +181,20 @@ export default function Register() {
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black mt-2"
+              disabled={submitting}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black mt-2 disabled:opacity-60"
             >
-              <span>{role === 'Supplier' ? 'Submit Vendor Registration' : 'Create Account'}</span>
-              <ArrowRightIcon className="w-3.5 h-3.5" />
+              {submitting ? (
+                <>
+                  <BrandSpinner size="xs" variant="gold" inline={true} />
+                  <span>Processing Registration...</span>
+                </>
+              ) : (
+                <>
+                  <span>{role === 'Supplier' ? 'Submit Vendor Registration' : 'Create Account'}</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </>
+              )}
             </button>
           </form>
 

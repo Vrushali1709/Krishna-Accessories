@@ -8,6 +8,7 @@ import { getProducts, getProductById, getProductReviews, addProductReview, isInW
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon } from '../components/Icons';
+import BrandSpinner from '../components/BrandSpinner';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export default function ProductDetails() {
   const [activeTab, setActiveTab] = useState('specs');
   const [toastMessage, setToastMessage] = useState('');
   const [inWish, setInWish] = useState(() => isInWishlist(id));
+  const [isSwitching, setIsSwitching] = useState(false);
 
   // Write a Review modal
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
@@ -47,10 +49,13 @@ export default function ProductDetails() {
   };
 
   useEffect(() => {
+    setIsSwitching(true);
     refreshData();
+    const t = setTimeout(() => setIsSwitching(false), 120);
     window.addEventListener('reviewsUpdated', refreshData);
     window.addEventListener('wishlistUpdated', () => setInWish(isInWishlist(id)));
     return () => {
+      clearTimeout(t);
       window.removeEventListener('reviewsUpdated', refreshData);
       window.removeEventListener('wishlistUpdated', () => setInWish(isInWishlist(id)));
     };

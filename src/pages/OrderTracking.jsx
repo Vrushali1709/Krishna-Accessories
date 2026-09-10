@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getOrderById, getOrders } from '../utils/orderStore';
 import { SearchIcon, TruckIcon, ShieldCheckIcon, BoxIcon } from '../components/Icons';
+import BrandSpinner from '../components/BrandSpinner';
 
 export default function OrderTracking() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,17 +14,22 @@ export default function OrderTracking() {
   const [orderIdInput, setOrderIdInput] = useState(initialId);
   const [activeOrder, setActiveOrder] = useState(() => getOrderById(initialId));
   const [notFound, setNotFound] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const refreshOrder = (idToLookup) => {
-    const id = idToLookup || orderIdInput;
-    const found = getOrderById(id);
-    if (found) {
-      setActiveOrder(found);
-      setNotFound(false);
-    } else {
-      setActiveOrder(null);
-      setNotFound(true);
-    }
+    setIsSearching(true);
+    setTimeout(() => {
+      const id = idToLookup || orderIdInput;
+      const found = getOrderById(id);
+      if (found) {
+        setActiveOrder(found);
+        setNotFound(false);
+      } else {
+        setActiveOrder(null);
+        setNotFound(true);
+      }
+      setIsSearching(false);
+    }, 280);
   };
 
   useEffect(() => {
@@ -107,7 +113,11 @@ export default function OrderTracking() {
 
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 
-        {notFound ? (
+        {isSearching ? (
+          <div className="rounded-3xl border border-gray-200 bg-white p-12 text-center shadow-sm flex flex-col items-center justify-center min-h-[300px]">
+            <BrandSpinner size="lg" variant="gold" showBadge={true} label="Fetching real-time consignment status..." />
+          </div>
+        ) : notFound ? (
           <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
             <h3 className="text-base font-bold text-gray-950">Consignment Reference Not Found</h3>
             <p className="mt-1.5 text-xs text-gray-500">

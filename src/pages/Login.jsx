@@ -7,10 +7,14 @@ import { setAdminUser, setSupplierUser, setCustomerUser } from '../utils/auth';
 import { getSuppliers } from '../utils/orderStore';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 import { Eye, EyeOff } from 'lucide-react';
+import { useLoading } from '../context/LoadingContext';
+import BrandSpinner from '../components/BrandSpinner';
 
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
+  const [submitting, setSubmitting] = useState(false);
 
   // Determine initial selected role from location state or default
   const [selectedRole, setSelectedRole] = useState(() => {
@@ -72,13 +76,19 @@ export default function Login() {
     // 1. Admin Authentication Check
     if (cleanEmail === 'admin@krishna.com' || cleanEmail === 'admin') {
       if (cleanPassword === 'admin123') {
-        setAdminUser({
-          email: 'admin@krishna.com',
-          role: 'admin',
-          name: 'Super Administrator',
-          phone: '+91 98765 00001'
-        });
-        navigate(returnPath || '/admin', { replace: true });
+        setSubmitting(true);
+        showLoading('Authenticating Administrator Privileges...');
+        setTimeout(() => {
+          setAdminUser({
+            email: 'admin@krishna.com',
+            role: 'admin',
+            name: 'Super Administrator',
+            phone: '+91 98765 00001'
+          });
+          setSubmitting(false);
+          hideLoading();
+          navigate(returnPath || '/admin', { replace: true });
+        }, 400);
         return;
       } else {
         setError('Invalid password for Administrator.');
@@ -92,13 +102,19 @@ export default function Login() {
 
     if (cleanEmail === 'supplier@krishna.com' || cleanEmail === 'supplier' || matchedSupplier) {
       if (cleanPassword === 'supplier123' || cleanPassword === matchedSupplier?.password) {
-        setSupplierUser({
-          email: matchedSupplier?.email || 'supplier@krishna.com',
-          role: 'supplier',
-          name: matchedSupplier?.name || 'Apex Timepieces Ltd.',
-          phone: matchedSupplier?.phone || '+91 98765 43210'
-        });
-        navigate(returnPath || '/supplier', { replace: true });
+        setSubmitting(true);
+        showLoading('Connecting to Supplier Portal...');
+        setTimeout(() => {
+          setSupplierUser({
+            email: matchedSupplier?.email || 'supplier@krishna.com',
+            role: 'supplier',
+            name: matchedSupplier?.name || 'Apex Timepieces Ltd.',
+            phone: matchedSupplier?.phone || '+91 98765 43210'
+          });
+          setSubmitting(false);
+          hideLoading();
+          navigate(returnPath || '/supplier', { replace: true });
+        }, 400);
         return;
       } else {
         setError('Invalid password for Supplier.');
@@ -112,13 +128,19 @@ export default function Login() {
         setError('Password is too short.');
         return;
       }
-      setCustomerUser({
-        email: cleanEmail,
-        role: 'customer',
-        name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
-        phone: '+91 98765 12345'
-      });
-      navigate(returnPath || '/account', { replace: true });
+      setSubmitting(true);
+      showLoading('Signing into your Krishna Account...');
+      setTimeout(() => {
+        setCustomerUser({
+          email: cleanEmail,
+          role: 'customer',
+          name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
+          phone: '+91 98765 12345'
+        });
+        setSubmitting(false);
+        hideLoading();
+        navigate(returnPath || '/account', { replace: true });
+      }, 400);
     } else {
       setError('Please provide a valid email and password.');
     }
@@ -237,10 +259,20 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer"
+              disabled={submitting}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer disabled:opacity-60"
             >
-              <span>Sign In</span>
-              <ArrowRightIcon className="w-3.5 h-3.5" />
+              {submitting ? (
+                <>
+                  <BrandSpinner size="xs" variant="gold" inline={true} />
+                  <span>Authenticating...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </>
+              )}
             </button>
           </form>
 

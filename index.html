@@ -17,7 +17,76 @@
 
 <body
   class="bg-[#FAFAFB] text-[#111827] antialiased selection:bg-gray-900 selection:text-white text-[13px] leading-normal font-sans">
-  <div id="root"></div>
+  <div id="root">
+    <!-- Instant Pre-React Brand Splash -->
+    <style>
+      .app-preloader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #080C14;
+        color: #FAF8F5;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        z-index: 999999;
+      }
+      .preloader-badge {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-family: 'Playfair Display', serif;
+        font-weight: bold;
+        color: #FDE68A;
+        box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
+        animation: prePulse 2s ease-in-out infinite;
+      }
+      .preloader-title {
+        margin-top: 18px;
+        font-size: 13px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #F7F3E8;
+      }
+      .preloader-bar {
+        margin-top: 14px;
+        width: 130px;
+        height: 2px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 99px;
+        overflow: hidden;
+        position: relative;
+      }
+      .preloader-bar::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; height: 100%; width: 50%;
+        background: linear-gradient(90deg, #D97706, #FDE68A);
+        animation: preBar 1.2s infinite ease-in-out;
+      }
+      @keyframes prePulse {
+        0%, 100% { transform: scale(0.98); opacity: 0.9; }
+        50% { transform: scale(1.02); opacity: 1; }
+      }
+      @keyframes preBar {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(250%); }
+      }
+    </style>
+    <div class="app-preloader">
+      <div class="preloader-badge">K</div>
+      <div class="preloader-title">Krishna Accessories</div>
+      <div class="preloader-bar"></div>
+    </div>
+  </div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
