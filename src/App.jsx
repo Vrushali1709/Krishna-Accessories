@@ -50,7 +50,6 @@ export default function App() {
         />
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/tracking" element={<OrderTracking />} />
-        <Route path="/order-tracking" element={<OrderTracking />} />
         <Route
           path="/wishlist"
           element={
@@ -68,14 +67,10 @@ export default function App() {
           }
         />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsConditions />} />
-        <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
