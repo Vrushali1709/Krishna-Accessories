@@ -990,6 +990,229 @@ export const defaultProducts = [
     },
     colors: ["Black / Powder Gray", "Whitestone / Powder Gray"],
     variants: ["Standard Titanium Edition"]
+  },
+  // ================= ADDITIONAL BUDGET & PRESTIGE CURATIONS =================
+  {
+    id: 27,
+    name: "Vintage A168WG Digital Gold Watch",
+    brand: "Casio",
+    category: "Watches",
+    subcategory: "Digital Watches",
+    sku: "KA-CAS-A168",
+    price: 1895,
+    oldPrice: 2495,
+    discount: 24,
+    stock: 50,
+    rating: 4.8,
+    reviews: 410,
+    isBestSeller: true,
+    bestsellerRank: 9,
+    salesCount: 2300,
+    status: "Active",
+    supplier: "Apex Timepieces Ltd.",
+    image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
+    images: ["https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"],
+    description: "Iconic vintage retro digital watch in radiant gold tone with electro-luminescent backlight, 1/100-second stopwatch, and daily alarm.",
+    specifications: {
+      Material: "Gold-Tone Stainless Steel",
+      Display: "Digital LCD with EL Backlight",
+      WaterResistance: "Water Resistant",
+      Warranty: "2 Years Brand Warranty"
+    },
+    colors: ["Radiant Gold", "Classic Silver"],
+    variants: ["Standard Gold Edition"]
+  },
+  {
+    id: 28,
+    name: "Derrick RFID Genuine Leather Bifold Wallet",
+    brand: "Fossil",
+    category: "Bags & Wallets",
+    subcategory: "Wallets",
+    sku: "KA-FOS-DER01",
+    price: 2495,
+    oldPrice: 3495,
+    discount: 28,
+    stock: 35,
+    rating: 4.7,
+    reviews: 165,
+    isBestSeller: true,
+    bestsellerRank: 10,
+    salesCount: 1100,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=700",
+    images: ["https://images.unsplash.com/photo-1627123424574-724758594e93?w=700"],
+    description: "Slim 100% genuine top-grain leather bifold wallet featuring RFID blocking lining, 8 card slots, flip ID window, and 2 bill compartments.",
+    specifications: {
+      Material: "100% Genuine Top-Grain Leather",
+      Security: "RFID Blocking Technology",
+      Dimensions: "11.4cm x 8.9cm x 1.9cm",
+      Warranty: "1 Year International"
+    },
+    colors: ["Dark Brown", "Sleek Black"],
+    variants: ["Standard Bifold"]
+  },
+  {
+    id: 29,
+    name: "Airdopes 800 Spatial Audio Earbuds",
+    brand: "boAt",
+    category: "Smart Gadgets",
+    subcategory: "Audio Accessories",
+    sku: "KA-BOA-800",
+    price: 1999,
+    oldPrice: 3990,
+    discount: 50,
+    stock: 60,
+    rating: 4.6,
+    reviews: 320,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=700",
+    images: ["https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=700"],
+    description: "Powered by Dolby Audio, AI-ENx Quad Mics for crystal clear calls, 40-hour total playback, and 50ms low-latency BEAST Mode.",
+    specifications: {
+      Audio: "Dolby Audio Spatial Sound",
+      Battery: "40 Hours Playback (Fast Charging)",
+      Connectivity: "Bluetooth 5.3",
+      Warranty: "1 Year Manufacturer"
+    },
+    colors: ["Titan Titanium", "Interstellar White"],
+    variants: ["Standard Edition"]
+  },
+  {
+    id: 30,
+    name: "Machine Chronograph Smoke Stainless Steel Watch",
+    brand: "Fossil",
+    category: "Watches",
+    subcategory: "Chronograph Watches",
+    sku: "KA-FOS-MAC01",
+    price: 8495,
+    oldPrice: 11995,
+    discount: 29,
+    stock: 20,
+    rating: 4.8,
+    reviews: 140,
+    status: "Active",
+    supplier: "Apex Timepieces Ltd.",
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
+    images: ["https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700"],
+    description: "Rugged knurled top ring, diamond pattern textured dial, and smoke grey ion-plated stainless steel bracelet with three precision chronograph sub-dials.",
+    specifications: {
+      Material: "Smoke Ion-Plated Stainless Steel",
+      Movement: "Quartz Chronograph",
+      WaterResistance: "50m / 5 ATM",
+      Warranty: "2 Years International"
+    },
+    colors: ["Smoke Grey", "Matte Black"],
+    variants: ["Steel Bracelet"]
+  },
+  {
+    id: 31,
+    name: "Willen Portable High-Power Bluetooth Speaker",
+    brand: "Marshall",
+    category: "Electronics",
+    subcategory: "Wireless Speakers",
+    sku: "KA-MAR-WIL01",
+    price: 9999,
+    oldPrice: 12999,
+    discount: 23,
+    stock: 18,
+    rating: 4.9,
+    reviews: 195,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700",
+    images: ["https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700"],
+    description: "Mighty portable speaker with heavy Marshall sound, IP67 dust & water resistance rating, multi-directional control knob, and 15+ hours playtime.",
+    specifications: {
+      Battery: "15+ Hours Playtime",
+      Durability: "IP67 Dust & Water-Resistant",
+      Sound: "2'' 10W Full Range Driver",
+      Warranty: "1 Year Official Brand Warranty"
+    },
+    colors: ["Black & Brass", "Cream"],
+    variants: ["Standard Edition"]
+  },
+  {
+    id: 32,
+    name: "LinkBuds S Ultra-Light Noise Cancelling Earbuds",
+    brand: "Sony",
+    category: "Electronics",
+    subcategory: "True Wireless Earbuds",
+    sku: "KA-SON-LNK01",
+    price: 12990,
+    oldPrice: 16990,
+    discount: 24,
+    stock: 22,
+    rating: 4.7,
+    reviews: 130,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=700",
+    images: ["https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=700"],
+    description: "World's smallest and lightest Hi-Res noise-cancelling truly wireless headphones with Auto Play, seamless ambient sound switching, and LDAC audio.",
+    specifications: {
+      Weight: "4.8g per earbud (Ultra Light)",
+      Battery: "20 Hours with Charging Case",
+      Audio: "Hi-Res Audio Wireless (LDAC)",
+      Warranty: "1 Year Brand Warranty"
+    },
+    colors: ["Earth Blue", "Black", "White"],
+    variants: ["Standard Pack"]
+  },
+  {
+    id: 33,
+    name: "SoundLink Revolve+ II 360 Bluetooth Speaker",
+    brand: "Bose",
+    category: "Electronics",
+    subcategory: "Wireless Speakers",
+    sku: "KA-BOS-REV02",
+    price: 19900,
+    oldPrice: 24900,
+    discount: 20,
+    stock: 14,
+    rating: 4.9,
+    reviews: 175,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700",
+    images: ["https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700"],
+    description: "Deep, jaw-dropping 360-degree sound with flexible fabric handle, durable water-resistant aluminum body, and 17 hours of battery life.",
+    specifications: {
+      Audio: "True 360° Omnidirectional Acoustic Design",
+      Battery: "17 Hours Rechargeable",
+      WaterResistance: "IP55 Dust and Water Protection",
+      Warranty: "1 Year Official Bose Warranty"
+    },
+    colors: ["Triple Black", "Lux Silver"],
+    variants: ["Revolve+ II Handle Edition"]
+  },
+  {
+    id: 34,
+    name: "Apple Watch SE (GPS 40mm Starlight)",
+    brand: "Apple",
+    category: "Smart Gadgets",
+    subcategory: "Smart Wearables",
+    sku: "KA-APP-SE02",
+    price: 19900,
+    oldPrice: 24900,
+    discount: 20,
+    stock: 18,
+    rating: 4.8,
+    reviews: 240,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700",
+    images: ["https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700"],
+    description: "Retina display, Crash Detection, Enhanced Workout app, Heart rate notifications, sleep stages tracking, and 50m swimproof water resistance.",
+    specifications: {
+      Case: "40mm 100% Recycled Aluminum",
+      Display: "Retina LTPO OLED 1000 nits",
+      WaterResistance: "50m Swimproof",
+      Warranty: "1 Year AppleCare Warranty"
+    },
+    colors: ["Starlight", "Midnight Black", "Silver"],
+    variants: ["40mm GPS"]
   }
 ];
 
@@ -1018,7 +1241,10 @@ export function getProducts() {
     try {
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        list = parsed;
+        // Merge any new default products that are not yet in stored list
+        const existingIds = new Set(parsed.map(p => Number(p.id)));
+        const missingDefaults = defaultProducts.filter(p => !existingIds.has(Number(p.id)));
+        list = missingDefaults.length > 0 ? [...parsed, ...missingDefaults] : parsed;
       }
     } catch {
       list = defaultProducts;
