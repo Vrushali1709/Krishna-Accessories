@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import Reveal from '../components/Reveal';
 import { setAdminUser, setSupplierUser, setCustomerUser } from '../utils/auth';
 import { getSuppliers } from '../utils/orderStore';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
@@ -173,158 +174,160 @@ export default function Login() {
     <div className="min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
-        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
+      <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
+        <Reveal effect="fade-up">
+          <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-9 shadow-sm space-y-5">
 
-          <div className="text-center">
-            <img
-              src="/images/krishna-logo.png"
-              alt="Krishna Accessories Logo"
-              className="mx-auto h-12 w-12 object-contain rounded-2xl bg-white p-1 shadow-xs border border-gray-200 mb-2.5"
-            />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Client Authentication
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-950 mt-1">Sign In to Your Account</h2>
-            <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
-              Access your saved bag, order timeline tracking, and address book
-            </p>
-          </div>
-
-          {redirectMessage && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-xs">
-              <span className="text-base">🔒</span>
-              <div>
-                <strong className="font-bold block text-amber-950">Authentication Required</strong>
-                <span>{redirectMessage}</span>
-              </div>
-            </div>
-          )}
-
-          {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleLogin} className="space-y-3.5" autoComplete="off">
-            <div>
-              <label className="text-xs font-semibold text-gray-700 mb-1 block">Email Address</label>
-              <input
-                type="text"
-                required
-                autoComplete="off"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={
-                  selectedRole === 'supplier'
-                    ? 'supplier@krishna.com'
-                    : selectedRole === 'admin'
-                      ? 'admin@krishna.com'
-                      : 'name@domain.com'
-                }
-                className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+            <div className="text-center">
+              <img
+                src="/images/krishna-logo.png"
+                alt="Krishna Accessories Logo"
+                className="mx-auto h-12 w-12 object-contain rounded-2xl bg-white p-1 shadow-xs border border-gray-200 mb-3 hover:rotate-3 transition duration-300"
               />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C6734]">
+                Client Authentication
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-gray-950 mt-1">Sign In to Your Account</h2>
+              <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                Access your saved bag, consignment timeline tracking, and address book
+              </p>
             </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-gray-700">Password</label>
-                <button
-                  type="button"
-                  onClick={() => setForgotModalOpen(true)}
-                  className="text-[11px] text-gray-900 font-semibold hover:underline"
-                >
-                  Forgot?
-                </button>
+            {redirectMessage && (
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-2xs">
+                <span className="text-base">🔒</span>
+                <div>
+                  <strong className="font-bold block text-amber-950">Authentication Required</strong>
+                  <span>{redirectMessage}</span>
+                </div>
               </div>
-              <div className="relative">
+            )}
+
+            {error && (
+              <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-3.5" autoComplete="off">
+              <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">Email Address</label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type="text"
                   required
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 pr-11 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                  autoComplete="off"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={
+                    selectedRole === 'supplier'
+                      ? 'supplier@krishna.com'
+                      : selectedRole === 'admin'
+                        ? 'admin@krishna.com'
+                        : 'name@domain.com'
+                  }
+                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-3 text-xs text-gray-900 outline-none focus:border-[#8C6734] focus:bg-white transition"
                 />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-gray-700">Password</label>
+                  <button
+                    type="button"
+                    onClick={() => setForgotModalOpen(true)}
+                    className="text-[11px] text-[#8C6734] font-semibold hover:underline cursor-pointer"
+                  >
+                    Forgot?
+                  </button>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-3 pr-11 text-xs text-gray-900 outline-none focus:border-[#8C6734] focus:bg-white transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer disabled:opacity-60 hover:-translate-y-0.5"
+              >
+                {submitting ? (
+                  <>
+                    <BrandSpinner size="xs" variant="gold" inline={true} />
+                    <span>Authenticating...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Sign In</span>
+                    <ArrowRightIcon className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Quick Access Account Selector */}
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
+                Quick Demo Switcher
+              </p>
+              <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => setShowPassword((visible) => !visible)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900"
+                  onClick={() => handleSelectRole('customer')}
+                  className={`rounded-full py-2 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
+                    ? 'border border-[#8C6734] bg-amber-50 font-bold text-[#8C6734]'
+                    : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                    }`}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  Customer Demo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectRole('supplier')}
+                  className={`rounded-full py-2 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
+                    ? 'border border-[#8C6734] bg-amber-50 font-bold text-[#8C6734]'
+                    : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                    }`}
+                >
+                  Supplier Demo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectRole('admin')}
+                  className={`rounded-full py-2 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
+                    ? 'border border-[#8C6734] bg-amber-50 font-bold text-[#8C6734]'
+                    : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
+                    }`}
+                >
+                  Admin Demo
                 </button>
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer disabled:opacity-60"
-            >
-              {submitting ? (
-                <>
-                  <BrandSpinner size="xs" variant="gold" inline={true} />
-                  <span>Authenticating...</span>
-                </>
-              ) : (
-                <>
-                  <span>Sign In</span>
-                  <ArrowRightIcon className="w-3.5 h-3.5" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Quick Access Account Selector (Selects Mode but does NOT auto-fill credentials) */}
-          <div className="border-t border-gray-100 pt-4">
-            <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
-              Demo Access
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleSelectRole('customer')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
-                  }`}
-              >
-                Customer Demo
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSelectRole('supplier')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
-                  }`}
-              >
-                Supplier Demo
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSelectRole('admin')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                  : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
-                  }`}
-              >
-                Admin Demo
-              </button>
+            <div className="text-center text-xs text-gray-500">
+              Don't have an account?{' '}
+              <Link to="/register" state={location.state} className="font-bold text-gray-950 hover:text-[#8C6734] transition hover:underline">
+                Create Account
+              </Link>
             </div>
-          </div>
 
-          <div className="text-center text-xs text-gray-500">
-            Don't have an account?{' '}
-            <Link to="/register" state={location.state} className="font-bold text-gray-950 hover:underline">
-              Create Account
-            </Link>
           </div>
-
-        </div>
+        </Reveal>
       </main>
 
       {/* Forgot Password OTP Modal */}
@@ -359,7 +362,7 @@ export default function Login() {
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                     placeholder="registered@krishna.com"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-[#8C6734] focus:bg-white"
                   />
                 </div>
                 <button
@@ -380,7 +383,7 @@ export default function Login() {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value)}
                     placeholder="123456"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white tracking-widest text-center font-bold"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-[#8C6734] focus:bg-white tracking-widest text-center font-bold"
                   />
                 </div>
                 <div>
@@ -391,7 +394,7 @@ export default function Login() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new strong password"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-[#8C6734] focus:bg-white"
                   />
                 </div>
                 <button

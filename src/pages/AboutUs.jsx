@@ -300,7 +300,7 @@ export default function AboutUs() {
                   Orders Fulfilled
                 </p>
                 <p className="text-[11px] text-neutral-500">
-                  Across Gujarat & nationwide delivery
+                  Across Mumbai & nationwide delivery
                 </p>
               </div>
             </Reveal>
@@ -484,7 +484,7 @@ export default function AboutUs() {
                       Authenticated Since Day One
                     </p>
                     <p className="text-[11px] text-neutral-500 mt-0.5">
-                      Gujarat's trusted multi-brand store with verified provenance.
+                      Mumbai's trusted multi-brand store with verified provenance.
                     </p>
                   </div>
                 </div>

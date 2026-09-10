@@ -26,7 +26,7 @@ const DEFAULT_REVIEWS = [
   {
     id: 3,
     name: 'Rohan Patel',
-    location: 'Surat, Gujarat',
+    location: 'Bandra, Mumbai',
     rating: 5,
     category: 'Audio & Gadgets',
     product: 'Sony WH-1000XM5 Noise Cancelling',
@@ -66,7 +66,7 @@ const DEFAULT_REVIEWS = [
   {
     id: 7,
     name: 'Harsh Joshi',
-    location: 'Vadodara, Gujarat',
+    location: 'Pune, Maharashtra',
     rating: 5,
     category: 'Chronograph Watches',
     product: 'Casio Edifice Sapphire Chronograph',

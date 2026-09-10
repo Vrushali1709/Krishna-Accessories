@@ -198,7 +198,7 @@ export default function AdminDashboard() {
     email: '',
     phone: '',
     category: 'Fitness',
-    address: 'Gujarat, India'
+    address: 'Shop No. 64, Heera Panna Shopping Center, Haji Ali, Mumbai - 400026'
   });
 
   const [newNotificationText, setNewNotificationText] = useState('');
@@ -665,7 +665,7 @@ export default function AdminDashboard() {
       email: supplierForm.email.trim().toLowerCase(),
       phone: supplierForm.phone.trim() || '+91 98765 00000',
       category: supplierForm.category || 'Fitness',
-      address: supplierForm.address || 'Gujarat, India',
+      address: supplierForm.address || 'Shop No. 64, Heera Panna Shopping Center, Haji Ali, Mumbai - 400026',
       status: 'Active'
     });
     setSuppliers(getSuppliers());
@@ -675,7 +675,7 @@ export default function AdminDashboard() {
       email: '',
       phone: '',
       category: 'Fitness',
-      address: 'Gujarat, India'
+      address: 'Shop No. 64, Heera Panna Shopping Center, Haji Ali, Mumbai - 400026'
     });
     showToast('Vendor partner onboarded');
   };
@@ -3940,7 +3940,7 @@ export default function AdminDashboard() {
                       {selectedOrder.customer?.address || 'Standard Address'}
                     </p>
                     <p className="text-[11px] text-zinc-500 font-medium">
-                      {selectedOrder.customer?.city || 'Ahmedabad'}, {selectedOrder.customer?.state || 'Gujarat'} - {selectedOrder.customer?.pincode}
+                      {selectedOrder.customer?.city || 'Mumbai'}, {selectedOrder.customer?.state || 'Maharashtra'} - {selectedOrder.customer?.pincode}
                     </p>
                   </div>
                 </div>

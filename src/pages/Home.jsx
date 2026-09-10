@@ -25,6 +25,8 @@ import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
+import Reveal from '../components/Reveal';
+import AnimatedCounter from '../components/AnimatedCounter';
 import {
   ArrowRightIcon,
   ChevronLeftIcon,
@@ -578,18 +580,81 @@ export default function Home() {
         </div>
       </div>
 
-      <HomeDiscoveryStrip categories={categoryList} />
+      {/* ================= LUXURY STATS & TRUST RIBBON ================= */}
+      <section className="bg-white border-b border-gray-200/80 py-6 sm:py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <Reveal delay={0} direction="up" className="text-center sm:text-left">
+              <div className="p-3 sm:p-4 rounded-2xl bg-[#FAFAFB] border border-gray-200/70 hover:border-amber-300/60 transition-colors">
+                <p className="font-serif text-2xl sm:text-3xl font-bold text-gray-950 text-[#8C6734]">
+                  <AnimatedCounter end={100} suffix="%" />
+                </p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-900 mt-1">
+                  Certified Authentic
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Direct brand warranty credentials
+                </p>
+              </div>
+            </Reveal>
 
+            <Reveal delay={80} direction="up" className="text-center sm:text-left">
+              <div className="p-3 sm:p-4 rounded-2xl bg-[#FAFAFB] border border-gray-200/70 hover:border-amber-300/60 transition-colors">
+                <p className="font-serif text-2xl sm:text-3xl font-bold text-gray-950 text-[#8C6734]">
+                  <AnimatedCounter end={10} suffix="k+" />
+                </p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-900 mt-1">
+                  Orders Fulfilled
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Across Mumbai & nationwide delivery
+                </p>
+              </div>
+            </Reveal>
 
+            <Reveal delay={160} direction="up" className="text-center sm:text-left">
+              <div className="p-3 sm:p-4 rounded-2xl bg-[#FAFAFB] border border-gray-200/70 hover:border-amber-300/60 transition-colors">
+                <p className="font-serif text-2xl sm:text-3xl font-bold text-gray-950 text-[#8C6734]">
+                  <AnimatedCounter end={50} suffix="+" />
+                </p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-900 mt-1">
+                  Heritage Brands
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Swiss watches, audio & tech
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={240} direction="up" className="text-center sm:text-left">
+              <div className="p-3 sm:p-4 rounded-2xl bg-[#FAFAFB] border border-gray-200/70 hover:border-amber-300/60 transition-colors">
+                <p className="font-serif text-2xl sm:text-3xl font-bold text-gray-950 text-[#8C6734]">
+                  <AnimatedCounter end={7} suffix=" Days" />
+                </p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-900 mt-1">
+                  Easy Replacement
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Hassle-free return policy
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <Reveal direction="up" delay={50}>
+        <HomeDiscoveryStrip categories={categoryList} />
+      </Reveal>
 
       {/* ================= CURATED DEPARTMENTS CAROUSEL ================= */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
+        <Reveal direction="up" className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
-            <div className="flex items-center gap-2">
-
-            </div>
-            <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C6734]">
+              Curated Catalog
+            </span>
+            <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950 font-serif">
               Shop by Category
             </h2>
           </div>
@@ -599,14 +664,10 @@ export default function Home() {
               to="/shop"
               className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
             >
-              <span>View All</span>
+              <span>View All Catalog &rarr;</span>
             </Link>
-
-
-
-
           </div>
-        </div>
+        </Reveal>
 
         <div
           ref={carouselRef}
@@ -618,7 +679,7 @@ export default function Home() {
             }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {categoryList.map((c) => {
+          {categoryList.map((c, idx) => {
             const count = getProductCountForCategory(c.name);
             return (
               <Link
@@ -672,7 +733,7 @@ export default function Home() {
 
                   {/* Pill Action Button */}
                   <div className="w-full py-2 sm:py-2.5 rounded-full bg-[#181a1f] group-hover:bg-black text-white text-[11px] sm:text-xs font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] shadow-2xs">
-                    <span>Explore Now</span>
+                    <span>Explore Collection</span>
                     <ArrowRightIcon className="w-3 h-3 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </div>
                 </div>
@@ -684,42 +745,46 @@ export default function Home() {
 
       {/* ================= PROMOTIONAL VOUCHER ================= */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
-        <div className="rounded-2xl bg-[#0F172A] text-white p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 shadow-sm border border-slate-800">
-          <div className="flex items-center gap-3 w-full md:w-auto min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-base border border-white/10">
-              🎁
+        <Reveal direction="up" delay={80}>
+          <div className="rounded-3xl bg-[#0F172A] text-white p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-md border border-slate-800">
+            <div className="flex items-center gap-3.5 w-full md:w-auto min-w-0">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-400/20 text-amber-300 text-lg border border-amber-400/30 shadow-inner">
+                🎁
+              </div>
+              <div className="min-w-0">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-amber-300">Exclusive Privé Privilege</span>
+                <h3 className="text-base sm:text-lg font-bold text-white leading-snug truncate">Save 10% Instant Discount on Orders &gt; ₹1,000</h3>
+                <p className="text-xs text-slate-300 truncate mt-0.5">
+                  Use verified promo code:{' '}
+                  <strong className="text-amber-300 font-mono bg-white/10 px-1.5 py-0.5 rounded border border-white/10 ml-1">KRISHNA10</strong>
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <span className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-amber-300">Exclusive Privé</span>
-              <h3 className="text-sm sm:text-base font-bold text-white leading-snug truncate">Save 10% Instant Discount &gt; ₹1,000</h3>
-              <p className="text-[10px] sm:text-[10.5px] text-gray-400 truncate">
-                Coupon code:{' '}
-                <strong className="text-white font-mono bg-white/10 px-1 py-0.2 rounded border border-white/10">KRISHNA10</strong>
-              </p>
-            </div>
+            <Link
+              to="/shop"
+              className="w-full md:w-auto text-center rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold px-6 py-2.5 text-xs uppercase tracking-wider transition shrink-0 shadow-sm"
+            >
+              Shop Offer &rarr;
+            </Link>
           </div>
-          <Link
-            to="/shop"
-            className="w-full md:w-auto text-center rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-gray-100 transition shrink-0 shadow-2xs"
-          >
-            Claim Offer →
-          </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ================= FEATURED PRODUCTS (SELECTED EDITIONS) ================= */}
-      <section className="bg-white border-y border-gray-200/80 py-10 sm:py-14">
+      <section className="bg-white border-y border-gray-200/80 py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
+          <Reveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
             <div>
-
-              <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C6734]">
+                Handpicked Curation
+              </span>
+              <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950 font-serif">
                 Selected Editions
               </h2>
               <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
-                Certified authentic luxury pieces and trendsetting essentials crafted for distinction.
+                Certified authentic luxury timepieces and trendsetting essentials crafted for everyday distinction.
               </p>
             </div>
 
@@ -730,10 +795,10 @@ export default function Home() {
               <span>Explore All Catalog</span>
               <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
-          </div>
+          </Reveal>
 
           {/* Interactive Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 sm:mb-8 no-scrollbar">
+          <Reveal direction="up" delay={50} className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 sm:mb-8 no-scrollbar">
             {editionCategories.map((cat) => {
               const isActive = selectedEditionCategory === cat;
               return (
@@ -750,7 +815,7 @@ export default function Home() {
                 </button>
               );
             })}
-          </div>
+          </Reveal>
 
           {/* Spacious Products Grid */}
           {filteredFeatured.length > 0 ? (
@@ -786,15 +851,17 @@ export default function Home() {
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
       ====================================================== */}
       <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8">
-        <div className="text-center mb-7 sm:mb-9">
-
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+        <Reveal direction="up" className="text-center mb-7 sm:mb-9">
+          <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#8C6734]">
+            Authorized Multi-Brand Network
+          </span>
+          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950 font-serif">
             Explore by Brand
           </h2>
           <p className="mt-1.5 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
             Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
           </p>
-        </div>
+        </Reveal>
 
         {/* Dual Capsule Infinite Scrolling Carousel Strips */}
         <div className="space-y-3 sm:space-y-3.5">
@@ -820,8 +887,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-
-
 
           {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
           <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">

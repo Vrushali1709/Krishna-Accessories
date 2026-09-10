@@ -14,6 +14,7 @@ import {
   AVAILABLE_COUPONS,
   FREE_SHIPPING_THRESHOLD
 } from '../utils/cart';
+import Reveal from '../components/Reveal';
 import {
   ShieldCheckIcon,
   TruckIcon,
@@ -109,19 +110,19 @@ export default function Cart() {
       {/* Breadcrumb & Cart Header */}
       <section className="border-b border-gray-200/80 bg-white py-5 sm:py-7">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-xs text-gray-400 mb-1.5 font-medium">
+          <Reveal direction="up" className="flex items-center gap-2 text-xs text-gray-400 mb-1.5 font-medium">
             <Link to="/" className="hover:text-gray-950 transition">Home</Link>
             <span>/</span>
             <Link to="/shop" className="hover:text-gray-950 transition">Catalog</Link>
             <span>/</span>
             <span className="text-gray-900 font-semibold">Shopping Bag</span>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+          </Reveal>
+          <Reveal direction="up" delay={50} className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#B89758]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8C6734]">
                 Boutique Cart & Selection
               </span>
-              <h1 className="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+              <h1 className="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950 font-serif">
                 Your Shopping Bag ({cart.reduce((s, i) => s + (i.quantity || 1), 0)} {cart.length === 1 && cart[0]?.quantity === 1 ? 'item' : 'items'})
               </h1>
             </div>
@@ -135,7 +136,7 @@ export default function Cart() {
                 <span>Empty Bag</span>
               </button>
             )}
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -143,30 +144,30 @@ export default function Cart() {
 
         {cart.length === 0 ? (
           /* Empty Bag State */
-          <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-gray-200/80 bg-white p-8 text-center shadow-xs">
+          <Reveal direction="up" className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-gray-200/80 bg-white p-8 text-center shadow-xs">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200/60 text-amber-800 mb-2">
               <BagIcon className="w-8 h-8" />
             </div>
-            <h2 className="mt-3 text-xl font-bold text-gray-950">Your Shopping Bag is Empty</h2>
+            <h2 className="mt-3 text-xl font-bold text-gray-950 font-serif">Your Shopping Bag is Empty</h2>
             <p className="mt-1.5 max-w-md text-xs sm:text-sm text-gray-500 leading-relaxed">
-              Explore our curated boutique collection of certified Swiss timepieces, handcrafted Italian leather, designer footwear, and modern electronics.
+              Explore our curated boutique collection of certified Swiss timepieces, handcrafted leather essentials, designer footwear, and modern electronics.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-black"
+                className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-black cursor-pointer"
               >
                 <span>Explore Full Catalog</span>
                 <ArrowRightIcon className="w-3.5 h-3.5" />
               </Link>
               <Link
                 to="/new-arrivals"
-                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-[#F4F4F6] px-5 py-2.5 text-xs font-semibold text-gray-800 transition hover:bg-gray-200"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-[#F4F4F6] px-5 py-2.5 text-xs font-semibold text-gray-800 transition hover:bg-gray-200 cursor-pointer"
               >
                 <span>Season New Arrivals</span>
               </Link>
             </div>
-          </div>
+          </Reveal>
         ) : (
           /* 2-Column Cart Grid */
           <div className="grid gap-6 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_390px]">

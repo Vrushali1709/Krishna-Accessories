@@ -90,9 +90,9 @@ export default function Account() {
       lastName: currentUser?.name?.split(' ')[1] || 'Patel',
       phone: currentUser?.phone || '9876512345',
       address: '',
-      city: 'Ahmedabad',
-      state: 'Gujarat',
-      pincode: '380054',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      pincode: '400026',
       isDefault: addresses.length === 0
     });
     setAddrModalOpen(true);
