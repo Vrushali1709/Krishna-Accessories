@@ -102,6 +102,88 @@ export const categoryBrandMap = {
   "Fashion Accessories": ["Ray-Ban", "Fossil", "Tommy Hilfiger", "Titan", "Calvin Klein", "Police"],
 };
 
+export const categorySubcategoryMap = {
+  "Watches": [
+    "Analog Watches",
+    "Chronograph Watches",
+    "Automatic Watches",
+    "Smart Watches",
+    "Luxury Watches",
+    "Solar Watches",
+    "Swiss Made Watches"
+  ],
+  "Bags & Wallets": [
+    "Leather Briefcases",
+    "Backpacks",
+    "Women Totes",
+    "Luggage & Trolleys",
+    "Quilted Satchels",
+    "Wallets & Clutches"
+  ],
+  "Shoes": [
+    "Running Shoes",
+    "Sneakers",
+    "High Tops",
+    "Trekking Boots",
+    "Performance Trainers",
+    "Formal Shoes"
+  ],
+  "Mobiles": [
+    "Flagship Smartphones",
+    "AI Flagships",
+    "Camera Phones",
+    "Performance 5G",
+    "Foldables"
+  ],
+  "Clothes & Fashion": [
+    "Denim & Jeans",
+    "Blazers & Suits",
+    "Oxford Shirts",
+    "Monogram Polos",
+    "Jackets & Outerwear"
+  ],
+  "Laptops": [
+    "Flagship Laptops",
+    "Professional Laptops",
+    "Gaming Laptops",
+    "2-in-1 Convertibles",
+    "Ultrabooks"
+  ],
+  "Electronics": [
+    "Over-Ear Headphones",
+    "True Wireless Earbuds",
+    "Bluetooth Home Speakers",
+    "Wireless ANC Headphones",
+    "Soundbars"
+  ],
+  "Smart Gadgets": [
+    "Smart Wearables",
+    "Smart Trackers & Tags",
+    "Smartwatches",
+    "Smart Home Devices"
+  ],
+  "Gaming": [
+    "Gaming Consoles",
+    "Mechanical Keyboards",
+    "Wireless Gaming Mice",
+    "Gaming Headsets",
+    "Gaming Peripherals"
+  ],
+  "Fitness": [
+    "Fitness Trackers",
+    "Multisport GPS Watches",
+    "Fitness Smartwatches",
+    "Activity Bands"
+  ],
+  "Fashion Accessories": [
+    "Luxury Eyewear",
+    "Luxury Fragrances",
+    "Leather Wallets & Sets",
+    "Jewelry & Bracelets",
+    "Designer Belts"
+  ]
+};
+
 export const WATCH_TYPES = [];
 export const WATCH_TYPE_METADATA = {};
 
@@ -990,6 +1072,362 @@ export const defaultProducts = [
     },
     colors: ["Black / Powder Gray", "Whitestone / Powder Gray"],
     variants: ["Standard Titanium Edition"]
+  },
+  {
+    id: 27,
+    name: "Captain Cook High-Tech Ceramic Diver Watch",
+    brand: "Rado",
+    category: "Watches",
+    subcategory: "Automatic Watches",
+    sku: "KA-RAD-027",
+    price: 38999,
+    oldPrice: 48999,
+    discount: 20,
+    stock: 9,
+    rating: 4.9,
+    reviews: 74,
+    status: "Active",
+    supplier: "Apex Timepieces Ltd.",
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
+    ],
+    description: "High-tech plasma ceramic case with tinted sapphire skeleton dial, 80-hour power reserve Nivachron hairspring, and 300m water resistance.",
+    specifications: {
+      Material: "Plasma High-Tech Ceramic & Titanium",
+      Movement: "Swiss Automatic R734 (80 Hours Reserve)",
+      Glass: "Box Sapphire Crystal Anti-Reflective",
+      WaterResistance: "300m / 30 ATM",
+      Warranty: "5 Years International Warranty"
+    },
+    colors: ["High-Tech Smoke Ceramic", "Rose Gold Ceramic"],
+    variants: ["Ceramic Bracelet", "Rubber Strap"]
+  },
+  {
+    id: 28,
+    name: "Highland Polycarbonate Hard Luggage Trolley 75cm",
+    brand: "American Tourister",
+    category: "Bags & Wallets",
+    subcategory: "Luggage & Trolleys",
+    sku: "KA-AMT-028",
+    price: 4999,
+    oldPrice: 7999,
+    discount: 37,
+    stock: 28,
+    rating: 4.7,
+    reviews: 145,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=700"
+    ],
+    description: "Scratch-resistant 100% Makrolon polycarbonate hard trolley with recessed TSA combination lock, 360-degree silent dual spinner wheels, and expandable capacity.",
+    specifications: {
+      Material: "100% Virgin Polycarbonate",
+      Volume: "98 Litres Expandable",
+      Lock: "TSA Approved Flush Mount Lock",
+      Warranty: "3 Years International Warranty"
+    },
+    colors: ["Ocean Blue", "Graphite Black", "Champagne Gold"],
+    variants: ["Large 75cm", "Cabin 55cm"]
+  },
+  {
+    id: 29,
+    name: "Premium Quilted Satchel Shoulder Handbag",
+    brand: "Lavie",
+    category: "Bags & Wallets",
+    subcategory: "Quilted Satchels",
+    sku: "KA-LAV-029",
+    price: 2799,
+    oldPrice: 4299,
+    discount: 35,
+    stock: 35,
+    rating: 4.6,
+    reviews: 112,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700"
+    ],
+    description: "Fashion-forward quilted pattern handbag with high-polish metallic chain strap, multiple organizing slip pockets, and secure turn-lock closure.",
+    specifications: {
+      Material: "Premium Soft PU Leather",
+      Hardware: "Gold-Tone Metal Chain & Buckle",
+      Compartments: "2 Main Zip + 1 Centre Divider",
+      Warranty: "1 Year Manufacturer Warranty"
+    },
+    colors: ["Blush Pink", "Jet Black", "Ivory Cream"],
+    variants: ["Medium Satchel"]
+  },
+  {
+    id: 30,
+    name: "Waterproof Oiled Leather Heavy-Duty Trekking Boots",
+    brand: "Woodland",
+    category: "Shoes",
+    subcategory: "Trekking Boots",
+    sku: "KA-WOO-030",
+    price: 4499,
+    oldPrice: 5999,
+    discount: 25,
+    stock: 20,
+    rating: 4.7,
+    reviews: 168,
+    status: "Active",
+    supplier: "Urban Footwear Co.",
+    image: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=700"
+    ],
+    description: "Rugged oiled nubuck leather ankle-high hiking boots with rust-resistant brass eyelets, deep grooved lugged rubber outsoles for extreme mountain traction.",
+    specifications: {
+      Material: "Genuine Nubuck Oiled Leather",
+      Sole: "Heavy-Duty Vulcanized High-Grip Rubber",
+      WaterResistance: "Treated Waterproof Membrane",
+      Warranty: "6 Months"
+    },
+    colors: ["Camel Tan", "Forest Khaki", "Dark Brown"],
+    variants: ["UK 7", "UK 8", "UK 9", "UK 10", "UK 11"]
+  },
+  {
+    id: 31,
+    name: "Pixel 9 Pro XL (Gemini AI & 50MP Pro Triple Camera)",
+    brand: "Google Pixel",
+    category: "Mobiles",
+    subcategory: "AI Flagships",
+    sku: "KA-PIX-031",
+    price: 109999,
+    oldPrice: 124999,
+    discount: 12,
+    stock: 10,
+    rating: 4.9,
+    reviews: 195,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700"
+    ],
+    description: "Powered by Google Tensor G4 with built-in Gemini Nano AI, 6.8'' Super Actua OLED Display with 3000 nits, and 7 years of Android OS and security upgrades.",
+    specifications: {
+      Display: "6.8 inch Super Actua OLED 1-120Hz LTPO",
+      Processor: "Google Tensor G4 with Titan M2",
+      RAM: "16GB RAM",
+      Storage: "256GB / 512GB",
+      Camera: "50MP Main + 48MP Telephoto 5x + 48MP Ultrawide",
+      Warranty: "1 Year Official Google Warranty"
+    },
+    colors: ["Obsidian", "Porcelain", "Hazel"],
+    variants: ["16GB / 256GB", "16GB / 512GB"]
+  },
+  {
+    id: 32,
+    name: "Classic Oxford 100% Pure Cotton Button-Down Shirt",
+    brand: "Tommy Hilfiger",
+    category: "Clothes & Fashion",
+    subcategory: "Oxford Shirts",
+    sku: "KA-TOM-032",
+    price: 3499,
+    oldPrice: 4999,
+    discount: 30,
+    stock: 30,
+    rating: 4.7,
+    reviews: 108,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=700"
+    ],
+    description: "Timeless business-casual Oxford cotton shirt with iconic TH flag embroidery on chest, curved hem, and button-down collar.",
+    specifications: {
+      Material: "100% Breathable Combed Cotton",
+      Fit: "Custom Regular Fit",
+      Collar: "Button-Down",
+      Care: "Machine Wash Cold"
+    },
+    colors: ["Sky Blue", "Crisp White", "Soft Pink"],
+    variants: ["S (38)", "M (40)", "L (42)", "XL (44)"]
+  },
+  {
+    id: 33,
+    name: "ROG Zephyrus G16 OLED Ultra 9 Gaming Laptop",
+    brand: "Asus",
+    category: "Laptops",
+    subcategory: "Gaming Laptops",
+    sku: "KA-ASU-033",
+    price: 189990,
+    oldPrice: 209990,
+    discount: 9,
+    stock: 6,
+    rating: 4.9,
+    reviews: 78,
+    status: "Active",
+    supplier: "Optima Tech Solutions",
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=700"
+    ],
+    description: "Sleek 1.49cm thin CNC aluminum gaming machine with ROG Nebula 2.5K 240Hz OLED display, Intel Core Ultra 9, and NVIDIA GeForce RTX 4080.",
+    specifications: {
+      Processor: "Intel Core Ultra 9 185H (16 Cores / 22 Threads)",
+      Graphics: "NVIDIA GeForce RTX 4080 12GB GDDR6",
+      Display: "16 inch 2.5K (2560x1600) 240Hz OLED 0.2ms",
+      RAM: "32GB LPDDR5X 7467MHz",
+      Storage: "2TB PCIe 4.0 NVMe M.2 SSD",
+      Warranty: "2 Years Asus India Warranty"
+    },
+    colors: ["Eclipse Gray with Slash Lighting", "Platinum White"],
+    variants: ["32GB / 2TB SSD"]
+  },
+  {
+    id: 34,
+    name: "Stanmore III Iconic Vintage Bluetooth Home Speaker",
+    brand: "Marshall",
+    category: "Electronics",
+    subcategory: "Bluetooth Home Speakers",
+    sku: "KA-MAR-034",
+    price: 31999,
+    oldPrice: 36999,
+    discount: 13,
+    stock: 14,
+    rating: 4.9,
+    reviews: 165,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700"
+    ],
+    description: "Legendary room-filling Marshall signature sound with re-engineered wider soundstage, Placement Compensation, Bluetooth 5.2, and tactile brass control knobs.",
+    specifications: {
+      Amplifiers: "One 50 Watt Class D (Woofer) + Two 15 Watt Class D (Tweeters)",
+      Connectivity: "Bluetooth 5.2, 3.5mm AUX, RCA Input",
+      FrequencyRange: "45–20,000 Hz",
+      Warranty: "1 Year Official Brand Warranty"
+    },
+    colors: ["Vintage Black", "Cream White", "Rich Brown"],
+    variants: ["Stanmore III Standard"]
+  },
+  {
+    id: 35,
+    name: "PlayStation 5 Pro 2TB SSD DualSense Bundle",
+    brand: "Sony",
+    category: "Gaming",
+    subcategory: "Gaming Consoles",
+    sku: "KA-SON-035",
+    price: 68990,
+    oldPrice: 74990,
+    discount: 8,
+    stock: 12,
+    rating: 5.0,
+    reviews: 310,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=700"
+    ],
+    description: "Next-generation gaming console with PlayStation Spectral Super Resolution (PSSR) AI upscaling, advanced ray tracing, 60fps/120fps 4K gaming, and 2TB high-speed NVMe SSD.",
+    specifications: {
+      Storage: "2TB Ultra-High Speed Custom SSD",
+      Graphics: "Upgraded RDNA GPU with Advanced Ray Tracing",
+      Audio: "Tempest 3D AudioTech",
+      Output: "4K 120Hz / 8K Support, VRR",
+      Warranty: "1 Year Sony India Warranty"
+    },
+    colors: ["White / Black Standard Edition"],
+    variants: ["Console + 1 Wireless DualSense", "Bundle + 2 Controllers"]
+  },
+  {
+    id: 36,
+    name: "G Pro X Superlight 2 Wireless Ultra-Light Gaming Mouse",
+    brand: "Logitech",
+    category: "Gaming",
+    subcategory: "Wireless Gaming Mice",
+    sku: "KA-LOG-036",
+    price: 13995,
+    oldPrice: 16995,
+    discount: 17,
+    stock: 22,
+    rating: 4.8,
+    reviews: 140,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=700"
+    ],
+    description: "Pro-championship esports mouse weighing just 60 grams, featuring LIGHTFORCE hybrid optical-mechanical switches, HERO 2 32,000 DPI sensor, and 95-hour battery.",
+    specifications: {
+      Weight: "60 grams Ultralight",
+      Sensor: "HERO 2 32K DPI Precision",
+      PollingRate: "Up to 4000Hz (0.25ms)",
+      Battery: "95 Hours Constant Motion",
+      Warranty: "2 Years Logitech Warranty"
+    },
+    colors: ["Matte Black", "Pure White", "Magenta"],
+    variants: ["Superlight 2 Edition"]
+  },
+  {
+    id: 37,
+    name: "Skinn Raw Luxury Eau De Parfum For Men (100ml)",
+    brand: "Titan",
+    category: "Fashion Accessories",
+    subcategory: "Luxury Fragrances",
+    sku: "KA-TIT-037",
+    price: 2495,
+    oldPrice: 3295,
+    discount: 24,
+    stock: 45,
+    rating: 4.7,
+    reviews: 185,
+    status: "Active",
+    supplier: "Apex Timepieces Ltd.",
+    image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=700"
+    ],
+    description: "Mastercrafted in France by renowned perfumer Olivier Pescheux. Crisp citrus top notes of Italian Bergamot blended with violet leaves and Indonesian Patchouli.",
+    specifications: {
+      FragranceFamily: "Woody Citrus Fresh",
+      Concentration: "Eau De Parfum (Long-Lasting 12h+)",
+      Origin: "Crafted in France",
+      Volume: "100 ml / 3.4 fl. oz"
+    },
+    colors: ["Amber Glass Flacon"],
+    variants: ["100ml EDP", "50ml EDP"]
+  },
+  {
+    id: 38,
+    name: "Derrick Genuine Leather RFID Bifold Wallet & Keyfob Set",
+    brand: "Fossil",
+    category: "Fashion Accessories",
+    subcategory: "Leather Wallets & Sets",
+    sku: "KA-FOS-038",
+    price: 3495,
+    oldPrice: 4995,
+    discount: 30,
+    stock: 30,
+    rating: 4.8,
+    reviews: 120,
+    status: "Active",
+    supplier: "Apex Timepieces Ltd.",
+    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=700",
+    images: [
+      "https://images.unsplash.com/photo-1627123424574-724758594e93?w=700"
+    ],
+    description: "Full-grain 100% cowhide leather bifold wallet with built-in RFID blocking shield, 8 card slots, 2 slip pockets, clear ID window, and matching metal keyfob.",
+    specifications: {
+      Material: "100% Genuine Full-Grain Leather",
+      Security: "RFID Blocking Technology",
+      Dimensions: "11.4cm L x 1.9cm W x 8.9cm H",
+      Warranty: "1 Year"
+    },
+    colors: ["Dark Brown", "Sleek Black"],
+    variants: ["Wallet + Keyfob Gift Box"]
   }
 ];
 
@@ -1018,7 +1456,10 @@ export function getProducts() {
     try {
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        list = parsed;
+        // Merge any new default products whose IDs are not already stored
+        const storedIds = new Set(parsed.map(p => Number(p.id)));
+        const missingDefaults = defaultProducts.filter(p => !storedIds.has(Number(p.id)));
+        list = [...parsed, ...missingDefaults];
       }
     } catch {
       list = defaultProducts;
@@ -1181,6 +1622,26 @@ export function getBrandsByCategory(categoryName) {
     products.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase()).map(p => p.brand).filter(Boolean)
   );
   return brandsInCat.size > 0 ? Array.from(brandsInCat) : getBrands().slice(0, 6);
+}
+
+// Dynamic subcategory / product type finder for specific category
+export function getSubcategoriesByCategory(categoryName) {
+  if (!categoryName || categoryName === 'All') {
+    const products = getProducts();
+    const set = new Set();
+    products.forEach(p => {
+      if (p.subcategory) set.add(p.subcategory);
+    });
+    return Array.from(set);
+  }
+  if (categorySubcategoryMap[categoryName]) {
+    return categorySubcategoryMap[categoryName];
+  }
+  const products = getProducts();
+  const set = new Set(
+    products.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase()).map(p => p.subcategory).filter(Boolean)
+  );
+  return Array.from(set);
 }
 
 // ================= WISHLIST MANAGEMENT =================
