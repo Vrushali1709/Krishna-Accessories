@@ -1,4 +1,5 @@
 // src/utils/orderStore.js
+import { sendOrderConfirmationEmail, sendOrderStatusUpdateEmail } from './emailService';
 
 const ORDERS_KEY = 'krishna_platform_orders';
 const SUPPLIERS_KEY = 'krishna_platform_suppliers';
@@ -404,6 +405,13 @@ export function createOrder(orderData) {
     console.error("Failed to sync customer profile:", err);
   }
 
+  // Dispatch real-time Order Confirmation & Invoice Email to customer
+  try {
+    sendOrderConfirmationEmail(newOrder);
+  } catch (err) {
+    console.error("Order confirmation email dispatch failed:", err);
+  }
+
   // Also add a notification for the customer & admin
   addNotification({
     title: `Order Placed: ${orderNumber}`,
@@ -417,6 +425,8 @@ export function createOrder(orderData) {
 
 export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
   const orders = getOrders();
+  let modifiedOrder = null;
+
   const updated = orders.map(order => {
     if (order.id.toUpperCase() === orderId.toUpperCase()) {
       const now = new Date();
@@ -438,18 +448,30 @@ export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
         return step;
       }) : [];
 
-      return {
+      const result = {
         ...order,
         status: nextStatus,
         courier: courierInfo.courier || order.courier,
         trackingNumber: courierInfo.trackingNumber || order.trackingNumber,
         timeline: newTimeline
       };
+      modifiedOrder = result;
+      return result;
     }
     return order;
   });
 
   localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
+
+  // Dispatch real-time Order Status Update Email to customer
+  if (modifiedOrder) {
+    try {
+      sendOrderStatusUpdateEmail(modifiedOrder, nextStatus, courierInfo);
+    } catch (err) {
+      console.error("Order status update email dispatch failed:", err);
+    }
+  }
+
   window.dispatchEvent(new Event('ordersUpdated'));
   return updated;
 }

@@ -498,6 +498,18 @@ export default function Navbar() {
                         ))
                       )}
                     </div>
+                    <div className="mt-2 pt-2 border-t border-gray-100">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNotificationsOpen(false);
+                          window.dispatchEvent(new CustomEvent('openEmailViewer', { detail: {} }));
+                        }}
+                        className="w-full rounded-xl bg-slate-950 hover:bg-slate-800 text-white px-3 py-1.5 text-[10.5px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                      >
+                        <span>📨 Dispatched Emails &amp; OTPs</span>
+                      </button>
+                    </div>
                   </div>
                 </>
               )}
@@ -587,6 +599,18 @@ export default function Navbar() {
                           <span className="text-sm">👤</span>
                           <span>Account & Orders</span>
                         </Link>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            window.dispatchEvent(new CustomEvent('openEmailViewer', { detail: {} }));
+                          }}
+                          className="w-full flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition text-left cursor-pointer"
+                        >
+                          <span className="text-sm">📨</span>
+                          <span>Dispatched Emails &amp; OTPs</span>
+                        </button>
 
                         <Link
                           to="/account?tab=tracking"
