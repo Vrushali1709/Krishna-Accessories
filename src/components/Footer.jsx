@@ -123,53 +123,7 @@ export default function Footer() {
         <div className="absolute bottom-0 right-1/4 translate-y-1/2 h-64 w-[500px] rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
 
         {/* Value Proposition / Trust Pillars Strip */}
-        <div className="border-b border-slate-800/80 bg-slate-950/40">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:gap-8">
-              
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 border border-amber-400/20 shadow-xs">
-                  <ShieldCheckIcon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">100% Certified Authentic</h4>
-                  <p className="text-[11px] text-slate-400">Official brand warranty & certificate</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 border border-amber-400/20 shadow-xs">
-                  <TruckIcon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Free Express Shipping</h4>
-                  <p className="text-[11px] text-slate-400">Insured delivery across India</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 border border-amber-400/20 shadow-xs">
-                  <RefreshIcon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">7-Day Easy Guarantee</h4>
-                  <p className="text-[11px] text-slate-400">Hassle-free replacement policy</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 border border-amber-400/20 shadow-xs">
-                  <HeadphonesIcon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">VIP Concierge Support</h4>
-                  <p className="text-[11px] text-slate-400">Direct WhatsApp assistance</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
+        
 
         {/* Main Footer Links & Company Information Grid */}
         <div className="relative mx-auto max-w-7xl px-4 pt-12 pb-10 sm:px-6 lg:px-8">
