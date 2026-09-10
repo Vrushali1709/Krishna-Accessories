@@ -4,9 +4,14 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { isInWishlist, toggleWishlist } from '../utils/productStore';
-import { HeartIcon } from './Icons';
+import { HeartIcon, BagIcon, CheckCircleIcon } from './Icons';
 
-export default function ProductCard({ product, onAddToCart, onBuyNow }) {
+export default function ProductCard({
+  product,
+  onAddToCart,
+  onBuyNow,
+  layout = 'grid'
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const [justAdded, setJustAdded] = useState(false);
@@ -77,6 +82,148 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
     setInWish(active);
   };
 
+  // Stock status text & style
+  const stockCount = typeof product.stock === 'number' ? product.stock : 10;
+  const isLowStock = stockCount > 0 && stockCount <= 5;
+  const isOutOfStock = stockCount <= 0;
+
+  // ================= LIST VIEW LAYOUT =================
+  if (layout === 'list') {
+    return (
+      <div className="group relative flex flex-col sm:flex-row items-stretch gap-4 sm:gap-6 rounded-2xl sm:rounded-3xl border border-gray-200/80 bg-white p-3.5 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_14px_30px_rgba(0,0,0,0.07)] hover:border-gray-300">
+        
+        {/* Left: Thumbnail & Badges */}
+        <div className="relative w-full sm:w-48 md:w-56 aspect-[4/3.8] sm:aspect-square shrink-0 overflow-hidden rounded-xl sm:rounded-2xl bg-[#F6F7F9]">
+          <Link to={`/product/${product.id}`} className="block h-full w-full">
+            <img
+              src={product.image || product.images?.[0]}
+              alt={product.name}
+              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              loading="lazy"
+            />
+          </Link>
+
+          {/* Floating Badges */}
+          <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
+            {discount > 0 && (
+              <span className="rounded-full bg-gray-950/90 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-white shadow-xs">
+                {discount}% OFF
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleWishlistToggle}
+              aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
+              className={`pointer-events-auto ml-auto flex h-8 w-8 items-center justify-center rounded-full shadow-xs backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer ${inWish
+                ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
+                : 'bg-white/90 text-gray-700 hover:text-rose-600 border border-gray-200/70 hover:bg-white'
+                }`}
+            >
+              <HeartIcon className="w-4 h-4 transition-colors" filled={inWish} />
+            </button>
+          </div>
+        </div>
+
+        {/* Center: Details & Specifications */}
+        <div className="flex-1 flex flex-col justify-between py-1">
+          <div>
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+              <span className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#B89758]">
+                {product.brand || 'Authentic'}
+              </span>
+              {product.category && (
+                <span className="text-gray-300">•</span>
+              )}
+              {product.category && (
+                <span className="text-[10px] sm:text-[10.5px] font-medium text-gray-500">
+                  {product.category}
+                </span>
+              )}
+              {product.subcategory && (
+                <span className="rounded-md bg-gray-100 px-2 py-0.5 text-[9.5px] font-medium text-gray-700">
+                  {product.subcategory}
+                </span>
+              )}
+            </div>
+
+            <Link
+              to={`/product/${product.id}`}
+              className="block text-base sm:text-lg font-bold text-gray-950 transition-colors hover:text-[#B89758] line-clamp-1 leading-snug"
+            >
+              {product.name}
+            </Link>
+
+            <p className="mt-1 text-xs text-gray-500 line-clamp-2 leading-relaxed">
+              {product.description || 'Certified authentic luxury product with manufacturer warranty.'}
+            </p>
+
+            {/* Quick Specs / Color tags */}
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-600">
+              <div className="flex items-center gap-1 font-semibold text-gray-900 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+                <span className="text-amber-500 text-xs">★</span>
+                <span>{product.rating || '4.8'}</span>
+                <span className="text-gray-400 font-normal">({product.reviews || 48} reviews)</span>
+              </div>
+
+              {isLowStock && (
+                <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                  ⚡ Only {stockCount} left in stock
+                </span>
+              )}
+
+              {!isLowStock && !isOutOfStock && (
+                <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
+                  ✓ In Stock & Ready to Ship
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom List Info: Price & Action Bar */}
+          <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-baseline gap-2.5">
+              <span className="text-lg sm:text-xl font-bold text-gray-950 tabular-nums">
+                ₹{Number(product.price).toLocaleString('en-IN')}
+              </span>
+              {product.oldPrice && product.oldPrice > product.price && (
+                <span className="text-xs text-gray-400 line-through tabular-nums">
+                  ₹{Number(product.oldPrice).toLocaleString('en-IN')}
+                </span>
+              )}
+              {discount > 0 && (
+                <span className="text-[10.5px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
+                  Save {discount}%
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleQuickAdd}
+                className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold border transition-all active:scale-95 ${justAdded
+                  ? 'bg-emerald-600 text-white border-emerald-600'
+                  : 'bg-white text-gray-900 border-gray-300 hover:border-gray-900 hover:bg-gray-50'
+                  }`}
+              >
+                <span>{justAdded ? '✓ Added' : '+ Add to Bag'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleBuyNowClick}
+                className="flex-1 sm:flex-initial rounded-xl bg-gray-950 px-5 py-2 text-xs font-semibold text-white transition-all hover:bg-black active:scale-95"
+              >
+                Instant Buy
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+
+  // ================= GRID VIEW LAYOUT (DEFAULT) =================
   return (
     <div className="group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-gray-200/80 bg-white p-2.5 sm:p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-gray-300 hover:-translate-y-1">
 
@@ -96,10 +243,15 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
 
         {/* Minimalist Floating Badges */}
         <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
-          <div className="flex items-center gap-1.5 flex-wrap max-w-[75%]">
+          <div className="flex items-center gap-1 flex-wrap max-w-[75%]">
             {discount > 0 && (
-              <span className="rounded-full bg-gray-950/90 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-white shadow-xs">
+              <span className="rounded-full bg-gray-950/90 backdrop-blur-md px-2 py-0.5 text-[9px] sm:text-[9.5px] font-bold uppercase tracking-wider text-white shadow-xs">
                 {discount}% OFF
+              </span>
+            )}
+            {isLowStock && (
+              <span className="rounded-full bg-amber-500/90 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-xs">
+                Only {stockCount} left
               </span>
             )}
           </div>
@@ -118,7 +270,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           </button>
         </div>
 
-        {/* 2. Desktop Quick-Action Slide-Up Bar (Hidden by default, slides up smoothly on hover) */}
+        {/* 2. Desktop Quick-Action Slide-Up Bar */}
         <div className="hidden sm:flex absolute inset-x-2.5 bottom-2.5 z-10 gap-1.5 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
           <button
             type="button"
@@ -146,7 +298,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
         <div>
           {/* Row A: Brand Name & Minimalist Star Rating */}
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-gray-400 truncate">
+            <span className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-gray-400 truncate">
               {product.brand || 'Original'}
             </span>
 
@@ -159,15 +311,22 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           {/* Row B: Clean Product Title */}
           <Link
             to={`/product/${product.id}`}
-            className="block text-[13.5px] sm:text-[14.5px] font-semibold text-gray-900 transition-colors duration-150 hover:text-black line-clamp-1 leading-snug"
+            className="block text-[13px] sm:text-[14.5px] font-semibold text-gray-900 transition-colors duration-150 hover:text-black line-clamp-1 leading-snug"
             title={product.name}
           >
             {product.name}
           </Link>
 
+          {/* Subcategory Pill */}
+          {product.subcategory && (
+            <span className="inline-block mt-0.5 text-[9.5px] font-medium text-gray-500 truncate">
+              {product.subcategory}
+            </span>
+          )}
+
           {/* Row C: Price & Savings */}
           <div className="flex items-baseline gap-2 mt-1.5">
-            <span className="text-[15px] sm:text-base font-bold text-gray-950 tabular-nums">
+            <span className="text-[14.5px] sm:text-base font-bold text-gray-950 tabular-nums">
               ₹{Number(product.price).toLocaleString('en-IN')}
             </span>
 
@@ -178,7 +337,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
             )}
 
             {discount > 0 && (
-              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded ml-auto">
+              <span className="text-[9.5px] sm:text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded ml-auto">
                 {discount}% Off
               </span>
             )}

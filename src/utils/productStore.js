@@ -5,6 +5,21 @@ const CATEGORIES_KEY = "krishna_categories";
 const BRANDS_KEY = "krishna_brands";
 const WISHLIST_KEY = "krishna_wishlist";
 const REVIEWS_KEY = "krishna_product_reviews";
+const RECENTLY_VIEWED_KEY = "krishna_recently_viewed";
+
+export const categorySubcategoryMap = {
+  "Watches": ["Analog Watches", "Chronograph Watches", "Smart Watches", "Swiss Made Watches", "Solar Watches", "Luxury Watches"],
+  "Bags & Wallets": ["Leather Briefcases", "Backpacks", "Women Totes", "Wallets"],
+  "Shoes": ["Running Shoes", "Sneakers", "High Tops", "Casual Loafers"],
+  "Mobiles": ["Flagship Smartphones"],
+  "Clothes & Fashion": ["Denim & Jeans", "Blazers & Suits", "Luxury Polo Shirts"],
+  "Laptops": ["Professional Laptops", "Flagship Laptops", "Gaming Laptops"],
+  "Electronics": ["Over-Ear Headphones", "True Wireless Earbuds", "Bluetooth Speakers"],
+  "Smart Gadgets": ["Smart Wearables"],
+  "Gaming": ["Gaming Peripherals"],
+  "Fitness": ["Fitness Trackers"],
+  "Fashion Accessories": ["Luxury Eyewear", "Designer Belts"]
+};
 
 export const defaultCategories = [
   "Watches",
@@ -990,6 +1005,281 @@ export const defaultProducts = [
     },
     colors: ["Black / Powder Gray", "Whitestone / Powder Gray"],
     variants: ["Standard Titanium Edition"]
+  },
+
+  // ================= ADDITIONAL FOOTWEAR & LEATHER =================
+  {
+    id: 27,
+    name: "Classic Heritage Leather Adventure Boots",
+    brand: "Woodland",
+    category: "Shoes",
+    subcategory: "Casual Loafers",
+    sku: "KA-WOO-027",
+    price: 4595,
+    oldPrice: 5995,
+    discount: 23,
+    stock: 28,
+    rating: 4.7,
+    reviews: 112,
+    status: "Active",
+    supplier: "Urban Footwear Co.",
+    image: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=700",
+    images: ["https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=700"],
+    description: "Rugged oiled nubuck genuine leather boots with heavy-duty grooved rubber lugs for all-terrain traction and long-lasting durability.",
+    specifications: {
+      Material: "Oiled Nubuck Leather",
+      Sole: "High-Traction Deep Lug Rubber",
+      Warranty: "1 Year"
+    },
+    colors: ["Khaki Tan", "Dark Olive Brown"],
+    variants: ["UK 7", "UK 8", "UK 9", "UK 10"]
+  },
+  {
+    id: 28,
+    name: "Pixel 9 Pro XL AI Studio",
+    brand: "Google Pixel",
+    category: "Mobiles",
+    subcategory: "Flagship Smartphones",
+    sku: "KA-PIX-028",
+    price: 124999,
+    oldPrice: 139999,
+    discount: 11,
+    stock: 9,
+    rating: 4.8,
+    reviews: 78,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700",
+    images: ["https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700"],
+    description: "Powered by Google Tensor G4 with Gemini Nano AI, advanced Triple Rear Camera with 30x Super Res Zoom, and 24-hour battery with extreme battery saver.",
+    specifications: {
+      Display: "6.8 inch Super Actua LTPO OLED",
+      Chipset: "Google Tensor G4 with Titan M2",
+      RAM: "16GB",
+      Storage: "256GB / 512GB",
+      Warranty: "1 Year"
+    },
+    colors: ["Obsidian Black", "Porcelain White", "Hazel Green"],
+    variants: ["16GB / 256GB", "16GB / 512GB"]
+  },
+  {
+    id: 29,
+    name: "Milano Bifold Italian Leather Wallet",
+    brand: "Hidesign",
+    category: "Bags & Wallets",
+    subcategory: "Wallets",
+    sku: "KA-HID-029",
+    price: 1995,
+    oldPrice: 2995,
+    discount: 33,
+    stock: 45,
+    rating: 4.9,
+    reviews: 165,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=700",
+    images: ["https://images.unsplash.com/photo-1627123424574-724758594e93?w=700"],
+    description: "Slimline vegetable-tanned genuine leather wallet with RFID blocking protection, 8 card slots, 2 currency compartments, and quick-access ID window.",
+    specifications: {
+      Material: "100% Genuine Full-Grain Leather",
+      RFID: "Certified RFID Blocking Mesh",
+      Warranty: "1 Year"
+    },
+    colors: ["Vintage Tan", "Midnight Black"],
+    variants: ["Standard Bifold"]
+  },
+  {
+    id: 30,
+    name: "Iconic Signature Organic Cotton Polo",
+    brand: "Tommy Hilfiger",
+    category: "Clothes & Fashion",
+    subcategory: "Luxury Polo Shirts",
+    sku: "KA-TOM-030",
+    price: 3499,
+    oldPrice: 4999,
+    discount: 30,
+    stock: 30,
+    rating: 4.7,
+    reviews: 120,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=700",
+    images: ["https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=700"],
+    description: "Classic fit polo shirt tailored from breathable 100% organic cotton pique with signature embroidered flag on chest and rib-knit collar.",
+    specifications: {
+      Material: "100% Organic Pique Cotton",
+      Fit: "Custom Slim Fit",
+      Care: "Machine Wash Warm"
+    },
+    colors: ["Classic Navy", "Crisp White", "Burgundy Red"],
+    variants: ["S", "M", "L", "XL", "XXL"]
+  },
+  {
+    id: 31,
+    name: "ROG Zephyrus G16 OLED Gaming Laptop",
+    brand: "Asus",
+    category: "Laptops",
+    subcategory: "Gaming Laptops",
+    sku: "KA-ASU-031",
+    price: 179990,
+    oldPrice: 199990,
+    discount: 10,
+    stock: 6,
+    rating: 4.9,
+    reviews: 64,
+    status: "Active",
+    supplier: "Optima Tech Solutions",
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=700",
+    images: ["https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=700"],
+    description: "Ultra-sleek aluminum chassis with ROG Nebula 2.5K OLED 240Hz display, Intel Core Ultra 9 processor, and NVIDIA RTX 4080 12GB GPU.",
+    specifications: {
+      Processor: "Intel Core Ultra 9 185H",
+      Graphics: "NVIDIA GeForce RTX 4080 12GB",
+      Display: "16-inch 2.5K OLED 240Hz 0.2ms",
+      RAM: "32GB LPDDR5X",
+      Storage: "1TB Gen4 SSD",
+      Warranty: "2 Years"
+    },
+    colors: ["Eclipse Gray", "Platinum White"],
+    variants: ["32GB / 1TB SSD"]
+  },
+  {
+    id: 32,
+    name: "Stanmore III Bluetooth Home Speaker",
+    brand: "Marshall",
+    category: "Electronics",
+    subcategory: "Bluetooth Speakers",
+    sku: "KA-MAR-032",
+    price: 31999,
+    oldPrice: 36999,
+    discount: 14,
+    stock: 14,
+    rating: 4.9,
+    reviews: 154,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700",
+    images: ["https://images.unsplash.com/photo-1545454675-3531b543be5d?w=700"],
+    description: "Iconic rock 'n' roll vintage aesthetic with wider soundstage, Placement Compensation acoustic calibration, and Bluetooth 5.2 connectivity.",
+    specifications: {
+      OutputPower: "80W Class D Amplifier",
+      Connectivity: "Bluetooth 5.2, 3.5mm AUX, RCA",
+      FrequencyRange: "45–20,000 Hz",
+      Warranty: "1 Year"
+    },
+    colors: ["Classic Black / Brass", "Vintage Cream"],
+    variants: ["Stanmore III Standard"]
+  },
+  {
+    id: 33,
+    name: "PRO X Superlight 2 Wireless Gaming Mouse",
+    brand: "Logitech",
+    category: "Gaming",
+    subcategory: "Gaming Peripherals",
+    sku: "KA-LOG-033",
+    price: 13995,
+    oldPrice: 15995,
+    discount: 13,
+    stock: 19,
+    rating: 4.9,
+    reviews: 210,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=700",
+    images: ["https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=700"],
+    description: "Featherlight 60g design, HERO 2 sensor with 32,000 DPI, LIGHTFORCE hybrid optical-mechanical switches, and 95 hours of continuous battery.",
+    specifications: {
+      Weight: "60 grams",
+      Sensor: "HERO 2 (32,000 DPI)",
+      PollingRate: "Up to 4000 Hz",
+      Battery: "95 Hours",
+      Warranty: "2 Years"
+    },
+    colors: ["Matte Black", "Pure White", "Magenta"],
+    variants: ["Wireless Standard"]
+  },
+  {
+    id: 34,
+    name: "Classic Reversible Full-Grain Leather Belt",
+    brand: "Fossil",
+    category: "Fashion Accessories",
+    subcategory: "Designer Belts",
+    sku: "KA-FOS-034",
+    price: 2495,
+    oldPrice: 3495,
+    discount: 29,
+    stock: 35,
+    rating: 4.8,
+    reviews: 90,
+    status: "Active",
+    supplier: "Vogue Apparel India",
+    image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=700",
+    images: ["https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=700"],
+    description: "Versatile 2-in-1 reversible strap in rich cognac brown and classic black with a polished gunmetal twist buckle crafted from 100% genuine leather.",
+    specifications: {
+      Material: "100% Genuine Italian Cowhide Leather",
+      Buckle: "Polished Gunmetal Rotational Buckle",
+      Width: "35mm",
+      Warranty: "1 Year"
+    },
+    colors: ["Black / Brown Reversible"],
+    variants: ["32 Inch", "34 Inch", "36 Inch", "38 Inch"]
+  },
+  {
+    id: 35,
+    name: "Galaxy Ring Titanium Smart Health Monitor",
+    brand: "Samsung",
+    category: "Smart Gadgets",
+    subcategory: "Smart Wearables",
+    sku: "KA-SAM-035",
+    price: 38999,
+    oldPrice: 42999,
+    discount: 9,
+    stock: 14,
+    rating: 4.9,
+    reviews: 82,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=700",
+    images: ["https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=700"],
+    description: "Featherlight Grade 5 Titanium smart ring with 24/7 AI health tracking, sleep analysis, heart rate monitoring, 10ATM water resistance, and up to 7-day battery life.",
+    specifications: {
+      Material: "Grade 5 Titanium",
+      Battery: "Up to 7 Days with Portable Charging Case",
+      WaterResistance: "10ATM / IP68",
+      Sensors: "Skin Temperature, Heart Rate, PPG",
+      Warranty: "1 Year"
+    },
+    colors: ["Titanium Black", "Titanium Gold", "Titanium Silver"],
+    variants: ["Size 8", "Size 9", "Size 10", "Size 11", "Size 12"]
+  },
+  {
+    id: 36,
+    name: "Charge 6 Advanced Health & Fitness Tracker",
+    brand: "Fitbit",
+    category: "Fitness",
+    subcategory: "Fitness Trackers",
+    sku: "KA-FIT-036",
+    price: 14999,
+    oldPrice: 17999,
+    discount: 17,
+    stock: 22,
+    rating: 4.7,
+    reviews: 130,
+    status: "Active",
+    supplier: "Global Gadgets Inc.",
+    image: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=700",
+    images: ["https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=700"],
+    description: "Built-in GPS, YouTube Music controls, Google Maps directions, ECG app for heart rhythm assessment, EDA sensor for stress management, and 7-day battery life.",
+    specifications: {
+      Display: "Vibrant Color AMOLED Touchscreen",
+      Battery: "Up to 7 Days",
+      WaterResistance: "Water resistant to 50m",
+      Sensors: "Optical Heart Rate, SpO2, ECG, EDA",
+      Warranty: "1 Year"
+    },
+    colors: ["Obsidian / Black Aluminum", "Porcelain / Silver Aluminum", "Coral / Champagne Gold"],
+    variants: ["Includes Small and Large Bands"]
   }
 ];
 
@@ -1270,5 +1560,59 @@ export function addProductReview(productId, review) {
   } catch (err) {
     console.error('Error adding review:', err);
     return [];
+  }
+}
+
+// Dynamic product type / subcategory finder
+export function getProductTypesByCategory(categoryName) {
+  if (!categoryName || categoryName === 'All') {
+    const allTypes = new Set();
+    getProducts().forEach(p => {
+      if (p.subcategory) allTypes.add(p.subcategory);
+    });
+    return Array.from(allTypes);
+  }
+  if (categorySubcategoryMap[categoryName]) {
+    return categorySubcategoryMap[categoryName];
+  }
+  const products = getProducts();
+  const typesInCat = new Set(
+    products
+      .filter(p => p.category?.toLowerCase() === categoryName.toLowerCase())
+      .map(p => p.subcategory)
+      .filter(Boolean)
+  );
+  return Array.from(typesInCat);
+}
+
+// ================= RECENTLY VIEWED PRODUCTS =================
+
+export function getRecentlyViewedProducts() {
+  try {
+    const data = localStorage.getItem(RECENTLY_VIEWED_KEY);
+    if (!data) return [];
+    const ids = JSON.parse(data);
+    if (!Array.isArray(ids)) return [];
+    const products = getProducts();
+    return ids
+      .map(id => products.find(p => Number(p.id) === Number(id)))
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+export function addRecentlyViewedProduct(productOrId) {
+  try {
+    const id = typeof productOrId === 'object' && productOrId !== null ? productOrId.id : productOrId;
+    if (!id) return;
+    const data = localStorage.getItem(RECENTLY_VIEWED_KEY);
+    const existing = data ? JSON.parse(data) : [];
+    const filtered = existing.filter(item => Number(item) !== Number(id));
+    const updated = [Number(id), ...filtered].slice(0, 10);
+    localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event('recentlyViewedUpdated'));
+  } catch (err) {
+    console.error('Error updating recently viewed:', err);
   }
 }
