@@ -10,15 +10,31 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [justAdded, setJustAdded] = useState(false);
-  const [inWish, setInWish] = useState(() => isInWishlist(product.id));
+  const [inWish, setInWish] = useState(() => isInWishlist(product?.id));
+  const fallbackImg = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700";
+  const [imgSrc, setImgSrc] = useState(product?.image || product?.images?.[0] || fallbackImg);
+
+  useEffect(() => {
+    if (product?.id) {
+      setInWish(isInWishlist(product.id));
+    }
+  }, [product?.id]);
 
   useEffect(() => {
     const handleWishlistUpdate = () => {
-      setInWish(isInWishlist(product.id));
+      if (product?.id) {
+        setInWish(isInWishlist(product.id));
+      }
     };
     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
     return () => window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
-  }, [product.id]);
+  }, [product?.id]);
+
+  useEffect(() => {
+    setImgSrc(product?.image || product?.images?.[0] || fallbackImg);
+  }, [product?.image, product?.images]);
+
+  if (!product) return null;
 
   const discount = product.discount || (
     product.oldPrice && product.oldPrice > product.price
@@ -87,8 +103,9 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           className="block h-full w-full"
         >
           <img
-            src={product.image || product.images?.[0]}
+            src={imgSrc}
             alt={product.name}
+            onError={() => setImgSrc(fallbackImg)}
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-106"
             loading="lazy"
           />
