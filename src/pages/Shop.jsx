@@ -4,7 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
+import { getProducts, getCategories, getBrandsByCategory, WATCH_TYPES, WATCH_TYPE_METADATA } from '../utils/productStore';
 import { getCurrentUser } from '../utils/auth';
 import { addToCart } from '../utils/cart';
 
@@ -14,6 +14,7 @@ export default function Shop() {
 
   const urlCategory = searchParams.get('category') || 'All';
   const urlBrand = searchParams.get('brand') || 'All';
+  const urlWatchType = searchParams.get('watchType') || 'All';
   const urlSearch = searchParams.get('search') || '';
 
   const [products, setProducts] = useState(() => getProducts());
@@ -21,6 +22,7 @@ export default function Shop() {
 
   const [category, setCategory] = useState(urlCategory);
   const [selectedBrand, setSelectedBrand] = useState(urlBrand);
+  const [selectedWatchType, setSelectedWatchType] = useState(urlWatchType);
   const [sort, setSort] = useState('featured');
   const [search, setSearch] = useState(urlSearch);
   const [minPrice, setMinPrice] = useState(0);
@@ -51,6 +53,12 @@ export default function Shop() {
       setSelectedBrand(urlBrand);
     }
   }, [urlBrand]);
+
+  useEffect(() => {
+    if (urlWatchType !== selectedWatchType) {
+      setSelectedWatchType(urlWatchType);
+    }
+  }, [urlWatchType]);
 
   useEffect(() => {
     if (urlSearch && urlSearch !== search) {
@@ -89,6 +97,21 @@ export default function Shop() {
     setSearchParams(params);
   };
 
+  const handleWatchTypeSelect = (type) => {
+    setSelectedWatchType(type);
+    const params = new URLSearchParams(searchParams);
+    if (type === 'All') {
+      params.delete('watchType');
+    } else {
+      params.set('watchType', type);
+      if (category !== 'Watches' && category !== 'All') {
+        params.set('category', 'Watches');
+        setCategory('Watches');
+      }
+    }
+    setSearchParams(params);
+  };
+
   // Filtered and Sorted Products
   const filteredProducts = useMemo(() => {
     let list = [...products];
@@ -101,6 +124,14 @@ export default function Shop() {
     // Brand Filter
     if (selectedBrand !== 'All') {
       list = list.filter((p) => p.brand?.toLowerCase() === selectedBrand.toLowerCase());
+    }
+
+    // Watch Type Filter
+    if (selectedWatchType !== 'All') {
+      list = list.filter((p) => {
+        const wt = p.watchType || (p.category === 'Watches' ? 'Original' : '');
+        return wt.toLowerCase() === selectedWatchType.toLowerCase();
+      });
     }
 
     // Price Range Filter
@@ -139,11 +170,12 @@ export default function Shop() {
     }
 
     return list;
-  }, [products, category, selectedBrand, minPrice, maxPrice, inStockOnly, search, sort]);
+  }, [products, category, selectedBrand, selectedWatchType, minPrice, maxPrice, inStockOnly, search, sort]);
 
   const clearAllFilters = () => {
     setCategory('All');
     setSelectedBrand('All');
+    setSelectedWatchType('All');
     setSort('featured');
     setSearch('');
     setMinPrice(0);
@@ -233,7 +265,7 @@ export default function Shop() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search products, brands, categories..."
+              placeholder="Search timepieces, brands, watch types..."
               className="w-full rounded-full border border-gray-200 bg-[#F4F4F6] py-1.5 pl-8 pr-8 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-gray-400 focus:bg-white"
             />
             <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
@@ -259,7 +291,7 @@ export default function Shop() {
               className="flex items-center justify-center gap-1.5 rounded-full border border-gray-200 bg-[#F4F4F6] px-3.5 py-1.5 text-xs font-semibold text-gray-800 lg:hidden hover:bg-gray-200 shrink-0"
             >
               <span>⚙️ Filters</span>
-                {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly) && (
+              {(category !== 'All' || selectedBrand !== 'All' || selectedWatchType !== 'All' || search || inStockOnly) && (
                 <span className="flex h-2 w-2 rounded-full bg-amber-500" />
               )}
             </button>
@@ -339,6 +371,79 @@ export default function Shop() {
                           <span className="truncate">{cat}</span>
                           <span className="text-[10px] opacity-70">({count})</span>
                         </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Watch Quality & Types (All 7 Types on Mobile) */}
+                <div className="border-t border-gray-100 pt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <span>⌚</span>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950">Watch Types (7)</h3>
+                    </div>
+                    {selectedWatchType !== 'All' && (
+                      <button
+                        type="button"
+                        onClick={() => handleWatchTypeSelect('All')}
+                        className="text-[10px] text-[#B89758] font-semibold hover:underline"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+                    <label
+                      onClick={() => handleWatchTypeSelect('All')}
+                      className={`flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition ${selectedWatchType === 'All'
+                        ? 'bg-gray-100 text-gray-950 font-semibold'
+                        : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="mobileWatchType"
+                          checked={selectedWatchType === 'All'}
+                          onChange={() => handleWatchTypeSelect('All')}
+                          className="accent-[#111827] h-3.5 w-3.5"
+                        />
+                        <span>All Watch Types</span>
+                      </div>
+                      <span className="text-[10px] text-gray-400">
+                        ({products.filter(p => p.category === 'Watches' || p.watchType).length})
+                      </span>
+                    </label>
+
+                    {WATCH_TYPES.map((wt) => {
+                      const isSelected = selectedWatchType === wt;
+                      const meta = WATCH_TYPE_METADATA[wt];
+                      const count = products.filter(p => (p.category === 'Watches' || p.watchType) && (p.watchType || 'Original') === wt).length;
+
+                      return (
+                        <label
+                          key={wt}
+                          onClick={() => handleWatchTypeSelect(wt)}
+                          className={`flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition ${isSelected
+                            ? 'bg-gray-100 text-gray-950 font-semibold'
+                            : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <input
+                              type="radio"
+                              name="mobileWatchType"
+                              checked={isSelected}
+                              onChange={() => handleWatchTypeSelect(wt)}
+                              className="accent-[#111827] h-3.5 w-3.5 shrink-0"
+                            />
+                            <span className={`h-2 w-2 rounded-full shrink-0 ${meta?.dotClass || 'bg-gray-400'}`} />
+                            <span className="truncate">{wt}</span>
+                          </div>
+                          <span className="text-[10px] text-gray-400 shrink-0 ml-1">({count})</span>
+                        </label>
                       );
                     })}
                   </div>
@@ -461,7 +566,7 @@ export default function Shop() {
                   </span>
                 </div>
 
-                {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly || minPrice > 0 || maxPrice < 250000) && (
+                {(category !== 'All' || selectedBrand !== 'All' || selectedWatchType !== 'All' || search || inStockOnly || minPrice > 0 || maxPrice < 250000) && (
                   <button
                     type="button"
                     onClick={clearAllFilters}
@@ -547,7 +652,82 @@ export default function Shop() {
                 </div>
               </div>
 
-              {/* 3. Price Range Filter */}
+              {/* 3. DEDICATED WATCH QUALITY / TYPE FILTER */}
+              <div className="border-t border-gray-100 pt-3">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-[11px]">⌚</span>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950">
+                      Watch Types
+                    </h3>
+                  </div>
+                  {selectedWatchType !== 'All' && (
+                    <button
+                      type="button"
+                      onClick={() => handleWatchTypeSelect('All')}
+                      className="text-[10px] text-[#B89758] hover:underline font-semibold"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-1 pr-1">
+                  <label
+                    onClick={() => handleWatchTypeSelect('All')}
+                    className={`flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1 text-xs transition ${selectedWatchType === 'All'
+                      ? 'bg-gray-100 text-gray-950 font-semibold'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-black'
+                      }`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        type="radio"
+                        name="watchTypeFilter"
+                        checked={selectedWatchType === 'All'}
+                        onChange={() => handleWatchTypeSelect('All')}
+                        className="accent-[#111827] h-3 w-3"
+                      />
+                      <span>All Watch Types</span>
+                    </div>
+                    <span className="text-[9.5px] text-gray-400 font-mono">
+                      ({products.filter(p => p.category === 'Watches' || p.watchType).length})
+                    </span>
+                  </label>
+
+                  {WATCH_TYPES.map((wt) => {
+                    const isSelected = selectedWatchType === wt;
+                    const meta = WATCH_TYPE_METADATA[wt];
+                    const count = products.filter(p => (p.category === 'Watches' || p.watchType) && (p.watchType || 'Original') === wt).length;
+
+                    return (
+                      <label
+                        key={wt}
+                        onClick={() => handleWatchTypeSelect(wt)}
+                        className={`flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1 text-xs transition ${isSelected
+                          ? 'bg-gray-100 text-gray-950 font-semibold'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-black'
+                          }`}
+                      >
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <input
+                            type="radio"
+                            name="watchTypeFilter"
+                            checked={isSelected}
+                            onChange={() => handleWatchTypeSelect(wt)}
+                            className="accent-[#111827] h-3 w-3 shrink-0"
+                          />
+                          <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${meta?.dotClass || 'bg-gray-400'}`} />
+                          <span className="truncate">{wt}</span>
+                        </div>
+                        <span className="text-[9.5px] text-gray-400 font-mono shrink-0 ml-1">({count})</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4. Price Range Filter */}
               <div className="border-t border-gray-100 pt-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 mb-2">
                   Price Range
@@ -621,8 +801,68 @@ export default function Shop() {
           {/* ================= PRODUCT LISTING AREA ================= */}
           <section className="min-w-0">
 
+            {/* Dedicated Watch Types Horizontal Chips Strip (Visible for Watches & Mobile Swipable) */}
+            {(category === 'Watches' || selectedWatchType !== 'All') && (
+              <div className="mb-3.5 sm:mb-4 rounded-xl border border-gray-200/80 bg-white p-2.5 sm:p-3 shadow-2xs">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs">⌚</span>
+                    <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-gray-900">
+                      Watch Types & Editions
+                    </span>
+                  </div>
+                  {selectedWatchType !== 'All' && (
+                    <button
+                      type="button"
+                      onClick={() => handleWatchTypeSelect('All')}
+                      className="text-[10.5px] sm:text-[11px] font-semibold text-[#B89758] hover:underline"
+                    >
+                      Show All Types
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                  <button
+                    type="button"
+                    onClick={() => handleWatchTypeSelect('All')}
+                    className={`shrink-0 rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold transition ${selectedWatchType === 'All'
+                      ? 'bg-[#0F172A] text-white shadow-2xs'
+                      : 'bg-[#F4F4F6] text-gray-700 hover:bg-gray-200'
+                      }`}
+                  >
+                    All Types ({products.filter(p => p.category === 'Watches' || p.watchType).length})
+                  </button>
+
+                  {WATCH_TYPES.map((wt) => {
+                    const isSelected = selectedWatchType === wt;
+                    const meta = WATCH_TYPE_METADATA[wt];
+                    const count = products.filter(p => (p.category === 'Watches' || p.watchType) && (p.watchType || 'Original') === wt).length;
+
+                    return (
+                      <button
+                        key={wt}
+                        type="button"
+                        onClick={() => handleWatchTypeSelect(wt)}
+                        className={`shrink-0 inline-flex items-center gap-1 sm:gap-1.5 rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold transition border ${isSelected
+                          ? 'bg-[#0F172A] text-white border-[#0F172A] shadow-2xs'
+                          : `${meta?.badgeClass || 'bg-gray-100 text-gray-700 border-gray-200'} hover:opacity-90`
+                          }`}
+                      >
+                        <span className={`h-1.5 w-1.5 rounded-full ${isSelected ? 'bg-amber-400' : (meta?.dotClass || 'bg-current')}`} />
+                        <span>{wt}</span>
+                        <span className={`text-[9.5px] sm:text-[10px] font-mono ${isSelected ? 'text-gray-300' : 'opacity-70'}`}>
+                          ({count})
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Active Filters Pill Bar */}
-            {(category !== 'All' || selectedBrand !== 'All' || search || inStockOnly) && (
+            {(category !== 'All' || selectedBrand !== 'All' || selectedWatchType !== 'All' || search || inStockOnly) && (
               <div className="mb-3.5 sm:mb-4 flex flex-wrap items-center gap-1 sm:gap-1.5 rounded-xl border border-gray-200/80 bg-white p-2 sm:p-2.5 text-xs shadow-2xs animate-fade-in">
                 <span className="text-[10px] sm:text-[10.5px] text-gray-400 font-semibold">Active:</span>
 
@@ -637,6 +877,13 @@ export default function Shop() {
                   <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[10.5px] font-semibold text-gray-900 border border-gray-200">
                     Brand: {selectedBrand}
                     <button type="button" onClick={() => handleBrandSelect('All')} className="hover:text-black ml-0.5 font-bold">×</button>
+                  </span>
+                )}
+
+                {selectedWatchType !== 'All' && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[10.5px] font-semibold text-amber-900 border border-amber-200">
+                    Watch Type: {selectedWatchType}
+                    <button type="button" onClick={() => handleWatchTypeSelect('All')} className="hover:text-black ml-0.5 font-bold">×</button>
                   </span>
                 )}
 
