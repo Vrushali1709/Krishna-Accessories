@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import Logo from '../components/Logo';
 import { setCurrentUser } from '../utils/auth';
 import { addSupplier } from '../utils/orderStore';
 import { ArrowRightIcon, LockClosedIcon, ShieldCheckIcon } from '../components/Icons';
@@ -47,7 +46,7 @@ export default function Register() {
         email: email.trim().toLowerCase(),
         phone: phone.trim(),
         category: supplierCategory,
-        address: "Mumbai, India",
+        address: "Gujarat, India",
         status: "Pending Approval"
       });
       setSuccess('Supplier registered! Directing to vendor portal...');
@@ -65,12 +64,12 @@ export default function Register() {
       <main className="flex-1 flex items-center justify-center px-4 py-14">
         <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
 
-          <div className="text-center flex flex-col items-center">
-            <div className="mb-3">
-              <Logo variant="dark" size="lg" />
+          <div className="text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#111827] text-white font-serif font-bold text-base mb-2.5 shadow-sm">
+              K
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Client & Partner Registration
+              Client Registration
             </span>
             <h2 className="text-2xl font-bold text-gray-950 mt-1">Create an Account</h2>
             <p className="text-xs text-gray-500 mt-1">

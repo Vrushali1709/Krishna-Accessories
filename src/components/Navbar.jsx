@@ -6,7 +6,6 @@ import { defaultCategories, getCategories, getWishlist } from '../utils/productS
 import { getCurrentUser, logout, isAdmin, isSupplier, getAdminUser } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import { SHOP_INFO } from '../utils/shopInfo';
-import Logo from './Logo';
 import {
   BagIcon,
   SearchIcon,
@@ -226,9 +225,13 @@ export default function Navbar() {
       <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 border-b border-gray-200/80">
         <div className="relative flex h-14 sm:h-16 items-center justify-between">
 
-          {/* Left: Brand Identity (Official Logo & Name) */}
+          {/* Left: Brand Identity */}
           <div className="flex items-center shrink-0 z-10">
-            <Logo variant="dark" size="md" />
+            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 group">
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-[#0F172A] text-amber-300 font-serif font-bold text-sm sm:text-base shadow-xs border border-amber-500/20 transition-transform group-hover:scale-105">
+                K
+              </div>
+            </Link>
           </div>
 
           {/* Center: Primary Navigation Links (Strictly Centered in Viewport) */}

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { defaultCategories } from '../utils/productStore';
 import { SHOP_INFO } from '../utils/shopInfo';
-import Logo from './Logo';
 import { FacebookIcon, InstagramIcon, WhatsAppIcon, PhoneIcon, MailIcon, MapPinIcon } from './Icons';
 
 export default function Footer() {
@@ -100,9 +99,16 @@ export default function Footer() {
         <div className="relative mx-auto max-w-7xl px-4 pt-14 pb-8 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
 
-            {/* Brand Column (Official Logo & Name) */}
+            {/* Brand Column */}
             <div className="lg:col-span-2 space-y-4">
-              <Logo variant="light" size="lg" />
+              <Link to="/" className="inline-flex items-center gap-2.5 group">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 font-serif text-base font-black text-slate-950 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
+                  K
+                </div>
+                <span className="text-lg font-bold tracking-tight text-white">
+                  Krishna <span className="font-bold text-amber-400">Accessories</span>
+                </span>
+              </Link>
 
               <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-300">
                 Mumbai's premier luxury destination for certified authentic timepieces, handcrafted leather goods, premium electronics, and curated lifestyle essentials.
