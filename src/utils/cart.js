@@ -62,9 +62,9 @@ export function saveCart(cart) {
 }
 
 /**
- * Adds a product into the cart with specific color/variant specifications.
+ * Adds a product into the cart with specific color/variant specifications and optional variation metadata.
  */
-export function addToCart(product, quantity = 1, color = '', variant = '') {
+export function addToCart(product, quantity = 1, color = '', variant = '', variationMeta = {}) {
   if (!product || product.id === undefined || product.id === null) {
     return getCart();
   }
@@ -73,6 +73,11 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
   const qtyToAdd = Math.max(1, parseInt(quantity, 10) || 1);
   const targetColor = typeof color === 'string' ? color.trim() : '';
   const targetVariant = typeof variant === 'string' ? variant.trim() : '';
+
+  const effectivePrice = Number(variationMeta.price !== undefined ? variationMeta.price : product.price) || 0;
+  const effectiveOldPrice = variationMeta.oldPrice !== undefined ? Number(variationMeta.oldPrice) : (product.oldPrice ? Number(product.oldPrice) : null);
+  const effectiveSku = variationMeta.sku || product.sku || `KA-${product.id}`;
+  const effectiveImage = variationMeta.image || (Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : product.image) || '';
 
   const existingIndex = cart.findIndex((item) => {
     const itemColor = (item.color || item.selectedColor || '').trim();
@@ -86,24 +91,21 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
 
   if (existingIndex > -1) {
     cart[existingIndex].quantity = (cart[existingIndex].quantity || 0) + qtyToAdd;
+    cart[existingIndex].price = effectivePrice;
+    if (effectiveOldPrice) cart[existingIndex].oldPrice = effectiveOldPrice;
+    if (effectiveSku) cart[existingIndex].sku = effectiveSku;
+    if (effectiveImage) cart[existingIndex].image = effectiveImage;
   } else {
-    let productImage = '';
-    if (Array.isArray(product.images) && product.images.length > 0) {
-      productImage = product.images[0];
-    } else if (product.image) {
-      productImage = product.image;
-    }
-
     cart.push({
       id: product.id,
       name: product.name || 'Selected Accessory',
       brand: product.brand || 'Krishna Accessories',
       category: product.category || 'Luxury Goods',
-      sku: product.sku || `KA-${product.id}`,
+      sku: effectiveSku,
       supplier: product.supplier || 'Krishna Accessories',
-      price: Number(product.price) || 0,
-      oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
-      image: productImage,
+      price: effectivePrice,
+      oldPrice: effectiveOldPrice,
+      image: effectiveImage,
       color: targetColor,
       variant: targetVariant,
       quantity: qtyToAdd,
