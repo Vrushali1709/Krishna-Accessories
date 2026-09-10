@@ -64,7 +64,7 @@ export function saveCart(cart) {
 /**
  * Adds a product into the cart with specific color/variant specifications.
  */
-export function addToCart(product, quantity = 1, color = '', variant = '', customPrice = null, customImage = null, customSku = null) {
+export function addToCart(product, quantity = 1, color = '', variant = '') {
   if (!product || product.id === undefined || product.id === null) {
     return getCart();
   }
@@ -84,40 +84,26 @@ export function addToCart(product, quantity = 1, color = '', variant = '', custo
     );
   });
 
-  const priceToUse = customPrice !== null && customPrice !== undefined
-    ? Number(customPrice)
-    : (Number(product.price) || 0);
-
-  let imageToUse = customImage || '';
-  if (!imageToUse) {
-    if (product.image) {
-      imageToUse = product.image;
-    } else if (Array.isArray(product.images) && product.images.length > 0) {
-      imageToUse = product.images[0];
-    }
-  }
-
-  const skuToUse = customSku || product.sku || `KA-${product.id}`;
-
   if (existingIndex > -1) {
     cart[existingIndex].quantity = (cart[existingIndex].quantity || 0) + qtyToAdd;
-    if (customPrice !== null && customPrice !== undefined) {
-      cart[existingIndex].price = priceToUse;
-    }
-    if (imageToUse) {
-      cart[existingIndex].image = imageToUse;
-    }
   } else {
+    let productImage = '';
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      productImage = product.images[0];
+    } else if (product.image) {
+      productImage = product.image;
+    }
+
     cart.push({
       id: product.id,
       name: product.name || 'Selected Accessory',
       brand: product.brand || 'Krishna Accessories',
       category: product.category || 'Luxury Goods',
-      sku: skuToUse,
+      sku: product.sku || `KA-${product.id}`,
       supplier: product.supplier || 'Krishna Accessories',
-      price: priceToUse,
+      price: Number(product.price) || 0,
       oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
-      image: imageToUse,
+      image: productImage,
       color: targetColor,
       variant: targetVariant,
       quantity: qtyToAdd,
