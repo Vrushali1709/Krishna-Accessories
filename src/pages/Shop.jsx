@@ -1,29 +1,35 @@
-import { useMemo, useState, useEffect } from 'react';
+// src/pages/Shop.jsx
+import React, { useMemo, useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
+import { getCurrentUser } from '../utils/auth';
 import { addToCart } from '../utils/cart';
 
 export default function Shop() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const category = searchParams.get('category') || 'All';
-  const selectedBrand = searchParams.get('brand') || 'All';
-  const search = searchParams.get('search') || '';
-  const minPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 0;
-  const maxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 250000;
-  const sort = searchParams.get('sort') || 'featured';
+  const urlCategory = searchParams.get('category') || 'All';
+  const urlBrand = searchParams.get('brand') || 'All';
+  const urlSearch = searchParams.get('search') || '';
 
   const [products, setProducts] = useState(() => getProducts());
   const [categories, setCategories] = useState(() => ['All', ...getCategories()]);
+
+  const [category, setCategory] = useState(urlCategory);
+  const [selectedBrand, setSelectedBrand] = useState(urlBrand);
+  const [sort, setSort] = useState('featured');
+  const [search, setSearch] = useState(urlSearch);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(250000);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFilters, setMobileFilters] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Sync when storage changes
+  // Sync when storage or search params change
   useEffect(() => {
     const handleProductsUpdate = () => {
       setProducts(getProducts());
@@ -33,13 +39,35 @@ export default function Shop() {
     return () => window.removeEventListener('productsUpdated', handleProductsUpdate);
   }, []);
 
+  useEffect(() => {
+    if (urlCategory && urlCategory !== category) {
+      setCategory(urlCategory);
+      setSelectedBrand('All');
+    }
+  }, [urlCategory]);
+
+  useEffect(() => {
+    if (urlBrand && urlBrand !== selectedBrand) {
+      setSelectedBrand(urlBrand);
+    }
+  }, [urlBrand]);
+
+  useEffect(() => {
+    if (urlSearch && urlSearch !== search) {
+      setSearch(urlSearch);
+    }
+  }, [urlSearch]);
+
   // Dynamic Brands based on selected category
   const dynamicBrands = useMemo(() => {
     const brandsList = getBrandsByCategory(category);
     return ['All', ...brandsList];
-  }, [category]);
+  }, [category, products]);
 
   const handleCategorySelect = (cat) => {
+    setCategory(cat);
+    setSelectedBrand('All');
+
     const params = new URLSearchParams(searchParams);
     if (cat === 'All') {
       params.delete('category');
@@ -51,47 +79,12 @@ export default function Shop() {
   };
 
   const handleBrandSelect = (brand) => {
+    setSelectedBrand(brand);
     const params = new URLSearchParams(searchParams);
     if (brand === 'All') {
       params.delete('brand');
     } else {
       params.set('brand', brand);
-    }
-    setSearchParams(params);
-  };
-
-  const handleSearchChange = (val) => {
-    const params = new URLSearchParams(searchParams);
-    if (!val.trim()) {
-      params.delete('search');
-    } else {
-      params.set('search', val);
-    }
-    setSearchParams(params);
-  };
-
-  const handleSortChange = (val) => {
-    const params = new URLSearchParams(searchParams);
-    if (!val || val === 'featured') {
-      params.delete('sort');
-    } else {
-      params.set('sort', val);
-    }
-    setSearchParams(params);
-  };
-
-  const handlePriceChange = (min, max) => {
-    const params = new URLSearchParams(searchParams);
-    if (min <= 0) {
-      params.delete('minPrice');
-    } else {
-      params.set('minPrice', String(min));
-    }
-
-    if (max >= 250000) {
-      params.delete('maxPrice');
-    } else {
-      params.set('maxPrice', String(max));
     }
     setSearchParams(params);
   };
@@ -131,7 +124,7 @@ export default function Shop() {
       );
     }
 
-    // Sorting
+    // Sorting (Including Price Low to High, High to Low)
     if (sort === 'price-low') {
       list.sort((a, b) => a.price - b.price);
     } else if (sort === 'price-high') {
@@ -148,6 +141,12 @@ export default function Shop() {
   }, [products, category, selectedBrand, minPrice, maxPrice, inStockOnly, search, sort]);
 
   const clearAllFilters = () => {
+    setCategory('All');
+    setSelectedBrand('All');
+    setSort('featured');
+    setSearch('');
+    setMinPrice(0);
+    setMaxPrice(250000);
     setInStockOnly(false);
     setSearchParams({});
   };
@@ -224,7 +223,7 @@ export default function Shop() {
             <input
               type="text"
               value={search}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search timepieces, brands, watch types..."
               className="w-full rounded-full border border-gray-200 bg-[#F4F4F6] py-1.5 pl-8 pr-8 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-gray-400 focus:bg-white"
             />
@@ -234,7 +233,7 @@ export default function Shop() {
             {search && (
               <button
                 type="button"
-                onClick={() => handleSearchChange('')}
+                onClick={() => setSearch('')}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-black"
               >
                 ✕
@@ -263,7 +262,7 @@ export default function Shop() {
               </label>
               <select
                 value={sort}
-                onChange={(e) => handleSortChange(e.target.value)}
+                onChange={(e) => setSort(e.target.value)}
                 className="w-full lg:w-44 rounded-full border border-gray-200 bg-[#F4F4F6] px-3 py-1.5 text-xs font-medium text-gray-800 outline-none focus:border-gray-400 cursor-pointer"
               >
                 <option value="featured">Featured / Best Match</option>
@@ -384,7 +383,7 @@ export default function Shop() {
                       <input
                         type="number"
                         value={minPrice}
-                        onChange={(e) => handlePriceChange(Math.max(0, Number(e.target.value)), maxPrice)}
+                        onChange={(e) => setMinPrice(Math.max(0, Number(e.target.value)))}
                         className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-2 py-1 text-xs"
                       />
                     </div>
@@ -393,7 +392,7 @@ export default function Shop() {
                       <input
                         type="number"
                         value={maxPrice}
-                        onChange={(e) => handlePriceChange(minPrice, Math.max(0, Number(e.target.value)))}
+                        onChange={(e) => setMaxPrice(Math.max(0, Number(e.target.value)))}
                         className="w-full rounded-lg border border-gray-200 bg-[#F4F4F6] px-2 py-1 text-xs"
                       />
                     </div>
@@ -552,7 +551,7 @@ export default function Shop() {
                       type="number"
                       min="0"
                       value={minPrice}
-                      onChange={(e) => handlePriceChange(Math.max(0, Number(e.target.value)), maxPrice)}
+                      onChange={(e) => setMinPrice(Math.max(0, Number(e.target.value)))}
                       className="w-full rounded-md border border-gray-200 bg-[#F4F4F6] px-2 py-1 text-xs text-gray-900 outline-none focus:border-gray-400"
                     />
                   </div>
@@ -562,7 +561,7 @@ export default function Shop() {
                       type="number"
                       min="0"
                       value={maxPrice}
-                      onChange={(e) => handlePriceChange(minPrice, Math.max(0, Number(e.target.value)))}
+                      onChange={(e) => setMaxPrice(Math.max(0, Number(e.target.value)))}
                       className="w-full rounded-md border border-gray-200 bg-[#F4F4F6] px-2 py-1 text-xs text-gray-900 outline-none focus:border-gray-400"
                     />
                   </div>
@@ -572,21 +571,21 @@ export default function Shop() {
                 <div className="mt-2 flex flex-wrap gap-1">
                   <button
                     type="button"
-                    onClick={() => handlePriceChange(0, 5000)}
+                    onClick={() => { setMinPrice(0); setMaxPrice(5000); }}
                     className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-700 hover:bg-gray-200"
                   >
                     &lt; ₹5K
                   </button>
                   <button
                     type="button"
-                    onClick={() => handlePriceChange(5000, 25000)}
+                    onClick={() => { setMinPrice(5000); setMaxPrice(25000); }}
                     className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-700 hover:bg-gray-200"
                   >
                     ₹5K - ₹25K
                   </button>
                   <button
                     type="button"
-                    onClick={() => handlePriceChange(25000, 250000)}
+                    onClick={() => { setMinPrice(25000); setMaxPrice(250000); }}
                     className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-700 hover:bg-gray-200"
                   >
                     &gt; ₹25K
@@ -635,7 +634,7 @@ export default function Shop() {
                 {search && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[10.5px] font-semibold text-blue-700 border border-blue-200">
                     "{search}"
-                    <button type="button" onClick={() => handleSearchChange('')} className="hover:text-black ml-0.5 font-bold">×</button>
+                    <button type="button" onClick={() => setSearch('')} className="hover:text-black ml-0.5 font-bold">×</button>
                   </span>
                 )}
 
