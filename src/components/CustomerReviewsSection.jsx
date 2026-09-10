@@ -211,34 +211,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
           </div>
 
           {/* Carousel Arrow Controls */}
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => scrollCarousel('left')}
-              disabled={!canScrollLeft}
-              aria-label="Previous review"
-              className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 cursor-pointer ${
-                canScrollLeft
-                  ? 'border-gray-300 bg-white text-gray-800 hover:border-gray-900 hover:bg-gray-900 hover:text-white shadow-2xs active:scale-95'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              }`}
-            >
-              <ChevronLeftIcon className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollCarousel('right')}
-              disabled={!canScrollRight}
-              aria-label="Next review"
-              className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 cursor-pointer ${
-                canScrollRight
-                  ? 'border-gray-300 bg-white text-gray-800 hover:border-gray-900 hover:bg-gray-900 hover:text-white shadow-2xs active:scale-95'
-                  : 'border-gray-200 bg-gray-50 text-gray-300 cursor-not-allowed'
-              }`}
-            >
-              <ChevronRightIcon className="w-4 h-4" />
-            </button>
-          </div>
+          
         </div>
       </div>
 
