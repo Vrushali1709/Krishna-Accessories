@@ -79,7 +79,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
 
   return (
     <div className="group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-gray-200/80 bg-white p-2.5 sm:p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-gray-300 hover:-translate-y-1">
-      
+
       {/* 1. Spacious & Clean Image Frame with Soft Neutral Canvas */}
       <div className="relative aspect-[4/4.7] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#F6F7F9]">
         <Link
@@ -98,13 +98,8 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
         <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
           <div className="flex items-center gap-1.5 flex-wrap max-w-[75%]">
             {discount > 0 && (
-              <span className="rounded-full bg-rose-600/90 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-white shadow-xs">
+              <span className="rounded-full bg-gray-950/90 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-white shadow-xs">
                 {discount}% OFF
-              </span>
-            )}
-            {product.stock && product.stock <= 5 && (
-              <span className="rounded-full bg-amber-500/90 backdrop-blur-md px-2 py-0.5 text-[8.5px] font-bold uppercase tracking-wider text-white shadow-xs">
-                Only {product.stock} Left
               </span>
             )}
           </div>
@@ -114,11 +109,10 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
             type="button"
             onClick={handleWishlistToggle}
             aria-label={inWish ? "Remove from wishlist" : "Add to wishlist"}
-            className={`pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full shadow-xs backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer ${
-              inWish
-                ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
-                : 'bg-white/90 text-gray-700 hover:text-rose-600 border border-gray-200/70 hover:bg-white'
-            }`}
+            className={`pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full shadow-xs backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer ${inWish
+              ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
+              : 'bg-white/90 text-gray-700 hover:text-rose-600 border border-gray-200/70 hover:bg-white'
+              }`}
           >
             <HeartIcon className="w-4 h-4 transition-colors" filled={inWish} />
           </button>
@@ -129,11 +123,10 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           <button
             type="button"
             onClick={handleQuickAdd}
-            className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold backdrop-blur-md border shadow-md transition-all duration-150 active:scale-95 cursor-pointer truncate ${
-              justAdded
-                ? 'bg-emerald-600 text-white border-emerald-600'
-                : 'bg-white/95 text-gray-900 border-white/80 hover:bg-white hover:text-black'
-            }`}
+            className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold backdrop-blur-md border shadow-md transition-all duration-150 active:scale-95 cursor-pointer truncate ${justAdded
+              ? 'bg-emerald-600 text-white border-emerald-600'
+              : 'bg-white/95 text-gray-900 border-white/80 hover:bg-white hover:text-black'
+              }`}
           >
             <span>{justAdded ? '✓ Added' : '+ Add to Bag'}</span>
           </button>
@@ -186,7 +179,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
 
             {discount > 0 && (
               <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded ml-auto">
-                Save ₹{Number((product.oldPrice || product.price * 1.25) - product.price).toLocaleString('en-IN')}
+                {discount}% Off
               </span>
             )}
           </div>
@@ -197,11 +190,10 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
           <button
             type="button"
             onClick={handleQuickAdd}
-            className={`w-full rounded-lg py-1.5 text-[11px] font-semibold transition-all active:scale-95 truncate ${
-              justAdded
-                ? 'bg-emerald-600 text-white'
-                : 'bg-gray-100 text-gray-800'
-            }`}
+            className={`w-full rounded-lg py-1.5 text-[11px] font-semibold transition-all active:scale-95 truncate ${justAdded
+              ? 'bg-emerald-600 text-white'
+              : 'bg-gray-100 text-gray-800'
+              }`}
           >
             {justAdded ? '✓ Added' : 'Add to Bag'}
           </button>
