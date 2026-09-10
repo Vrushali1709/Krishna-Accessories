@@ -796,9 +796,11 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 flex flex-col justify-center items-center px-4 py-12 font-sans selection:bg-zinc-900 selection:text-white">
         <div className="w-full max-w-sm bg-white border border-zinc-200/80 rounded-2xl p-7 sm:p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] space-y-6 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900 text-white font-serif font-bold text-lg shadow-sm">
-            KA
-          </div>
+          <img
+            src="/images/krishna-logo.png"
+            alt="Krishna Accessories Logo"
+            className="mx-auto h-12 w-12 object-contain rounded-xl bg-white p-1 shadow-xs border border-zinc-200"
+          />
           <div>
             <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 block">
               Governance Console
@@ -865,9 +867,11 @@ export default function AdminDashboard() {
         <div className="flex flex-col min-h-0 flex-1">
           <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
             <Link to="/admin" className="flex items-center gap-3 overflow-hidden min-w-0">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-100 font-serif font-bold text-xs border border-zinc-700/60 shadow-xs">
-                KA
-              </div>
+              <img
+                src="/images/krishna-logo.png"
+                alt="Krishna Accessories Logo"
+                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs"
+              />
               {!sidebarCollapsed && (
                 <div className="flex flex-col min-w-0">
                   <span className="font-semibold text-zinc-100 tracking-tight text-xs truncate">

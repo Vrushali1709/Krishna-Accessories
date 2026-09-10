@@ -78,9 +78,11 @@ export default function Register() {
         <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
 
           <div className="text-center">
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#111827] text-white font-serif font-bold text-base mb-2.5 shadow-sm">
-              K
-            </div>
+            <img
+              src="/images/krishna-logo.png"
+              alt="Krishna Accessories Logo"
+              className="mx-auto h-12 w-12 object-contain rounded-2xl bg-white p-1 shadow-xs border border-gray-200 mb-2.5"
+            />
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
               Client Registration
             </span>

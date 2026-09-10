@@ -72,16 +72,17 @@ export default function WebsiteLoader({ forceVisible = false, customMessage = nu
             <rect x="94" y="48" width="4" height="4" fill="#FBBF24" transform="rotate(45 96 50)" />
           </svg>
 
-          {/* Central Luxury Crest Badge with 'K' Monogram */}
-          <div className="relative z-10 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#0F172A] via-[#1E293B] to-[#0B132B] border border-amber-400/40 shadow-[0_0_25px_rgba(245,158,11,0.25)] group">
-            {/* Shimmering 'K' */}
-            <span className="font-serif font-black text-2xl sm:text-3xl bg-gradient-to-tr from-amber-400 via-amber-200 to-yellow-100 bg-clip-text text-transparent drop-shadow-sm">
-              K
-            </span>
+          {/* Central Luxury Crest Badge with Official Logo */}
+          <div className="relative z-10 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-white/95 border-2 border-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.35)] p-1.5 group backdrop-blur-md">
+            <img
+              src="/images/krishna-logo.png"
+              alt="Krishna Accessories Logo"
+              className="w-full h-full object-contain filter drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+            />
 
             {/* Micro gold corner accents */}
-            <span className="absolute top-1 left-1 w-1 h-1 rounded-full bg-amber-400/60" />
-            <span className="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-amber-400/60" />
+            <span className="absolute -top-1 -left-1 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]" />
+            <span className="absolute -bottom-1 -right-1 w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]" />
           </div>
         </div>
 

@@ -131,12 +131,14 @@ export default function Footer() {
 
             {/* Column 1: Company Information & Mumbai Boutique (Span 4) */}
             <div className="lg:col-span-4 space-y-4">
-              <Link to="/" className="inline-flex items-center gap-2.5 group">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 font-serif text-base font-black text-slate-950 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
-                  K
-                </div>
+              <Link to="/" className="inline-flex items-center gap-3 group">
+                <img
+                  src="/images/krishna-logo.png"
+                  alt="Krishna Accessories Logo"
+                  className="h-11 w-11 object-contain rounded-2xl bg-white p-1 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200"
+                />
                 <div>
-                  <span className="text-lg font-bold tracking-tight text-white block leading-none">
+                  <span className="text-lg font-bold tracking-tight text-white block leading-tight">
                     Krishna <span className="font-bold text-amber-400">Accessories</span>
                   </span>
                   <span className="text-[9.5px] uppercase tracking-[0.2em] text-slate-400 font-semibold">

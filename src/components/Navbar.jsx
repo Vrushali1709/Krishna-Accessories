@@ -227,9 +227,19 @@ export default function Navbar() {
 
           {/* Left: Brand Identity */}
           <div className="flex items-center shrink-0 z-10">
-            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 group">
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-[#0F172A] text-amber-300 font-serif font-bold text-sm sm:text-base shadow-xs border border-amber-500/20 transition-transform group-hover:scale-105">
-                K
+            <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2.5 sm:gap-3 group">
+              <img
+                src="/images/krishna-logo.png"
+                alt="Krishna Accessories Logo"
+                className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105"
+              />
+              <div className="flex flex-col">
+                <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors">
+                  Krishna <span className="text-amber-700 font-extrabold">Accessories</span>
+                </span>
+                <span className="text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5">
+                  Curated Luxury
+                </span>
               </div>
             </Link>
           </div>
@@ -770,6 +780,23 @@ export default function Navbar() {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="xl:hidden border-t border-gray-200 bg-white px-3.5 py-3.5 shadow-xl max-h-[80vh] overflow-y-auto animate-fade-in">
+          {/* Mobile Drawer Brand Identity */}
+          <div className="flex items-center gap-2.5 pb-3 mb-2 border-b border-gray-100">
+            <img
+              src="/images/krishna-logo.png"
+              alt="Krishna Accessories"
+              className="h-10 w-10 object-contain rounded-xl bg-white p-0.5 border border-amber-500/30 shadow-2xs"
+            />
+            <div className="flex flex-col">
+              <span className="font-serif font-bold text-sm text-gray-950 leading-tight">
+                Krishna <span className="text-amber-700">Accessories</span>
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-gray-400 font-semibold">
+                Mumbai Boutique
+              </span>
+            </div>
+          </div>
+
           <div className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wider">
             <Link
               to="/"

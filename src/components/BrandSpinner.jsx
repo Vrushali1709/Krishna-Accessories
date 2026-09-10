@@ -69,12 +69,16 @@ export default function BrandSpinner({
           />
         </svg>
 
-        {/* Optional Miniature 'K' Badge */}
+        {/* Optional Miniature Brand Emblem Badge */}
         {showBadge && (
           <div
-            className={`absolute rounded-full ${sizeConfig.badge} ${variantConfig.badgeBg} ${variantConfig.badgeText} flex items-center justify-center font-serif font-bold shadow-xs border border-amber-400/30`}
+            className={`absolute rounded-full ${sizeConfig.badge} bg-white p-0.5 flex items-center justify-center shadow-xs border border-amber-400/50 overflow-hidden`}
           >
-            K
+            <img
+              src="/images/krishna-logo.png"
+              alt="Krishna Accessories"
+              className="w-full h-full object-contain"
+            />
           </div>
         )}
       </div>
