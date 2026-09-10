@@ -1,12 +1,11 @@
 // src/pages/Shop.jsx
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { ProductCardSkeleton } from '../components/SkeletonLoader';
 import { getProducts, getCategories, getBrandsByCategory } from '../utils/productStore';
-import { getCurrentUser } from '../utils/auth';
 import { addToCart } from '../utils/cart';
 
 export default function Shop() {
@@ -22,10 +21,7 @@ export default function Shop() {
   const [products, setProducts] = useState(() => getProducts());
   const [categories, setCategories] = useState(() => ['All', ...getCategories()]);
 
-  const [category, setCategory] = useState(urlCategory);
-  const [selectedBrand, setSelectedBrand] = useState(urlBrand);
   const [sort, setSort] = useState('featured');
-  const [search, setSearch] = useState(urlSearch);
   const [minPrice, setMinPrice] = useState(() => (urlMinPrice ? Number(urlMinPrice) : 0));
   const [maxPrice, setMaxPrice] = useState(() => (urlMaxPrice ? Number(urlMaxPrice) : 250000));
   const [inStockOnly, setInStockOnly] = useState(false);
@@ -33,7 +29,11 @@ export default function Shop() {
   const [toastMessage, setToastMessage] = useState('');
   const [isFiltering, setIsFiltering] = useState(false);
 
-  // Sync when storage or search params change
+  const category = urlCategory;
+  const selectedBrand = urlBrand;
+  const search = urlSearch;
+
+  // Sync when storage changes
   useEffect(() => {
     const handleProductsUpdate = () => {
       setProducts(getProducts());
@@ -43,48 +43,14 @@ export default function Shop() {
     return () => window.removeEventListener('productsUpdated', handleProductsUpdate);
   }, []);
 
-  useEffect(() => {
-    if (urlCategory && urlCategory !== category) {
-      setCategory(urlCategory);
-      setSelectedBrand('All');
-    }
-  }, [urlCategory]);
-
-  useEffect(() => {
-    if (urlBrand && urlBrand !== selectedBrand) {
-      setSelectedBrand(urlBrand);
-    }
-  }, [urlBrand]);
-
-  useEffect(() => {
-    if (urlSearch && urlSearch !== search) {
-      setSearch(urlSearch);
-    }
-  }, [urlSearch]);
-
-  useEffect(() => {
-    if (urlMaxPrice) {
-      setMaxPrice(Number(urlMaxPrice));
-    }
-  }, [urlMaxPrice]);
-
-  useEffect(() => {
-    if (urlMinPrice) {
-      setMinPrice(Number(urlMinPrice));
-    }
-  }, [urlMinPrice]);
-
   // Dynamic Brands based on selected category
   const dynamicBrands = useMemo(() => {
     const brandsList = getBrandsByCategory(category);
     return ['All', ...brandsList];
-  }, [category, products]);
+  }, [category]);
 
   const handleCategorySelect = (cat) => {
     setIsFiltering(true);
-    setCategory(cat);
-    setSelectedBrand('All');
-
     const params = new URLSearchParams(searchParams);
     if (cat === 'All') {
       params.delete('category');
@@ -98,7 +64,6 @@ export default function Shop() {
 
   const handleBrandSelect = (brand) => {
     setIsFiltering(true);
-    setSelectedBrand(brand);
     const params = new URLSearchParams(searchParams);
     if (brand === 'All') {
       params.delete('brand');
@@ -107,6 +72,16 @@ export default function Shop() {
     }
     setSearchParams(params);
     setTimeout(() => setIsFiltering(false), 200);
+  };
+
+  const setSearch = (val) => {
+    const params = new URLSearchParams(searchParams);
+    if (val.trim()) {
+      params.set('search', val);
+    } else {
+      params.delete('search');
+    }
+    setSearchParams(params);
   };
 
   // Filtered and Sorted Products
@@ -124,7 +99,9 @@ export default function Shop() {
     }
 
     // Price Range Filter
-    list = list.filter((p) => p.price >= minPrice && p.price <= maxPrice);
+    const activeMax = urlMaxPrice ? Number(urlMaxPrice) : maxPrice;
+    const activeMin = urlMinPrice ? Number(urlMinPrice) : minPrice;
+    list = list.filter((p) => p.price >= activeMin && p.price <= activeMax);
 
     // In Stock Only Filter
     if (inStockOnly) {
@@ -158,13 +135,10 @@ export default function Shop() {
     }
 
     return list;
-  }, [products, category, selectedBrand, minPrice, maxPrice, inStockOnly, search, sort]);
+  }, [products, category, selectedBrand, minPrice, maxPrice, urlMinPrice, urlMaxPrice, inStockOnly, search, sort]);
 
   const clearAllFilters = () => {
-    setCategory('All');
-    setSelectedBrand('All');
     setSort('featured');
-    setSearch('');
     setMinPrice(0);
     setMaxPrice(250000);
     setInStockOnly(false);

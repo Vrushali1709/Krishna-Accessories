@@ -1,18 +1,14 @@
 // src/pages/Home.jsx
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   siAdidas,
   siApple,
-  siBose,
   siDell,
   siGarmin,
   siNike,
   siPuma,
-  siRazer,
-  siSamsung,
-  siSony,
-  siZara
+  siRazer
 } from 'simple-icons';
 
 import Navbar from '../components/Navbar';
@@ -279,6 +275,14 @@ const KNOWN_BRAND_LOGOS = {
         <path d={siRazer.path} />
       </svg>
       <span className="font-sans font-black text-xs sm:text-sm tracking-[0.18em] text-gray-900">RAZER</span>
+    </div>
+  ),
+  garmin: () => (
+    <div className="flex items-center gap-1.5">
+      <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-5 sm:w-6 fill-current text-[#007CC3]">
+        <path d={siGarmin.path} />
+      </svg>
+      <span className="font-sans font-bold text-xs sm:text-sm tracking-[0.16em] text-gray-900">GARMIN</span>
     </div>
   )
 };
@@ -1007,7 +1011,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-          {curatedStyleCollections.map((col, idx) => (
+          {curatedStyleCollections.map((col) => (
             <Link
               key={col.title}
               to={col.link}
