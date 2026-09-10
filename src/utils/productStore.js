@@ -122,18 +122,11 @@ export const defaultProducts = [
     reviews: 128,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700",
     images: [
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80",
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80"
-    ],
-    imageAngles: [
-      "Front Dial View",
-      "45° Perspective Angle",
-      "Crown & Sapphire Glass",
-      "On-Wrist Styling"
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700",
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
+      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700"
     ],
     description: "Handcrafted luxury automatic analog watch with premium sapphire crystal glass, surgical-grade stainless steel dial, and water resistance up to 50 meters.",
     specifications: {
@@ -143,25 +136,8 @@ export const defaultProducts = [
       WaterResistance: "50m / 5 ATM",
       Warranty: "2 Years International Warranty"
     },
-    colors: ["Champagne Gold", "Classic Silver", "Midnight Black"],
-    colorMap: {
-      "Champagne Gold": { hex: "#D4AF37", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80" },
-      "Classic Silver": { hex: "#D1D5DB", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" },
-      "Midnight Black": { hex: "#111827", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80" }
-    },
-    sizes: ["38mm Case", "40mm Case", "42mm Case"],
-    variants: ["Stainless Steel Bracelet", "Italian Leather Strap"],
-    variationMatrix: [
-      { color: "Champagne Gold", size: "38mm Case", variant: "Stainless Steel Bracelet", price: 4999, oldPrice: 6999, stock: 12, sku: "KA-TIT-001-GLD-38" },
-      { color: "Champagne Gold", size: "40mm Case", variant: "Stainless Steel Bracelet", price: 5499, oldPrice: 7499, stock: 8, sku: "KA-TIT-001-GLD-40" },
-      { color: "Champagne Gold", size: "42mm Case", variant: "Stainless Steel Bracelet", price: 5999, oldPrice: 7999, stock: 5, sku: "KA-TIT-001-GLD-42" },
-      { color: "Classic Silver", size: "38mm Case", variant: "Stainless Steel Bracelet", price: 4799, oldPrice: 6699, stock: 14, sku: "KA-TIT-001-SLV-38" },
-      { color: "Classic Silver", size: "40mm Case", variant: "Stainless Steel Bracelet", price: 5299, oldPrice: 7199, stock: 9, sku: "KA-TIT-001-SLV-40" },
-      { color: "Classic Silver", size: "42mm Case", variant: "Stainless Steel Bracelet", price: 5799, oldPrice: 7699, stock: 6, sku: "KA-TIT-001-SLV-42" },
-      { color: "Midnight Black", size: "38mm Case", variant: "Stainless Steel Bracelet", price: 5199, oldPrice: 7199, stock: 10, sku: "KA-TIT-001-BLK-38" },
-      { color: "Midnight Black", size: "40mm Case", variant: "Stainless Steel Bracelet", price: 5699, oldPrice: 7699, stock: 7, sku: "KA-TIT-001-BLK-40" },
-      { color: "Midnight Black", size: "42mm Case", variant: "Stainless Steel Bracelet", price: 6199, oldPrice: 8199, stock: 4, sku: "KA-TIT-001-BLK-42" }
-    ]
+    colors: ["Gold", "Silver", "Midnight Black"],
+    variants: ["Gold Dial", "Silver Dial", "Black Mesh"]
   },
   {
     id: 2,
@@ -178,18 +154,10 @@ export const defaultProducts = [
     reviews: 94,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700",
     images: [
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80"
-    ],
-    imageAngles: [
-      "Sunray Royal Blue Dial",
-      "Chrono Sub-Dials Angle",
-      "Italian Leather Strap Profile",
-      "Lifestyle / Wrist Fit"
+      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700",
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
     ],
     description: "Sophisticated multi-dial chronograph watch featuring a sunray royal blue dial, genuine Italian leather strap, and stop-watch micro-second precision.",
     specifications: {
@@ -199,22 +167,8 @@ export const defaultProducts = [
       WaterResistance: "50m",
       Warranty: "2 Years International Warranty"
     },
-    colors: ["Royal Blue", "Deep Black", "Rose Gold Accent"],
-    colorMap: {
-      "Royal Blue": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80" },
-      "Deep Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" },
-      "Rose Gold Accent": { hex: "#B76E79", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80" }
-    },
-    sizes: ["42mm Case", "44mm Case"],
-    variants: ["Genuine Leather Strap", "Solid Steel Bracelet"],
-    variationMatrix: [
-      { color: "Royal Blue", size: "42mm Case", variant: "Genuine Leather Strap", price: 8999, oldPrice: 11999, stock: 10, sku: "KA-FOS-002-BLU-42" },
-      { color: "Royal Blue", size: "44mm Case", variant: "Solid Steel Bracelet", price: 9499, oldPrice: 12499, stock: 8, sku: "KA-FOS-002-BLU-44" },
-      { color: "Deep Black", size: "42mm Case", variant: "Genuine Leather Strap", price: 8999, oldPrice: 11999, stock: 9, sku: "KA-FOS-002-BLK-42" },
-      { color: "Deep Black", size: "44mm Case", variant: "Solid Steel Bracelet", price: 9499, oldPrice: 12499, stock: 6, sku: "KA-FOS-002-BLK-44" },
-      { color: "Rose Gold Accent", size: "42mm Case", variant: "Genuine Leather Strap", price: 9299, oldPrice: 12999, stock: 5, sku: "KA-FOS-002-RSG-42" },
-      { color: "Rose Gold Accent", size: "44mm Case", variant: "Solid Steel Bracelet", price: 9799, oldPrice: 13499, stock: 3, sku: "KA-FOS-002-RSG-44" }
-    ]
+    colors: ["Royal Blue", "Deep Black"],
+    variants: ["Leather Strap", "Steel Bracelet"]
   },
   {
     id: 3,
@@ -231,18 +185,10 @@ export const defaultProducts = [
     reviews: 160,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
     images: [
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80"
-    ],
-    imageAngles: [
-      "Tough Solar Face",
-      "Octagonal Bezel Angle",
-      "Solar Cell Texture Detail",
-      "Outdoor Adventure Fit"
+      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
     ],
     description: "High-precision solar chronograph powered by light energy with Bluetooth mobile link and 100m water resistance.",
     specifications: {
@@ -252,21 +198,8 @@ export const defaultProducts = [
       WaterResistance: "100m / 10 ATM",
       Warranty: "2 Years International Warranty"
     },
-    colors: ["Carbon Black", "Gunmetal Silver", "Solar Blue"],
-    colorMap: {
-      "Carbon Black": { hex: "#27272A", image: "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80" },
-      "Gunmetal Silver": { hex: "#9CA3AF", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80" },
-      "Solar Blue": { hex: "#1D4ED8", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80" }
-    },
-    sizes: ["44mm Case", "46mm Case"],
-    variants: ["Solid Steel Bracelet", "Resin Sport Band"],
-    variationMatrix: [
-      { color: "Carbon Black", size: "44mm Case", variant: "Solid Steel Bracelet", price: 6499, oldPrice: 12999, stock: 8, sku: "KA-CAS-003-BLK-44" },
-      { color: "Carbon Black", size: "46mm Case", variant: "Solid Steel Bracelet", price: 6999, oldPrice: 13499, stock: 6, sku: "KA-CAS-003-BLK-46" },
-      { color: "Gunmetal Silver", size: "44mm Case", variant: "Solid Steel Bracelet", price: 6499, oldPrice: 12999, stock: 7, sku: "KA-CAS-003-SLV-44" },
-      { color: "Gunmetal Silver", size: "46mm Case", variant: "Solid Steel Bracelet", price: 6999, oldPrice: 13499, stock: 5, sku: "KA-CAS-003-SLV-46" },
-      { color: "Solar Blue", size: "44mm Case", variant: "Resin Sport Band", price: 6799, oldPrice: 13299, stock: 6, sku: "KA-CAS-003-BLU-44" }
-    ]
+    colors: ["Carbon Black", "Silver"],
+    variants: ["Solar Steel", "Carbon Edition"]
   },
   {
     id: 4,
@@ -283,18 +216,10 @@ export const defaultProducts = [
     reviews: 115,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700",
     images: [
-      "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80",
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80"
-    ],
-    imageAngles: [
-      "Cerachrom Bezel & Dial",
-      "Oyster Case 45° Angle",
-      "Glidelock Clasp & Crown",
-      "Diver Elegance Styling"
+      "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700",
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
     ],
     description: "Iconic luxury diver timepiece with black Cerachrom unidirectional rotating bezel, Chromalight display, scratch-resistant sapphire crystal, and Calibre 3235 automatic movement.",
     specifications: {
@@ -304,21 +229,8 @@ export const defaultProducts = [
       WaterResistance: "300m / 30 ATM",
       Warranty: "5 Years International Warranty"
     },
-    colors: ["Emerald Green", "Onyx Black", "Two-Tone Gold & Steel"],
-    colorMap: {
-      "Emerald Green": { hex: "#065F46", image: "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=900&q=80" },
-      "Onyx Black": { hex: "#09090B", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" },
-      "Two-Tone Gold & Steel": { hex: "#CA8A04", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80" }
-    },
-    sizes: ["41mm Case"],
-    variants: ["Oystersteel Bracelet", "Jubilee Bracelet"],
-    variationMatrix: [
-      { color: "Emerald Green", size: "41mm Case", variant: "Oystersteel Bracelet", price: 49999, oldPrice: 65999, stock: 4, sku: "KA-ROL-004-GRN-OYS" },
-      { color: "Emerald Green", size: "41mm Case", variant: "Jubilee Bracelet", price: 52999, oldPrice: 68999, stock: 2, sku: "KA-ROL-004-GRN-JUB" },
-      { color: "Onyx Black", size: "41mm Case", variant: "Oystersteel Bracelet", price: 48999, oldPrice: 64999, stock: 5, sku: "KA-ROL-004-BLK-OYS" },
-      { color: "Onyx Black", size: "41mm Case", variant: "Jubilee Bracelet", price: 51999, oldPrice: 67999, stock: 3, sku: "KA-ROL-004-BLK-JUB" },
-      { color: "Two-Tone Gold & Steel", size: "41mm Case", variant: "Oystersteel Bracelet", price: 56999, oldPrice: 72999, stock: 2, sku: "KA-ROL-004-TT-OYS" }
-    ]
+    colors: ["Emerald Green", "Onyx Black", "Gold Two-Tone"],
+    variants: ["Emerald Green Bezel", "Onyx Black"]
   },
   {
     id: 5,
@@ -335,18 +247,9 @@ export const defaultProducts = [
     reviews: 210,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700",
     images: [
-      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80",
-      "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80",
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80"
-    ],
-    imageAngles: [
-      "1.91'' HD Curved Display",
-      "Curved Profile Angle",
-      "Sensors & Magnetic Charger",
-      "Fitness Workout Wear"
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700"
     ],
     description: "1.91'' UltraVU HD Display with single-sync BT Calling, 100+ sports modes, AI voice assistant, and 7-day battery life.",
     specifications: {
@@ -357,19 +260,7 @@ export const defaultProducts = [
       Warranty: "1 Year Manufacturer Warranty"
     },
     colors: ["Pitch Black", "Teal Blue", "Olive Green"],
-    colorMap: {
-      "Pitch Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80" },
-      "Teal Blue": { hex: "#0D9488", image: "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80" },
-      "Olive Green": { hex: "#3F6212", image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80" }
-    },
-    sizes: ["Standard 1.91'' Dial"],
-    variants: ["Silicone Sport Strap", "Magnetic Milanese Loop"],
-    variationMatrix: [
-      { color: "Pitch Black", size: "Standard 1.91'' Dial", variant: "Silicone Sport Strap", price: 2499, oldPrice: 3999, stock: 25, sku: "KA-FAS-005-BLK-SPT" },
-      { color: "Pitch Black", size: "Standard 1.91'' Dial", variant: "Magnetic Milanese Loop", price: 2799, oldPrice: 4299, stock: 15, sku: "KA-FAS-005-BLK-MAG" },
-      { color: "Teal Blue", size: "Standard 1.91'' Dial", variant: "Silicone Sport Strap", price: 2499, oldPrice: 3999, stock: 18, sku: "KA-FAS-005-TEA-SPT" },
-      { color: "Olive Green", size: "Standard 1.91'' Dial", variant: "Silicone Sport Strap", price: 2499, oldPrice: 3999, stock: 12, sku: "KA-FAS-005-OLV-SPT" }
-    ]
+    variants: ["Standard Strap", "Magnetic Strap"]
   },
   {
     id: 6,
@@ -386,18 +277,10 @@ export const defaultProducts = [
     reviews: 58,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
     images: [
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80"
-    ],
-    imageAngles: [
-      "Domed Sapphire Crystal",
-      "Powermatic 80 Case Back",
-      "Embossed Calfskin Strap",
-      "Executive Suit Styling"
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
     ],
     description: "Prestigious Swiss-made vintage automatic timepiece featuring domed sapphire crystal, exhibition case back with engraved rotor, and genuine embossed leather strap.",
     specifications: {
@@ -407,21 +290,8 @@ export const defaultProducts = [
       WaterResistance: "100m / 10 ATM",
       Warranty: "2 Years International Warranty"
     },
-    colors: ["Silver Dial / Brown Strap", "Black Dial / Black Strap", "Ivory Dial / Tan Strap"],
-    colorMap: {
-      "Silver Dial / Brown Strap": { hex: "#78350F", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80" },
-      "Black Dial / Black Strap": { hex: "#18181B", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" },
-      "Ivory Dial / Tan Strap": { hex: "#D97706", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80" }
-    },
-    sizes: ["40mm Case", "42mm Case"],
-    variants: ["Embossed Leather Strap", "Milanese Mesh Bracelet"],
-    variationMatrix: [
-      { color: "Silver Dial / Brown Strap", size: "40mm Case", variant: "Embossed Leather Strap", price: 18999, oldPrice: 24999, stock: 5, sku: "KA-TIS-006-BRN-40" },
-      { color: "Silver Dial / Brown Strap", size: "42mm Case", variant: "Milanese Mesh Bracelet", price: 20499, oldPrice: 26499, stock: 3, sku: "KA-TIS-006-BRN-42" },
-      { color: "Black Dial / Black Strap", size: "40mm Case", variant: "Embossed Leather Strap", price: 18999, oldPrice: 24999, stock: 4, sku: "KA-TIS-006-BLK-40" },
-      { color: "Black Dial / Black Strap", size: "42mm Case", variant: "Milanese Mesh Bracelet", price: 20499, oldPrice: 26499, stock: 2, sku: "KA-TIS-006-BLK-42" },
-      { color: "Ivory Dial / Tan Strap", size: "40mm Case", variant: "Embossed Leather Strap", price: 19499, oldPrice: 25499, stock: 3, sku: "KA-TIS-006-IVR-40" }
-    ]
+    colors: ["Silver Dial / Brown Strap", "Black Dial / Black Strap"],
+    variants: ["Leather Strap", "Steel Bracelet"]
   },
   {
     id: 101,
@@ -438,18 +308,9 @@ export const defaultProducts = [
     reviews: 62,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
     images: [
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80",
-      "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=900&q=80",
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80"
-    ],
-    imageAngles: [
-      "Panda Chrono Dial",
-      "Tachymeter Bezel Angle",
-      "Screw-Down Pushers Profile",
-      "Motorsport Prestige Wear"
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
     ],
     description: "High-precision luxury chronograph with engraved tachymetric scale bezel, triple sub-dials, Oystersteel bracelet, and certified chronometer mechanical movement.",
     specifications: {
@@ -459,20 +320,8 @@ export const defaultProducts = [
       WaterResistance: "100m / 10 ATM",
       Warranty: "5 Years International Warranty"
     },
-    colors: ["Panda White", "Onyx Black", "Rose Gold Sundust"],
-    colorMap: {
-      "Panda White": { hex: "#F3F4F6", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" },
-      "Onyx Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80" },
-      "Rose Gold Sundust": { hex: "#BE7B72", image: "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=900&q=80" }
-    },
-    sizes: ["40mm Case"],
-    variants: ["Oystersteel Bracelet", "Oysterflex Rubber Strap"],
-    variationMatrix: [
-      { color: "Panda White", size: "40mm Case", variant: "Oystersteel Bracelet", price: 64999, oldPrice: 79999, stock: 3, sku: "KA-ROL-DAY-WHT-OYS" },
-      { color: "Panda White", size: "40mm Case", variant: "Oysterflex Rubber Strap", price: 66999, oldPrice: 81999, stock: 2, sku: "KA-ROL-DAY-WHT-FLX" },
-      { color: "Onyx Black", size: "40mm Case", variant: "Oystersteel Bracelet", price: 64999, oldPrice: 79999, stock: 3, sku: "KA-ROL-DAY-BLK-OYS" },
-      { color: "Rose Gold Sundust", size: "40mm Case", variant: "Oysterflex Rubber Strap", price: 72999, oldPrice: 88999, stock: 2, sku: "KA-ROL-DAY-RSG-FLX" }
-    ]
+    colors: ["Panda White", "Onyx Black"],
+    variants: ["Panda White Dial", "All Black"]
   },
   {
     id: 102,
@@ -489,18 +338,9 @@ export const defaultProducts = [
     reviews: 44,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700",
     images: [
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80",
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80"
-    ],
-    imageAngles: [
-      "Moonwatch Step Dial",
-      "Co-Axial Master Case Back",
-      "Double-Beveled Bracelet",
-      "Lunar Heritage Styling"
+      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700"
     ],
     description: "Legendary Speedmaster Moonwatch chronograph featuring a black step dial, sapphire crystal, and Master Chronometer certified co-axial movement.",
     specifications: {
@@ -510,19 +350,8 @@ export const defaultProducts = [
       WaterResistance: "50m / 5 ATM",
       Warranty: "5 Years International Warranty"
     },
-    colors: ["Racing Black", "Meteorite Grey", "Navy Moon"],
-    colorMap: {
-      "Racing Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80" },
-      "Meteorite Grey": { hex: "#6B7280", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" },
-      "Navy Moon": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80" }
-    },
-    sizes: ["42mm Case"],
-    variants: ["Stainless Steel Bracelet", "Perforated Racing Leather"],
-    variationMatrix: [
-      { color: "Racing Black", size: "42mm Case", variant: "Stainless Steel Bracelet", price: 45999, oldPrice: 59999, stock: 6, sku: "KA-OMG-SPD-BLK-STL" },
-      { color: "Racing Black", size: "42mm Case", variant: "Perforated Racing Leather", price: 47999, oldPrice: 61999, stock: 4, sku: "KA-OMG-SPD-BLK-LTH" },
-      { color: "Meteorite Grey", size: "42mm Case", variant: "Stainless Steel Bracelet", price: 48999, oldPrice: 63999, stock: 3, sku: "KA-OMG-SPD-MET-STL" }
-    ]
+    colors: ["Racing Black", "Blue Accent"],
+    variants: ["Steel Bracelet", "Leather Strap"]
   },
   {
     id: 103,
@@ -539,18 +368,9 @@ export const defaultProducts = [
     reviews: 36,
     status: "Active",
     supplier: "Apex Timepieces Ltd.",
-    image: "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
     images: [
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80",
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80",
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=900&q=80"
-    ],
-    imageAngles: [
-      "Sunburst Blue Dial",
-      "Unidirectional Rotating Bezel",
-      "4R36 Movement Exhibition Back",
-      "Daily Urban Wrist Fit"
+      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700"
     ],
     description: "Authentic Seiko 5 Sports automatic timepiece, thoroughly crafted with LumiBrite hands, exhibition case back, and tested for precise timekeeping.",
     specifications: {
@@ -560,19 +380,8 @@ export const defaultProducts = [
       WaterResistance: "100m / 10 ATM",
       Warranty: "2 Years International Warranty"
     },
-    colors: ["Sunburst Silver", "Champagne Gold", "Deep Sea Blue"],
-    colorMap: {
-      "Sunburst Silver": { hex: "#D1D5DB", image: "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80" },
-      "Champagne Gold": { hex: "#F59E0B", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80" },
-      "Deep Sea Blue": { hex: "#1E40AF", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900&q=80" }
-    },
-    sizes: ["38mm Case", "42.5mm Case"],
-    variants: ["Steel Jubilee Bracelet", "NATO Nylon Strap"],
-    variationMatrix: [
-      { color: "Sunburst Silver", size: "38mm Case", variant: "Steel Jubilee Bracelet", price: 14299, oldPrice: 19999, stock: 7, sku: "KA-SEI-SPO-SLV-38" },
-      { color: "Sunburst Silver", size: "42.5mm Case", variant: "Steel Jubilee Bracelet", price: 14999, oldPrice: 20999, stock: 8, sku: "KA-SEI-SPO-SLV-42" },
-      { color: "Deep Sea Blue", size: "42.5mm Case", variant: "Steel Jubilee Bracelet", price: 15499, oldPrice: 21499, stock: 6, sku: "KA-SEI-SPO-BLU-42" }
-    ]
+    colors: ["Sunburst Silver", "Champagne Gold"],
+    variants: ["Steel Jubilee", "Leather Strap"]
   },
 
   // ================= BAGS & WALLETS =================
@@ -591,18 +400,10 @@ export const defaultProducts = [
     reviews: 72,
     status: "Active",
     supplier: "Vogue Apparel India",
-    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700",
     images: [
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80",
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80",
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80",
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80"
-    ],
-    imageAngles: [
-      "Front Leather Profile",
-      "Padded Laptop Compartment",
-      "Solid Brass Hardware & Locks",
-      "Executive Shoulder Carry"
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700",
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"
     ],
     description: "Handcrafted vegetable-tanned genuine leather briefcase with padded 15.6-inch laptop compartment, solid brass hardware, and detachable shoulder strap.",
     specifications: {
@@ -611,20 +412,8 @@ export const defaultProducts = [
       Hardware: "Antique Solid Brass",
       Warranty: "1 Year International"
     },
-    colors: ["Rich Cognac Brown", "Classic Black", "Tan Vintage"],
-    colorMap: {
-      "Rich Cognac Brown": { hex: "#78350F", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80" },
-      "Classic Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80" },
-      "Tan Vintage": { hex: "#B45309", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80" }
-    },
-    sizes: ["Standard 15.6-inch", "Executive 17-inch"],
-    variants: ["Standard Briefcase", "Slim Profile Edition"],
-    variationMatrix: [
-      { color: "Rich Cognac Brown", size: "Standard 15.6-inch", variant: "Standard Briefcase", price: 8499, oldPrice: 11999, stock: 8, sku: "KA-HID-007-BRN-STD" },
-      { color: "Rich Cognac Brown", size: "Executive 17-inch", variant: "Standard Briefcase", price: 9299, oldPrice: 12999, stock: 4, sku: "KA-HID-007-BRN-17" },
-      { color: "Classic Black", size: "Standard 15.6-inch", variant: "Standard Briefcase", price: 8499, oldPrice: 11999, stock: 7, sku: "KA-HID-007-BLK-STD" },
-      { color: "Classic Black", size: "Executive 17-inch", variant: "Standard Briefcase", price: 9299, oldPrice: 12999, stock: 3, sku: "KA-HID-007-BLK-17" }
-    ]
+    colors: ["Rich Cognac Brown", "Classic Black"],
+    variants: ["Standard Briefcase", "Slim Edition"]
   },
   {
     id: 8,
@@ -641,18 +430,9 @@ export const defaultProducts = [
     reviews: 190,
     status: "Active",
     supplier: "Vogue Apparel India",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700",
     images: [
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80",
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80",
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80",
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80"
-    ],
-    imageAngles: [
-      "Front Minimalist Profile",
-      "AirMesh Ergonomic Back",
-      "Multi-Pocket Storage Interior",
-      "Commuter Daily Travel"
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"
     ],
     description: "Weatherproof 32-liter urban travel backpack with ergonomic AirMesh lumbar support, dedicated USB charging port pass-through, and rain cover included.",
     specifications: {
@@ -662,19 +442,7 @@ export const defaultProducts = [
       Warranty: "5 Years"
     },
     colors: ["Charcoal Grey", "Navy Blue", "Olive Tactical"],
-    colorMap: {
-      "Charcoal Grey": { hex: "#4B5563", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80" },
-      "Navy Blue": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80" },
-      "Olive Tactical": { hex: "#3F6212", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80" }
-    },
-    sizes: ["28 Litres Daily", "32 Litres Pro", "38 Litres Travel"],
-    variants: ["Standard Ballistic", "WeatherShield Pro (with Raincover)"],
-    variationMatrix: [
-      { color: "Charcoal Grey", size: "28 Litres Daily", variant: "Standard Ballistic", price: 2199, oldPrice: 3199, stock: 15, sku: "KA-WIL-008-GRY-28" },
-      { color: "Charcoal Grey", size: "32 Litres Pro", variant: "Standard Ballistic", price: 2499, oldPrice: 3499, stock: 20, sku: "KA-WIL-008-GRY-32" },
-      { color: "Charcoal Grey", size: "38 Litres Travel", variant: "WeatherShield Pro (with Raincover)", price: 2999, oldPrice: 4199, stock: 10, sku: "KA-WIL-008-GRY-38" },
-      { color: "Navy Blue", size: "32 Litres Pro", variant: "Standard Ballistic", price: 2499, oldPrice: 3499, stock: 18, sku: "KA-WIL-008-NVY-32" }
-    ]
+    variants: ["32 Litres Standard"]
   },
   {
     id: 9,
@@ -691,18 +459,9 @@ export const defaultProducts = [
     reviews: 84,
     status: "Active",
     supplier: "Vogue Apparel India",
-    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700",
     images: [
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80",
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80",
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80",
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80"
-    ],
-    imageAngles: [
-      "Monogram Front Silhouette",
-      "Interior Zip Pouch & Divider",
-      "Leather Trim & Gold Accents",
-      "Chic Shoulder Carry"
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700"
     ],
     description: "Chic structured tote bag featuring iconic monogram detailing, premium faux-leather trim, magnetic closure, and removable matching zip pouch.",
     specifications: {
@@ -711,19 +470,8 @@ export const defaultProducts = [
       Dimensions: "38cm x 28cm x 14cm",
       Warranty: "1 Year"
     },
-    colors: ["Navy / White Stripe", "Black Jacquard", "Beige Monogram"],
-    colorMap: {
-      "Navy / White Stripe": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80" },
-      "Black Jacquard": { hex: "#18181B", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80" },
-      "Beige Monogram": { hex: "#D4B996", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80" }
-    },
-    sizes: ["Medium Tote (34cm)", "Large Carryall (42cm)"],
-    variants: ["Classic Jacquard", "Vegan Leather Edition"],
-    variationMatrix: [
-      { color: "Navy / White Stripe", size: "Medium Tote (34cm)", variant: "Classic Jacquard", price: 6999, oldPrice: 9999, stock: 12, sku: "KA-TOM-009-NVY-MED" },
-      { color: "Navy / White Stripe", size: "Large Carryall (42cm)", variant: "Classic Jacquard", price: 7999, oldPrice: 10999, stock: 8, sku: "KA-TOM-009-NVY-LRG" },
-      { color: "Black Jacquard", size: "Medium Tote (34cm)", variant: "Classic Jacquard", price: 6999, oldPrice: 9999, stock: 10, sku: "KA-TOM-009-BLK-MED" }
-    ]
+    colors: ["Navy / White Stripe", "Black Jacquard"],
+    variants: ["Standard Tote Size"]
   },
 
   // ================= SHOES =================
@@ -742,18 +490,10 @@ export const defaultProducts = [
     reviews: 215,
     status: "Active",
     supplier: "Urban Footwear Co.",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700",
     images: [
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80",
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80",
-      "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80",
-      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=900&q=80"
-    ],
-    imageAngles: [
-      "Side Athletic Profile",
-      "Engineered Mesh Upper Top",
-      "Zoom Air Sole & Waffle Grip",
-      "Track Runner In-Action"
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=700"
     ],
     description: "Responsive cushioning in the Nike Air Zoom Pegasus provides a springy feel for everyday road and track runners with engineered breathable mesh.",
     specifications: {
@@ -762,22 +502,8 @@ export const defaultProducts = [
       Weight: "260g",
       Warranty: "6 Months"
     },
-    colors: ["Crimson Red", "Triple Black", "Pure White & Royal"],
-    colorMap: {
-      "Crimson Red": { hex: "#DC2626", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80" },
-      "Triple Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80" },
-      "Pure White & Royal": { hex: "#2563EB", image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80" }
-    },
-    sizes: ["UK 7", "UK 8", "UK 9", "UK 10", "UK 11"],
-    variants: ["Standard Width (D)", "Extra Wide (4E)"],
-    variationMatrix: [
-      { color: "Crimson Red", size: "UK 7", variant: "Standard Width (D)", price: 5499, oldPrice: 7499, stock: 6, sku: "KA-NIK-010-RED-7" },
-      { color: "Crimson Red", size: "UK 8", variant: "Standard Width (D)", price: 5499, oldPrice: 7499, stock: 10, sku: "KA-NIK-010-RED-8" },
-      { color: "Crimson Red", size: "UK 9", variant: "Standard Width (D)", price: 5499, oldPrice: 7499, stock: 8, sku: "KA-NIK-010-RED-9" },
-      { color: "Crimson Red", size: "UK 10", variant: "Standard Width (D)", price: 5699, oldPrice: 7699, stock: 5, sku: "KA-NIK-010-RED-10" },
-      { color: "Triple Black", size: "UK 8", variant: "Standard Width (D)", price: 5499, oldPrice: 7499, stock: 9, sku: "KA-NIK-010-BLK-8" },
-      { color: "Triple Black", size: "UK 9", variant: "Standard Width (D)", price: 5499, oldPrice: 7499, stock: 7, sku: "KA-NIK-010-BLK-9" }
-    ]
+    colors: ["Crimson Red", "Triple Black", "Pure White"],
+    variants: ["UK 7", "UK 8", "UK 9", "UK 10", "UK 11"]
   },
   {
     id: 11,
@@ -794,18 +520,10 @@ export const defaultProducts = [
     reviews: 180,
     status: "Active",
     supplier: "Urban Footwear Co.",
-    image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=700",
     images: [
-      "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80",
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80",
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80",
-      "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=900&q=80"
-    ],
-    imageAngles: [
-      "Primeknit Side Silhouette",
-      "BOOST Capsule Midsole",
-      "Continental Grip Rubber Sole",
-      "Urban Sprint Lifestyle"
+      "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=700",
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"
     ],
     description: "Experience epic energy return with Light BOOST cushioning technology and an adaptive Primeknit+ textile upper designed for ultimate comfort.",
     specifications: {
@@ -814,21 +532,8 @@ export const defaultProducts = [
       Drop: "10mm",
       Warranty: "6 Months"
     },
-    colors: ["Core Black", "Cloud White", "Solar Red / Carbon"],
-    colorMap: {
-      "Core Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80" },
-      "Cloud White": { hex: "#F3F4F6", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80" },
-      "Solar Red / Carbon": { hex: "#EF4444", image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80" }
-    },
-    sizes: ["UK 7", "UK 8", "UK 9", "UK 10", "UK 11"],
-    variants: ["Standard Primeknit+", "Cold.RDY Water-Resistant"],
-    variationMatrix: [
-      { color: "Core Black", size: "UK 7", variant: "Standard Primeknit+", price: 6999, oldPrice: 9999, stock: 5, sku: "KA-ADI-011-BLK-7" },
-      { color: "Core Black", size: "UK 8", variant: "Standard Primeknit+", price: 6999, oldPrice: 9999, stock: 8, sku: "KA-ADI-011-BLK-8" },
-      { color: "Core Black", size: "UK 9", variant: "Standard Primeknit+", price: 6999, oldPrice: 9999, stock: 7, sku: "KA-ADI-011-BLK-9" },
-      { color: "Cloud White", size: "UK 8", variant: "Standard Primeknit+", price: 6999, oldPrice: 9999, stock: 6, sku: "KA-ADI-011-WHT-8" },
-      { color: "Cloud White", size: "UK 9", variant: "Standard Primeknit+", price: 6999, oldPrice: 9999, stock: 5, sku: "KA-ADI-011-WHT-9" }
-    ]
+    colors: ["Core Black", "Cloud White", "Solar Red"],
+    variants: ["UK 7", "UK 8", "UK 9", "UK 10"]
   },
   {
     id: 12,
@@ -845,18 +550,9 @@ export const defaultProducts = [
     reviews: 88,
     status: "Active",
     supplier: "Urban Footwear Co.",
-    image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=700",
     images: [
-      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=900&q=80",
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80",
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80",
-      "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80"
-    ],
-    imageAngles: [
-      "Low-Boot Profile",
-      "NITRO Foam Heel Angle",
-      "PUMAGRIP Rubber Tread",
-      "Casual Street Styling"
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=700"
     ],
     description: "Sleek low-boot street design infused with advanced NITRO foam for featherlight responsiveness and all-day urban walking comfort.",
     specifications: {
@@ -864,19 +560,8 @@ export const defaultProducts = [
       Sole: "PUMAGRIP High Traction Rubber",
       Warranty: "6 Months"
     },
-    colors: ["White / Black", "All Black", "Electric Lime"],
-    colorMap: {
-      "White / Black": { hex: "#E5E7EB", image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=900&q=80" },
-      "All Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80" },
-      "Electric Lime": { hex: "#84CC16", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80" }
-    },
-    sizes: ["UK 7", "UK 8", "UK 9", "UK 10"],
-    variants: ["Standard Edition", "Reflective Night Runner"],
-    variationMatrix: [
-      { color: "White / Black", size: "UK 8", variant: "Standard Edition", price: 3999, oldPrice: 5499, stock: 8, sku: "KA-PUM-012-WHT-8" },
-      { color: "White / Black", size: "UK 9", variant: "Standard Edition", price: 3999, oldPrice: 5499, stock: 6, sku: "KA-PUM-012-WHT-9" },
-      { color: "All Black", size: "UK 8", variant: "Standard Edition", price: 3999, oldPrice: 5499, stock: 7, sku: "KA-PUM-012-BLK-8" }
-    ]
+    colors: ["White / Black", "All Black"],
+    variants: ["UK 7", "UK 8", "UK 9", "UK 10"]
   },
   {
     id: 13,
@@ -893,18 +578,9 @@ export const defaultProducts = [
     reviews: 140,
     status: "Active",
     supplier: "Urban Footwear Co.",
-    image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=700",
     images: [
-      "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=900&q=80",
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80",
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80",
-      "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80"
-    ],
-    imageAngles: [
-      "High-Top Leather Profile",
-      "Wings Ankle Collar & Swoosh",
-      "Tumbled Toe Box & Red Tread",
-      "Court-Side Streetwear Fit"
+      "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=700"
     ],
     description: "Iconic high-top silhouette in premium genuine tumbled leather with encapsulated Air-Sole unit and legendary basketball legacy.",
     specifications: {
@@ -912,20 +588,8 @@ export const defaultProducts = [
       Sole: "Rubber Cupsole with Air Cushioning",
       Warranty: "6 Months"
     },
-    colors: ["Chicago Red / White / Black", "Shadow Grey", "Royal Blue OG"],
-    colorMap: {
-      "Chicago Red / White / Black": { hex: "#B91C1C", image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=900&q=80" },
-      "Shadow Grey": { hex: "#4B5563", image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900&q=80" },
-      "Royal Blue OG": { hex: "#1D4ED8", image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=900&q=80" }
-    },
-    sizes: ["UK 8", "UK 9", "UK 10", "UK 11"],
-    variants: ["Classic High-Top OG"],
-    variationMatrix: [
-      { color: "Chicago Red / White / Black", size: "UK 8", variant: "Classic High-Top OG", price: 14999, oldPrice: 17999, stock: 3, sku: "KA-JOR-013-CHI-8" },
-      { color: "Chicago Red / White / Black", size: "UK 9", variant: "Classic High-Top OG", price: 14999, oldPrice: 17999, stock: 4, sku: "KA-JOR-013-CHI-9" },
-      { color: "Chicago Red / White / Black", size: "UK 10", variant: "Classic High-Top OG", price: 15499, oldPrice: 18499, stock: 2, sku: "KA-JOR-013-CHI-10" },
-      { color: "Shadow Grey", size: "UK 9", variant: "Classic High-Top OG", price: 14999, oldPrice: 17999, stock: 3, sku: "KA-JOR-013-SHD-9" }
-    ]
+    colors: ["Chicago Red / White / Black", "Shadow Grey"],
+    variants: ["UK 8", "UK 9", "UK 10", "UK 11"]
   },
 
   // ================= MOBILES =================
@@ -944,43 +608,22 @@ export const defaultProducts = [
     reviews: 340,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700",
     images: [
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80",
-      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=900&q=80",
-      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80",
-      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80"
-    ],
-    imageAngles: [
-      "AMOLED Display & S-Pen",
-      "Quad 200MP Titanium Camera",
-      "Titanium Frame & Stylus Port",
-      "Galaxy AI In-Hand Experience"
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700",
+      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700"
     ],
     description: "Next-generation titanium design equipped with Galaxy AI, 200MP Quad Telephoto Camera system, S-Pen built-in, and Snapdragon 8 Gen 4 chipset.",
     specifications: {
       Display: "6.8 inch Dynamic AMOLED 2X 120Hz",
-      Storage: "256GB / 512GB / 1TB UFS 4.0",
-      RAM: "12GB / 16GB LPDDR5X",
+      Storage: "256GB / 512GB UFS 4.0",
+      RAM: "12GB LPDDR5X",
       Camera: "200MP + 50MP + 12MP + 10MP",
       Battery: "5000mAh with 45W Fast Charging",
       Warranty: "1 Year Brand Warranty"
     },
     colors: ["Titanium Black", "Titanium Gray", "Titanium Violet"],
-    colorMap: {
-      "Titanium Black": { hex: "#1C1917", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80" },
-      "Titanium Gray": { hex: "#78716C", image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=900&q=80" },
-      "Titanium Violet": { hex: "#5B21B6", image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80" }
-    },
-    sizes: ["256GB (12GB RAM)", "512GB (12GB RAM)", "1TB (16GB RAM)"],
-    variants: ["Standard Edition", "Enterprise AI Security Edition"],
-    variationMatrix: [
-      { color: "Titanium Black", size: "256GB (12GB RAM)", variant: "Standard Edition", price: 114999, oldPrice: 129999, stock: 6, sku: "KA-SAM-014-BLK-256" },
-      { color: "Titanium Black", size: "512GB (12GB RAM)", variant: "Standard Edition", price: 124999, oldPrice: 139999, stock: 4, sku: "KA-SAM-014-BLK-512" },
-      { color: "Titanium Black", size: "1TB (16GB RAM)", variant: "Standard Edition", price: 139999, oldPrice: 154999, stock: 2, sku: "KA-SAM-014-BLK-1TB" },
-      { color: "Titanium Gray", size: "256GB (12GB RAM)", variant: "Standard Edition", price: 114999, oldPrice: 129999, stock: 5, sku: "KA-SAM-014-GRY-256" },
-      { color: "Titanium Gray", size: "512GB (12GB RAM)", variant: "Standard Edition", price: 124999, oldPrice: 139999, stock: 3, sku: "KA-SAM-014-GRY-512" }
-    ]
+    variants: ["12GB / 256GB", "12GB / 512GB"]
   },
   {
     id: 15,
@@ -997,18 +640,10 @@ export const defaultProducts = [
     reviews: 520,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=700",
     images: [
-      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80",
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80",
-      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=900&q=80",
-      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80"
-    ],
-    imageAngles: [
-      "Super Retina XDR Display",
-      "48MP Fusion Triple Camera",
-      "Grade 5 Titanium & USB-C",
-      "Cinematic Video Capture"
+      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=700",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700"
     ],
     description: "Forged in grade 5 titanium with Apple Intelligence, revolutionary A18 Pro chip, 48MP Fusion camera with 5x Telephoto, and industry-leading battery longevity.",
     specifications: {
@@ -1018,23 +653,8 @@ export const defaultProducts = [
       Camera: "48MP Main + 48MP Ultra-Wide + 12MP 5x Telephoto",
       Warranty: "1 Year Apple India Warranty"
     },
-    colors: ["Desert Titanium", "Natural Titanium", "Black Titanium", "White Titanium"],
-    colorMap: {
-      "Desert Titanium": { hex: "#C2A68C", image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80" },
-      "Natural Titanium": { hex: "#9E9A95", image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=900&q=80" },
-      "Black Titanium": { hex: "#292828", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80" },
-      "White Titanium": { hex: "#F5F5F7", image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80" }
-    },
-    sizes: ["256GB", "512GB", "1TB"],
-    variants: ["eSIM + Physical SIM"],
-    variationMatrix: [
-      { color: "Desert Titanium", size: "256GB", variant: "eSIM + Physical SIM", price: 139900, oldPrice: 149900, stock: 4, sku: "KA-APP-015-DST-256" },
-      { color: "Desert Titanium", size: "512GB", variant: "eSIM + Physical SIM", price: 159900, oldPrice: 169900, stock: 3, sku: "KA-APP-015-DST-512" },
-      { color: "Desert Titanium", size: "1TB", variant: "eSIM + Physical SIM", price: 179900, oldPrice: 189900, stock: 1, sku: "KA-APP-015-DST-1TB" },
-      { color: "Natural Titanium", size: "256GB", variant: "eSIM + Physical SIM", price: 139900, oldPrice: 149900, stock: 3, sku: "KA-APP-015-NAT-256" },
-      { color: "Natural Titanium", size: "512GB", variant: "eSIM + Physical SIM", price: 159900, oldPrice: 169900, stock: 2, sku: "KA-APP-015-NAT-512" },
-      { color: "Black Titanium", size: "256GB", variant: "eSIM + Physical SIM", price: 139900, oldPrice: 149900, stock: 4, sku: "KA-APP-015-BLK-256" }
-    ]
+    colors: ["Desert Titanium", "Natural Titanium", "Black Titanium"],
+    variants: ["256GB", "512GB", "1TB"]
   },
   {
     id: 16,
@@ -1051,40 +671,20 @@ export const defaultProducts = [
     reviews: 140,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=700",
     images: [
-      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80",
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80",
-      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=900&q=80",
-      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=900&q=80"
-    ],
-    imageAngles: [
-      "2K 120Hz ProXDR Screen",
-      "Hasselblad Camera Array",
-      "100W Fast Charging Port",
-      "High-Performance Gaming"
+      "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=700"
     ],
     description: "Hasselblad 4th Gen Mobile Camera, 100W SUPERVOOC fast charge with 6000mAh silicon-carbon battery and ultra-smooth 2K 120Hz Oriental Screen.",
     specifications: {
       Display: "6.82 inch 2K ProXDR 120Hz",
       Storage: "256GB / 512GB",
-      RAM: "16GB / 24GB LPDDR5X",
+      RAM: "16GB LPDDR5X",
       Battery: "6000mAh with 100W Charging",
       Warranty: "1 Year"
     },
-    colors: ["Emerald Silk", "Midnight Obsidian", "Arctic Silver"],
-    colorMap: {
-      "Emerald Silk": { hex: "#064E3B", image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=900&q=80" },
-      "Midnight Obsidian": { hex: "#18181B", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900&q=80" },
-      "Arctic Silver": { hex: "#E5E7EB", image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=900&q=80" }
-    },
-    sizes: ["16GB RAM / 256GB", "16GB RAM / 512GB", "24GB RAM / 1TB"],
-    variants: ["Standard 100W Edition"],
-    variationMatrix: [
-      { color: "Emerald Silk", size: "16GB RAM / 256GB", variant: "Standard 100W Edition", price: 64999, oldPrice: 69999, stock: 8, sku: "KA-ONE-016-EMR-256" },
-      { color: "Emerald Silk", size: "16GB RAM / 512GB", variant: "Standard 100W Edition", price: 69999, oldPrice: 74999, stock: 5, sku: "KA-ONE-016-EMR-512" },
-      { color: "Midnight Obsidian", size: "16GB RAM / 256GB", variant: "Standard 100W Edition", price: 64999, oldPrice: 69999, stock: 7, sku: "KA-ONE-016-BLK-256" }
-    ]
+    colors: ["Emerald Silk", "Midnight Obsidian"],
+    variants: ["16GB / 256GB", "16GB / 512GB"]
   },
 
   // ================= CLOTHES & FASHION =================
@@ -1103,18 +703,9 @@ export const defaultProducts = [
     reviews: 95,
     status: "Active",
     supplier: "Vogue Apparel India",
-    image: "https://images.unsplash.com/photo-1542272604-780c96856592?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1542272604-780c96856592?w=700",
     images: [
-      "https://images.unsplash.com/photo-1542272604-780c96856592?w=900&q=80",
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80",
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80",
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80"
-    ],
-    imageAngles: [
-      "Straight Leg Denim Fit",
-      "Back Two-Horse Leather Patch",
-      "Signature Button Fly & Red Tab",
-      "Everyday Denim Streetwear"
+      "https://images.unsplash.com/photo-1542272604-780c96856592?w=700"
     ],
     description: "The iconic straight fit with signature button fly crafted from 100% heavyweight cotton denim that molds uniquely to your body over time.",
     specifications: {
@@ -1124,19 +715,7 @@ export const defaultProducts = [
       Care: "Machine Wash Cold"
     },
     colors: ["Dark Indigo", "Light Stone Wash", "Vintage Black"],
-    colorMap: {
-      "Dark Indigo": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1542272604-780c96856592?w=900&q=80" },
-      "Light Stone Wash": { hex: "#60A5FA", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80" },
-      "Vintage Black": { hex: "#27272A", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=80" }
-    },
-    sizes: ["30W 32L", "32W 32L", "34W 32L", "36W 32L", "38W 32L"],
-    variants: ["Original 100% Rigid Cotton", "Stretch Denim Comfort"],
-    variationMatrix: [
-      { color: "Dark Indigo", size: "30W 32L", variant: "Original 100% Rigid Cotton", price: 2999, oldPrice: 3999, stock: 10, sku: "KA-LEV-017-IND-30" },
-      { color: "Dark Indigo", size: "32W 32L", variant: "Original 100% Rigid Cotton", price: 2999, oldPrice: 3999, stock: 14, sku: "KA-LEV-017-IND-32" },
-      { color: "Dark Indigo", size: "34W 32L", variant: "Original 100% Rigid Cotton", price: 2999, oldPrice: 3999, stock: 12, sku: "KA-LEV-017-IND-34" },
-      { color: "Light Stone Wash", size: "32W 32L", variant: "Original 100% Rigid Cotton", price: 2999, oldPrice: 3999, stock: 8, sku: "KA-LEV-017-STN-32" }
-    ]
+    variants: ["30W 32L", "32W 32L", "34W 32L", "36W 32L"]
   },
   {
     id: 18,
@@ -1153,18 +732,9 @@ export const defaultProducts = [
     reviews: 62,
     status: "Active",
     supplier: "Vogue Apparel India",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700",
     images: [
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80",
-      "https://images.unsplash.com/photo-1542272604-780c96856592?w=900&q=80",
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80",
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=80"
-    ],
-    imageAngles: [
-      "Tailored Slim Silhouette",
-      "Peak Lapels & Horn Buttons",
-      "Silk Acetate Interior Lining",
-      "Evening Formal Business Wear"
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700"
     ],
     description: "Modern unstructured slim fit blazer with peak lapels, flap pockets, and breathable stretch wool-blend fabric for business and evening formal wear.",
     specifications: {
@@ -1173,20 +743,8 @@ export const defaultProducts = [
       Lining: "100% Acetate Silk",
       Care: "Dry Clean Only"
     },
-    colors: ["Navy Blue", "Charcoal Gray", "Camel Tan"],
-    colorMap: {
-      "Navy Blue": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80" },
-      "Charcoal Gray": { hex: "#374151", image: "https://images.unsplash.com/photo-1542272604-780c96856592?w=900&q=80" },
-      "Camel Tan": { hex: "#D97706", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80" }
-    },
-    sizes: ["38 (M)", "40 (L)", "42 (XL)", "44 (XXL)"],
-    variants: ["Wool-Blend Tailored", "Stretch Wool Breathable"],
-    variationMatrix: [
-      { color: "Navy Blue", size: "38 (M)", variant: "Wool-Blend Tailored", price: 5999, oldPrice: 7999, stock: 5, sku: "KA-ZAR-018-NVY-38" },
-      { color: "Navy Blue", size: "40 (L)", variant: "Wool-Blend Tailored", price: 5999, oldPrice: 7999, stock: 6, sku: "KA-ZAR-018-NVY-40" },
-      { color: "Navy Blue", size: "42 (XL)", variant: "Wool-Blend Tailored", price: 6299, oldPrice: 8299, stock: 4, sku: "KA-ZAR-018-NVY-42" },
-      { color: "Charcoal Gray", size: "40 (L)", variant: "Wool-Blend Tailored", price: 5999, oldPrice: 7999, stock: 5, sku: "KA-ZAR-018-GRY-40" }
-    ]
+    colors: ["Navy Blue", "Charcoal Gray"],
+    variants: ["38 (M)", "40 (L)", "42 (XL)"]
   },
 
   // ================= LAPTOPS =================
@@ -1205,18 +763,10 @@ export const defaultProducts = [
     reviews: 110,
     status: "Active",
     supplier: "Optima Tech Solutions",
-    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700",
     images: [
-      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80",
-      "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=900&q=80",
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=80",
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80"
-    ],
-    imageAngles: [
-      "3.5K OLED InfinityEdge Screen",
-      "Carbon Fiber Palmrest & Keyboard",
-      "Slim CNC Machined Side Profile",
-      "Creative Design Studio Desk"
+      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700",
+      "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=700"
     ],
     description: "Ultra-premium CNC machined aluminum chassis with 3.5K OLED touchscreen, Intel Core Ultra 9 processor, NVIDIA RTX 4070 Graphics, and 64GB DDR5 RAM.",
     specifications: {
@@ -1227,18 +777,8 @@ export const defaultProducts = [
       Display: "15.6 inch 3.5K (3456x2160) OLED Touch",
       Warranty: "2 Years On-Site Support"
     },
-    colors: ["Platinum Silver / Black Carbon", "Frost White / Arctic Palmrest"],
-    colorMap: {
-      "Platinum Silver / Black Carbon": { hex: "#D1D5DB", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80" },
-      "Frost White / Arctic Palmrest": { hex: "#F9FAFB", image: "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=900&q=80" }
-    },
-    sizes: ["16GB RAM / 512GB SSD", "32GB RAM / 1TB SSD", "64GB RAM / 2TB SSD"],
-    variants: ["Intel Core Ultra 7", "Intel Core Ultra 9 + RTX 4070"],
-    variationMatrix: [
-      { color: "Platinum Silver / Black Carbon", size: "16GB RAM / 512GB SSD", variant: "Intel Core Ultra 7", price: 119999, oldPrice: 134999, stock: 4, sku: "KA-DEL-019-16-512" },
-      { color: "Platinum Silver / Black Carbon", size: "32GB RAM / 1TB SSD", variant: "Intel Core Ultra 9 + RTX 4070", price: 134999, oldPrice: 149999, stock: 3, sku: "KA-DEL-019-32-1TB" },
-      { color: "Platinum Silver / Black Carbon", size: "64GB RAM / 2TB SSD", variant: "Intel Core Ultra 9 + RTX 4070", price: 154999, oldPrice: 169999, stock: 2, sku: "KA-DEL-019-64-2TB" }
-    ]
+    colors: ["Platinum Silver with Black Carbon Fiber"],
+    variants: ["32GB / 1TB SSD", "64GB / 2TB SSD"]
   },
   {
     id: 20,
@@ -1255,39 +795,20 @@ export const defaultProducts = [
     reviews: 92,
     status: "Active",
     supplier: "Optima Tech Solutions",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700",
     images: [
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=80",
-      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80",
-      "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=900&q=80",
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80"
-    ],
-    imageAngles: [
-      "Liquid Retina XDR Display",
-      "Magic Keyboard & Touch ID",
-      "MagSafe & HDMI Port Array",
-      "4K Video Editing Workspace"
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700"
     ],
     description: "Driven by M3 Max chip with 16-core CPU and 40-core GPU, stunning Liquid Retina XDR display, up to 22 hours battery life, and studio-quality mics.",
     specifications: {
       Processor: "Apple M3 Max Chip",
-      RAM: "36GB / 48GB / 128GB Unified Memory",
-      Storage: "1TB / 2TB / 4TB NVMe SSD",
+      RAM: "36GB Unified Memory",
+      Storage: "1TB NVMe SSD",
       Display: "16.2-inch Liquid Retina XDR (3456x2234)",
       Warranty: "1 Year Official AppleCare"
     },
     colors: ["Space Black", "Silver"],
-    colorMap: {
-      "Space Black": { hex: "#1F2022", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=80" },
-      "Silver": { hex: "#E5E7EB", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80" }
-    },
-    sizes: ["18GB Unified / 512GB SSD", "36GB Unified / 1TB SSD", "48GB Unified / 2TB SSD"],
-    variants: ["Apple M3 Pro (12-Core CPU)", "Apple M3 Max (16-Core CPU)"],
-    variationMatrix: [
-      { color: "Space Black", size: "18GB Unified / 512GB SSD", variant: "Apple M3 Pro (12-Core CPU)", price: 199900, oldPrice: 219900, stock: 3, sku: "KA-APP-020-BLK-18GB" },
-      { color: "Space Black", size: "36GB Unified / 1TB SSD", variant: "Apple M3 Max (16-Core CPU)", price: 249900, oldPrice: 269900, stock: 2, sku: "KA-APP-020-BLK-36GB" },
-      { color: "Silver", size: "36GB Unified / 1TB SSD", variant: "Apple M3 Max (16-Core CPU)", price: 249900, oldPrice: 269900, stock: 2, sku: "KA-APP-020-SLV-36GB" }
-    ]
+    variants: ["36GB / 1TB", "48GB / 2TB"]
   },
 
   // ================= ELECTRONICS =================
@@ -1306,18 +827,10 @@ export const defaultProducts = [
     reviews: 286,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
     images: [
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80",
-      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=80",
-      "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=900&q=80",
-      "https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=80"
-    ],
-    imageAngles: [
-      "Ergonomic Over-Ear Profile",
-      "Leather Cushions & Touch Sensor",
-      "Fold-Flat Hard Case Profile",
-      "In-Flight Acoustic Immersion"
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700"
     ],
     description: "Industry-leading noise cancellation with two processors and eight microphones for unprecedented sound clarity, crystal clear hands-free calls, and 30-hour battery.",
     specifications: {
@@ -1326,21 +839,8 @@ export const defaultProducts = [
       Connectivity: "Bluetooth 5.2, LDAC High-Res Audio",
       Warranty: "1 Year Brand Warranty"
     },
-    colors: ["Silver Grey", "Midnight Black", "Smoky Pink", "Navy Midnight"],
-    colorMap: {
-      "Silver Grey": { hex: "#D1D5DB", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80" },
-      "Midnight Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=80" },
-      "Smoky Pink": { hex: "#F472B6", image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=900&q=80" },
-      "Navy Midnight": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=80" }
-    },
-    sizes: ["Standard Fit (Adjustable Headband)"],
-    variants: ["Headphones + Hard Travel Case", "Pro Travel Bundle (+Flight Adapter & Cable)"],
-    variationMatrix: [
-      { color: "Silver Grey", size: "Standard Fit (Adjustable Headband)", variant: "Headphones + Hard Travel Case", price: 24990, oldPrice: 29990, stock: 8, sku: "KA-SON-021-SLV-STD" },
-      { color: "Silver Grey", size: "Standard Fit (Adjustable Headband)", variant: "Pro Travel Bundle (+Flight Adapter & Cable)", price: 26490, oldPrice: 31490, stock: 4, sku: "KA-SON-021-SLV-PRO" },
-      { color: "Midnight Black", size: "Standard Fit (Adjustable Headband)", variant: "Headphones + Hard Travel Case", price: 24990, oldPrice: 29990, stock: 10, sku: "KA-SON-021-BLK-STD" },
-      { color: "Smoky Pink", size: "Standard Fit (Adjustable Headband)", variant: "Headphones + Hard Travel Case", price: 25490, oldPrice: 30490, stock: 3, sku: "KA-SON-021-PNK-STD" }
-    ]
+    colors: ["Silver Grey", "Midnight Black", "Smoky Pink"],
+    variants: ["Standard Edition"]
   },
   {
     id: 22,
@@ -1357,18 +857,9 @@ export const defaultProducts = [
     reviews: 142,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=700",
     images: [
-      "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=900&q=80",
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80",
-      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=80",
-      "https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=80"
-    ],
-    imageAngles: [
-      "True Wireless Charging Case",
-      "CustomFit Stability Bands",
-      "Touch Controls & Microphones",
-      "Workout & Focus Listening"
+      "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=700"
     ],
     description: "Breakthrough immersive spatial audio, world-class active noise cancellation, and CustomTune technology that personalizes sound to the shape of your ears.",
     specifications: {
@@ -1377,19 +868,8 @@ export const defaultProducts = [
       WaterResistance: "IPX4 Sweat Resistant",
       Warranty: "1 Year"
     },
-    colors: ["Black", "White Smoke", "Lunar Blue"],
-    colorMap: {
-      "Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=900&q=80" },
-      "White Smoke": { hex: "#F4F4F5", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80" },
-      "Lunar Blue": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=80" }
-    },
-    sizes: ["Standard Fit (Includes S/M/L Kits)"],
-    variants: ["Standard Wireless Case", "Wireless Charging Cover Bundle"],
-    variationMatrix: [
-      { color: "Black", size: "Standard Fit (Includes S/M/L Kits)", variant: "Standard Wireless Case", price: 21999, oldPrice: 25999, stock: 8, sku: "KA-BOS-022-BLK-STD" },
-      { color: "Black", size: "Standard Fit (Includes S/M/L Kits)", variant: "Wireless Charging Cover Bundle", price: 23999, oldPrice: 27999, stock: 4, sku: "KA-BOS-022-BLK-BND" },
-      { color: "White Smoke", size: "Standard Fit (Includes S/M/L Kits)", variant: "Standard Wireless Case", price: 21999, oldPrice: 25999, stock: 6, sku: "KA-BOS-022-WHT-STD" }
-    ]
+    colors: ["Black", "White Smoke"],
+    variants: ["Single Size with 3 Ear Tip Pairs"]
   },
 
   // ================= GAMING & ACCESSORIES =================
@@ -1408,18 +888,9 @@ export const defaultProducts = [
     reviews: 98,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=700",
     images: [
-      "https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=80",
-      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900&q=80",
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80",
-      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=900&q=80"
-    ],
-    imageAngles: [
-      "Chroma RGB Underglow & Layout",
-      "Mechanical Switch Stem & Keycaps",
-      "Magnetic Plush Leather Wrist Rest",
-      "RGB Gaming Battlestation Setup"
+      "https://images.unsplash.com/photo-1595225476474-87563907a212?w=700"
     ],
     description: "Command dial with 8 dedicated macro keys, Razer Green clicky mechanical switches, magnetic plush wrist rest with underglow, and 8000Hz polling rate.",
     specifications: {
@@ -1428,18 +899,8 @@ export const defaultProducts = [
       Lighting: "Razer Chroma RGB Per-Key & 3-Side Underglow",
       Warranty: "2 Years"
     },
-    colors: ["Classic Matte Black", "Mercury White"],
-    colorMap: {
-      "Classic Matte Black": { hex: "#18181B", image: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=80" },
-      "Mercury White": { hex: "#F3F4F6", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900&q=80" }
-    },
-    sizes: ["Full Size (104 Keys + 8 Macro)"],
-    variants: ["Green Switches (Clicky & Tactile)", "Yellow Switches (Linear & Silent)", "Orange Switches (Tactile & Quiet)"],
-    variationMatrix: [
-      { color: "Classic Matte Black", size: "Full Size (104 Keys + 8 Macro)", variant: "Green Switches (Clicky & Tactile)", price: 18499, oldPrice: 21999, stock: 6, sku: "KA-RAZ-023-BLK-GRN" },
-      { color: "Classic Matte Black", size: "Full Size (104 Keys + 8 Macro)", variant: "Yellow Switches (Linear & Silent)", price: 18999, oldPrice: 22499, stock: 4, sku: "KA-RAZ-023-BLK-YEL" },
-      { color: "Mercury White", size: "Full Size (104 Keys + 8 Macro)", variant: "Green Switches (Clicky & Tactile)", price: 19499, oldPrice: 22999, stock: 3, sku: "KA-RAZ-023-WHT-GRN" }
-    ]
+    colors: ["Classic Black"],
+    variants: ["Green Switches", "Yellow Linear Switches"]
   },
   {
     id: 24,
@@ -1456,18 +917,9 @@ export const defaultProducts = [
     reviews: 175,
     status: "Active",
     supplier: "Vogue Apparel India",
-    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700",
     images: [
-      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900&q=80",
-      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80",
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80",
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80"
-    ],
-    imageAngles: [
-      "Classic Pilot Teardrop Lenses",
-      "Polished Metal Temples & Logo",
-      "Folded Profile & Leather Case",
-      "Summer Lifestyle Wear"
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"
     ],
     description: "Timeless teardrop pilot shape in polished gold metal frame with crystal green G-15 polarized lenses providing 100% UV protection and glare elimination.",
     specifications: {
@@ -1476,19 +928,8 @@ export const defaultProducts = [
       UVProtection: "100% UV400",
       Warranty: "2 Years"
     },
-    colors: ["Gold Frame / Green Classic G-15", "Gunmetal Frame / Polarized Grey", "Black Frame / Gradient Blue"],
-    colorMap: {
-      "Gold Frame / Green Classic G-15": { hex: "#D4AF37", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900&q=80" },
-      "Gunmetal Frame / Polarized Grey": { hex: "#4B5563", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80" },
-      "Black Frame / Gradient Blue": { hex: "#1E3A8A", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80" }
-    },
-    sizes: ["Small (55mm)", "Standard (58mm)", "Large (62mm)"],
-    variants: ["Standard Crystal Lens", "Polarized Anti-Glare Lens"],
-    variationMatrix: [
-      { color: "Gold Frame / Green Classic G-15", size: "Standard (58mm)", variant: "Standard Crystal Lens", price: 7990, oldPrice: 9990, stock: 12, sku: "KA-RAY-024-GLD-58" },
-      { color: "Gold Frame / Green Classic G-15", size: "Large (62mm)", variant: "Polarized Anti-Glare Lens", price: 8990, oldPrice: 10990, stock: 8, sku: "KA-RAY-024-GLD-62P" },
-      { color: "Gunmetal Frame / Polarized Grey", size: "Standard (58mm)", variant: "Polarized Anti-Glare Lens", price: 8990, oldPrice: 10990, stock: 6, sku: "KA-RAY-024-GUN-58P" }
-    ]
+    colors: ["Gold / Green Classic G-15", "Gunmetal / Polarized Grey"],
+    variants: ["Standard 58mm", "Large 62mm"]
   },
   {
     id: 25,
@@ -1505,18 +946,9 @@ export const defaultProducts = [
     reviews: 130,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=700",
     images: [
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80",
-      "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80",
-      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80",
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80"
-    ],
-    imageAngles: [
-      "49mm Titanium Case & Action Button",
-      "Dual-Frequency GPS & Speakers",
-      "Sapphire Crystal Sensor Array",
-      "Extreme Mountaineering Wear"
+      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=700"
     ],
     description: "Rugged 49mm aerospace-grade titanium casing, dual-frequency precision GPS, up to 72 hours battery life in low power mode, and 100m water resistance.",
     specifications: {
@@ -1526,19 +958,8 @@ export const defaultProducts = [
       WaterResistance: "100m Water Resistance (EN13319)",
       Warranty: "1 Year Official AppleCare"
     },
-    colors: ["Titanium / Orange Ocean Band", "Titanium / Midnight Ocean Band", "Titanium / Blue Alpine Loop"],
-    colorMap: {
-      "Titanium / Orange Ocean Band": { hex: "#F97316", image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80" },
-      "Titanium / Midnight Ocean Band": { hex: "#18181B", image: "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80" },
-      "Titanium / Blue Alpine Loop": { hex: "#2563EB", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80" }
-    },
-    sizes: ["49mm Titanium Case"],
-    variants: ["Ocean Band (Water & Dive)", "Alpine Loop (Outdoor Trail)", "Trail Loop (Ultra Lightweight)"],
-    variationMatrix: [
-      { color: "Titanium / Orange Ocean Band", size: "49mm Titanium Case", variant: "Ocean Band (Water & Dive)", price: 89900, oldPrice: 94900, stock: 6, sku: "KA-APP-025-ORG-OCN" },
-      { color: "Titanium / Midnight Ocean Band", size: "49mm Titanium Case", variant: "Ocean Band (Water & Dive)", price: 89900, oldPrice: 94900, stock: 5, sku: "KA-APP-025-MID-OCN" },
-      { color: "Titanium / Blue Alpine Loop", size: "49mm Titanium Case", variant: "Alpine Loop (Outdoor Trail)", price: 89900, oldPrice: 94900, stock: 4, sku: "KA-APP-025-BLU-ALP" }
-    ]
+    colors: ["Titanium / Orange Ocean Band", "Titanium / Midnight Ocean Band"],
+    variants: ["49mm GPS + Cellular"]
   },
   {
     id: 26,
@@ -1555,18 +976,9 @@ export const defaultProducts = [
     reviews: 86,
     status: "Active",
     supplier: "Global Gadgets Inc.",
-    image: "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80",
+    image: "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=700",
     images: [
-      "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80",
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80",
-      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80",
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=900&q=80"
-    ],
-    imageAngles: [
-      "1.4'' Brilliant AMOLED Display",
-      "Titanium Bezel & 5-Button Control",
-      "Elevate Optical HR & GPS Sensor",
-      "Triathlon & Marathon Performance"
+      "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=700"
     ],
     description: "Brilliant 1.4-inch AMOLED touchscreen display, titanium bezel, advanced training metrics, built-in full-color mapping, and up to 23 days battery life.",
     specifications: {
@@ -1576,19 +988,8 @@ export const defaultProducts = [
       Sensors: "Multi-Band GNSS & Pulse Ox",
       Warranty: "2 Years Garmin Warranty"
     },
-    colors: ["Black / Powder Gray", "Whitestone / Powder Gray", "Amp Yellow / Black"],
-    colorMap: {
-      "Black / Powder Gray": { hex: "#18181B", image: "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=900&q=80" },
-      "Whitestone / Powder Gray": { hex: "#E5E7EB", image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900&q=80" },
-      "Amp Yellow / Black": { hex: "#EAB308", image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=80" }
-    },
-    sizes: ["47mm Case (Standard Fit)"],
-    variants: ["Standard Silicone Band", "Titanium QuickFit Edition (+Extra Band)"],
-    variationMatrix: [
-      { color: "Black / Powder Gray", size: "47mm Case (Standard Fit)", variant: "Standard Silicone Band", price: 67490, oldPrice: 74990, stock: 6, sku: "KA-GAR-026-BLK-STD" },
-      { color: "Black / Powder Gray", size: "47mm Case (Standard Fit)", variant: "Titanium QuickFit Edition (+Extra Band)", price: 71490, oldPrice: 78990, stock: 3, sku: "KA-GAR-026-BLK-TIT" },
-      { color: "Whitestone / Powder Gray", size: "47mm Case (Standard Fit)", variant: "Standard Silicone Band", price: 67490, oldPrice: 74990, stock: 4, sku: "KA-GAR-026-WHT-STD" }
-    ]
+    colors: ["Black / Powder Gray", "Whitestone / Powder Gray"],
+    variants: ["Standard Titanium Edition"]
   }
 ];
 
@@ -1627,9 +1028,7 @@ export function getProducts() {
     return defaultProducts;
   }
 
-  const defaultMap = new Map(defaultProducts.map(p => [Number(p.id), p]));
-
-  // Clean up and merge rich images/variations from default catalog
+  // Clean up any legacy replica data or watchType properties
   const sanitized = list.map(p => {
     const clean = { ...p };
     delete clean.watchType;
@@ -1638,33 +1037,6 @@ export function getProducts() {
       delete specs["Quality Type"];
       clean.specifications = specs;
     }
-
-    const defaultP = defaultMap.get(Number(p.id));
-    if (defaultP) {
-      // Ensure multi-angle images and variation matrices are merged
-      if (!clean.images || clean.images.length < 3) {
-        clean.images = defaultP.images;
-      }
-      if (!clean.imageAngles || clean.imageAngles.length < 3) {
-        clean.imageAngles = defaultP.imageAngles;
-      }
-      if (!clean.colors || clean.colors.length === 0) {
-        clean.colors = defaultP.colors;
-      }
-      if (!clean.colorMap || Object.keys(clean.colorMap).length === 0) {
-        clean.colorMap = defaultP.colorMap;
-      }
-      if (!clean.sizes || clean.sizes.length === 0) {
-        clean.sizes = defaultP.sizes;
-      }
-      if (!clean.variants || clean.variants.length === 0) {
-        clean.variants = defaultP.variants;
-      }
-      if (!clean.variationMatrix || clean.variationMatrix.length === 0) {
-        clean.variationMatrix = defaultP.variationMatrix;
-      }
-    }
-
     // Fix any old replica product names if stored in localStorage
     if (clean.id === 4 && clean.name?.includes("Tribute")) {
       clean.name = "Submariner Date 41mm Oystersteel";
