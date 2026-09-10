@@ -1,5 +1,4 @@
 // src/utils/orderStore.js
-import { sendOrderConfirmationEmail, sendOrderStatusUpdateEmail } from './emailService';
 
 const ORDERS_KEY = 'krishna_platform_orders';
 const SUPPLIERS_KEY = 'krishna_platform_suppliers';
@@ -372,13 +371,13 @@ export function createOrder(orderData) {
 
   const updatedOrders = [newOrder, ...orders];
   localStorage.setItem(ORDERS_KEY, JSON.stringify(updatedOrders));
-  
+
   // Update or add user to Platform Users Registry for Admin
   try {
     const users = getUsers();
     const customerEmail = customerData.email.toLowerCase();
     const customerFullName = `${customerData.firstName} ${customerData.lastName}`.trim() || 'Client';
-    
+
     const existingUserIndex = users.findIndex(u => u.email?.toLowerCase() === customerEmail);
     if (existingUserIndex >= 0) {
       users[existingUserIndex].ordersCount = (users[existingUserIndex].ordersCount || 0) + 1;
@@ -405,13 +404,6 @@ export function createOrder(orderData) {
     console.error("Failed to sync customer profile:", err);
   }
 
-  // Dispatch real-time Order Confirmation & Invoice Email to customer
-  try {
-    sendOrderConfirmationEmail(newOrder);
-  } catch (err) {
-    console.error("Order confirmation email dispatch failed:", err);
-  }
-
   // Also add a notification for the customer & admin
   addNotification({
     title: `Order Placed: ${orderNumber}`,
@@ -425,13 +417,11 @@ export function createOrder(orderData) {
 
 export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
   const orders = getOrders();
-  let modifiedOrder = null;
-
   const updated = orders.map(order => {
     if (order.id.toUpperCase() === orderId.toUpperCase()) {
       const now = new Date();
       const timeStr = `${now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}, ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-      
+
       const newTimeline = order.timeline ? order.timeline.map(step => {
         if (nextStatus === "Processing" && (step.status === "Order Placed" || step.status === "Payment Confirmed" || step.status === "Processing & Packing")) {
           return { ...step, done: true, completed: true };
@@ -448,30 +438,18 @@ export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
         return step;
       }) : [];
 
-      const result = {
+      return {
         ...order,
         status: nextStatus,
         courier: courierInfo.courier || order.courier,
         trackingNumber: courierInfo.trackingNumber || order.trackingNumber,
         timeline: newTimeline
       };
-      modifiedOrder = result;
-      return result;
     }
     return order;
   });
 
   localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
-
-  // Dispatch real-time Order Status Update Email to customer
-  if (modifiedOrder) {
-    try {
-      sendOrderStatusUpdateEmail(modifiedOrder, nextStatus, courierInfo);
-    } catch (err) {
-      console.error("Order status update email dispatch failed:", err);
-    }
-  }
-
   window.dispatchEvent(new Event('ordersUpdated'));
   return updated;
 }
@@ -607,7 +585,7 @@ export function processReturnStatus(orderId, newStatus, resolution = {}) {
             completed: true,
             stage: newStatus,
             time: dateFormatted,
-            description: isRefunded 
+            description: isRefunded
               ? `Refund of ₹${refundAmount.toLocaleString('en-IN')} issued. Txn ID: ${refundTxn}`
               : `Return status updated to ${newStatus}. Notes: ${resolution.notes || 'Verified'}`
           }
@@ -634,7 +612,7 @@ export function processReturnStatus(orderId, newStatus, resolution = {}) {
 export function getSupplierOrders(supplierName) {
   const orders = getOrders();
   if (!supplierName) return orders;
-  return orders.filter(o => 
+  return orders.filter(o =>
     o.items && o.items.some(item => !item.supplier || item.supplier.toLowerCase() === supplierName.toLowerCase())
   );
 }

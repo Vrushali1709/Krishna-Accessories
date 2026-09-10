@@ -7,8 +7,6 @@ import { getCurrentUser, logout } from '../utils/auth';
 import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn, getOrderById } from '../utils/orderStore';
 import { getWishlist } from '../utils/productStore';
 import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon, SearchIcon, CheckCircleIcon } from '../components/Icons';
-import { Mail, Key, RotateCcw, Eye, EyeOff, Check, ExternalLink, ShieldCheck } from 'lucide-react';
-import { generateAndSendOtp, verifyOtp, resendOtp, updateAccountPassword, getEmailLogs } from '../utils/emailService';
 
 export default function Account() {
   const navigate = useNavigate();
@@ -58,32 +56,11 @@ export default function Account() {
   const [returnBankDetails, setReturnBankDetails] = useState('');
   const [returnCondition, setReturnCondition] = useState('Unused with Original Packaging & Tags');
 
-  // Security & Password Change with OTP state
-  const [emailLogs, setEmailLogs] = useState(() => getEmailLogs());
-  const [securityOtpSent, setSecurityOtpSent] = useState(false);
-  const [securityOtpDigits, setSecurityOtpDigits] = useState(['', '', '', '', '', '']);
-  const [securityCooldown, setSecurityCooldown] = useState(0);
-  const [securityNewPassword, setSecurityNewPassword] = useState('');
-  const [securityConfirmPassword, setSecurityConfirmPassword] = useState('');
-  const [securityShowPassword, setSecurityShowPassword] = useState(false);
-  const [securityStatus, setSecurityStatus] = useState('');
-  const [securityError, setSecurityError] = useState('');
-  const [securityLoading, setSecurityLoading] = useState(false);
-
-  useEffect(() => {
-    let timer;
-    if (securityCooldown > 0) {
-      timer = setInterval(() => setSecurityCooldown(c => Math.max(0, c - 1)), 1000);
-    }
-    return () => clearInterval(timer);
-  }, [securityCooldown]);
-
   const refreshData = () => {
     setCurrentUser(getCurrentUser());
     setOrders(getOrders());
     setAddresses(getUserAddresses());
     setWishlist(getWishlist());
-    setEmailLogs(getEmailLogs());
   };
 
   useEffect(() => {
@@ -92,82 +69,13 @@ export default function Account() {
     window.addEventListener('addressesUpdated', refreshData);
     window.addEventListener('wishlistUpdated', refreshData);
     window.addEventListener('authUpdated', refreshData);
-    window.addEventListener('emailLogsUpdated', refreshData);
     return () => {
       window.removeEventListener('ordersUpdated', refreshData);
       window.removeEventListener('addressesUpdated', refreshData);
       window.removeEventListener('wishlistUpdated', refreshData);
       window.removeEventListener('authUpdated', refreshData);
-      window.removeEventListener('emailLogsUpdated', refreshData);
     };
   }, []);
-
-  const handleSendSecurityOtp = (e) => {
-    e.preventDefault();
-    if (!currentUser?.email) return;
-    setSecurityError('');
-    setSecurityStatus('');
-    setSecurityLoading(true);
-
-    setTimeout(() => {
-      const res = generateAndSendOtp(currentUser.email, 'security_change', {
-        name: currentUser.name
-      });
-      setSecurityLoading(false);
-      if (res.success) {
-        setSecurityOtpSent(true);
-        setSecurityCooldown(60);
-        setSecurityStatus(`6-digit verification code sent to ${currentUser.email}`);
-      } else {
-        setSecurityError(res.error || 'Failed to dispatch security code.');
-      }
-    }, 350);
-  };
-
-  const handleUpdateSecurityPassword = (e) => {
-    e.preventDefault();
-    setSecurityError('');
-    setSecurityStatus('');
-
-    const code = securityOtpDigits.join('');
-    if (code.length !== 6) {
-      setSecurityError('Please enter the 6-digit OTP code.');
-      return;
-    }
-
-    if (securityNewPassword.length < 6) {
-      setSecurityError('Password must be at least 6 characters.');
-      return;
-    }
-
-    if (securityNewPassword !== securityConfirmPassword) {
-      setSecurityError('Passwords do not match.');
-      return;
-    }
-
-    setSecurityLoading(true);
-
-    setTimeout(() => {
-      const verifyRes = verifyOtp(currentUser.email, code, 'security_change');
-      if (!verifyRes.success) {
-        setSecurityLoading(false);
-        setSecurityError(verifyRes.error || 'Invalid OTP code.');
-        return;
-      }
-
-      updateAccountPassword(currentUser.email, securityNewPassword);
-      setSecurityLoading(false);
-      setSecurityStatus('✓ Password successfully changed! Security alert sent to your email.');
-      setSecurityOtpSent(false);
-      setSecurityOtpDigits(['', '', '', '', '', '']);
-      setSecurityNewPassword('');
-      setSecurityConfirmPassword('');
-    }, 400);
-  };
-
-  const handleOpenEmailModal = (emailId) => {
-    window.dispatchEvent(new CustomEvent('openEmailViewer', { detail: { emailId } }));
-  };
 
   const handleLogout = () => {
     logout();
@@ -333,8 +241,8 @@ export default function Account() {
     }
     const cleanId = id.trim();
     const allOrders = getOrders();
-    const found = getOrderById(cleanId) || allOrders.find(o => 
-      o.id?.toLowerCase() === cleanId.toLowerCase() || 
+    const found = getOrderById(cleanId) || allOrders.find(o =>
+      o.id?.toLowerCase() === cleanId.toLowerCase() ||
       (o.trackingNumber && o.trackingNumber.toLowerCase() === cleanId.toLowerCase())
     );
     if (found) {
@@ -449,7 +357,6 @@ export default function Account() {
             { id: 'tracking', label: `Track Order` },
             { id: 'addresses', label: `Address Book (${addresses.length})` },
             { id: 'wishlist', label: `Saved Wishlist (${wishlist.length})` },
-            { id: 'security', label: `Security & Mails` },
             { id: 'profile', label: `Profile Preferences` }
           ].map(tab => (
             <button
@@ -716,16 +623,14 @@ export default function Account() {
                           key={ord.id}
                           type="button"
                           onClick={() => handleSelectOrderToTrack(ord.id)}
-                          className={`flex items-center gap-2 rounded-xs border px-3 py-1.5 text-xs transition cursor-pointer ${
-                            isSelected
+                          className={`flex items-center gap-2 rounded-xs border px-3 py-1.5 text-xs transition cursor-pointer ${isSelected
                               ? 'border-[#121316] bg-[#121316] text-white shadow-xs'
                               : 'border-stone-200 bg-[#FAF9F5] text-stone-700 hover:border-stone-400 hover:bg-white'
-                          }`}
+                            }`}
                         >
                           <span className="font-mono font-bold">{ord.id}</span>
-                          <span className={`text-[9.5px] font-semibold px-1.5 py-0.2 rounded-2xs ${
-                            isSelected ? 'bg-white/20 text-white' : getStatusBadge(ord.status)
-                          }`}>
+                          <span className={`text-[9.5px] font-semibold px-1.5 py-0.2 rounded-2xs ${isSelected ? 'bg-white/20 text-white' : getStatusBadge(ord.status)
+                            }`}>
                             {ord.status}
                           </span>
                         </button>
@@ -917,15 +822,14 @@ export default function Account() {
                           <div key={idx} className="relative">
                             {/* Step Indicator Node */}
                             <span
-                              className={`absolute -left-[31px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 bg-white ${
-                                isCancelledNode
+                              className={`absolute -left-[31px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 bg-white ${isCancelledNode
                                   ? 'border-rose-600 bg-rose-600 text-white'
                                   : isRefundNode
-                                  ? 'border-emerald-600 bg-emerald-600 text-white'
-                                  : isDone
-                                  ? 'border-emerald-600 bg-emerald-600 text-white'
-                                  : 'border-stone-300 bg-white'
-                              }`}
+                                    ? 'border-emerald-600 bg-emerald-600 text-white'
+                                    : isDone
+                                      ? 'border-emerald-600 bg-emerald-600 text-white'
+                                      : 'border-stone-300 bg-white'
+                                }`}
                             >
                               {isCancelledNode ? (
                                 <span className="text-[8px] font-bold">✕</span>
@@ -936,9 +840,8 @@ export default function Account() {
 
                             <div className="min-w-0">
                               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                                <h5 className={`text-xs font-bold truncate ${
-                                  isCancelledNode ? 'text-rose-600' : isDone ? 'text-stone-950' : 'text-stone-400'
-                                }`}>
+                                <h5 className={`text-xs font-bold truncate ${isCancelledNode ? 'text-rose-600' : isDone ? 'text-stone-950' : 'text-stone-400'
+                                  }`}>
                                   {stageLabel}
                                 </h5>
                                 {isDone && (
@@ -1074,207 +977,6 @@ export default function Account() {
                 ))}
               </div>
             )}
-          </div>
-        )}
-
-        {/* ================= TAB: SECURITY & EMAILS ================= */}
-        {activeTab === 'security' && (
-          <div className="space-y-6 animate-fade-in text-xs max-w-4xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-              {/* Email Status & Credentials Card */}
-              <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-amber-600" />
-                    <h3 className="font-bold uppercase tracking-wider text-stone-950">Email Status</h3>
-                  </div>
-                  <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 flex items-center gap-1">
-                    <Check className="h-3 w-3" />
-                    <span>Verified</span>
-                  </span>
-                </div>
-
-                <div className="space-y-3">
-                  <div>
-                    <label className="font-bold text-stone-600 block mb-1">Registered Customer Email</label>
-                    <div className="rounded-xl border border-stone-200 bg-[#FAF9F5] px-3.5 py-2.5 font-bold text-stone-900 break-all">
-                      {currentUser?.email}
-                    </div>
-                  </div>
-
-                  <p className="text-[11px] text-stone-500 leading-relaxed">
-                    All digital receipts, dispatch tracking links, and security alerts are securely routed to this email address.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() => handleOpenEmailModal(null)}
-                    className="w-full rounded-full border border-stone-300 bg-stone-50 hover:bg-stone-100 py-2.5 font-bold text-stone-900 transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Open Delivered Emails &amp; OTP Inbox</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Change Password via OTP Card */}
-              <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-4">
-                <div className="flex items-center gap-2 border-b border-stone-100 pb-3">
-                  <Key className="h-4 w-4 text-amber-600" />
-                  <h3 className="font-bold uppercase tracking-wider text-stone-950">Update Password (OTP)</h3>
-                </div>
-
-                {securityError && (
-                  <div className="rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-[11px] font-semibold text-rose-800">
-                    {securityError}
-                  </div>
-                )}
-
-                {securityStatus && (
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-2.5 text-[11px] font-semibold text-emerald-800">
-                    {securityStatus}
-                  </div>
-                )}
-
-                {!securityOtpSent ? (
-                  <div className="space-y-3">
-                    <p className="text-[11px] text-stone-600">
-                      To safeguard your account, updating your credentials requires a 6-digit OTP verification code sent to <strong>{currentUser?.email}</strong>.
-                    </p>
-                    <button
-                      type="button"
-                      disabled={securityLoading}
-                      onClick={handleSendSecurityOtp}
-                      className="w-full rounded-full bg-[#121316] py-2.5 font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer disabled:opacity-60"
-                    >
-                      {securityLoading ? 'Sending Security Code...' : 'Send Password Change OTP'}
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleUpdateSecurityPassword} className="space-y-3">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="font-bold text-stone-700">6-Digit Verification OTP</label>
-                        <button
-                          type="button"
-                          disabled={securityCooldown > 0}
-                          onClick={handleSendSecurityOtp}
-                          className="text-[10px] font-bold text-amber-700 hover:underline"
-                        >
-                          {securityCooldown > 0 ? `Resend in ${securityCooldown}s` : 'Resend OTP'}
-                        </button>
-                      </div>
-                      <div className="flex justify-center gap-1.5">
-                        {securityOtpDigits.map((d, i) => (
-                          <input
-                            key={i}
-                            type="text"
-                            inputMode="numeric"
-                            maxLength={1}
-                            value={d}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/[^0-9]/g, '').slice(-1);
-                              const updated = [...securityOtpDigits];
-                              updated[i] = val;
-                              setSecurityOtpDigits(updated);
-                            }}
-                            className="h-9 w-8 text-center font-mono text-base font-bold rounded-lg border border-stone-300 bg-[#FAF9F5] text-stone-900 outline-none focus:border-amber-500 focus:bg-white"
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-stone-700 block mb-1">New Strong Password</label>
-                      <input
-                        type="password"
-                        required
-                        value={securityNewPassword}
-                        onChange={(e) => setSecurityNewPassword(e.target.value)}
-                        placeholder="At least 6 characters"
-                        className="w-full rounded-xl border border-stone-200 bg-[#FAF9F5] px-3 py-2 outline-none focus:bg-white text-stone-900"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="font-bold text-stone-700 block mb-1">Confirm New Password</label>
-                      <input
-                        type="password"
-                        required
-                        value={securityConfirmPassword}
-                        onChange={(e) => setSecurityConfirmPassword(e.target.value)}
-                        placeholder="Re-type new password"
-                        className="w-full rounded-xl border border-stone-200 bg-[#FAF9F5] px-3 py-2 outline-none focus:bg-white text-stone-900"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={securityLoading}
-                      className="w-full rounded-full bg-[#121316] py-2.5 font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer disabled:opacity-60"
-                    >
-                      {securityLoading ? 'Verifying & Saving...' : 'Save New Password'}
-                    </button>
-                  </form>
-                )}
-              </div>
-
-            </div>
-
-            {/* Email History Table Card */}
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs space-y-4">
-              <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-amber-600" />
-                  <h3 className="font-bold uppercase tracking-wider text-stone-950">
-                    Recent Emails &amp; Dispatches to You
-                  </h3>
-                </div>
-                <span className="text-[11px] text-stone-500">
-                  {emailLogs.filter(l => l.to?.toLowerCase() === currentUser?.email?.toLowerCase()).length} Recorded Dispatches
-                </span>
-              </div>
-
-              {emailLogs.filter(l => l.to?.toLowerCase() === currentUser?.email?.toLowerCase()).length === 0 ? (
-                <div className="text-center py-6 text-stone-400">
-                  <Mail className="h-8 w-8 mx-auto mb-2 opacity-30" />
-                  <p>No dispatches recorded yet for {currentUser?.email}.</p>
-                </div>
-              ) : (
-                <div className="divide-y divide-stone-100 overflow-hidden">
-                  {emailLogs
-                    .filter(l => l.to?.toLowerCase() === currentUser?.email?.toLowerCase())
-                    .slice(0, 5)
-                    .map((log) => (
-                      <div key={log.id} className="py-3 flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <span className="font-bold text-stone-900 truncate block">
-                              {log.subject}
-                            </span>
-                            <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.2 text-[9px] font-bold text-emerald-700">
-                              {log.status || 'Delivered'}
-                            </span>
-                          </div>
-                          <span className="text-[10.5px] text-stone-400">
-                            {log.formattedDate} at {log.formattedTime}
-                          </span>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEmailModal(log.id)}
-                          className="rounded-full border border-stone-200 bg-stone-50 hover:bg-stone-100 px-3 py-1 text-[11px] font-bold text-stone-800 transition shrink-0 cursor-pointer"
-                        >
-                          View Email
-                        </button>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-
           </div>
         )}
 

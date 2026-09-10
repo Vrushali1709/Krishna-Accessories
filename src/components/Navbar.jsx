@@ -318,8 +318,8 @@ export default function Navbar() {
                             to={`/shop?category=${encodeURIComponent(cat)}`}
                             onClick={() => setCategoriesOpen(false)}
                             className={`group/cat flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold normal-case transition-all duration-150 ${isActive
-                                ? 'bg-gray-950 text-white shadow-xs'
-                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-950'
+                              ? 'bg-gray-950 text-white shadow-xs'
+                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-950'
                               }`}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -498,18 +498,6 @@ export default function Navbar() {
                         ))
                       )}
                     </div>
-                    <div className="mt-2 pt-2 border-t border-gray-100">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setNotificationsOpen(false);
-                          window.dispatchEvent(new CustomEvent('openEmailViewer', { detail: {} }));
-                        }}
-                        className="w-full rounded-xl bg-slate-950 hover:bg-slate-800 text-white px-3 py-1.5 text-[10.5px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
-                      >
-                        <span>📨 Dispatched Emails &amp; OTPs</span>
-                      </button>
-                    </div>
                   </div>
                 </>
               )}
@@ -579,10 +567,10 @@ export default function Navbar() {
                         <p className="text-[10px] text-gray-500 truncate mt-0.5">{currentUser.email}</p>
                         <div className="mt-1.5 flex items-center gap-1.5">
                           <span className={`inline-block rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${currentUser.role === 'admin'
-                              ? 'bg-amber-100 text-amber-900 border border-amber-300/60'
-                              : currentUser.role === 'supplier'
-                                ? 'bg-blue-100 text-blue-900 border border-blue-300/60'
-                                : 'bg-gray-100 text-gray-800 border border-gray-200'
+                            ? 'bg-amber-100 text-amber-900 border border-amber-300/60'
+                            : currentUser.role === 'supplier'
+                              ? 'bg-blue-100 text-blue-900 border border-blue-300/60'
+                              : 'bg-gray-100 text-gray-800 border border-gray-200'
                             }`}>
                             {currentUser.role || 'Customer'}
                           </span>
@@ -599,18 +587,6 @@ export default function Navbar() {
                           <span className="text-sm">👤</span>
                           <span>Account & Orders</span>
                         </Link>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setUserMenuOpen(false);
-                            window.dispatchEvent(new CustomEvent('openEmailViewer', { detail: {} }));
-                          }}
-                          className="w-full flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition text-left cursor-pointer"
-                        >
-                          <span className="text-sm">📨</span>
-                          <span>Dispatched Emails &amp; OTPs</span>
-                        </button>
 
                         <Link
                           to="/account?tab=tracking"

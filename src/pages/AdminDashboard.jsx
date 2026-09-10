@@ -35,20 +35,11 @@ import {
   Folder,
   Copy,
   Download,
+  Layers,
+  Store,
   SlidersHorizontal,
-  CheckCircle2,
-  Mail,
-  Key,
-  Send,
-  RefreshCw
+  CheckCircle2
 } from 'lucide-react';
-import {
-  getEmailLogs,
-  clearEmailLogs,
-  sendTestEmail,
-  getActiveOtps,
-  getRegisteredAccounts
-} from '../utils/emailService';
 import {
   getProducts,
   saveProduct,
@@ -146,13 +137,6 @@ export default function AdminDashboard() {
   const [permissionsMatrix, setPermissionsMatrix] = useState(() => getPermissionsMatrix());
   const [shippingCarriers, setShippingCarriers] = useState(() => getShippingCarriers());
   const [systemConfig, setSystemConfigState] = useState(() => getSystemConfig());
-  const [emailLogs, setEmailLogs] = useState(() => getEmailLogs());
-  const [adminTestEmail, setAdminTestEmail] = useState('');
-  const [adminTestSubject, setAdminTestSubject] = useState('');
-  const [adminTestMessage, setAdminTestMessage] = useState('');
-  const [adminTestLoading, setAdminTestLoading] = useState(false);
-  const [emailFilter, setEmailFilter] = useState('All');
-  const [emailSearch, setEmailSearch] = useState('');
 
   // Global & Local Search Filters
   const [globalSearch, setGlobalSearch] = useState('');
@@ -293,7 +277,6 @@ export default function AdminDashboard() {
     setPermissionsMatrix(getPermissionsMatrix());
     setShippingCarriers(getShippingCarriers());
     setSystemConfigState(getSystemConfig());
-    setEmailLogs(getEmailLogs());
     setCurrentUserState(getCurrentUser());
   };
 
@@ -303,36 +286,11 @@ export default function AdminDashboard() {
       'productsUpdated', 'categoriesUpdated', 'brandsUpdated', 'suppliersUpdated',
       'ordersUpdated', 'usersUpdated', 'notificationsUpdated', 'authUpdated',
       'subcategoriesUpdated', 'variantsUpdated', 'mediaUpdated', 'promotionsUpdated',
-      'rolesUpdated', 'permissionsUpdated', 'shippingUpdated', 'systemConfigUpdated',
-      'emailLogsUpdated'
+      'rolesUpdated', 'permissionsUpdated', 'shippingUpdated', 'systemConfigUpdated'
     ];
     listeners.forEach(ev => window.addEventListener(ev, refreshAll));
     return () => listeners.forEach(ev => window.removeEventListener(ev, refreshAll));
   }, []);
-
-  const handleAdminSendTest = (e) => {
-    e.preventDefault();
-    if (!adminTestEmail.trim()) return;
-    setAdminTestLoading(true);
-
-    setTimeout(() => {
-      const res = sendTestEmail(adminTestEmail.trim(), adminTestSubject.trim(), adminTestMessage.trim());
-      setAdminTestLoading(false);
-      if (res.success) {
-        showToast(`✓ Test email & OTP (${res.otpCode}) dispatched to ${adminTestEmail.trim()}`);
-        setAdminTestEmail('');
-        setAdminTestSubject('');
-        setAdminTestMessage('');
-        setEmailLogs(getEmailLogs());
-      } else {
-        alert(res.error || 'Failed to send test email');
-      }
-    }, 400);
-  };
-
-  const handleOpenEmailInspector = (emailId) => {
-    window.dispatchEvent(new CustomEvent('openEmailViewer', { detail: { emailId } }));
-  };
 
   // Filter Catalog Products
   const filteredProducts = useMemo(() => {
@@ -484,7 +442,6 @@ export default function AdminDashboard() {
       icon: Settings,
       subItems: [
         { id: 'settings', label: 'Store Settings' },
-        { id: 'email-center', label: 'Email & OTP Engine' },
         { id: 'audit-logs', label: 'Audit Trail' },
         { id: 'security', label: 'Security' },
         { id: 'backups', label: 'Backups' },
@@ -960,8 +917,8 @@ export default function AdminDashboard() {
                       }
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 font-medium transition-colors cursor-pointer ${isSectionActive
-                        ? 'bg-zinc-800/90 text-white font-semibold'
-                        : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
+                      ? 'bg-zinc-800/90 text-white font-semibold'
+                      : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -993,8 +950,8 @@ export default function AdminDashboard() {
                             key={sub.id}
                             onClick={() => handleNavSelect(sec.id, sub.id)}
                             className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-[11.5px] transition cursor-pointer ${isSubActive
-                                ? 'bg-zinc-800/80 text-white font-semibold'
-                                : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
+                              ? 'bg-zinc-800/80 text-white font-semibold'
+                              : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
                               }`}
                           >
                             <span className="truncate">{sub.label}</span>
@@ -1259,8 +1216,8 @@ export default function AdminDashboard() {
                 key={sub.id}
                 onClick={() => setActiveSubTab(sub.id)}
                 className={`rounded-lg px-3 py-1 text-xs font-medium transition whitespace-nowrap shrink-0 cursor-pointer ${isSubActive
-                    ? 'bg-zinc-900 text-white shadow-xs'
-                    : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                  ? 'bg-zinc-900 text-white shadow-xs'
+                  : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
                   }`}
               >
                 {sub.label}
@@ -1672,57 +1629,57 @@ export default function AdminDashboard() {
                                 <span className="text-[10.5px] text-zinc-500">{p.brand}</span>
                               </td>
 
-                            <td className="p-3.5">
-                              <span className="font-mono text-zinc-700 block">{p.sku}</span>
-                              {p.gender && (
-                                <span className="text-[10px] text-zinc-400 font-medium">{p.gender}</span>
-                              )}
-                            </td>
+                              <td className="p-3.5">
+                                <span className="font-mono text-zinc-700 block">{p.sku}</span>
+                                {p.gender && (
+                                  <span className="text-[10px] text-zinc-400 font-medium">{p.gender}</span>
+                                )}
+                              </td>
 
-                            <td className="p-3.5">
-                              <span className="font-semibold text-zinc-900 block tabular-nums">₹{Number(p.price).toLocaleString('en-IN')}</span>
-                              {p.oldPrice && (
-                                <span className="text-[10px] text-zinc-400 line-through tabular-nums">₹{Number(p.oldPrice).toLocaleString('en-IN')}</span>
-                              )}
-                            </td>
+                              <td className="p-3.5">
+                                <span className="font-semibold text-zinc-900 block tabular-nums">₹{Number(p.price).toLocaleString('en-IN')}</span>
+                                {p.oldPrice && (
+                                  <span className="text-[10px] text-zinc-400 line-through tabular-nums">₹{Number(p.oldPrice).toLocaleString('en-IN')}</span>
+                                )}
+                              </td>
 
-                            <td className="p-3.5">
-                              <div className="flex items-center gap-1.5">
+                              <td className="p-3.5">
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    onClick={() => handleStockAdjust(p.id, -1)}
+                                    className="h-6 w-6 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 font-medium text-zinc-700 flex items-center justify-center text-xs shrink-0 cursor-pointer"
+                                  >
+                                    −
+                                  </button>
+                                  <span className={`font-semibold font-mono px-1.5 text-xs ${p.stock < 5 ? 'text-rose-700' : 'text-zinc-800'}`}>
+                                    {p.stock}
+                                  </span>
+                                  <button
+                                    onClick={() => handleStockAdjust(p.id, 1)}
+                                    className="h-6 w-6 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 font-medium text-zinc-700 flex items-center justify-center text-xs shrink-0 cursor-pointer"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </td>
+
+                              <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
                                 <button
-                                  onClick={() => handleStockAdjust(p.id, -1)}
-                                  className="h-6 w-6 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 font-medium text-zinc-700 flex items-center justify-center text-xs shrink-0 cursor-pointer"
+                                  onClick={() => handleOpenEditProduct(p)}
+                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
                                 >
-                                  −
+                                  Edit
                                 </button>
-                                <span className={`font-semibold font-mono px-1.5 text-xs ${p.stock < 5 ? 'text-rose-700' : 'text-zinc-800'}`}>
-                                  {p.stock}
-                                </span>
                                 <button
-                                  onClick={() => handleStockAdjust(p.id, 1)}
-                                  className="h-6 w-6 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 font-medium text-zinc-700 flex items-center justify-center text-xs shrink-0 cursor-pointer"
+                                  onClick={() => handleDeleteProduct(p.id)}
+                                  className="rounded-md border border-rose-200 bg-rose-50/50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 text-xs font-medium transition cursor-pointer"
                                 >
-                                  +
+                                  Delete
                                 </button>
-                              </div>
-                            </td>
-
-                            <td className="p-3.5 text-right space-x-1.5 whitespace-nowrap">
-                              <button
-                                onClick={() => handleOpenEditProduct(p)}
-                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => handleDeleteProduct(p.id)}
-                                className="rounded-md border border-rose-200 bg-rose-50/50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 text-xs font-medium transition cursor-pointer"
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -2032,8 +1989,8 @@ export default function AdminDashboard() {
                           key={st}
                           onClick={() => setOrderStatusFilter(st)}
                           className={`rounded-lg px-2.5 py-1 text-xs font-medium transition whitespace-nowrap cursor-pointer ${orderStatusFilter === st
-                              ? 'bg-zinc-900 text-white shadow-xs'
-                              : 'bg-white border border-zinc-200/80 text-zinc-700 hover:bg-zinc-50'
+                            ? 'bg-zinc-900 text-white shadow-xs'
+                            : 'bg-white border border-zinc-200/80 text-zinc-700 hover:bg-zinc-50'
                             }`}
                         >
                           {st}
@@ -2081,22 +2038,22 @@ export default function AdminDashboard() {
 
                             <td className="p-3.5">
                               <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${order.status === 'Delivered'
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                                  : order.status === 'Shipped'
-                                    ? 'bg-sky-50 text-sky-800 border-sky-200'
-                                    : order.status === 'Cancelled'
-                                      ? 'bg-rose-50 text-rose-800 border-rose-200'
-                                      : order.status === 'Refunded'
-                                        ? 'bg-purple-50 text-purple-800 border-purple-200'
-                                        : order.status === 'Return Requested'
-                                          ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
-                                          : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                : order.status === 'Shipped'
+                                  ? 'bg-sky-50 text-sky-800 border-sky-200'
+                                  : order.status === 'Cancelled'
+                                    ? 'bg-rose-50 text-rose-800 border-rose-200'
+                                    : order.status === 'Refunded'
+                                      ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                      : order.status === 'Return Requested'
+                                        ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
+                                        : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                                 }`}>
                                 <span className={`h-1.5 w-1.5 rounded-full ${order.status === 'Delivered' ? 'bg-emerald-500' :
-                                    order.status === 'Shipped' ? 'bg-sky-500' :
-                                      order.status === 'Cancelled' ? 'bg-rose-500' :
-                                        order.status === 'Refunded' ? 'bg-purple-500' :
-                                          order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
+                                  order.status === 'Shipped' ? 'bg-sky-500' :
+                                    order.status === 'Cancelled' ? 'bg-rose-500' :
+                                      order.status === 'Refunded' ? 'bg-purple-500' :
+                                        order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
                                   }`} />
                                 <span>{order.status}</span>
                               </span>
@@ -3201,229 +3158,6 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Sub-item: Email & OTP Center */}
-              {activeSubTab === 'email-center' && (
-                <div className="space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
-                        <Mail className="h-5 w-5 text-amber-600" />
-                        <span>Email Delivery &amp; OTP Governance Hub</span>
-                      </h1>
-                      <p className="text-xs text-zinc-500 mt-0.5">
-                        Real-time delivery pipelines, cryptographic OTP keys, and customer invoice receipts.
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEmailInspector(null)}
-                      className="rounded-lg bg-zinc-900 hover:bg-black text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5 text-amber-400" />
-                      <span>Launch Full Email Viewer &amp; HTML Inspector</span>
-                    </button>
-                  </div>
-
-                  {/* Top 4 Engine Stat Badges */}
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block">
-                        Total Emails Sent
-                      </span>
-                      <p className="text-xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        {emailLogs.length}
-                      </p>
-                      <span className="text-[10px] text-emerald-600 font-medium">100% Pipeline Throughput</span>
-                    </div>
-
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block">
-                        OTPs Generated
-                      </span>
-                      <p className="text-xl font-semibold text-amber-700 mt-1 tabular-nums">
-                        {emailLogs.filter(l => l.otpCode).length}
-                      </p>
-                      <span className="text-[10px] text-zinc-500">10-Min Cryptographic Expiry</span>
-                    </div>
-
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block">
-                        Registered Accounts
-                      </span>
-                      <p className="text-xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        {getRegisteredAccounts().length}
-                      </p>
-                      <span className="text-[10px] text-blue-600 font-medium">Verified Credentials</span>
-                    </div>
-
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 block">
-                        Delivery Success Rate
-                      </span>
-                      <p className="text-xl font-semibold text-emerald-600 mt-1 tabular-nums">
-                        100.0%
-                      </p>
-                      <span className="text-[10px] text-zinc-500">Zero Undelivered Failures</span>
-                    </div>
-                  </div>
-
-                  {/* 2-Column Grid: Test Email Sender & Dispatch Stream */}
-                  <div className="grid gap-6 lg:grid-cols-3">
-
-                    {/* Left: Interactive Test Email Dispatcher */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4 text-xs">
-                      <div className="border-b border-zinc-100 pb-3">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">
-                          Diagnostic Tool
-                        </span>
-                        <h3 className="text-sm font-semibold text-zinc-900 mt-0.5">Send Live Test Email</h3>
-                        <p className="text-[11px] text-zinc-500">
-                          Verify live inbox delivery and check OTP code generation.
-                        </p>
-                      </div>
-
-                      <form onSubmit={handleAdminSendTest} className="space-y-3">
-                        <div>
-                          <label className="font-semibold text-zinc-700 block mb-1">Recipient Email Address *</label>
-                          <input
-                            type="email"
-                            required
-                            value={adminTestEmail}
-                            onChange={e => setAdminTestEmail(e.target.value)}
-                            placeholder="recipient@domain.com"
-                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400 text-zinc-900"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="font-semibold text-zinc-700 block mb-1">Subject (Optional)</label>
-                          <input
-                            type="text"
-                            value={adminTestSubject}
-                            onChange={e => setAdminTestSubject(e.target.value)}
-                            placeholder="[Live Test] System Verification"
-                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400 text-zinc-900"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="font-semibold text-zinc-700 block mb-1">Custom Message Note</label>
-                          <textarea
-                            rows={2}
-                            value={adminTestMessage}
-                            onChange={e => setAdminTestMessage(e.target.value)}
-                            placeholder="Custom diagnostic message..."
-                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400 text-zinc-900 resize-none"
-                          />
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={adminTestLoading}
-                          className="w-full rounded-lg bg-zinc-900 hover:bg-black text-white font-semibold py-2.5 transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-60"
-                        >
-                          {adminTestLoading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-                          <span>{adminTestLoading ? 'Sending Test...' : 'Dispatch Live Test'}</span>
-                        </button>
-                      </form>
-                    </div>
-
-                    {/* Right: Real-Time Dispatched Emails Stream Table */}
-                    <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4 text-xs">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-semibold text-zinc-900">
-                            Dispatched Emails Stream ({emailLogs.length})
-                          </h3>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="text"
-                            value={emailSearch}
-                            onChange={e => setEmailSearch(e.target.value)}
-                            placeholder="Search recipient or OTP..."
-                            className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs outline-none focus:bg-white"
-                          />
-                          {emailLogs.length > 0 && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (window.confirm('Clear all email logs?')) {
-                                  clearEmailLogs();
-                                  setEmailLogs([]);
-                                }
-                              }}
-                              className="text-zinc-400 hover:text-rose-600 p-1 font-bold"
-                              title="Clear Logs"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      {emailLogs.length === 0 ? (
-                        <div className="text-center py-8 text-zinc-400">
-                          <Mail className="h-8 w-8 mx-auto mb-2 opacity-30" />
-                          <p>No dispatched emails recorded yet.</p>
-                        </div>
-                      ) : (
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-left">
-                            <thead>
-                              <tr className="border-b border-zinc-100 text-zinc-400 text-[10px] uppercase font-semibold">
-                                <th className="pb-2">Recipient</th>
-                                <th className="pb-2">Subject / Type</th>
-                                <th className="pb-2">Security OTP</th>
-                                <th className="pb-2">Timestamp</th>
-                                <th className="pb-2 text-right">Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-zinc-100">
-                              {emailLogs
-                                .filter(l => {
-                                  if (!emailSearch.trim()) return true;
-                                  const q = emailSearch.toLowerCase();
-                                  return l.to?.toLowerCase().includes(q) || l.subject?.toLowerCase().includes(q) || (l.otpCode && l.otpCode.includes(q));
-                                })
-                                .slice(0, 8)
-                                .map(log => (
-                                  <tr key={log.id} className="hover:bg-zinc-50/60">
-                                    <td className="py-2.5 font-semibold text-zinc-900 truncate max-w-[140px]">
-                                      {log.to}
-                                    </td>
-                                    <td className="py-2.5 text-zinc-600 truncate max-w-[180px]">
-                                      {log.subject}
-                                    </td>
-                                    <td className="py-2.5 font-mono font-bold text-amber-700">
-                                      {log.otpCode ? `[${log.otpCode}]` : '-'}
-                                    </td>
-                                    <td className="py-2.5 text-zinc-400 text-[10.5px]">
-                                      {log.formattedTime || 'Just now'}
-                                    </td>
-                                    <td className="py-2.5 text-right">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleOpenEmailInspector(log.id)}
-                                        className="rounded-md border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-2 py-1 text-[10px] font-bold text-zinc-800 transition cursor-pointer"
-                                      >
-                                        Inspect
-                                      </button>
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-                    </div>
-
-                  </div>
-                </div>
-              )}
-
             </div>
           )}
 
@@ -4008,8 +3742,8 @@ export default function AdminDashboard() {
                 <button
                   type="submit"
                   className={`rounded-lg px-5 py-2 font-semibold text-white shadow-xs cursor-pointer ${adminReturnDecision === 'Return Rejected'
-                      ? 'bg-rose-700 hover:bg-rose-800'
-                      : 'bg-zinc-900 hover:bg-black'
+                    ? 'bg-rose-700 hover:bg-rose-800'
+                    : 'bg-zinc-900 hover:bg-black'
                     }`}
                 >
                   {adminReturnDecision === 'Refunded'
@@ -4122,12 +3856,12 @@ export default function AdminDashboard() {
                       Order Consignment {selectedOrder.id}
                     </h3>
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${selectedOrder.status === 'Delivered'
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                        : selectedOrder.status === 'Shipped'
-                          ? 'bg-sky-50 text-sky-800 border-sky-200'
-                          : selectedOrder.status === 'Cancelled'
-                            ? 'bg-rose-50 text-rose-800 border-rose-200'
-                            : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : selectedOrder.status === 'Shipped'
+                        ? 'bg-sky-50 text-sky-800 border-sky-200'
+                        : selectedOrder.status === 'Cancelled'
+                          ? 'bg-rose-50 text-rose-800 border-rose-200'
+                          : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                       }`}>
                       {selectedOrder.status}
                     </span>

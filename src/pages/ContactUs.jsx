@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { SHOP_INFO } from '../utils/shopInfo';
-import { sendContactInquiryEmails } from '../utils/emailService';
 import {
   ShieldCheckIcon,
   FacebookIcon,
@@ -27,14 +26,6 @@ export default function ContactUs() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
-    
-    // Dispatch auto-acknowledgement email to customer & alert to admin
-    try {
-      sendContactInquiryEmails(form);
-    } catch (err) {
-      console.error('Failed to send contact inquiry emails:', err);
-    }
-
     setForm({ name: '', email: '', phone: '', subject: 'Order & Product Inquiry', message: '' });
     setTimeout(() => setSubmitted(false), 5000);
   };
