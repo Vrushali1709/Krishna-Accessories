@@ -36,20 +36,12 @@ export default function NewArrivals() {
   }, [products, category, sort]);
 
   const handleAddToCart = (product) => {
-    if (!getCurrentUser()) {
-      navigate('/login', { state: { from: '/new-arrivals', requiredRole: 'customer' } });
-      return;
-    }
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
-    setToastMessage(`Added "${product.name}" to your bag`);
-    setTimeout(() => setToastMessage(''), 3000);
+    setToastMessage(`✓ Added "${product.name}" to your bag`);
+    setTimeout(() => setToastMessage(''), 3500);
   };
 
   const handleBuyNow = (product) => {
-    if (!getCurrentUser()) {
-      navigate('/login', { state: { from: '/new-arrivals', requiredRole: 'customer' } });
-      return;
-    }
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     navigate('/checkout');
   };

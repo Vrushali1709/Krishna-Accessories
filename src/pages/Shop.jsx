@@ -152,20 +152,12 @@ export default function Shop() {
   };
 
   const handleAddToCart = (product) => {
-    if (!getCurrentUser()) {
-      navigate('/login');
-      return;
-    }
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     setToastMessage(`✓ Added "${product.name}" to your bag`);
-    setTimeout(() => setToastMessage(''), 3000);
+    setTimeout(() => setToastMessage(''), 3500);
   };
 
   const handleBuyNow = (product) => {
-    if (!getCurrentUser()) {
-      navigate('/login');
-      return;
-    }
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     navigate('/checkout');
   };

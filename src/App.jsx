@@ -32,14 +32,7 @@ export default function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/new-arrivals" element={<NewArrivals />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/cart" element={<Cart />} />
         <Route
           path="/checkout"
           element={

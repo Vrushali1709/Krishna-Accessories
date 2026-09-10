@@ -45,13 +45,11 @@ export default function ProtectedRoute({ children, roleRequired }) {
     return children;
   }
 
-  // 3. Customer route protection (cart, checkout, wishlist, account)
+  // 3. Customer route protection (checkout, wishlist, account)
   if (!user && !hasAdmin && !hasSupplier) {
     let message = 'Please sign in with your credentials to access this page.';
     if (location.pathname === '/wishlist') {
       message = 'Please sign in to access and manage your Wishlist.';
-    } else if (location.pathname === '/cart') {
-      message = 'Please sign in to view and access your Shopping Bag.';
     } else if (location.pathname === '/checkout') {
       message = 'Please sign in to proceed with Checkout.';
     } else if (location.pathname === '/account') {

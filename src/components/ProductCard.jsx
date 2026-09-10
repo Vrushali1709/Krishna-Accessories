@@ -49,7 +49,6 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const handleQuickAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!requireLogin('bag')) return;
     if (onAddToCart) {
       onAddToCart(product);
     } else {
@@ -62,7 +61,6 @@ export default function ProductCard({ product, onAddToCart, onBuyNow }) {
   const handleBuyNowClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!requireLogin('buy')) return;
     if (onBuyNow) {
       onBuyNow(product);
     } else {

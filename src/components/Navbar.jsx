@@ -820,7 +820,21 @@ export default function Navbar() {
             </div>
 
             <Link
+              to="/cart"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-3 py-2 text-gray-900 bg-gray-50 hover:bg-gray-100 transition flex items-center justify-between font-bold"
+            >
+              <div className="flex items-center gap-2">
+                <span>🛍️</span>
+                <span>My Shopping Bag</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold text-white ${cartCount > 0 ? 'bg-[#111827]' : 'bg-gray-400'}`}>
+                {cartCount} {cartCount === 1 ? 'item' : 'items'}
+              </span>
+            </Link>
+            <Link
               to="/wishlist"
+              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition flex items-center justify-between"
             >
               <span>Saved Wishlist</span>

@@ -165,7 +165,6 @@ export default function NewArrivalsSection({ products = [], onToast }) {
   const handleQuickAdd = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!requireLogin('bag')) return;
 
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     setAddedMap((prev) => ({ ...prev, [product.id]: true }));

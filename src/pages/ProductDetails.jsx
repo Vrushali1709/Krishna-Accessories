@@ -98,14 +98,12 @@ export default function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    if (!requireLogin('bag')) return;
     addToCart(product, quantity, selectedColor, selectedVariant);
     setToastMessage(`✓ Added ${quantity} × "${product.name}" to your bag`);
-    setTimeout(() => setToastMessage(''), 3000);
+    setTimeout(() => setToastMessage(''), 3500);
   };
 
   const handleBuyNow = () => {
-    if (!requireLogin('buy')) return;
     addToCart(product, quantity, selectedColor, selectedVariant);
     navigate('/checkout');
   };
