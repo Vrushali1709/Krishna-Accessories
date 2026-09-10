@@ -120,8 +120,6 @@ export function setCurrentUser(user) {
 
 export function logout() {
   localStorage.removeItem(CUSTOMER_AUTH_KEY);
-  localStorage.removeItem(ADMIN_AUTH_KEY);
-  localStorage.removeItem(SUPPLIER_AUTH_KEY);
   localStorage.removeItem(LEGACY_AUTH_KEY);
   window.dispatchEvent(new Event('authUpdated'));
 }
