@@ -10,7 +10,8 @@ import {
   BagIcon,
   StarIcon,
   ArrowRightIcon,
-  TagIcon
+  TagIcon,
+  CheckIcon
 } from './Icons';
 
 export default function FeaturedTrendingSection({ products = [], onToast }) {
@@ -19,7 +20,6 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
 
   const [activeTab, setActiveTab] = useState('trending'); // 'trending', 'featured', 'top-rated', 'best-deals'
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [cardLimit, setCardLimit] = useState(8); // 4 or 8 product cards
   const [wishlistMap, setWishlistMap] = useState({});
   const [addedMap, setAddedMap] = useState({});
 
@@ -39,7 +39,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
     return () => window.removeEventListener('wishlistUpdated', handleWishlistChange);
   }, [syncWishlist]);
 
-  // Auth requirement check for wishlist
+  // Auth requirement check
   const requireLogin = (action = 'continue') => {
     if (!getCurrentUser()) {
       const message = action === 'bag'
@@ -79,16 +79,42 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     setAddedMap((prev) => ({ ...prev, [product.id]: true }));
     if (onToast) {
-      onToast(`✓ Added "${product.name}" to your cart`);
+      onToast(`✓ Added "${product.name}" to your bag`);
     }
 
     setTimeout(() => {
       setAddedMap((prev) => ({ ...prev, [product.id]: false }));
-    }, 1500);
+    }, 1800);
   };
 
-  // Curated category filter pills
-  const categoryFilters = ['All', 'Watches', 'Bags & Wallets', 'Shoes', 'Mobiles', 'Electronics', 'Laptops'];
+  const handleBuyNow = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
+    navigate('/checkout');
+  };
+
+  // Category filter list
+  const categoryFilters = [
+    'All',
+    'Watches',
+    'Bags & Wallets',
+    'Shoes',
+    'Mobiles',
+    'Electronics',
+    'Laptops',
+    'Smart Gadgets',
+    'Fashion Accessories'
+  ];
+
+  // Tab Definitions
+  const tabs = [
+    { id: 'trending', label: 'Trending Now', icon: '🔥' },
+    { id: 'featured', label: 'Featured Picks', icon: '✦' },
+    { id: 'top-rated', label: 'Top Rated', icon: '⭐' },
+    { id: 'best-deals', label: 'Special Deals', icon: '🏷️' }
+  ];
 
   // Compute products according to active tab and category
   const filteredProducts = useMemo(() => {
@@ -113,8 +139,8 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
 
       case 'featured':
         list.sort((a, b) => {
-          const isLuxuryA = ['Rolex', 'Titan', 'Apple', 'Dell', 'Hidesign', 'Jordan', 'Samsung'].includes(a.brand) ? 1 : 0;
-          const isLuxuryB = ['Rolex', 'Titan', 'Apple', 'Dell', 'Hidesign', 'Jordan', 'Samsung'].includes(b.brand) ? 1 : 0;
+          const isLuxuryA = ['Rolex', 'Titan', 'Apple', 'Dell', 'Hidesign', 'Nike', 'Sony'].includes(a.brand) ? 1 : 0;
+          const isLuxuryB = ['Rolex', 'Titan', 'Apple', 'Dell', 'Hidesign', 'Nike', 'Sony'].includes(b.brand) ? 1 : 0;
           return isLuxuryB - isLuxuryA || (b.price || 0) - (a.price || 0);
         });
         break;
@@ -135,108 +161,50 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         break;
     }
 
-    return list.slice(0, cardLimit);
-  }, [products, activeTab, selectedCategory, cardLimit]);
+    return list.slice(0, 8);
+  }, [products, activeTab, selectedCategory]);
 
   return (
-    <section className="bg-white py-14 sm:py-20 border-t border-b border-gray-200/80">
+    <section className="bg-[#FAFBFD] py-14 sm:py-20 border-t border-b border-gray-200/80">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* ============================================================
-            1. SECTION HEADER
+            1. SECTION HEADER WITH TABS
         ============================================================ */}
         <Reveal direction="up" delay={50}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
             <div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
-                CURATED SHOWCASE
-              </span>
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-950 tracking-tight mt-1">
-                Featured / Trending Products
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#C5A880] animate-pulse" />
+                <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-[#9E8362]">
+                  CURATED SELECTION
+                </span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-gray-950 tracking-tight mt-1.5">
+                Featured &amp; Trending Products
               </h2>
-              <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl">
-                Discover our handpicked showcase of top-rated accessories, trending flagship essentials, and exclusive luxury pieces.
+              <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl leading-relaxed">
+                Explore our handpicked curation of best-selling luxury timepieces, leather goods, smart electronics, and footwear.
               </p>
             </div>
 
             {/* Interactive Feature Tabs */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1 bg-neutral-100 rounded-2xl border border-neutral-200/80 shrink-0">
-              <button
-                type="button"
-                onClick={() => setActiveTab('trending')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'trending'
-                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-                }`}
-              >
-                <span>🔥</span>
-                <span>Trending Now</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('featured')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'featured'
-                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-                }`}
-              >
-                <span>✦</span>
-                <span>Featured</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('top-rated')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'top-rated'
-                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-                }`}
-              >
-                <span>⭐</span>
-                <span>Top Rated</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('best-deals')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'best-deals'
-                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-                }`}
-              >
-                <span>🏷️</span>
-                <span>Best Deals</span>
-              </button>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* ============================================================
-            2. SUB-BAR: CATEGORY PILLS
-        ============================================================ */}
-        <Reveal direction="up" delay={100}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-neutral-100">
-            {/* Category Filter Pills */}
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar">
-              {categoryFilters.map((cat) => {
-                const isActive = selectedCategory === cat;
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 bg-neutral-200/60 backdrop-blur-md rounded-2xl border border-neutral-300/60 shadow-xs self-start lg:self-auto">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
                 return (
                   <button
-                    key={cat}
+                    key={tab.id}
                     type="button"
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-3.5 py-1.2 text-xs font-bold rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
                       isActive
-                        ? 'bg-neutral-900 text-white shadow-xs scale-[1.02]'
-                        : 'bg-neutral-50 text-neutral-600 border border-neutral-200/70 hover:bg-neutral-100 hover:text-neutral-900'
+                        ? 'bg-neutral-950 text-white shadow-md scale-[1.02]'
+                        : 'text-neutral-700 hover:text-black hover:bg-white/70'
                     }`}
                   >
-                    {cat}
+                    <span>{tab.icon}</span>
+                    <span>{tab.label}</span>
                   </button>
                 );
               })}
@@ -245,10 +213,35 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         </Reveal>
 
         {/* ============================================================
-            3. PRODUCT CARDS GRID (4–8 CARDS)
+            2. CATEGORY FILTER SUB-BAR
+        ============================================================ */}
+        <Reveal direction="up" delay={100}>
+          <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar scroll-smooth">
+            {categoryFilters.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-1.5 text-xs sm:text-[12.5px] font-bold rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer shadow-2xs ${
+                    isActive
+                      ? 'bg-white text-gray-950 border-2 border-gray-950 shadow-xs font-black scale-[1.03]'
+                      : 'bg-white text-gray-600 border border-gray-200/90 hover:border-gray-400 hover:text-gray-950 hover:bg-gray-50'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
+
+        {/* ============================================================
+            3. PRODUCT CARDS GRID (PROPER SIZES & LUXURY SPACING)
         ============================================================ */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
             {filteredProducts.map((product, idx) => {
               const isWish = Boolean(wishlistMap[product.id]);
               const isAdded = Boolean(addedMap[product.id]);
@@ -263,25 +256,26 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
               let badgeText = '';
               let badgeColor = '';
 
-              if (activeTab === 'trending' || idx === 0) {
-                badgeText = '🔥 Trending';
-                badgeColor = 'bg-amber-500 text-white';
-              } else if (activeTab === 'best-deals' || discount >= 25) {
+              if (discount >= 20) {
                 badgeText = `${discount}% OFF`;
                 badgeColor = 'bg-rose-600 text-white';
+              } else if (activeTab === 'trending' || idx === 0) {
+                badgeText = '🔥 TRENDING';
+                badgeColor = 'bg-amber-500 text-white';
               } else if (product.rating >= 4.8) {
-                badgeText = '★ Top Pick';
+                badgeText = '★ TOP RATED';
                 badgeColor = 'bg-neutral-900 text-white';
               } else {
-                badgeText = '✦ Featured';
-                badgeColor = 'bg-slate-900 text-white';
+                badgeText = '✦ LUXE PICK';
+                badgeColor = 'bg-neutral-900 text-white';
               }
 
               return (
-                <Reveal key={`feat-trend-${product.id}`} direction="up" delay={(idx % 4) * 70} duration={650}>
-                  <div className="group relative flex flex-col justify-between h-full rounded-2xl border border-gray-200/80 bg-white p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-gray-300 hover:-translate-y-1.5">
-                    {/* 1. Product Image Frame with Hover Effects */}
-                    <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F5F4F0]">
+                <Reveal key={`feat-trend-${product.id}`} direction="up" delay={(idx % 4) * 80} duration={650}>
+                  <div className="group relative flex flex-col justify-between h-full rounded-[24px] sm:rounded-[28px] border border-gray-200/90 bg-white p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-400 hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] hover:border-amber-400/70 hover:-translate-y-2">
+                    
+                    {/* 1. Product Image Frame with Hover Canvas */}
+                    <div className="relative aspect-square w-full overflow-hidden rounded-[20px] bg-gradient-to-b from-[#F7F7F8] to-[#EDEDF0] mb-4">
                       <Link
                         to={`/product/${product.id}`}
                         className="flex h-full w-full items-center justify-center cursor-pointer overflow-hidden"
@@ -294,10 +288,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         />
                       </Link>
 
-                      {/* Top Badges & Actions */}
-                      <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
+                      {/* Top Badges & Actions Overlay */}
+                      <div className="absolute top-3 inset-x-3 z-10 flex items-center justify-between pointer-events-none">
                         {/* Dynamic Badge */}
-                        <span className={`rounded-md px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider shadow-xs backdrop-blur-md border border-white/10 ${badgeColor}`}>
+                        <span className={`rounded-lg px-2.5 py-1 text-[9.5px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md border border-white/10 ${badgeColor}`}>
                           {badgeText}
                         </span>
 
@@ -306,94 +300,114 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                           type="button"
                           onClick={(e) => handleWishlistToggle(e, product)}
                           aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                          className={`pointer-events-auto flex h-7.5 w-7.5 items-center justify-center rounded-full shadow-xs backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
+                          className={`pointer-events-auto flex h-8.5 w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
                             isWish
                               ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100 scale-105'
-                              : 'bg-white/90 text-gray-700 hover:text-rose-600 border border-gray-200/80 hover:bg-white'
+                              : 'bg-white/95 text-gray-700 hover:text-rose-600 border border-gray-200/90 hover:bg-white'
                           }`}
                           title={isWish ? 'In Wishlist' : 'Add to Wishlist'}
                         >
-                          <HeartIcon className="w-3.5 h-3.5 transition-colors" filled={isWish} />
+                          <HeartIcon className="w-4 h-4 transition-colors" filled={isWish} />
                         </button>
                       </div>
 
-                      {/* Category Overlay Tag */}
-                      <div className="absolute bottom-2 left-2 pointer-events-none">
-                        <span className="rounded-md bg-black/60 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white/90 uppercase tracking-wide">
+                      {/* Brand / Category Subtle Floating Bottom Pill */}
+                      <div className="absolute bottom-2.5 left-3 pointer-events-none">
+                        <span className="rounded-full bg-black/65 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold text-white uppercase tracking-wider border border-white/10">
                           {product.brand || product.category}
                         </span>
                       </div>
                     </div>
 
-                    {/* 2. Product Information */}
-                    <div className="pt-3.5 flex flex-1 flex-col justify-between text-center">
+                    {/* 2. Product Information Content */}
+                    <div className="flex flex-1 flex-col justify-between">
                       <div>
-                        {/* Product Name */}
+                        {/* Category & Verified Sourcing */}
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A880]">
+                            {product.category}
+                          </span>
+                          <span className="text-[10px] font-medium text-neutral-400">
+                            100% Authentic
+                          </span>
+                        </div>
+
+                        {/* Product Title */}
                         <Link
                           to={`/product/${product.id}`}
-                          className="block font-bold text-gray-900 text-[13.5px] sm:text-[14.5px] transition-colors duration-200 hover:text-black line-clamp-1 leading-snug"
+                          className="block font-bold text-gray-950 text-[15px] sm:text-[16px] transition-colors duration-200 hover:text-[#9E8362] line-clamp-1 leading-snug"
                           title={product.name}
                         >
                           {product.name}
                         </Link>
 
-                        {/* Rating (Stars + Score + Review count) */}
-                        <div className="flex items-center justify-center gap-1.5 mt-1.5">
+                        {/* Rating Stars & Customer Review Count */}
+                        <div className="flex items-center gap-1.5 mt-2">
                           <div className="flex items-center text-amber-500">
                             {[...Array(5)].map((_, starI) => (
-                              <StarIcon key={starI} className="w-3 h-3 text-amber-500" filled={true} />
+                              <StarIcon key={starI} className="w-3.5 h-3.5 text-amber-400" filled={true} />
                             ))}
                           </div>
-                          <span className="font-bold text-gray-800 text-[11.5px] tabular-nums">
-                            {product.rating ? Number(product.rating).toFixed(1) : '4.8'}
+                          <span className="font-bold text-gray-900 text-xs tabular-nums ml-0.5">
+                            {product.rating ? Number(product.rating).toFixed(1) : '4.9'}
                           </span>
-                          <span className="text-gray-400 text-[10.5px] tabular-nums">
-                            ({product.reviews || 45})
+                          <span className="text-gray-400 text-[11px] tabular-nums">
+                            ({product.reviews || 48} reviews)
                           </span>
                         </div>
 
-                        {/* Price Row (Current Price + Old Price) */}
-                        <div className="flex items-baseline justify-center gap-2 mt-2">
-                          <span className="text-base sm:text-lg font-extrabold text-gray-950 tabular-nums">
+                        {/* Price Architecture (Price + MRP + Save Pill) */}
+                        <div className="flex items-baseline gap-2 mt-3 pt-2.5 border-t border-gray-100">
+                          <span className="text-lg sm:text-xl font-black text-gray-950 tabular-nums">
                             ₹{Number(product.price).toLocaleString('en-IN')}
                           </span>
 
                           {product.oldPrice && product.oldPrice > product.price && (
-                            <span className="text-xs sm:text-sm text-gray-400 line-through tabular-nums font-normal">
+                            <span className="text-xs sm:text-sm text-neutral-400 line-through tabular-nums font-normal">
                               ₹{Number(product.oldPrice).toLocaleString('en-IN')}
                             </span>
                           )}
 
                           {discount > 0 && (
-                            <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
-                              {discount}% OFF
+                            <span className="ml-auto text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
+                              Save {discount}%
                             </span>
                           )}
                         </div>
                       </div>
 
-                      {/* 3. Add to Cart Button */}
-                      <div className="mt-3.5">
+                      {/* 3. Action Buttons (Add to Bag & Buy Now) */}
+                      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center gap-2">
+                        {/* Primary Add to Bag Button */}
                         <button
                           type="button"
                           onClick={(e) => handleAddToCart(e, product)}
-                          className={`w-full py-2.5 px-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
+                          className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
                             isAdded
                               ? 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700 scale-[1.02]'
-                              : 'bg-[#111827] text-white hover:bg-black hover:shadow-md'
+                              : 'bg-neutral-950 text-white hover:bg-black hover:shadow-md'
                           }`}
                         >
                           {isAdded ? (
                             <>
-                              <span className="text-sm">✓</span>
-                              <span>Added to Bag</span>
+                              <CheckIcon className="w-3.5 h-3.5" />
+                              <span>Added</span>
                             </>
                           ) : (
                             <>
-                              <BagIcon className="w-3.5 h-3.5 text-amber-300 transition-transform group-hover:scale-110" />
+                              <BagIcon className="w-3.5 h-3.5 text-amber-300" />
                               <span>Add to Bag</span>
                             </>
                           )}
+                        </button>
+
+                        {/* Secondary Instant Buy Now Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => handleBuyNow(e, product)}
+                          className="px-3.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider border border-gray-300 bg-white text-gray-800 hover:border-gray-950 hover:bg-gray-50 transition-all duration-300 active:scale-95 cursor-pointer shadow-2xs"
+                        >
+                          Buy Now
                         </button>
                       </div>
 
@@ -405,12 +419,12 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             })}
           </div>
         ) : (
-          <div className="text-center py-16 rounded-2xl bg-neutral-50 border border-neutral-200/80">
-            <p className="text-sm font-semibold text-neutral-700">No products found in this category.</p>
+          <div className="text-center py-16 rounded-3xl bg-white border border-gray-200/80 shadow-xs">
+            <p className="text-sm font-semibold text-neutral-700">No products found for the selected filter.</p>
             <button
               type="button"
               onClick={() => { setSelectedCategory('All'); setActiveTab('trending'); }}
-              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-4 py-1.5 text-xs font-semibold text-white hover:bg-black cursor-pointer"
+              className="mt-3.5 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2 text-xs font-bold text-white hover:bg-black cursor-pointer shadow-sm"
             >
               Reset Filters
             </button>
@@ -421,10 +435,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             4. SECTION FOOTER CALL TO ACTION
         ============================================================ */}
         <Reveal direction="up" delay={150}>
-          <div className="mt-12 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-12 sm:mt-14 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-98 shadow-xs"
+              className="inline-flex items-center gap-2.5 rounded-full bg-neutral-950 px-8 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-black hover:shadow-xl hover:scale-[1.02] active:scale-98 shadow-md"
             >
               <span>Explore All {products.length} Products</span>
               <ArrowRightIcon className="w-4 h-4 text-amber-300" />
@@ -432,10 +446,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
 
             <Link
               to="/shop?filter=offers"
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 transition-all duration-300 hover:border-neutral-500 hover:bg-neutral-50 shadow-2xs active:scale-98"
+              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 transition-all duration-300 hover:border-neutral-500 hover:bg-neutral-50 shadow-xs active:scale-98"
             >
               <TagIcon className="w-4 h-4 text-rose-600" />
-              <span>View Today&apos;s Deals</span>
+              <span>View Exclusive Offers</span>
             </Link>
           </div>
         </Reveal>
