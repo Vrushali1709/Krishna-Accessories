@@ -736,64 +736,73 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          10. OFFICIAL BRAND PARTNERS (CAPSULE SHOWCASE)
+          7. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
       ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-12 pb-10 sm:pb-14 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
-            <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-              AUTHENTICITY GUARANTEED
-            </span>
+            <div className="flex items-center justify-center gap-2 mb-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#C5A880] animate-pulse" />
+              <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-[#9E8362]">
+                100% CERTIFIED LUXURY
+              </span>
+            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
               Explore by Brand
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
-              Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
+            <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-lg mx-auto leading-relaxed">
+              Discover certified authentic luxury collections direct from authorized heritage houses &amp; global makers.
             </p>
           </div>
         </Reveal>
 
-        {/* Dual Capsule Infinite Scrolling Carousel Strips */}
+        {/* Unified Luxury Brand Showcase Box */}
         <Reveal direction="up" delay={120}>
-          <div className="space-y-3.5 sm:space-y-4">
+          <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-b from-white via-[#F8F9FA] to-[#EFF2F6] p-4 sm:p-7 md:p-8 border border-gray-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.03)]">
+            
+            {/* Subtle Ambient Gold Glow */}
+            <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#C5A880]/10 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
 
-            {/* Track 1 (Row 1 Brands - Scrolling Left) */}
-            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2.5 sm:p-3 sm:px-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
+            {/* Left & Right Gradient Mask Overlays */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-white via-white/80 to-transparent z-10 rounded-l-[28px] sm:rounded-l-[36px]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-white via-white/80 to-transparent z-10 rounded-r-[28px] sm:rounded-r-[36px]" />
 
-              <div className="animate-marquee flex items-center gap-3 py-1">
+            <div className="space-y-3.5 sm:space-y-4">
+              {/* Track 1 (Row 1 Brands - Scrolling Left) */}
+              <div className="animate-marquee flex items-center gap-3 sm:gap-4 py-1">
                 {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
                   <Link
                     key={`${b.name}-t1-${idx}`}
                     to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                    className="group relative flex-shrink-0 flex items-center justify-center w-[145px] sm:w-[165px] md:w-[180px] h-16 sm:h-19 px-4 rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-300 hover:border-amber-400 hover:shadow-md hover:scale-[1.03] active:scale-98"
+                    className="group relative flex-shrink-0 flex flex-col items-center justify-center w-[165px] sm:w-[195px] md:w-[215px] h-20 sm:h-24 px-5 py-3 rounded-[20px] sm:rounded-[22px] border border-gray-200/90 bg-white/95 backdrop-blur-xs shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-amber-400 hover:shadow-[0_12px_28px_rgba(197,168,128,0.18)] hover:-translate-y-1 active:scale-98"
                     title={`${b.name} • ${b.cat}`}
                   >
-                    <div className="transition-transform duration-300 group-hover:scale-108">
+                    <div className="transition-transform duration-300 group-hover:scale-108 flex items-center justify-center h-8">
                       {b.renderLogo()}
                     </div>
+                    <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-neutral-400 group-hover:text-[#9E8362] transition-colors mt-1">
+                      {b.cat}
+                    </span>
                   </Link>
                 ))}
               </div>
-            </div>
 
-            {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
-            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2.5 sm:p-3 sm:px-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
-
-              <div className="animate-marquee-reverse flex items-center gap-3 py-1">
+              {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
+              <div className="animate-marquee-reverse flex items-center gap-3 sm:gap-4 py-1">
                 {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
                   <Link
                     key={`${b.name}-t2-${idx}`}
                     to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                    className="group relative flex-shrink-0 flex items-center justify-center w-[145px] sm:w-[165px] md:w-[180px] h-16 sm:h-19 px-4 rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-300 hover:border-amber-400 hover:shadow-md hover:scale-[1.03] active:scale-98"
+                    className="group relative flex-shrink-0 flex flex-col items-center justify-center w-[165px] sm:w-[195px] md:w-[215px] h-20 sm:h-24 px-5 py-3 rounded-[20px] sm:rounded-[22px] border border-gray-200/90 bg-white/95 backdrop-blur-xs shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-amber-400 hover:shadow-[0_12px_28px_rgba(197,168,128,0.18)] hover:-translate-y-1 active:scale-98"
                     title={`${b.name} • ${b.cat}`}
                   >
-                    <div className="transition-transform duration-300 group-hover:scale-108">
+                    <div className="transition-transform duration-300 group-hover:scale-108 flex items-center justify-center h-8">
                       {b.renderLogo()}
                     </div>
+                    <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-neutral-400 group-hover:text-[#9E8362] transition-colors mt-1">
+                      {b.cat}
+                    </span>
                   </Link>
                 ))}
               </div>
