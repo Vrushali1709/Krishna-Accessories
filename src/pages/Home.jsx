@@ -21,20 +21,12 @@ import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
-import PromoVoucherBanner from '../components/PromoVoucherBanner';
-import NewArrivalsSection from '../components/NewArrivalsSection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
-import {
-  PriceSectionUnder5k,
-  PriceSectionUnder10k,
-  PriceSectionUnder15k,
-  PriceSectionUnder20k
-} from '../components/PriceSections';
-import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
+import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
-
+import PromoVoucherBanner from '../components/PromoVoucherBanner';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -43,10 +35,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   TagIcon,
-  CheckIcon,
-  StarIcon,
-  HeartIcon,
-  BagIcon
+  CheckIcon
 } from '../components/Icons';
 
 // ============================================================
@@ -118,31 +107,25 @@ const watchHeroSlides = [
     tag: 'NEW COLLECTION 2026',
     titleLine1: 'PRECISION.',
     titleLine2: 'CRAFTED FOR TIME.',
-    description: 'Where timeless Swiss horology meets modern prestige performance and certified craftsmanship.',
+    description: 'Where timeless Swiss horology meets modern prestige performance.',
     image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg',
-    category: 'Watches',
-    highlightPrice: '₹4,999',
-    highlightSpecs: 'Sapphire Crystal • 50m Water Resistant'
+    category: 'Watches'
   },
   {
     tag: 'LIMITED BESPOKE EDITION',
     titleLine1: 'HERITAGE.',
     titleLine2: 'CHRONOGRAPH LUXE.',
-    description: 'Engineered for absolute accuracy, ceramic durability, and distinguished Italian leather styling.',
+    description: 'Engineered for absolute accuracy, ceramic durability, and distinguished style.',
     image: 'https://i.pinimg.com/736x/e6/df/98/e6df982c03d41dbf66fe9470007838c2.jpg',
-    category: 'Watches',
-    highlightPrice: '₹8,999',
-    highlightSpecs: 'Multi-Dial Chrono • Italian Calfskin'
+    category: 'Watches'
   },
   {
     tag: 'AUTOMATIC MASTERPIECES',
     titleLine1: 'TIMELESS.',
     titleLine2: 'SAPPHIRE LUXURY.',
-    description: 'Crafted with genuine sapphire crystal, mechanical self-winding movements, and 5-year warranty.',
+    description: 'Crafted with genuine sapphire crystal, mechanical movements, and calfskin straps.',
     image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg',
-    category: 'Watches',
-    highlightPrice: '₹49,999',
-    highlightSpecs: 'Calibre 3235 • 300m Oystersteel'
+    category: 'Watches'
   }
 ];
 
@@ -356,7 +339,7 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  // Update listener for sync with Admin Panel
+  // Update listener
   useEffect(() => {
     const handleUpdate = () => {
       setProducts(getProducts());
@@ -390,6 +373,19 @@ export default function Home() {
     });
     return sorted.slice(0, 4);
   }, [products]);
+
+  // Check Out What's New (New Arrivals) - Fresh novelties from catalog
+  const newArrivals = useMemo(() => {
+    const bestSellerIds = new Set(bestSellers.map((p) => p.id));
+    const sortedNew = [...products]
+      .filter((p) => !bestSellerIds.has(p.id))
+      .sort((a, b) => (b.id || 0) - (a.id || 0));
+
+    if (sortedNew.length >= 4) {
+      return sortedNew.slice(0, 4);
+    }
+    return [...products].slice(0, 4);
+  }, [products, bestSellers]);
 
   const getProductCountForCategory = (catName) => {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
@@ -432,9 +428,8 @@ export default function Home() {
           {watchHeroSlides.map((slide, index) => (
             <div
               key={slide.titleLine1}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
             >
               <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[58%] xl:w-[52%] 2xl:w-[48%] h-full w-full">
                 <img
@@ -470,17 +465,10 @@ export default function Home() {
               {watchHeroSlides[currentSlide].description}
             </p>
 
-            {/* Live Feature Snippet Pill */}
-            <div className="mt-5 inline-flex items-center gap-3 rounded-full bg-white/10 backdrop-blur-md border border-[#C5A880]/30 px-4 py-1.5 text-xs text-[#E5D7C5]">
-              <span className="font-mono font-bold text-amber-300">From {watchHeroSlides[currentSlide].highlightPrice}</span>
-              <span className="h-3 w-px bg-white/20" />
-              <span className="text-[11px] font-light text-neutral-300">{watchHeroSlides[currentSlide].highlightSpecs}</span>
-            </div>
-
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 to="/shop?category=Watches"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95 shadow-md"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
               >
                 <span>Shop Watches</span>
                 <ArrowRightIcon className="w-4 h-4 text-black" />
@@ -501,9 +489,8 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setCurrentSlide(i)}
-                  className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
-                    i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
-                  }`}
+                  className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
+                    }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
               ))}
@@ -558,24 +545,29 @@ export default function Home() {
       <PromoVoucherBanner onToast={setToastMessage} />
 
       {/* =========================================================
-          6. FRESH NOVELTIES — NEW ARRIVALS (ASYMMETRIC EDITORIAL)
+          6. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
       ========================================================= */}
-      <NewArrivalsSection
+      <FeaturedTrendingSection
         products={products}
         onToast={setToastMessage}
       />
 
       {/* =========================================================
-          7. TOP PICKS FOR YOU — BEST SELLERS (#01–#04 GOLD RANKING)
+          7. CURATED EDITORIAL SPOTLIGHT (DUAL LUXURY BANNERS)
       ========================================================= */}
-      <section className="bg-white py-14 sm:py-20 border-b border-gray-200/80">
+      <EditorialSpotlightSection />
+
+      {/* =========================================================
+          8. TOP PICKS FOR YOU — BEST SELLERS ♡
+      ========================================================= */}
+      <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <Reveal direction="up" delay={50}>
             <div className="text-center mb-10 sm:mb-12">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-[#C5A880]">
-                CLIENT FAVORITES & RANKED ICONS
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+                TOP PICKS FOR YOU
               </p>
               <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />
@@ -586,22 +578,21 @@ export default function Home() {
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />
               </div>
               <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Our highest-rated luxury chronographs, designer sunglasses, and premium audio essentials.
+                Client favorites across timepieces, designer sunglasses, and premium audio.
               </p>
             </div>
           </Reveal>
 
-          {/* 4 Cards Grid with Gold Rank Badges #01 - #04 */}
+          {/* 4 Cards Grid */}
           {bestSellers.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
               {bestSellers.map((product, idx) => (
                 <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
                   <ProductCard
                     product={product}
-                    variant="ranked"
-                    rankNumber={idx + 1}
                     onAddToCart={handleAddToCart}
                     onBuyNow={handleBuyNow}
+                    showRating={true}
                   />
                 </Reveal>
               ))}
@@ -616,65 +607,60 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          8. PRICE TIER 1: UNDER ₹5,000 (COMPACT QUICK ACCESS)
+          9. CHECK OUT WHAT'S NEW — NEW ARRIVALS
       ========================================================= */}
-      <PriceSectionUnder5k
-        products={products}
-        onAddToCart={handleAddToCart}
-        onBuyNow={handleBuyNow}
-        onToast={setToastMessage}
-      />
+      <section className="bg-[#FAFAFB] py-14 sm:py-20 border-t border-gray-200/80">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* Section Header */}
+          <Reveal direction="up" delay={50}>
+            <div className="text-center mb-10 sm:mb-12">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+                CHECK OUT WHAT&apos;S NEW
+              </p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900">
+                  New Arrivals
+                </h2>
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              </div>
+              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
+                Fresh seasonal releases, novelties, and smart devices straight to catalog.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* 4 Cards Grid */}
+          {newArrivals.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {newArrivals.map((product, idx) => (
+                <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
+                    showRating={true}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
+              <p className="text-sm font-semibold text-gray-700">No new arrivals found.</p>
+            </div>
+          )}
+
+        </div>
+      </section>
 
       {/* =========================================================
-          9. CURATED EDITORIAL SPOTLIGHT (DUAL LUXURY BANNERS)
-      ========================================================= */}
-      <EditorialSpotlightSection />
-
-      {/* =========================================================
-          10. PRICE TIER 2: UNDER ₹10,000 (SPLIT HORIZONTAL CARDS)
-      ========================================================= */}
-      <PriceSectionUnder10k
-        products={products}
-        onAddToCart={handleAddToCart}
-        onBuyNow={handleBuyNow}
-        onToast={setToastMessage}
-      />
-
-      {/* =========================================================
-          11. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
-      ========================================================= */}
-      <FeaturedTrendingSection
-        products={products}
-        onToast={setToastMessage}
-      />
-
-      {/* =========================================================
-          12. PRICE TIER 3: UNDER ₹15,000 (EXECUTIVE SELECTS)
-      ========================================================= */}
-      <PriceSectionUnder15k
-        products={products}
-        onAddToCart={handleAddToCart}
-        onBuyNow={handleBuyNow}
-        onToast={setToastMessage}
-      />
-
-      {/* =========================================================
-          13. PRICE TIER 4: UNDER ₹20,000 / PRIVÉ (OBSIDIAN MASTERPIECES)
-      ========================================================= */}
-      <PriceSectionUnder20k
-        products={products}
-        onAddToCart={handleAddToCart}
-        onBuyNow={handleBuyNow}
-        onToast={setToastMessage}
-      />
-
-      {/* =========================================================
-          14. OFFICIAL BRAND PARTNERS (CAPSULE SHOWCASE)
+          10. OFFICIAL BRAND PARTNERS (CAPSULE SHOWCASE)
       ========================================================= */}
       <section className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
-            <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-[#C5A880]">
+            <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
               AUTHENTICITY GUARANTEED
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
@@ -737,22 +723,22 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          15. WHY CHOOSE US (THE DIFFERENCE)
+          11. WHY CHOOSE US (THE DIFFERENCE)
       ========================================================= */}
       <WhyChooseUsSection />
 
       {/* =========================================================
-          16. CUSTOMER REVIEWS (CAROUSEL)
+          12. CUSTOMER REVIEWS (CAROUSEL)
       ========================================================= */}
       <CustomerReviewsSection />
 
       {/* =========================================================
-          17. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
+          13. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
       ========================================================= */}
       <InstagramClubSection />
 
       {/* =========================================================
-          18. FOOTER
+          FOOTER
       ========================================================= */}
       <Footer />
     </div>
