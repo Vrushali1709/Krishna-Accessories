@@ -150,13 +150,8 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         ============================================================ */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-             
-            </div>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-950 tracking-tight flex items-center gap-2.5">
-              <span>Featured / Trending Products</span>
-              <span className="text-xl sm:text-2xl text-amber-500">✦</span>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-950 tracking-tight">
+              Featured / Trending Products
             </h2>
             <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl">
               Discover our handpicked showcase of top-rated accessories, trending flagship essentials, and exclusive luxury pieces.
