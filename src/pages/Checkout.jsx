@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import { clearCart, calculateCartSummary } from '../utils/cart';
 import { createOrder, getUserAddresses } from '../utils/orderStore';
 import { getCurrentUser } from '../utils/auth';
+import { sendOrderConfirmationEmail } from '../utils/emailService';
 import { ShieldCheckIcon, LockClosedIcon, BagIcon, ArrowRightIcon } from '../components/Icons';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
@@ -85,7 +86,7 @@ export default function Checkout() {
     }));
   };
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
     if (!form.firstName.trim() || !form.email.trim() || !form.phone.trim() || !form.address.trim() || !form.city.trim() || !form.pincode.trim()) {
@@ -94,20 +95,28 @@ export default function Checkout() {
     }
 
     setLoading(true);
-    showLoading('Securing your order & generating invoice...');
+    showLoading('Securing your order & generating official invoice...');
+
+    const orderPayload = {
+      customer: form,
+      items: cart,
+      subtotal,
+      shipping,
+      discount,
+      total,
+      paymentMethod,
+    };
+
+    const newOrder = createOrder(orderPayload);
+
+    // Dispatch Official Order Confirmation & Invoice Email to Customer
+    try {
+      await sendOrderConfirmationEmail(newOrder);
+    } catch (emailErr) {
+      console.error('Email dispatch error:', emailErr);
+    }
 
     setTimeout(() => {
-      const orderPayload = {
-        customer: form,
-        items: cart,
-        subtotal,
-        shipping,
-        discount,
-        total,
-        paymentMethod,
-      };
-
-      const newOrder = createOrder(orderPayload);
       clearCart();
       setLoading(false);
       hideLoading();
@@ -115,7 +124,7 @@ export default function Checkout() {
       navigate('/order-success', {
         state: { order: newOrder }
       });
-    }, 850);
+    }, 600);
   };
 
   if (cart.length === 0) {

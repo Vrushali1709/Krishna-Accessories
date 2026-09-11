@@ -1,17 +1,37 @@
 // src/pages/OrderSuccess.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, Navigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { CheckCircleIcon, PrinterIcon, ArrowRightIcon } from '../components/Icons';
+import { CheckCircleIcon, PrinterIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
+import { Mail, RefreshCw } from 'lucide-react';
+import { sendOrderConfirmationEmail } from '../utils/emailService';
 
 export default function OrderSuccess() {
   const location = useLocation();
   const order = location.state?.order;
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const [emailStatus, setEmailStatus] = useState('');
 
   if (!order) {
     return <Navigate to="/shop" replace />;
   }
+
+  const handleResendEmail = async () => {
+    if (resendingEmail) return;
+    setResendingEmail(true);
+    setEmailStatus('');
+
+    try {
+      await sendOrderConfirmationEmail(order);
+      setEmailStatus(`✓ Invoice re-sent to ${order.customer?.email}`);
+    } catch {
+      setEmailStatus('Failed to resend email receipt.');
+    } finally {
+      setResendingEmail(false);
+      setTimeout(() => setEmailStatus(''), 4000);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
@@ -35,7 +55,7 @@ export default function OrderSuccess() {
           </h1>
 
           <p className="mt-1.5 max-w-sm mx-auto text-xs text-gray-600 leading-relaxed">
-            We have confirmed your consignment. An official receipt has been sent to your email and our partner boutique is preparing your items for express dispatch.
+            We have confirmed your consignment. An official receipt has been sent to <strong>{order.customer?.email}</strong> and our partner boutique is preparing your items for express dispatch.
           </p>
 
           {/* Reference Number */}
@@ -43,6 +63,12 @@ export default function OrderSuccess() {
             <span className="text-[9.5px] text-gray-500 uppercase tracking-wider font-semibold shrink-0">Order Reference:</span>
             <span className="text-xs font-mono font-bold text-gray-950 truncate">{order.id}</span>
           </div>
+
+          {emailStatus && (
+            <div className="mt-3 text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl py-1.5 px-3 inline-block animate-fade-in">
+              {emailStatus}
+            </div>
+          )}
 
           {/* Action CTAs */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
@@ -56,8 +82,18 @@ export default function OrderSuccess() {
 
             <button
               type="button"
+              onClick={handleResendEmail}
+              disabled={resendingEmail}
+              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-800 hover:bg-gray-200 transition cursor-pointer"
+            >
+              <Mail className="w-3 h-3 text-amber-700" />
+              <span>{resendingEmail ? 'Sending...' : 'Resend Email Invoice'}</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-800 hover:bg-gray-200 transition"
+              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-800 hover:bg-gray-200 transition cursor-pointer"
             >
               <PrinterIcon className="w-3 h-3" />
               <span>Print Invoice</span>

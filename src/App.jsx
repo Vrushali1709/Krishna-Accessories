@@ -25,6 +25,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { LoadingProvider } from './context/LoadingContext';
 import WebsiteLoader from './components/WebsiteLoader';
 import TopProgressBar from './components/TopProgressBar';
+import LiveEmailToast from './components/LiveEmailToast';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         <ScrollToTop />
         <TopProgressBar />
         <WebsiteLoader />
+        <LiveEmailToast />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />

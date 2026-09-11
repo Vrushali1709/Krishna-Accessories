@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { SHOP_INFO } from '../utils/shopInfo';
+import { sendInquiryAcknowledgementEmail } from '../utils/emailService';
 import {
   ShieldCheckIcon,
   FacebookIcon,
@@ -23,12 +24,21 @@ export default function ContactUs() {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
+    const submittedForm = { ...form };
     setForm({ name: '', email: '', phone: '', subject: 'Order & Product Inquiry', message: '' });
+
+    try {
+      await sendInquiryAcknowledgementEmail(submittedForm);
+    } catch (err) {
+      console.error('Error sending inquiry ack:', err);
+    }
+
     setTimeout(() => setSubmitted(false), 5000);
   };
+
 
   return (
     <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
