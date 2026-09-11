@@ -642,12 +642,12 @@ export default function Home() {
       {/* =========================================================
           5. TOP PICKS FOR YOU — BEST SELLERS
       ========================================================= */}
-      <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
+      <section className="bg-white pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <Reveal direction="up" delay={50}>
-            <div className="text-center mb-10 sm:mb-12">
+            <div className="text-center mb-7 sm:mb-9">
               <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
                 TOP PICKS FOR YOU
               </p>
@@ -688,14 +688,14 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          9. CHECK OUT WHAT'S NEW — NEW ARRIVALS
+          6. CHECK OUT WHAT'S NEW — NEW ARRIVALS
       ========================================================= */}
-      <section className="bg-[#FAFAFB] py-14 sm:py-20 border-t border-gray-200/80">
+      <section className="bg-[#FAFAFB] pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <Reveal direction="up" delay={50}>
-            <div className="text-center mb-10 sm:mb-12">
+            <div className="text-center mb-7 sm:mb-9">
               <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
                 CHECK OUT WHAT&apos;S NEW
               </p>
