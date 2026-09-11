@@ -271,7 +271,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
               }
 
               return (
-                <Reveal key={`feat-trend-${product.id}`} direction="up" delay={(idx % 4) * 80} duration={650}>
+                <Reveal key={`feat-trend-${activeTab}-${selectedCategory}-${product.id}`} direction="up" delay={(idx % 4) * 80} duration={650}>
                   <div className="group relative flex flex-col justify-between h-full rounded-[24px] sm:rounded-[28px] border border-gray-200/90 bg-white p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-400 hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] hover:border-amber-400/70 hover:-translate-y-2">
                     
                     {/* 1. Product Image Frame with Hover Canvas */}

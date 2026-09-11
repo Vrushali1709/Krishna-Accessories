@@ -510,118 +510,130 @@ export default function Home() {
         </div>
 
         <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
-          <div className="max-w-[620px] lg:my-auto lg:py-8">
-            <div className="mb-5 flex items-center gap-3 animate-fade-in">
-              <span className="h-px w-8 bg-[#C5A880]" />
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#D5C2A5]">
-                {watchHeroSlides[currentSlide].tag}
+          <div className="max-w-[620px] lg:my-auto lg:py-8" key={`hero-slide-${currentSlide}`}>
+            <Reveal direction="down" delay={60}>
+              <div className="mb-5 flex items-center gap-3">
+                <span className="h-px w-8 bg-[#C5A880]" />
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#D5C2A5]">
+                  {watchHeroSlides[currentSlide].tag}
+                </span>
+              </div>
+            </Reveal>
+
+            <Reveal direction="up" delay={130}>
+              <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-extrabold sm:text-5xl lg:text-[68px] xl:text-[76px]">
+                <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
+                <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
+              </h1>
+            </Reveal>
+
+            <Reveal direction="up" delay={200}>
+              <p className="mt-5 text-sm sm:text-base text-[#B0B2B8] max-w-md font-light leading-relaxed">
+                {watchHeroSlides[currentSlide].description}
+              </p>
+            </Reveal>
+
+            <Reveal direction="up" delay={280}>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/shop?category=Watches"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
+                >
+                  <span>Shop Watches</span>
+                  <ArrowRightIcon className="w-4 h-4 text-black" />
+                </Link>
+
+                <Link
+                  to="/shop"
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
+                >
+                  <span>All Collections</span>
+                </Link>
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal direction="up" delay={340}>
+            <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
+              <div className="flex items-center gap-2">
+                {watchHeroSlides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentSlide(i)}
+                    className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
+                      }`}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              <span className="text-[11px] font-mono font-medium text-neutral-400 tracking-wider">
+                0{currentSlide + 1} / 0{watchHeroSlides.length}
               </span>
             </div>
-
-            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-extrabold sm:text-5xl lg:text-[68px] xl:text-[76px]">
-              <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
-              <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
-            </h1>
-
-            <p className="mt-5 text-sm sm:text-base text-[#B0B2B8] max-w-md font-light leading-relaxed">
-              {watchHeroSlides[currentSlide].description}
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                to="/shop?category=Watches"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
-              >
-                <span>Shop Watches</span>
-                <ArrowRightIcon className="w-4 h-4 text-black" />
-              </Link>
-
-              <Link
-                to="/shop"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
-              >
-                <span>All Collections</span>
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
-            <div className="flex items-center gap-2">
-              {watchHeroSlides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentSlide(i)}
-                  className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
-                    }`}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-
-            <span className="text-[11px] font-mono font-medium text-neutral-400 tracking-wider">
-              0{currentSlide + 1} / 0{watchHeroSlides.length}
-            </span>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* =========================================================
           2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (FULL WIDTH)
       ========================================================= */}
-      <div className="w-full relative bg-[#080B11] text-white border-y border-[#C5A880]/35 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#080B11] to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#080B11] to-transparent z-10" />
+      <Reveal direction="up" delay={50}>
+        <div className="w-full relative bg-[#080B11] text-white border-y border-[#C5A880]/35 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#080B11] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#080B11] to-transparent z-10" />
 
-        <div className="animate-marquee flex items-center gap-6 sm:gap-8">
-          {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
-            <div
-              key={idx}
-              onClick={() => item.code && handleCopyCode(item.code)}
-              className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
-            >
-              <span className="text-amber-400 text-xs">✦</span>
-              
-              {/* Offer / Category Badge */}
-              {item.badge && (
-                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
-                  {item.isOffer && (
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-300"></span>
-                    </span>
-                  )}
-                  {item.badge}
+          <div className="animate-marquee flex items-center gap-6 sm:gap-8">
+            {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
+              <div
+                key={idx}
+                onClick={() => item.code && handleCopyCode(item.code)}
+                className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
+              >
+                <span className="text-amber-400 text-xs">✦</span>
+                
+                {/* Offer / Category Badge */}
+                {item.badge && (
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
+                    {item.isOffer && (
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-300"></span>
+                      </span>
+                    )}
+                    {item.badge}
+                  </span>
+                )}
+
+                {/* Title */}
+                <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-neutral-100">
+                  {item.title}
                 </span>
-              )}
 
-              {/* Title */}
-              <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-neutral-100">
-                {item.title}
-              </span>
+                {/* Subtitle */}
+                <span className="text-[10.5px] sm:text-[11px] font-normal text-amber-100/75 tracking-wide">
+                  ({item.subtitle})
+                </span>
 
-              {/* Subtitle */}
-              <span className="text-[10.5px] sm:text-[11px] font-normal text-amber-100/75 tracking-wide">
-                ({item.subtitle})
-              </span>
+                {/* Clickable Code Tag */}
+                {item.code && (
+                  <button
+                    type="button"
+                    onClick={(e) => handleCopyCode(item.code, e)}
+                    title="Click to copy coupon code"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 hover:bg-amber-400/25 px-2 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-amber-300 border border-amber-400/40 transition active:scale-95 cursor-pointer shadow-xs"
+                  >
+                    <span>CODE: {item.code}</span>
+                    <span className="text-[10px]">📋</span>
+                  </button>
+                )}
 
-              {/* Clickable Code Tag */}
-              {item.code && (
-                <button
-                  type="button"
-                  onClick={(e) => handleCopyCode(item.code, e)}
-                  title="Click to copy coupon code"
-                  className="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 hover:bg-amber-400/25 px-2 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-amber-300 border border-amber-400/40 transition active:scale-95 cursor-pointer shadow-xs"
-                >
-                  <span>CODE: {item.code}</span>
-                  <span className="text-[10px]">📋</span>
-                </button>
-              )}
-
-              <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
-            </div>
-          ))}
+                <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </Reveal>
 
       {/* =========================================================
           3. SHOP BY CATEGORY (CURATED CAROUSEL)

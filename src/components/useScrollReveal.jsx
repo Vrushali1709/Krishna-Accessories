@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
  * Custom hook to detect when an element enters the viewport.
  * Uses IntersectionObserver with fallback for older environments.
  */
-export function useInView(options = { threshold: 0.12, triggerOnce: true }) {
+export function useInView(options = { threshold: 0.08, triggerOnce: true }) {
   const [inView, setInView] = useState(false);
   const ref = useRef(null);
 
