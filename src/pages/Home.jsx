@@ -569,64 +569,62 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER STRIP (OUTSIDE HERO SECTION)
+          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (FULL WIDTH)
       ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6 pb-1">
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#090C12] text-white border border-[#C5A880]/35 py-3 sm:py-3.5 shadow-[0_10px_30px_rgba(0,0,0,0.12)] select-none">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-[#090C12] to-transparent z-10 rounded-l-2xl sm:rounded-l-3xl" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-[#090C12] to-transparent z-10 rounded-r-2xl sm:rounded-r-3xl" />
+      <div className="w-full relative bg-[#080B11] text-white border-y border-[#C5A880]/35 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#080B11] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#080B11] to-transparent z-10" />
 
-          <div className="animate-marquee flex items-center gap-6 sm:gap-8">
-            {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
-              <div
-                key={idx}
-                onClick={() => item.code && handleCopyCode(item.code)}
-                className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
-              >
-                <span className="text-amber-400 text-xs">✦</span>
-                
-                {/* Offer / Category Badge */}
-                {item.badge && (
-                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
-                    {item.isOffer && (
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-300"></span>
-                      </span>
-                    )}
-                    {item.badge}
-                  </span>
-                )}
-
-                {/* Title */}
-                <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-neutral-100">
-                  {item.title}
+        <div className="animate-marquee flex items-center gap-6 sm:gap-8">
+          {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
+            <div
+              key={idx}
+              onClick={() => item.code && handleCopyCode(item.code)}
+              className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
+            >
+              <span className="text-amber-400 text-xs">✦</span>
+              
+              {/* Offer / Category Badge */}
+              {item.badge && (
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
+                  {item.isOffer && (
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-300"></span>
+                    </span>
+                  )}
+                  {item.badge}
                 </span>
+              )}
 
-                {/* Subtitle */}
-                <span className="text-[10.5px] sm:text-[11px] font-normal text-amber-100/75 tracking-wide">
-                  ({item.subtitle})
-                </span>
+              {/* Title */}
+              <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-neutral-100">
+                {item.title}
+              </span>
 
-                {/* Clickable Code Tag */}
-                {item.code && (
-                  <button
-                    type="button"
-                    onClick={(e) => handleCopyCode(item.code, e)}
-                    title="Click to copy coupon code"
-                    className="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 hover:bg-amber-400/25 px-2 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-amber-300 border border-amber-400/40 transition active:scale-95 cursor-pointer shadow-xs"
-                  >
-                    <span>CODE: {item.code}</span>
-                    <span className="text-[10px]">📋</span>
-                  </button>
-                )}
+              {/* Subtitle */}
+              <span className="text-[10.5px] sm:text-[11px] font-normal text-amber-100/75 tracking-wide">
+                ({item.subtitle})
+              </span>
 
-                <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
-              </div>
-            ))}
-          </div>
+              {/* Clickable Code Tag */}
+              {item.code && (
+                <button
+                  type="button"
+                  onClick={(e) => handleCopyCode(item.code, e)}
+                  title="Click to copy coupon code"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 hover:bg-amber-400/25 px-2 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-amber-300 border border-amber-400/40 transition active:scale-95 cursor-pointer shadow-xs"
+                >
+                  <span>CODE: {item.code}</span>
+                  <span className="text-[10px]">📋</span>
+                </button>
+              )}
+
+              <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
       {/* =========================================================
           3. CORE VALUE PILLARS (4-FEATURE DISCOVERY STRIP)
