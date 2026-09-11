@@ -68,53 +68,7 @@ export default function Footer() {
   return (
     <>
       {/* 1. Standalone Newsletter / Curated Releases Section (Above Footer) */}
-      <section className="py-8 sm:py-12 bg-[#FAF8F5] border-t border-amber-900/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-amber-900/15 bg-white p-6 sm:p-8 lg:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative overflow-hidden">
-            {/* Subtle ambient luxury light */}
-            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
-            <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
-
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-8">
-              <div className="max-w-xl">
-                <span className="inline-block rounded-full bg-amber-50 border border-amber-200/80 px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-amber-900 mb-2.5">
-                  Exclusive Privé Membership
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
-                  Join Privé & Get 10% Off
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-gray-600">
-                  Subscribe to receive private invitations to limited-edition timepieces, handcrafted essentials, and instant discount vouchers directly to your inbox.
-                </p>
-              </div>
-
-              <div className="w-full lg:max-w-md">
-                <form onSubmit={handleSubscribe} className="relative flex items-center">
-                  <input
-                    type="email"
-                    required
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="Enter your email address..."
-                    className="w-full rounded-2xl border border-gray-200 bg-[#F4F4F6] py-3.5 pl-4 sm:pl-5 pr-32 text-xs sm:text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-amber-400 focus:bg-white focus:shadow-xs"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-gray-950 px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs transition hover:bg-black active:scale-97 cursor-pointer"
-                  >
-                    Join Privé
-                  </button>
-                </form>
-                {subscribed && (
-                  <p className="mt-2 text-xs font-semibold text-emerald-600 animate-fade-in flex items-center gap-1">
-                    <span>✓</span> Thank you for subscribing! Use code <strong className="underline">KRISHNA10</strong> at checkout for 10% instant discount.
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* 2. Main Dark Luxury Footer */}
       <footer className="border-t border-slate-800 bg-[#090D16] text-white relative overflow-hidden select-none">
