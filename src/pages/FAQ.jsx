@@ -7,19 +7,19 @@ import { ChevronDownIcon } from '../components/Icons';
 
 const faqCategories = [
   {
-    category: "Authenticity & Products",
+    category: "Product Quality & Information",
     items: [
       {
-        q: "Are all watches and luxury goods sold on Krishna Accessories 100% authentic?",
-        a: "Yes, without exception. Krishna Accessories only partners with authorized brand manufacturers and certified luxury distributors. Every product arrives with original manufacturer warranty cards, stamped certificates, and authentic serial barcodes."
+        q: "What standards of quality and inspection do products on Krishna Accessories follow?",
+        a: "Every product in our collection is curated with verified product details, fine craftsmanship, and reliable partner networks. Each item arrives with complete product documentation, brand warranty cards, and serial details."
       },
       {
-        q: "Does my purchase come with an official manufacturer warranty?",
-        a: "All branded timepieces, electronics, and goods include full official manufacturer warranties valid across authorized service centers nationwide across India."
+        q: "Does my purchase come with manufacturer warranty?",
+        a: "All branded timepieces, electronics, and goods include standard manufacturer warranties valid across brand service centers nationwide across India."
       },
       {
-        q: "Can I verify the product at a local brand boutique?",
-        a: "Absolutely. You can take your watch or accessory along with our invoice and warranty booklet to any authorized brand showroom across India for authenticity validation."
+        q: "Can I verify product specifications and details?",
+        a: "Yes. Every product page provides detailed specifications, dimensions, SKU codes, and warranty information for transparent and confident shopping."
       }
     ]
   },
@@ -83,7 +83,7 @@ export default function FAQ() {
             Frequently Asked Questions
           </h1>
           <p className="mt-2 text-xs sm:text-sm text-gray-500">
-            Find immediate answers regarding authenticity verification, warranty coverage, order tracking, and returns.
+            Find immediate answers regarding product details, warranty coverage, order tracking, and returns.
           </p>
         </div>
       </section>

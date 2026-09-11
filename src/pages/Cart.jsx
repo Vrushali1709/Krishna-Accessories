@@ -149,7 +149,7 @@ export default function Cart() {
             </div>
             <h2 className="mt-3 text-xl font-bold text-gray-950">Your Shopping Bag is Empty</h2>
             <p className="mt-1.5 max-w-md text-xs sm:text-sm text-gray-500 leading-relaxed">
-              Explore our curated boutique collection of certified Swiss timepieces, handcrafted Italian leather, designer footwear, and modern electronics.
+              Explore our curated boutique collection of premium Swiss timepieces, handcrafted Italian leather, designer footwear, and modern electronics.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -532,10 +532,10 @@ export default function Cart() {
                 <div className="rounded-2xl bg-gray-50 border border-gray-100 p-3 text-[10px] text-gray-600 space-y-1">
                   <p className="flex items-center gap-1.5 font-semibold text-gray-900">
                     <ShieldCheckIcon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>Krishna 100% Certified Authenticity</span>
+                    <span>Quality Assured Shopping Experience</span>
                   </p>
                   <p className="text-gray-500 pl-5 leading-relaxed">
-                    Official warranties, tamper-proof luxury packaging & 7-day easy exchange.
+                    Brand warranty coverage, tamper-proof luxury packaging &amp; 7-day easy exchange.
                   </p>
                 </div>
 

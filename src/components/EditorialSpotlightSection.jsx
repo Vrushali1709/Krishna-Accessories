@@ -43,7 +43,7 @@ export default function EditorialSpotlightSection() {
                   Swiss Chronographs & Automatic Watches
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm text-neutral-300 font-light max-w-md line-clamp-2">
-                  Engineered with sapphire crystal, ceramic bezels, and authentic certified manufacture warranties.
+                  Engineered with sapphire crystal, ceramic bezels, and trusted manufacturer warranty coverage.
                 </p>
 
                 <div className="mt-5 flex items-center gap-3">

@@ -199,7 +199,7 @@ export default function ContactUs() {
                 <div className="flex items-start gap-2.5">
                   <MailIcon className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-gray-950 block">Official Support Email:</strong>
+                    <strong className="text-gray-950 block">Customer Support Email:</strong>
                     <a href={`mailto:${SHOP_INFO.email}`} className="text-gray-900 font-semibold hover:text-amber-600 transition break-all">
                       {SHOP_INFO.email}
                     </a>
@@ -216,7 +216,7 @@ export default function ContactUs() {
             {/* Social Media Connect Card */}
             <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm space-y-3.5 text-xs">
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 border-b border-gray-100 pb-2.5">
-                Official Social Media Channels
+                Social Media &amp; Updates
               </h3>
               <p className="text-xs text-gray-500">
                 Follow Krishna Accessories for daily luxury new arrivals, customer reviews, unboxings, and private client specials.

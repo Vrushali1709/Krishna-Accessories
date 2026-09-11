@@ -211,7 +211,7 @@ export async function sendOtpEmail(email, type = 'forgot_password', customerName
       <!-- Header -->
       <div style="background: #080B11; padding: 24px; text-align: center; border-bottom: 2px solid #C5A880;">
         <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.1em;">KRISHNA <span style="color: #C5A880;">ACCESSORIES</span></h1>
-        <p style="color: #9ca3af; margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;">Mumbai Sanctuary • 100% Certified Authentic</p>
+        <p style="color: #9ca3af; margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;">Mumbai Boutique • Quality & Premium Products</p>
       </div>
 
       <!-- Content -->
@@ -382,7 +382,7 @@ export async function sendOrderConfirmationEmail(orderData) {
       <!-- Header -->
       <div style="background: #080B11; padding: 24px; text-align: center; border-bottom: 2px solid #C5A880;">
         <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.1em;">KRISHNA <span style="color: #C5A880;">ACCESSORIES</span></h1>
-        <p style="color: #9ca3af; margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;">Official Consignment Invoice & Receipt</p>
+        <p style="color: #9ca3af; margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;">Consignment Invoice & Order Receipt</p>
       </div>
 
       <!-- Hero Badge -->
@@ -509,7 +509,7 @@ export async function sendWelcomeEmail(email, customerName = '', role = 'Custome
       <div style="padding: 24px;">
         <p style="font-size: 14px; margin: 0 0 12px 0;">Welcome, ${customerName || 'Friend'}!</p>
         <p style="font-size: 13px; color: #4b5563; line-height: 1.6;">
-          Your account as a <strong>${role}</strong> is now officially active. You now enjoy bespoke concierge access, verified warranty tracking, and private showroom previews.
+          Your account as a <strong>${role}</strong> is now active. You now enjoy bespoke concierge access, verified product details, and private showroom previews.
         </p>
         <div style="background: #fafafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; text-align: center; margin: 20px 0;">
           <p style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin: 0 0 4px 0;">Exclusive Welcome Privilege</p>

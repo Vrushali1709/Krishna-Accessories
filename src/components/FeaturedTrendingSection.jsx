@@ -328,7 +328,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                             {product.category}
                           </span>
                           <span className="text-[10px] font-medium text-neutral-400">
-                            100% Authentic
+                            Premium Quality
                           </span>
                         </div>
 

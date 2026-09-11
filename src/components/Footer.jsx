@@ -102,7 +102,7 @@ export default function Footer() {
               </Link>
 
               <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-300">
-                Mumbai's premier destination for certified authentic luxury timepieces, handcrafted leather essentials, designer sunglasses, and premium lifestyle goods.
+                Mumbai's premier destination for premium luxury timepieces, handcrafted leather essentials, designer sunglasses, and quality lifestyle goods.
               </p>
 
               {/* Mumbai Address & Contact Box */}
@@ -150,7 +150,7 @@ export default function Footer() {
                   <MailIcon className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-amber-400 font-bold block text-[10.5px] uppercase tracking-wider">
-                      Official Email:
+                      Customer Support Email:
                     </span>
                     <a
                       href={`mailto:${SHOP_INFO.email}`}
@@ -244,7 +244,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link to="/faq" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                    FAQ & Authenticity
+                    FAQ & Product Quality
                   </Link>
                 </li>
                 <li>
@@ -334,14 +334,14 @@ export default function Footer() {
           {/* Bottom Copyright Strip */}
           <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-slate-800/60 pt-6 text-xs text-slate-400 sm:flex-row">
             <p className="text-center sm:text-left">
-              &copy; {new Date().getFullYear()} Krishna Accessories Ltd. All rights reserved. 100% Certified Authentic Goods.
+              &copy; {new Date().getFullYear()} Krishna Accessories Ltd. All rights reserved. Quality &amp; Premium Lifestyle Products.
             </p>
             <div className="flex items-center gap-4 text-[11px] text-slate-400">
               <Link to="/privacy" className="hover:text-slate-200 transition">Privacy</Link>
               <span>•</span>
               <Link to="/terms" className="hover:text-slate-200 transition">Terms</Link>
               <span>•</span>
-              <Link to="/faq" className="hover:text-slate-200 transition">Authenticity</Link>
+              <Link to="/faq" className="hover:text-slate-200 transition">Product FAQs</Link>
               <span>•</span>
               <Link to="/contact" className="hover:text-slate-200 transition">Mumbai Boutique</Link>
             </div>

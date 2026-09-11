@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-gray-950">3. Payment Security & Encryption</h2>
             <p>
-              We do not store your complete payment card credentials on our servers. All transactions are securely processed through RBI-authorized payment gateways complying with PCI-DSS Tier 1 standards and 256-bit SSL encryption.
+              We do not store your complete payment card credentials on our servers. All transactions are securely processed through RBI-regulated payment gateways complying with PCI-DSS Tier 1 standards and 256-bit SSL encryption.
             </p>
           </section>
 

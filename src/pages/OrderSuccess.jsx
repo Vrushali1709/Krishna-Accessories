@@ -55,7 +55,7 @@ export default function OrderSuccess() {
           </h1>
 
           <p className="mt-1.5 max-w-sm mx-auto text-xs text-gray-600 leading-relaxed">
-            We have confirmed your consignment. An official receipt has been sent to <strong>{order.customer?.email}</strong> and our partner boutique is preparing your items for express dispatch.
+            We have confirmed your consignment. An order receipt has been sent to <strong>{order.customer?.email}</strong> and our partner boutique is preparing your items for express dispatch.
           </p>
 
           {/* Reference Number */}

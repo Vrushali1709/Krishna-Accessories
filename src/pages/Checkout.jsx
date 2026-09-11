@@ -95,7 +95,7 @@ export default function Checkout() {
     }
 
     setLoading(true);
-    showLoading('Securing your order & generating official invoice...');
+    showLoading('Securing your order & generating consignment invoice...');
 
     const orderPayload = {
       customer: form,
@@ -479,7 +479,7 @@ export default function Checkout() {
                   <ShieldCheckIcon className="w-3 h-3 text-emerald-600" />
                   <span>Krishna Purchase Protection</span>
                 </p>
-                <p>100% Genuine Certified &bull; 7-Day Return Guarantee</p>
+                <p>Quality Products &bull; 7-Day Return Guarantee</p>
               </div>
 
             </div>

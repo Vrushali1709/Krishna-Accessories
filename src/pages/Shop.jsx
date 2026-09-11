@@ -397,7 +397,7 @@ export default function Shop() {
               </h1>
 
               <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-2xl">
-                Explore handcrafted luxury horology, designer leather goods, high-performance footwear, and flagship mobile devices backed by authorized warranties and insured Pan-India express delivery.
+                Explore handcrafted luxury horology, designer leather goods, high-performance footwear, and flagship mobile devices backed by verified product details and insured Pan-India express delivery.
               </p>
             </div>
 
@@ -1214,8 +1214,8 @@ export default function Shop() {
               <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-50 text-[#B89758] border border-amber-200">
                 <ShieldCheckIcon className="w-5 h-5" />
               </div>
-              <h4 className="text-xs font-black text-gray-950 uppercase tracking-wider">100% Certified Authentic</h4>
-              <p className="text-[11px] text-gray-500">Rigorous boutique inspection with manufacturer warranty cards.</p>
+              <h4 className="text-xs font-black text-gray-950 uppercase tracking-wider">Quality &amp; Premium Products</h4>
+              <p className="text-[11px] text-gray-500">Rigorous boutique quality check with full product documentation.</p>
             </div>
 
             <div className="space-y-1.5">
@@ -1255,8 +1255,8 @@ export default function Shop() {
           <div className="divide-y divide-gray-100 max-w-3xl mx-auto text-xs">
             {[
               {
-                q: 'How do I know the products are 100% genuine?',
-                a: 'Every timepiece, leather bag, pair of sneakers, and tech gadget in our boutique is sourced directly through certified authorized channels and includes official stamped warranty cards and manufacturer serial codes.'
+                q: 'How do I know about product quality and details?',
+                a: 'Every timepiece, leather bag, pair of sneakers, and tech gadget in our boutique undergoes rigorous multi-point quality checks and includes complete verified product details and manufacturer warranty paperwork.'
               },
               {
                 q: 'How fast is express delivery across India?',

@@ -7,8 +7,8 @@ const DIFFERENCE_ITEMS = [
   {
     number: '01',
     icon: ShieldCheckIcon,
-    title: '100% Certified Authentic',
-    text: 'Every timepiece, leather good, and device is sourced directly from authorized brand houses with official manufacturer warranty.'
+    title: 'Quality & Premium Products',
+    text: 'Every timepiece, leather good, and device is curated with verified product details and reliable manufacturer warranty.'
   },
   {
     number: '02',
@@ -43,7 +43,7 @@ export default function WhyChooseUsSection({ items = DIFFERENCE_ITEMS }) {
             Why Shop With Us?
           </h2>
           <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed text-gray-500 sm:text-sm">
-            We hold ourselves to the highest standards of luxury curation, authentic sourcing, and client satisfaction.
+            We hold ourselves to the highest standards of luxury curation, trusted product quality, and client satisfaction.
           </p>
         </div>
       </Reveal>

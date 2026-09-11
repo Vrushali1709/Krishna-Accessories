@@ -372,10 +372,10 @@ export const defaultProducts = [
     images: [
       "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700"
     ],
-    description: "Authentic Seiko 5 Sports automatic timepiece, thoroughly crafted with LumiBrite hands, exhibition case back, and tested for precise timekeeping.",
+    description: "Premium Seiko 5 Sports automatic timepiece, thoroughly crafted with LumiBrite hands, exhibition case back, and tested for precise timekeeping.",
     specifications: {
       Material: "Solid Stainless Steel",
-      Movement: "Genuine Seiko 4R36 24-Jewel Automatic",
+      Movement: "Seiko 4R36 24-Jewel Automatic",
       Glass: "Hardlex Crystal",
       WaterResistance: "100m / 10 ATM",
       Warranty: "2 Years International Warranty"
@@ -805,7 +805,7 @@ export const defaultProducts = [
       RAM: "36GB Unified Memory",
       Storage: "1TB NVMe SSD",
       Display: "16.2-inch Liquid Retina XDR (3456x2234)",
-      Warranty: "1 Year Official AppleCare"
+      Warranty: "1 Year AppleCare Coverage"
     },
     colors: ["Space Black", "Silver"],
     variants: ["36GB / 1TB", "48GB / 2TB"]
@@ -956,7 +956,7 @@ export const defaultProducts = [
       Display: "Always-On Retina 3000 nits",
       Battery: "Up to 36 hours (72h Low Power)",
       WaterResistance: "100m Water Resistance (EN13319)",
-      Warranty: "1 Year Official AppleCare"
+      Warranty: "1 Year AppleCare Coverage"
     },
     colors: ["Titanium / Orange Ocean Band", "Titanium / Midnight Ocean Band"],
     variants: ["49mm GPS + Cellular"]
@@ -996,14 +996,14 @@ export const defaultProducts = [
 // Initial default reviews
 const defaultProductReviews = {
   1: [
-    { id: 101, user: "Anand Verma", rating: 5, date: "24 Aug 2026", title: "Masterpiece craftsmanship", text: "The dial finish and sapphire crystal are spectacular. Received the genuine certificate and Titan warranty booklet in an exquisite wooden case.", verified: true },
+    { id: 101, user: "Anand Verma", rating: 5, date: "24 Aug 2026", title: "Masterpiece craftsmanship", text: "The dial finish and sapphire crystal are spectacular. Received the product documentation and Titan warranty booklet in an exquisite wooden case.", verified: true },
     { id: 102, user: "Meera Patel", rating: 5, date: "18 Aug 2026", title: "Luxury feel on wrist", text: "Lightweight yet sturdy surgical steel. Express shipping delivered to Surat within 24 hours.", verified: true }
   ],
   4: [
     { id: 103, user: "Karan Singhania", rating: 5, date: "29 Aug 2026", title: "Pure luxury aesthetic", text: "The ceramic bezel glides smoothly. Super premium weight and luminescence. Worth every rupee.", verified: true }
   ],
   10: [
-    { id: 104, user: "Devansh Shah", rating: 5, date: "20 Aug 2026", title: "Exceptional marathon comfort", text: "Zoom Air foam is super responsive. Authentic Nike India barcode confirmed on box.", verified: true }
+    { id: 104, user: "Devansh Shah", rating: 5, date: "20 Aug 2026", title: "Exceptional marathon comfort", text: "Zoom Air foam is super responsive. Verified Nike India barcode confirmed on box.", verified: true }
   ]
 };
 

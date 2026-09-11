@@ -2,7 +2,7 @@
 
 export const SHOP_INFO = {
   name: "Krishna Accessories",
-  tagline: "Certified Authentic Luxury Goods & Lifestyle Accessories",
+  tagline: "Quality Products & Premium Lifestyle Accessories",
   address: "Shop No. 64, Heera Panna Shopping Center, Haji Ali, Mumbai - 400026",
   shortAddress: "Shop No. 64, Heera Panna Shopping Center, Haji Ali, Mumbai",
   city: "Mumbai",

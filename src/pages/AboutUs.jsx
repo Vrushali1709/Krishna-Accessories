@@ -174,7 +174,7 @@ export default function AboutUs() {
               {/* Main Heading */}
               <Reveal delay={120} direction="up">
                 <h1 className="font-serif text-3xl sm:text-5xl lg:text-[54px] font-medium tracking-tight text-neutral-950 leading-[1.15]">
-                  Precision, Authenticity, <br />
+                  Precision, Quality, <br />
                   <span className="italic font-normal text-[#8C6734]">Crafted for You.</span>
                 </h1>
               </Reveal>
@@ -182,7 +182,7 @@ export default function AboutUs() {
               {/* Real, Grounded Brand Story Intro */}
               <Reveal delay={220} direction="up">
                 <p className="text-sm sm:text-base text-neutral-600 font-normal leading-relaxed max-w-xl">
-                  Located at Mumbai’s iconic Heera Panna Shopping Center in Haji Ali, Krishna Accessories is India’s premier multi-category destination for 100% certified authentic timepieces, handcrafted leather goods, footwear, and curated lifestyle essentials. We connect discerning buyers directly with authorized brand manufacturers and official warranties.
+                  Located at Mumbai’s iconic Heera Panna Shopping Center in Haji Ali, Krishna Accessories is India’s premier multi-category destination for quality timepieces, handcrafted leather goods, footwear, and curated lifestyle essentials. We connect discerning buyers directly with verified products, premium accessories, and reliable brand warranties.
                 </p>
               </Reveal>
 
@@ -191,11 +191,11 @@ export default function AboutUs() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs text-neutral-700">
                   <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/80 hover:border-[#C5A880] transition-colors duration-200">
                     <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
-                    <span className="font-medium">Direct Authorized Sourcing</span>
+                    <span className="font-medium">Verified Product Sourcing</span>
                   </div>
                   <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/80 hover:border-[#C5A880] transition-colors duration-200">
                     <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
-                    <span className="font-medium">Official Brand Warranty</span>
+                    <span className="font-medium">Reliable Brand Warranty</span>
                   </div>
                   <div className="flex items-center gap-2 p-2.5 rounded-md bg-[#FAFAFB] border border-neutral-200/80 hover:border-[#C5A880] transition-colors duration-200">
                     <Check className="w-4 h-4 text-[#8C6734] shrink-0" />
@@ -209,38 +209,38 @@ export default function AboutUs() {
                 <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                   <Link
                     to="/shop"
-                    className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-semibold tracking-[0.16em] uppercase rounded-sm transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-0.5 group active:scale-98"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-[0.14em] hover:bg-[#8C6734] transition-colors duration-200 shadow-sm"
                   >
-                    <span>Explore Collection</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1.5 text-[#C5A880]" />
+                    <span>Explore Products</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
 
                   <a
-                    href="#our-story"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-neutral-300 hover:border-neutral-900 text-neutral-800 hover:text-neutral-950 text-xs font-medium tracking-[0.16em] uppercase rounded-sm transition-all duration-200 bg-white hover:bg-neutral-50"
+                    href="#story"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-md bg-white border border-neutral-300 text-neutral-900 text-xs font-semibold uppercase tracking-[0.14em] hover:bg-neutral-50 transition-colors duration-200"
                   >
-                    <span>Our Story</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-neutral-500 transition-transform duration-200 group-hover:translate-y-0.5" />
+                    <span>Our Legacy</span>
                   </a>
                 </div>
               </Reveal>
+
             </div>
 
-            {/* Right Hero Image with Floating Card */}
+            {/* Right Column: Hero Visual */}
             <div className="lg:col-span-5">
               <Reveal delay={200} direction="left">
                 <div className="relative mx-auto max-w-md lg:max-w-none group">
                   <div className="aspect-[4/4.8] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-xl relative transition-transform duration-500 hover:shadow-2xl">
                     <img
                       src="https://i.pinimg.com/1200x/f2/36/b7/f236b7045be01d7318acf6d2b7b19400.jpg"
-                      alt="Authentic Luxury Timepieces & Accessories"
+                      alt="Quality Luxury Timepieces & Accessories"
                       className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     />
 
                     {/* Discreet Bottom Label with subtle glassmorphism */}
                     <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-lg border border-neutral-200/80 flex items-center justify-between text-xs shadow-md transition-all duration-300 group-hover:bg-white">
                       <div>
-                        <p className="font-semibold text-neutral-950">100% Certified Authentic</p>
+                        <p className="font-semibold text-neutral-950">Quality &amp; Premium Products</p>
                         <p className="text-[11px] text-neutral-500">Titan &bull; Casio &bull; Fossil &bull; Hidesign &bull; Apple</p>
                       </div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6734] bg-[#F5F2EB] px-2.5 py-1 rounded-sm border border-[#C5A880]/40">
@@ -269,10 +269,10 @@ export default function AboutUs() {
                   <AnimatedCounter end={100} suffix="%" />
                 </p>
                 <p className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-                  Genuine Guarantee
+                  Quality Guarantee
                 </p>
                 <p className="text-[11px] text-neutral-500">
-                  Direct authorized distributor sourcing
+                  Curated multi-category product sourcing
                 </p>
               </div>
             </Reveal>
@@ -463,28 +463,28 @@ export default function AboutUs() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
 
-            {/* Left Column: Authentic Craftsmanship Image */}
+            {/* Left Column: Premium Craftsmanship Image */}
             <div className="lg:col-span-5 order-2 lg:order-1">
               <Reveal delay={100} direction="right">
                 <div className="relative group">
                   <div className="aspect-[4/4.6] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-md">
                     <img
                       src="https://i.pinimg.com/736x/ac/f6/7d/acf67d5d91a1b26246a9f121fdf4b41e.jpg"
-                      alt="Authentic Precision & Quality Check"
+                      alt="Precision & Quality Check"
                       className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-103"
                     />
                   </div>
 
-                  {/* Grounded Authenticity Stamp */}
+                  {/* Grounded Quality Stamp */}
                   <div className="absolute -bottom-4 right-2 sm:-right-4 bg-white border border-neutral-200 p-3.5 rounded-lg shadow-xl max-w-[230px] transition-transform duration-300 group-hover:-translate-y-1">
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8C6734]">
-                      Authorized Retailer
+                      Premium Retailer
                     </p>
                     <p className="text-xs font-semibold text-neutral-950 mt-0.5">
-                      Authenticated Since Day One
+                      Quality Sourcing Since Day One
                     </p>
                     <p className="text-[11px] text-neutral-500 mt-0.5">
-                      Gujarat's trusted multi-brand store with verified provenance.
+                      Mumbai's trusted multi-brand store with verified product details.
                     </p>
                   </div>
                 </div>
@@ -501,7 +501,7 @@ export default function AboutUs() {
                     Our Foundation
                   </span>
                   <h2 className="font-serif text-2xl sm:text-4xl font-medium text-neutral-950 tracking-tight leading-tight mt-2">
-                    A Legacy Built on Trust & Precision
+                    A Legacy Built on Trust &amp; Precision
                   </h2>
                 </div>
               </Reveal>
@@ -509,10 +509,10 @@ export default function AboutUs() {
               <Reveal delay={120} direction="left">
                 <div className="space-y-3.5 text-neutral-600 text-sm sm:text-base leading-relaxed font-normal">
                   <p>
-                    At Krishna Accessories, every timepiece, leather bag, footwear pair, and tech accessory in our catalog is sourced directly from brand-authorized manufacturers and certified distribution networks. We maintain zero tolerance for replicas, grey-market imports, and compromised quality.
+                    At Krishna Accessories, every timepiece, leather bag, footwear pair, and tech accessory in our catalog is curated with verified product details, fine craftsmanship, and reliable partner networks. We maintain zero tolerance for compromised quality and inconsistent standards.
                   </p>
                   <p>
-                    Whether you are ordering an automatic watch from Titan, a rugged chronograph from Casio, handcrafted leather accessories from Hidesign, or premium electronics from Sony and Apple, each item arrives with stamped warranty paperwork, official seals, and original retail packaging.
+                    Whether you are ordering an automatic watch from Titan, a rugged chronograph from Casio, handcrafted leather accessories from Hidesign, or premium electronics from Sony and Apple, each item arrives with warranty paperwork, brand seals, and luxury presentation packaging.
                   </p>
                 </div>
               </Reveal>
@@ -526,7 +526,7 @@ export default function AboutUs() {
               <Reveal delay={250} direction="left">
                 <div className="p-4 rounded-lg bg-white border border-neutral-200/80 border-l-3 border-l-[#8C6734] shadow-2xs">
                   <p className="italic text-xs sm:text-sm text-neutral-800 leading-normal">
-                    “We believe when customers invest in premium accessories, they deserve 100% peace of mind, prompt customer support, and genuine manufacturer-backed warranties.”
+                    “We believe when customers invest in premium accessories, they deserve 100% peace of mind, prompt customer support, and reliable manufacturer warranties.”
                   </p>
                   <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mt-1.5">
                     — The Krishna Accessories Promise
@@ -540,7 +540,7 @@ export default function AboutUs() {
                     to="/shop"
                     className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-neutral-950 hover:text-[#8C6734] transition-colors group"
                   >
-                    <span>Browse All Authenticated Products</span>
+                    <span>Browse All Premium Products</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1 text-[#8C6734]" />
                   </Link>
                 </div>
@@ -577,7 +577,7 @@ export default function AboutUs() {
           {/* 3 Value Blocks */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 
-            {/* 01 — AUTHENTICITY */}
+            {/* 01 — QUALITY ASSURANCE */}
             <Reveal delay={80} direction="up">
               <div className="h-full p-7 rounded-xl bg-[#FAFAFB] border border-neutral-200/80 hover:border-[#C5A880] hover:bg-white transition-all duration-300 shadow-2xs hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between text-left group">
                 <div>
@@ -594,16 +594,16 @@ export default function AboutUs() {
                     Pillar 01
                   </p>
                   <h3 className="text-base font-bold text-neutral-950 mt-1 mb-2">
-                    100% Authenticity Guarantee
+                    Quality Assurance Guarantee
                   </h3>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                    100% genuine products sourced exclusively from authorized distributors with official warranty cards serviceable at certified brand service centers nationwide.
+                    High quality products curated with verified product details and brand warranty cards serviceable at brand service centers nationwide.
                   </p>
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-neutral-200/60 flex items-center gap-1.5 text-[11px] font-medium text-neutral-500">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#8C6734]" />
-                  <span>Authorized Brand Partnerships</span>
+                  <span>Verified Brand Selections</span>
                 </div>
               </div>
             </Reveal>
@@ -625,7 +625,7 @@ export default function AboutUs() {
                     Pillar 02
                   </p>
                   <h3 className="text-base font-bold text-neutral-950 mt-1 mb-2">
-                    Curated Quality & Craftsmanship
+                    Curated Quality &amp; Craftsmanship
                   </h3>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
                     Every watch, leather wallet, backpack, footwear model, and tech gadget is hand-selected for durability, mechanical accuracy, and timeless aesthetics.
@@ -665,7 +665,7 @@ export default function AboutUs() {
 
                 <div className="mt-5 pt-3 border-t border-neutral-200/60 flex items-center gap-1.5 text-[11px] font-medium text-neutral-500">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#8C6734]" />
-                  <span>In-Store & Online Support</span>
+                  <span>In-Store &amp; Online Support</span>
                 </div>
               </div>
             </Reveal>
@@ -676,7 +676,7 @@ export default function AboutUs() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 6. AUTHENTICITY FEATURE SECTION (Charcoal Luxury, Clean & Trustworthy)     */}
+      {/* 6. QUALITY FEATURE SECTION (Charcoal Luxury, Clean & Trustworthy)          */}
       {/* ========================================================================= */}
       <section className="bg-[#111827] text-white py-16 sm:py-20 border-b border-neutral-800 relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -691,7 +691,7 @@ export default function AboutUs() {
                     Zero Compromise
                   </span>
                   <h2 className="font-serif text-2xl sm:text-4xl font-medium text-white tracking-tight leading-tight mt-2">
-                    Every Detail, Authenticated.
+                    Every Detail, Quality Assured.
                   </h2>
                 </div>
               </Reveal>
@@ -711,9 +711,9 @@ export default function AboutUs() {
                       <ShieldCheck className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="text-xs sm:text-sm font-semibold text-white">Official Warranty</h3>
+                      <h3 className="text-xs sm:text-sm font-semibold text-white">Brand Warranty</h3>
                       <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5">
-                        Brand warranty cards honored at all official brand service centers nationwide.
+                        Brand warranty cards honored at brand service centers nationwide.
                       </p>
                     </div>
                   </div>
@@ -727,7 +727,7 @@ export default function AboutUs() {
                     <div>
                       <h3 className="text-xs sm:text-sm font-semibold text-white">Verified Sourcing</h3>
                       <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5">
-                        Direct factory and certified distributor procurement with genuine batch codes.
+                        Direct quality procurement with complete verified batch codes.
                       </p>
                     </div>
                   </div>
@@ -741,7 +741,7 @@ export default function AboutUs() {
                     <div>
                       <h3 className="text-xs sm:text-sm font-semibold text-white">Secure Delivery</h3>
                       <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5">
-                        Insured transit in tamper-evident sealed packaging via BlueDart Express & Delhivery.
+                        Insured transit in tamper-evident sealed packaging via BlueDart Express &amp; Delhivery.
                       </p>
                     </div>
                   </div>
@@ -763,7 +763,7 @@ export default function AboutUs() {
                   <div className="absolute bottom-4 left-4 right-4 bg-black/80 backdrop-blur-md p-3 rounded-lg border border-neutral-800 flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2 text-neutral-200">
                       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Direct Factory Authorized</span>
+                      <span>Direct Quality Assurance</span>
                     </div>
                     <span className="text-[10px] font-mono text-[#C5A880] uppercase tracking-wider">
                       Mumbai Hub

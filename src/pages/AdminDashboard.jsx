@@ -1801,7 +1801,7 @@ export default function AdminDashboard() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Authorized Brands ({brands.length})
+                        Catalog Brands ({brands.length})
                       </h1>
                       <p className="text-xs text-zinc-500 mt-0.5">Registered luxury manufacturer partners.</p>
                     </div>

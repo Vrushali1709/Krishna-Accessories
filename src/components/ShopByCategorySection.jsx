@@ -86,7 +86,7 @@ export default function ShopByCategorySection({
               Shop by Category
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-neutral-500">
-              Browse our handcrafted collections across certified luxury, tech, and lifestyle.
+              Browse our handcrafted collections across premium luxury, tech, and lifestyle.
             </p>
           </div>
 

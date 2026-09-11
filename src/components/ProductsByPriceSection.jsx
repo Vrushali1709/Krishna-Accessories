@@ -143,7 +143,7 @@ export default function ProductsByPriceSection({
             </div>
 
             <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-xl mx-auto leading-relaxed">
-              Find authentic luxury timepieces, genuine leather, and high-performance electronics crafted for your exact budget.
+              Find premium luxury timepieces, fine leather, and high-performance electronics crafted for your exact budget.
             </p>
           </div>
         </Reveal>
@@ -289,7 +289,7 @@ export default function ProductsByPriceSection({
               </span>
               <div>
                 <p className="font-bold text-xs sm:text-sm text-white">
-                  Looking for more authentic choices {activeTier.label}?
+                  Looking for more curated choices {activeTier.label}?
                 </p>
                 <p className="text-[11px] text-neutral-300">
                   Filter by category, brand, and warranty directly in our specialized shop view.

@@ -176,7 +176,7 @@ export default function Navbar() {
             <a
               href={`mailto:${SHOP_INFO.email}`}
               className="hidden lg:inline-flex items-center gap-1 text-slate-200 hover:text-amber-300 transition"
-              title="Official Support Email"
+              title="Customer Support Email"
             >
               <MailIcon className="w-3 h-3 text-amber-400" />
               <span>{SHOP_INFO.email}</span>
@@ -337,7 +337,7 @@ export default function Navbar() {
 
                     {/* Bottom strip */}
                     <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between px-2 text-[10.5px] text-gray-400 font-medium">
-                      <span>★ 100% Certified Authentic Guarantee</span>
+                      <span>★ Quality Products &amp; Trusted Shopping</span>
                       <span className="text-gray-300">&bull;</span>
                       <span>Express Doorstep Delivery</span>
                     </div>

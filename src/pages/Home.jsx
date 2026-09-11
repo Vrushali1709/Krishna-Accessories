@@ -161,9 +161,9 @@ const storeTickerItems = [
     isOffer: true
   },
   {
-    badge: '100% AUTHENTIC',
+    badge: 'PREMIUM QUALITY',
     badgeColor: 'bg-amber-400/20 text-amber-300 border-amber-400/40',
-    title: 'OFFICIAL BRAND WARRANTY',
+    title: 'RELIABLE BRAND WARRANTY',
     subtitle: 'Titan • Casio • Fossil • Seiko • Apple • Sony',
     isOffer: false
   },
@@ -768,7 +768,7 @@ export default function Home() {
               Explore by Brand
             </h2>
             <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-lg mx-auto leading-relaxed">
-              Discover certified authentic luxury collections direct from authorized heritage houses &amp; global makers.
+              Discover quality luxury collections and curated pieces from renowned heritage houses &amp; global makers.
             </p>
           </div>
         </Reveal>

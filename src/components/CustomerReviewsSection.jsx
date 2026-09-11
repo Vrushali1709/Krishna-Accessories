@@ -11,7 +11,7 @@ const DEFAULT_REVIEWS = [
     rating: 5,
     category: 'Luxury Watches',
     product: 'Titan Edge Ceramic Chronograph',
-    text: 'Ordered the Titan Edge Ceramic watch. The packaging was immaculate with the official warranty card stamped. Genuine showroom experience delivered directly to my doorstep in South Mumbai!',
+    text: 'Ordered the Titan Edge Ceramic watch. The packaging was immaculate with the brand warranty card. Premium showroom experience delivered directly to my doorstep in South Mumbai!',
     date: 'Verified Buyer • 2 days ago'
   },
   {
@@ -21,7 +21,7 @@ const DEFAULT_REVIEWS = [
     rating: 5,
     category: 'Leather Handbags',
     product: 'Hidesign Genuine Leather Tote',
-    text: 'The quality of the leather bag is absolutely top-notch. Fast same-day pickup from their Heera Panna, Haji Ali store. 100% authentic product and the concierge team was super helpful.',
+    text: 'The quality of the leather bag is absolutely top-notch. Fast same-day pickup from their Heera Panna, Haji Ali store. Top quality product and the concierge team was super helpful.',
     date: 'Verified Buyer • 4 days ago'
   },
   {
@@ -31,7 +31,7 @@ const DEFAULT_REVIEWS = [
     rating: 5,
     category: 'Audio & Gadgets',
     product: 'Sony WH-1000XM5 Noise Cancelling',
-    text: 'Got the Sony flagship headphones at a fantastic price using code KRISHNA10. 100% original product with serial number instantly verified on the official portal.',
+    text: 'Got the Sony flagship headphones at a fantastic price using code KRISHNA10. Exceptional quality product with verified product details and serial barcode.',
     date: 'Verified Buyer • 1 week ago'
   },
   {
@@ -61,7 +61,7 @@ const DEFAULT_REVIEWS = [
     rating: 5,
     category: 'Luxury Fragrance',
     product: 'Dior Sauvage Eau De Parfum',
-    text: 'Finding 100% verified authentic designer perfumes online can be tough, but Krishna Accessories delivers guaranteed genuine bottles with batch code verification. Top marks!',
+    text: 'Finding trusted premium designer perfumes online can be tough, but Krishna Accessories delivers verified quality bottles with batch code verification. Top marks!',
     date: 'Verified Buyer • 2 weeks ago'
   },
   {
@@ -71,7 +71,7 @@ const DEFAULT_REVIEWS = [
     rating: 5,
     category: 'Chronograph Watches',
     product: 'Casio Edifice Sapphire Chronograph',
-    text: 'Super fast dispatch by BlueDart. The watch is gorgeous and came with all official tags, luxury box, and tax invoice. 7-day peace-of-mind guarantee gives complete confidence.',
+    text: 'Super fast dispatch by BlueDart. The watch is gorgeous and came with brand tags, luxury presentation box, and tax invoice. 7-day peace-of-mind guarantee gives complete confidence.',
     date: 'Verified Buyer • 3 weeks ago'
   }
 ];
@@ -197,7 +197,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
               Customer Reviews &amp; Testimonials
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-xl">
-              Real experiences from clients who trust Krishna Accessories for 100% certified authentic luxury.
+              Real experiences from clients who trust Krishna Accessories for premium products and a reliable shopping experience.
             </p>
           </div>
 

@@ -258,7 +258,7 @@ const defaultOrders = [
     date: "27 Aug 2026",
     timeline: [
       { status: "Order Placed", date: "27 Aug 2026, 11:00 AM", done: true, completed: true, stage: "Order Placed", time: "27 Aug 2026, 11:00 AM", description: "Order received" },
-      { status: "Payment Confirmed", date: "27 Aug 2026, 11:02 AM", done: true, completed: true, stage: "Payment Confirmed", time: "27 Aug 2026, 11:02 AM", description: "Card authorized" },
+      { status: "Payment Confirmed", date: "27 Aug 2026, 11:02 AM", done: true, completed: true, stage: "Payment Confirmed", time: "27 Aug 2026, 11:02 AM", description: "Card payment verified" },
       { status: "Processing & Packing", date: "27 Aug 2026, 02:30 PM", done: true, completed: true, stage: "Processing & Packing", time: "27 Aug 2026, 02:30 PM", description: "Secured in high-security packaging" },
       { status: "Shipped", date: "28 Aug 2026, 09:15 AM", done: true, completed: true, stage: "Shipped", time: "28 Aug 2026, 09:15 AM", description: "Dispatched via air express" },
       { status: "Out for Delivery", date: "29 Aug 2026, 10:30 AM", done: true, completed: true, stage: "Out for Delivery", time: "29 Aug 2026, 10:30 AM", description: "Out with delivery associate" },
@@ -271,7 +271,7 @@ const defaultNotifications = [
   {
     id: 1,
     title: "Welcome to Krishna Accessories",
-    message: "Thank you for choosing Ahmedabad's premier curated boutique for authenticated timepieces and essentials.",
+    message: "Thank you for choosing Mumbai's premier curated boutique for quality timepieces and lifestyle essentials.",
     date: "Just now",
     unread: true,
     type: "info"

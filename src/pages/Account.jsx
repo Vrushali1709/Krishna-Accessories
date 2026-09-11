@@ -486,7 +486,7 @@ export default function Account() {
                     {order.status === 'Return Approved' && (
                       <div className="rounded-xs border border-teal-200 bg-teal-50/70 p-3 text-xs text-teal-950 space-y-1">
                         <p className="font-bold flex items-center gap-1.5">
-                          <span>📦</span> Return Authorized & Reverse Pickup Scheduled
+                          <span>📦</span> Return Approved &amp; Reverse Pickup Scheduled
                         </p>
                         <p className="text-[11px] text-teal-800">
                           Please keep the product in its original box with all warranty cards and packaging. BlueDart courier will pick up within 1 business day.
@@ -736,7 +736,7 @@ export default function Account() {
                   {activeTrackingOrder.status === 'Return Approved' && (
                     <div className="rounded-xs border border-teal-200 bg-teal-50/70 p-3.5 text-xs text-teal-950 space-y-1">
                       <p className="font-bold flex items-center gap-1.5">
-                        <span>📦</span> Return Authorized & Reverse Courier Pickup Scheduled
+                        <span>📦</span> Return Approved &amp; Reverse Courier Pickup Scheduled
                       </p>
                       <p className="text-[11px] text-teal-800">
                         Please keep the item inside original box with warranty cards intact. BlueDart courier will collect it within 24-48 hours.
@@ -1244,7 +1244,7 @@ export default function Account() {
                 <span>Eligible Refund: ₹{selectedOrderForReturn.total?.toLocaleString('en-IN')}</span>
               </div>
               <p className="text-[11px] text-stone-500">
-                Protected by Krishna Accessories 7-Day Authentic Return Policy. Reverse pickup will be arranged by BlueDart.
+                Protected by Krishna Accessories 7-Day Return &amp; Exchange Policy. Reverse pickup will be arranged by BlueDart.
               </p>
             </div>
 

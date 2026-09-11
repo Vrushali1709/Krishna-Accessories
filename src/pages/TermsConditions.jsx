@@ -26,9 +26,9 @@ export default function TermsConditions() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base font-bold text-gray-950">2. Certified Authenticity & Pricing</h2>
+            <h2 className="text-base font-bold text-gray-950">2. Product Quality &amp; Pricing</h2>
             <p>
-              All products listed are guaranteed 100% authentic and sourced from verified brand partners. Prices are displayed in Indian Rupees (₹) and include all applicable GST and duties.
+              All products listed are curated for quality and sourced from verified supplier partners. Prices are displayed in Indian Rupees (₹) and include all applicable GST and duties.
             </p>
           </section>
 
