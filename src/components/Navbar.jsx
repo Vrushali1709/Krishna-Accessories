@@ -244,8 +244,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Center: Primary Navigation Links (Centered in Viewport) */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 2xl:gap-7 text-[11.5px] xl:text-[12px] font-semibold uppercase tracking-[0.12em] xl:tracking-[0.14em] text-gray-600 absolute left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
+          {/* Center: Primary Navigation Links (Strictly Centered in Viewport) */}
+          <nav className="hidden xl:flex items-center gap-7 text-[12px] font-semibold uppercase tracking-[0.14em] text-gray-600 absolute left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
             <Link
               to="/"
               className={`relative py-1.5 transition-colors ${location.pathname === '/'
@@ -356,29 +356,7 @@ export default function Navbar() {
               Shop All
             </Link>
 
-            {/* New Arrivals with glowing pill badge */}
-            <Link
-              to="/new-arrivals"
-              className={`relative py-1.5 transition-colors inline-flex items-center gap-1.5 ${location.pathname === '/new-arrivals'
-                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
-                : 'hover:text-gray-950'
-                }`}
-            >
-              <span>New Arrivals</span>
-              <span className="rounded-full bg-amber-500/15 border border-amber-500/40 px-1.5 py-0.2 text-[8.5px] font-extrabold text-amber-800 tracking-normal normal-case">
-                New
-              </span>
-            </Link>
 
-            <Link
-              to="/tracking"
-              className={`relative py-1.5 transition-colors ${location.pathname === '/tracking'
-                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
-                : 'hover:text-gray-950'
-                }`}
-            >
-              Track Order
-            </Link>
 
             <Link
               to="/about"
@@ -388,16 +366,6 @@ export default function Navbar() {
                 }`}
             >
               About
-            </Link>
-
-            <Link
-              to="/contact"
-              className={`relative py-1.5 transition-colors ${location.pathname === '/contact'
-                ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
-                : 'hover:text-gray-950'
-                }`}
-            >
-              Contact
             </Link>
 
             {/* Portal Link: Admin */}
@@ -774,7 +742,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Menu"
-              className="lg:hidden flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
+              className="xl:hidden flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition text-sm shrink-0 cursor-pointer"
             >
               {mobileMenuOpen ? '✕' : '☰'}
             </button>
@@ -811,7 +779,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 bg-white px-3.5 py-3.5 shadow-xl max-h-[80vh] overflow-y-auto animate-fade-in">
+        <div className="xl:hidden border-t border-gray-200 bg-white px-3.5 py-3.5 shadow-xl max-h-[80vh] overflow-y-auto animate-fade-in">
           {/* Mobile Drawer Brand Identity */}
           <div className="flex items-center gap-2.5 pb-3 mb-2 border-b border-gray-100">
             <img
@@ -832,38 +800,15 @@ export default function Navbar() {
           <div className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wider">
             <Link
               to="/"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Home
             </Link>
             <Link
               to="/shop"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Shop All Catalog
-            </Link>
-            <Link
-              to="/new-arrivals"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-gray-900 bg-amber-50/70 border border-amber-200/60 hover:bg-amber-100 transition flex items-center justify-between"
-            >
-              <div className="flex items-center gap-2">
-                <span>✨</span>
-                <span>New Arrivals</span>
-              </div>
-              <span className="rounded-full bg-amber-500 text-white px-1.5 py-0.2 text-[8px] font-extrabold uppercase">
-                Hot
-              </span>
-            </Link>
-            <Link
-              to="/tracking"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition flex items-center gap-2"
-            >
-              <span>🚚</span>
-              <span>Track Order</span>
             </Link>
 
             {/* All Departments list on mobile */}
@@ -916,34 +861,22 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition flex items-center justify-between"
             >
-              <div className="flex items-center gap-2">
-                <span className="text-rose-500">♥</span>
-                <span>Saved Wishlist</span>
-              </div>
+              <span>Saved Wishlist</span>
               {wishlistCount > 0 && (
                 <span className="rounded-full bg-rose-600 px-1.5 py-0.2 text-[8.5px] text-white font-bold">{wishlistCount}</span>
               )}
             </Link>
             <Link
               to="/about"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               About Us
             </Link>
             <Link
               to="/contact"
-              onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
             >
               Contact & Concierge
-            </Link>
-            <Link
-              to="/faq"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition"
-            >
-              Help & FAQ
             </Link>
 
             {/* Portal & Staff Access links on Mobile */}
