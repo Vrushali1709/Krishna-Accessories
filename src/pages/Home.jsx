@@ -26,6 +26,7 @@ import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
+import PromoVoucherBanner from '../components/PromoVoucherBanner';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -314,7 +315,6 @@ export default function Home() {
   const [products, setProducts] = useState(() => getProducts());
   const [toastMessage, setToastMessage] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [copiedCoupon, setCopiedCoupon] = useState(false);
 
   // Category List with dynamically synced categories
   const [categoryList, setCategoryList] = useState(() => {
@@ -400,16 +400,6 @@ export default function Home() {
   const handleBuyNow = (product) => {
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     navigate('/checkout');
-  };
-
-  const handleCopyCoupon = () => {
-    navigator.clipboard?.writeText('KRISHNA10');
-    setCopiedCoupon(true);
-    setToastMessage('🎉 Coupon "KRISHNA10" copied to clipboard!');
-    setTimeout(() => {
-      setCopiedCoupon(false);
-      setToastMessage('');
-    }, 3500);
   };
 
   return (
@@ -554,57 +544,7 @@ export default function Home() {
       {/* =========================================================
           5. FLASH PROMOTIONAL VOUCHER BANNER
       ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <Reveal direction="zoom" delay={50}>
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white p-5 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-5 shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-slate-700/80">
-            {/* Ambient decorative glow */}
-            <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-amber-500/15 blur-2xl" />
-
-            <div className="flex items-center gap-4 w-full md:w-auto min-w-0">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-xl border border-white/15 shadow-inner">
-                🎁
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-amber-300">
-                    LIMITED PRIVÉ PRIVILEGE
-                  </span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-white leading-snug truncate mt-0.5">
-                  Save 10% Instant Discount on all orders &gt; ₹1,000
-                </h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-xs text-gray-300">Use Promo Code:</p>
-                  <button
-                    type="button"
-                    onClick={handleCopyCoupon}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-amber-200 bg-white/10 hover:bg-white/20 px-2.5 py-0.5 rounded-md border border-white/20 transition-colors cursor-pointer"
-                    title="Click to copy coupon code"
-                  >
-                    <span>KRISHNA10</span>
-                    <span className="text-[10px] text-gray-300">📋</span>
-                  </button>
-                  {copiedCoupon && (
-                    <span className="text-[10px] font-bold text-emerald-400 animate-fade-in">
-                      ✓ Copied!
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 w-full md:w-auto shrink-0 justify-end">
-              <Link
-                to="/shop"
-                className="w-full md:w-auto text-center rounded-full bg-white px-7 py-3 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-[#E5D7C5] transition-all duration-300 shadow-md active:scale-95"
-              >
-                Claim Offer Now →
-              </Link>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+      <PromoVoucherBanner onToast={setToastMessage} />
 
       {/* =========================================================
           6. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
