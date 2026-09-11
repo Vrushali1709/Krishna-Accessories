@@ -21,7 +21,6 @@ import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
-import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
@@ -641,12 +640,7 @@ export default function Home() {
       />
 
       {/* =========================================================
-          7. CURATED EDITORIAL SPOTLIGHT (DUAL LUXURY BANNERS)
-      ========================================================= */}
-      <EditorialSpotlightSection />
-
-      {/* =========================================================
-          8. TOP PICKS FOR YOU — BEST SELLERS ♡
+          5. TOP PICKS FOR YOU — BEST SELLERS ♡
       ========================================================= */}
       <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
