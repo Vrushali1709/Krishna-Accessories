@@ -741,12 +741,7 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-12 pb-10 sm:pb-14 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
-            <div className="flex items-center justify-center gap-2 mb-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#C5A880] animate-pulse" />
-              <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-[#9E8362]">
-                100% CERTIFIED LUXURY
-              </span>
-            </div>
+           
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
               Explore by Brand
             </h2>
