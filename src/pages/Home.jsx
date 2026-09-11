@@ -32,74 +32,85 @@ import {
 } from '../components/Icons';
 
 // ============================================================
-// DEFAULT CATEGORY BANNERS
+// DEFAULT CATEGORY BANNERS (MATCHING REFERENCE SHOWCASE)
 // ============================================================
 const defaultCategoryBanners = [
   {
+    name: 'Backpacks',
+    targetCategory: 'Bags & Wallets',
+    itemCount: '120+ Items',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=80',
+    description: 'Urban Backpacks & Travel Bags'
+  },
+  {
+    name: 'Headphones',
+    targetCategory: 'Electronics',
+    itemCount: '150+ Items',
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80',
+    description: 'Audiophile Noise-Cancelling Sound'
+  },
+  {
     name: 'Watches',
-    description: 'Heritage Swiss & Smart Chronographs',
-    image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg',
-    tag: 'Titan, Fossil, Rolex, Casio'
+    targetCategory: 'Watches',
+    itemCount: '80+ Items',
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80',
+    description: 'Heritage Swiss & Smart Chronographs'
   },
   {
-    name: 'Bags & Wallets',
-    description: 'Genuine Leather & Urban Backpacks',
-    image: 'https://i.pinimg.com/736x/15/dc/da/15dcdac0fcc6a94440471bf201b96b75.jpg',
-    tag: 'Hidesign, Wildcraft, Tommy'
-  },
-  {
-    name: 'Shoes',
-    description: 'Handcrafted Sneakers & Running Footwear',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900',
-    tag: 'Nike, Adidas, Puma, Jordan'
-  },
-  {
-    name: 'Mobiles',
-    description: 'Flagship Titanium Handsets & Gear',
-    image: 'https://i.pinimg.com/736x/00/9b/91/009b91eaa9c50df8e5d5681cbde9a9c3.jpg',
-    tag: 'Apple, Samsung, OnePlus'
-  },
-  {
-    name: 'Clothes & Fashion',
-    description: 'Tailored Suits, Denim & Luxury Apparel',
-    image: 'https://i.pinimg.com/1200x/7e/e0/55/7ee055c1c667557a592fa716eb5005fc.jpg',
-    tag: 'Levis, Zara, Tommy, Calvin Klein'
-  },
-  {
-    name: 'Laptops',
-    description: 'High-Performance OLED Workstations',
-    image: 'https://i.pinimg.com/1200x/fe/f7/b3/fef7b3cbaeb59afc974ab04dd20741e6.jpg',
-    tag: 'Apple, Dell, HP, Asus'
-  },
-  {
-    name: 'Electronics',
-    description: 'Audiophile Noise-Cancelling Sound',
-    image: 'https://i.pinimg.com/1200x/db/6c/da/db6cdaadde558a889e0c812ea679d8e1.jpg',
-    tag: 'Sony, Bose, JBL, Marshall'
-  },
-  {
-    name: 'Smart Gadgets',
-    description: 'Smart Rings, AI Devices & Wearables',
-    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=900',
-    tag: 'Apple, Samsung, Google, boAt'
+    name: 'Wallets',
+    targetCategory: 'Bags & Wallets',
+    itemCount: '90+ Items',
+    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=80',
+    description: 'Genuine Leather Wallets & Cardholders'
   },
   {
     name: 'Gaming',
-    description: 'RGB Mechanical Gear & Consoles',
-    image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=900',
-    tag: 'Razer, Sony PS5, Logitech, Asus'
+    targetCategory: 'Gaming',
+    itemCount: '110+ Items',
+    image: 'https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=500&auto=format&fit=crop&q=80',
+    description: 'RGB Mechanical Gear & Consoles'
   },
   {
-    name: 'Fitness',
-    description: 'GPS Multi-Sport Trackers & Health',
-    image: 'https://i.pinimg.com/736x/ce/b4/1d/ceb41df7737b5918904522051f1f56f5.jpg',
-    tag: 'Garmin, Fitbit, Apple, Noise'
+    name: 'Sunglasses',
+    targetCategory: 'Fashion Accessories',
+    itemCount: '70+ Items',
+    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=80',
+    description: 'Polarized Eyewear & Shades'
   },
   {
-    name: 'Fashion Accessories',
-    description: 'Polarized Eyewear & Belts',
-    image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=900',
-    tag: 'Ray-Ban, Police, Titan, Fossil'
+    name: 'Travel',
+    targetCategory: 'Bags & Wallets',
+    itemCount: '60+ Items',
+    image: 'https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=500&auto=format&fit=crop&q=80',
+    description: 'Hard-Shell Suitcases & Travel Gear'
+  },
+  {
+    name: 'Shoes',
+    targetCategory: 'Shoes',
+    itemCount: '95+ Items',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=80',
+    description: 'Handcrafted Sneakers & Footwear'
+  },
+  {
+    name: 'Mobiles',
+    targetCategory: 'Mobiles',
+    itemCount: '45+ Items',
+    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=80',
+    description: 'Flagship Titanium Handsets & Gear'
+  },
+  {
+    name: 'Clothes & Fashion',
+    targetCategory: 'Clothes & Fashion',
+    itemCount: '130+ Items',
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop&q=80',
+    description: 'Tailored Suits & Luxury Apparel'
+  },
+  {
+    name: 'Laptops',
+    targetCategory: 'Laptops',
+    itemCount: '35+ Items',
+    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop&q=80',
+    description: 'High-Performance Workstations'
   }
 ];
 
