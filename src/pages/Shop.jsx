@@ -416,7 +416,7 @@ export default function Shop() {
           </div>
 
           {/* ================= 2. HORIZONTAL CATEGORY CHIPS CAROUSEL ================= */}
-          <div className="mt-6 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="mt-6 sm:mt-7 flex items-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar pb-1.5 pt-0.5 -mx-4 px-4 sm:mx-0 sm:px-0">
             {categories.map((cat) => {
               const isActive = category === cat;
               const count = cat === 'All'
@@ -432,7 +432,7 @@ export default function Shop() {
                     : 'bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 hover:text-black border border-gray-200/60'
                     }`}
                 >
-                  <span>{cat}</span>
+                  <span>{cat === 'All' ? '✦ All Categories' : cat}</span>
                   <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${isActive ? 'bg-white/20 text-amber-300' : 'bg-gray-200 text-gray-600'
                     }`}>
                     {count}

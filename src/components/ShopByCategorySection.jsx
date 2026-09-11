@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Reveal } from './useScrollReveal';
-import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
+import { ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from './Icons';
 
 export default function ShopByCategorySection({
   categories = [],
@@ -39,7 +39,7 @@ export default function ShopByCategorySection({
     if (!carouselRef.current) return;
     const container = carouselRef.current;
     const cardWidth = container.firstElementChild?.clientWidth || 240;
-    const scrollAmount = (cardWidth + 18) * 2;
+    const scrollAmount = (cardWidth + 20) * 2;
     container.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth'
@@ -76,39 +76,105 @@ export default function ShopByCategorySection({
   if (!categories || categories.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 pt-6 sm:pt-8 md:pt-10 pb-6 sm:pb-8 lg:px-8">
+      
+      {/* 1. Header Row with Title, Subtitle, Carousel Arrows & View All Link */}
       <Reveal direction="up" delay={50}>
-        {/* Header Row */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5 sm:mb-6">
           <div>
-
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+              <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
+                CURATED DEPARTMENTS
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
               Shop by Category
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-neutral-500">
-              Browse our handcrafted collections across premium luxury, tech, and lifestyle.
+            <p className="mt-1 text-xs sm:text-sm text-neutral-500 max-w-xl">
+              Browse our handcrafted collections across premium luxury, horology, tech, and lifestyle.
             </p>
           </div>
 
-          {/* Header Right Actions (Scroll Arrows + View All Link) */}
+          {/* Action Buttons: Carousel Left/Right & View All Link */}
           <div className="flex items-center gap-3 self-end sm:self-auto">
+            <div className="hidden sm:flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => scroll('left')}
+                disabled={!canScrollLeft}
+                aria-label="Scroll categories left"
+                className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all shadow-2xs ${
+                  canScrollLeft
+                    ? 'text-gray-800 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
+                    : 'text-gray-300 opacity-40 cursor-not-allowed'
+                }`}
+              >
+                <ChevronLeftIcon className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scroll('right')}
+                disabled={!canScrollRight}
+                aria-label="Scroll categories right"
+                className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all shadow-2xs ${
+                  canScrollRight
+                    ? 'text-gray-800 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
+                    : 'text-gray-300 opacity-40 cursor-not-allowed'
+                }`}
+              >
+                <ChevronRightIcon className="w-4 h-4" />
+              </button>
+            </div>
+
             <Link
               to="/shop"
-              className="group inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-neutral-800 hover:text-black transition-colors mr-2"
+              className="group inline-flex items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 sm:px-5 sm:py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all duration-200 hover:bg-black hover:shadow-md active:scale-95"
             >
-              <span>View All Catalog</span>
-              <span className="text-sm font-bold transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
+              <span>All Categories</span>
+              <ArrowRightIcon className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 text-amber-300" />
             </Link>
-
-            {/* Left / Right Carousel Controls */}
-
           </div>
         </div>
       </Reveal>
 
-      {/* Categories Large Cards Smooth Scrolling Strip */}
+      {/* 2. Quick Category Filter Pills Strip (Centered & Responsive) */}
+      <Reveal direction="up" delay={80}>
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 pt-1 mb-3 sm:mb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+          {/* Primary 'All Categories' Button */}
+          <Link
+            to="/shop"
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#111827] px-4 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-black active:scale-95"
+          >
+            <span className="text-amber-400 text-xs">✦</span>
+            <span>All Categories</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px] text-amber-300 font-mono">
+              11+
+            </span>
+          </Link>
+
+          {/* Top Category Shortcut Pills */}
+          {categories.slice(0, 7).map((c) => (
+            <Link
+              key={`pill-${c.name}`}
+              to={`/shop?category=${encodeURIComponent(c.targetCategory || c.name)}`}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-gray-200/90 bg-white hover:border-gray-400 hover:bg-neutral-50 px-3.5 py-1.5 text-xs font-semibold text-gray-700 transition hover:text-black shadow-2xs active:scale-95"
+            >
+              <span>{c.name}</span>
+            </Link>
+          ))}
+
+          <Link
+            to="/shop"
+            className="shrink-0 text-xs font-bold text-neutral-500 hover:text-black px-2 transition"
+          >
+            + More &rarr;
+          </Link>
+        </div>
+      </Reveal>
+
+      {/* 3. Categories Large Cards Smooth Scrolling Carousel */}
       <Reveal direction="up" delay={120}>
         <div
           ref={carouselRef}
@@ -116,8 +182,9 @@ export default function ShopByCategorySection({
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className={`flex gap-4 sm:gap-5 md:gap-6 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-            }`}
+          className={`flex gap-4 sm:gap-5 md:gap-6 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {categories.map((c) => {
@@ -166,7 +233,7 @@ export default function ShopByCategorySection({
                       Explore Collection
                     </span>
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-neutral-800 text-xs font-bold transition-all duration-300 group-hover:bg-black group-hover:text-white group-hover:translate-x-0.5">
-                      →
+                      &rarr;
                     </span>
                   </div>
                 </div>
@@ -174,7 +241,7 @@ export default function ShopByCategorySection({
             );
           })}
 
-          {/* All Categories / Explore More Card */}
+          {/* All Categories / Complete Catalog Final Card */}
           <Link
             to="/shop"
             onClick={handleCategoryClick}
@@ -207,7 +274,7 @@ export default function ShopByCategorySection({
                   Browse Everything
                 </span>
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-neutral-800 text-xs font-bold transition-all duration-300 group-hover:bg-black group-hover:text-white group-hover:translate-x-0.5">
-                  →
+                  &rarr;
                 </span>
               </div>
             </div>
