@@ -640,7 +640,7 @@ export default function Home() {
       />
 
       {/* =========================================================
-          5. TOP PICKS FOR YOU — BEST SELLERS ♡
+          5. TOP PICKS FOR YOU — BEST SELLERS
       ========================================================= */}
       <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -653,9 +653,8 @@ export default function Home() {
               </p>
               <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950 flex items-center gap-2">
-                  <span>Best Sellers</span>
-                  <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
+                  Best Sellers
                 </h2>
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />
               </div>

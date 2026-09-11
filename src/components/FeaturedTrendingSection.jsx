@@ -431,29 +431,6 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
           </div>
         )}
 
-        {/* ============================================================
-            4. SECTION FOOTER CALL TO ACTION
-        ============================================================ */}
-        <Reveal direction="up" delay={150}>
-          <div className="mt-12 sm:mt-14 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/shop"
-              className="inline-flex items-center gap-2.5 rounded-full bg-neutral-950 px-8 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-black hover:shadow-xl hover:scale-[1.02] active:scale-98 shadow-md"
-            >
-              <span>Explore All {products.length} Products</span>
-              <ArrowRightIcon className="w-4 h-4 text-amber-300" />
-            </Link>
-
-            <Link
-              to="/shop?filter=offers"
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 transition-all duration-300 hover:border-neutral-500 hover:bg-neutral-50 shadow-xs active:scale-98"
-            >
-              <TagIcon className="w-4 h-4 text-rose-600" />
-              <span>View Exclusive Offers</span>
-            </Link>
-          </div>
-        </Reveal>
-
       </div>
     </section>
   );
