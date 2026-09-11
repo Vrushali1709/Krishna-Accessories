@@ -1,5 +1,5 @@
 // src/pages/Home.jsx
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   siAdidas,
@@ -434,17 +434,28 @@ export default function Home() {
     }
   };
 
-  const [selectedEditionCategory, setSelectedEditionCategory] = useState('All');
+  // Top Picks For You (Best Sellers) - Sorted by rating and popularity
+  const bestSellers = useMemo(() => {
+    const sorted = [...products].sort((a, b) => {
+      const scoreB = (Number(b.rating) || 4.5) * 100 + (Number(b.reviews) || 10);
+      const scoreA = (Number(a.rating) || 4.5) * 100 + (Number(a.reviews) || 10);
+      return scoreB - scoreA;
+    });
+    return sorted.slice(0, 4);
+  }, [products]);
 
-  const editionCategories = ['All', 'Watches', 'Bags & Wallets', 'Shoes', 'Electronics', 'Fashion Accessories'];
+  // Check Out What's New (New Arrivals) - Fresh novelties from catalog
+  const newArrivals = useMemo(() => {
+    const bestSellerIds = new Set(bestSellers.map((p) => p.id));
+    const sortedNew = [...products]
+      .filter((p) => !bestSellerIds.has(p.id))
+      .sort((a, b) => (b.id || 0) - (a.id || 0));
 
-  const filteredFeatured = selectedEditionCategory === 'All'
-    ? products.slice(0, 8)
-    : products.filter((p) => p.category?.toLowerCase() === selectedEditionCategory.toLowerCase()).slice(0, 8);
-
-  const getProductCountForCategory = (catName) => {
-    return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
-  };
+    if (sortedNew.length >= 4) {
+      return sortedNew.slice(0, 4);
+    }
+    return [...products].slice(0, 4);
+  }, [products, bestSellers]);
 
   const handleAddToCart = (product) => {
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
@@ -707,80 +718,90 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURED PRODUCTS (SELECTED EDITIONS) ================= */}
-      <section className="bg-white border-y border-gray-200/80 py-10 sm:py-14">
+      {/* =========================================================
+          SECTION 1: TOP PICKS FOR YOU — BEST SELLERS ♡
+      ========================================================= */}
+      <section className="bg-white py-10 sm:py-14 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
+          
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8">
-            <div>
-
-              <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
-                Selected Editions
+          <div className="text-center mb-6 sm:mb-8">
+            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-600">
+              TOP PICKS FOR YOU
+            </p>
+            <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1.5">
+              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-normal text-neutral-900 flex items-center gap-2">
+                <span>Best Sellers</span>
+                <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
               </h2>
-              <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-md">
-                Certified authentic luxury pieces and trendsetting essentials crafted for distinction.
-              </p>
+              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
             </div>
-
-            <Link
-              to="/shop"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-gray-900 hover:text-black hover:underline self-start md:self-auto group shrink-0"
-            >
-              <span>Explore All Catalog</span>
-              <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
           </div>
 
-          {/* Interactive Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 sm:mb-8 no-scrollbar">
-            {editionCategories.map((cat) => {
-              const isActive = selectedEditionCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedEditionCategory(cat)}
-                  className={`rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${isActive
-                    ? 'bg-gray-950 text-white shadow-sm scale-102'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-black'
-                    }`}
-                >
-                  {cat === 'All' ? 'All Editions' : cat}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Spacious Products Grid */}
-          {filteredFeatured.length > 0 ? (
+          {/* 4 Cards Grid */}
+          {bestSellers.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
-              {filteredFeatured.map((product) => (
+              {bestSellers.map((product) => (
                 <ProductCard
-                  key={product.id}
+                  key={`bestseller-${product.id}`}
                   product={product}
                   onAddToCart={handleAddToCart}
                   onBuyNow={handleBuyNow}
+                  showRating={true}
                 />
               ))}
             </div>
           ) : (
             <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No products found in this category.</p>
-              <button
-                type="button"
-                onClick={() => setSelectedEditionCategory('All')}
-                className="mt-3 text-xs font-bold text-black underline cursor-pointer"
-              >
-                View all editions
-              </button>
+              <p className="text-sm font-semibold text-gray-700">No products found.</p>
             </div>
           )}
 
         </div>
       </section>
 
-      <NewArrivalsSection products={products} onToast={setToastMessage} />
+      {/* =========================================================
+          SECTION 2: CHECK OUT WHAT'S NEW — NEW ARRIVALS
+      ========================================================= */}
+      <section className="bg-white py-10 sm:py-14 border-t border-gray-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="text-center mb-6 sm:mb-8">
+            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-600">
+              CHECK OUT WHAT&apos;S NEW
+            </p>
+            <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1.5">
+              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-normal text-neutral-900">
+                New Arrivals
+              </h2>
+              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+            </div>
+          </div>
+
+          {/* 4 Cards Grid */}
+          {newArrivals.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
+              {newArrivals.map((product) => (
+                <ProductCard
+                  key={`newarrival-${product.id}`}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
+                  showRating={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
+              <p className="text-sm font-semibold text-gray-700">No new arrivals found.</p>
+            </div>
+          )}
+
+        </div>
+      </section>
 
       {/* ======================================================
           OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
