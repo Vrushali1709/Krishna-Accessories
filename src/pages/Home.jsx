@@ -18,7 +18,6 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import NewArrivalsSection from '../components/NewArrivalsSection';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
@@ -456,6 +455,10 @@ export default function Home() {
     }
     return [...products].slice(0, 4);
   }, [products, bestSellers]);
+
+  const getProductCountForCategory = (catName) => {
+    return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
+  };
 
   const handleAddToCart = (product) => {
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
