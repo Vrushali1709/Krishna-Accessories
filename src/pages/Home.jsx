@@ -1,42 +1,29 @@
 // src/pages/Home.jsx
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  siAdidas,
-  siApple,
-  siBose,
-  siDell,
-  siGarmin,
-  siNike,
-  siPuma,
-  siRazer,
-  siSamsung,
-  siSony,
-  siZara
-} from 'simple-icons';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import ProductCard from '../components/ProductCard';
-import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
+import { Reveal } from '../components/useScrollReveal';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
+import FeaturedBrandsSection from '../components/FeaturedBrandsSection';
 import ShopByCategorySection from '../components/ShopByCategorySection';
-import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
-import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
-import CustomerReviewsSection from '../components/CustomerReviewsSection';
-import WhyChooseUsSection from '../components/WhyChooseUsSection';
-import InstagramClubSection from '../components/InstagramClubSection';
+import BestSellersSection from '../components/BestSellersSection';
 import PromoVoucherBanner from '../components/PromoVoucherBanner';
+import PriceTierUnder5k from '../components/PriceTierUnder5k';
+import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
+import PriceTierUnder10k from '../components/PriceTierUnder10k';
+import NewArrivalsSection from '../components/NewArrivalsSection';
+import PriceTierUnder15k from '../components/PriceTierUnder15k';
+import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
+import WhyChooseUsSection from '../components/WhyChooseUsSection';
+import CustomerReviewsSection from '../components/CustomerReviewsSection';
+import InstagramClubSection from '../components/InstagramClubSection';
+
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import {
-  ArrowRightIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  TagIcon,
-  CheckIcon
-} from '../components/Icons';
+import { ArrowRightIcon } from '../components/Icons';
 
 // ============================================================
 // DEFAULT CATEGORY BANNERS (11 STORE CATEGORIES)
@@ -107,7 +94,7 @@ const watchHeroSlides = [
     tag: 'NEW COLLECTION 2026',
     titleLine1: 'PRECISION.',
     titleLine2: 'CRAFTED FOR TIME.',
-    description: 'Where timeless Swiss horology meets modern prestige performance.',
+    description: 'Where timeless Swiss horology meets modern prestige performance and certified manufacture warranties.',
     image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg',
     category: 'Watches'
   },
@@ -115,7 +102,7 @@ const watchHeroSlides = [
     tag: 'LIMITED BESPOKE EDITION',
     titleLine1: 'HERITAGE.',
     titleLine2: 'CHRONOGRAPH LUXE.',
-    description: 'Engineered for absolute accuracy, ceramic durability, and distinguished style.',
+    description: 'Engineered for absolute accuracy, sapphire durability, and distinguished executive elegance.',
     image: 'https://i.pinimg.com/736x/e6/df/98/e6df982c03d41dbf66fe9470007838c2.jpg',
     category: 'Watches'
   },
@@ -123,7 +110,7 @@ const watchHeroSlides = [
     tag: 'AUTOMATIC MASTERPIECES',
     titleLine1: 'TIMELESS.',
     titleLine2: 'SAPPHIRE LUXURY.',
-    description: 'Crafted with genuine sapphire crystal, mechanical movements, and calfskin straps.',
+    description: 'Crafted with genuine sapphire crystal, mechanical movements, and hand-finished calfskin straps.',
     image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg',
     category: 'Watches'
   }
@@ -134,180 +121,13 @@ const watchHeroSlides = [
 // ============================================================
 const storeTickerItems = [
   { title: "100% CERTIFIED AUTHENTIC", subtitle: "Official Brand Warranty Included" },
-  { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Seiko • Apple • Sony" },
+  { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Rolex • Apple • Sony" },
   { title: "MUMBAI FLAGSHIP SANCTUARY", subtitle: "Heera Panna Shopping Center, Haji Ali" },
   { title: "INSURED EXPRESS LOGISTICS", subtitle: "BlueDart & Delhivery Across India" },
   { title: "HANDCRAFTED LEATHER GOODS", subtitle: "Hidesign • Wildcraft • Tommy Hilfiger" },
   { title: "7-DAY PEACE-OF-MIND GUARANTEE", subtitle: "100% Client Satisfaction" },
   { title: "PREMIUM AUDIO & FLAGSHIP TECH", subtitle: "Sony • Bose • Samsung • boAt" },
   { title: "POLARIZED & LUXURY EYEWEAR", subtitle: "Ray-Ban • Police • Fastrack" },
-];
-
-// ============================================================
-// PARTNER BRANDS WITH CLEAN VECTOR LOGOS
-// ============================================================
-const brandRow1 = [
-  {
-    name: 'Titan',
-    cat: 'Watches',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <svg viewBox="0 0 32 32" className="h-5 w-5 sm:h-6 sm:w-6 text-gray-950 fill-current">
-          <path d="M5 8h22v4h-8.5v16h-5V12H5V8z M16 1.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-        </svg>
-        <span className="font-sans font-bold text-xs sm:text-sm md:text-[15px] tracking-[0.2em] text-gray-950">TITAN</span>
-      </div>
-    )
-  },
-  {
-    name: 'Rolex',
-    cat: 'Watches',
-    renderLogo: () => (
-      <div className="flex flex-col items-center justify-center">
-        <svg viewBox="0 0 24 14" className="h-4 sm:h-5 w-6 sm:w-7 text-[#006039] fill-current">
-          <path d="M12 1l2.2 4.5 3.8-3 1.5 5.5-3.5 1.5 4.5 3H3.5l4.5-3-3.5-1.5 1.5-5.5 3.8 3L12 1zm-5 11.5h10V14H7v-1.5z" />
-        </svg>
-        <span className="font-serif font-bold text-[10px] sm:text-xs tracking-[0.25em] text-[#006039] leading-tight mt-0.5">ROLEX</span>
-      </div>
-    )
-  },
-  {
-    name: 'Fossil',
-    cat: 'Watches',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-[#3D2314] text-white font-sans font-black text-[10px] sm:text-xs shadow-2xs">F</span>
-        <span className="font-sans font-black text-xs sm:text-sm md:text-[15px] tracking-[0.16em] text-gray-950">FOSSIL</span>
-      </div>
-    )
-  },
-  {
-    name: 'Casio',
-    cat: 'Watches',
-    renderLogo: () => (
-      <span className="font-sans font-black text-sm sm:text-base md:text-lg tracking-[0.12em] text-[#003B95]">CASIO</span>
-    )
-  },
-  {
-    name: 'Nike',
-    cat: 'Shoes',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-8 sm:w-10 fill-current text-gray-950">
-          <path d={siNike.path} />
-        </svg>
-        <span className="font-sans font-black text-xs sm:text-sm md:text-[15px] tracking-[0.15em] text-gray-950 italic hidden sm:inline">NIKE</span>
-      </div>
-    )
-  },
-  {
-    name: 'Adidas',
-    cat: 'Shoes',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-6 sm:w-7 fill-current text-gray-950">
-          <path d={siAdidas.path} />
-        </svg>
-        <span className="font-sans font-bold text-xs sm:text-sm md:text-[14px] tracking-wide text-gray-950">adidas</span>
-      </div>
-    )
-  },
-  {
-    name: 'Apple',
-    cat: 'Mobiles',
-    renderLogo: () => (
-      <div className="flex items-center gap-1 sm:gap-1.5">
-        <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-5 sm:w-6 fill-current text-gray-950">
-          <path d={siApple.path} />
-        </svg>
-        <span className="font-sans font-semibold text-xs sm:text-sm md:text-[15px] tracking-tight text-gray-950">Apple</span>
-      </div>
-    )
-  },
-  {
-    name: 'Samsung',
-    cat: 'Mobiles',
-    renderLogo: () => (
-      <span className="font-sans font-black text-xs sm:text-sm md:text-[15px] tracking-[0.2em] text-[#034EA2]">SAMSUNG</span>
-    )
-  }
-];
-
-const brandRow2 = [
-  {
-    name: 'Puma',
-    cat: 'Shoes',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-6 sm:w-7 fill-current text-[#111827]">
-          <path d={siPuma.path} />
-        </svg>
-        <span className="font-sans font-black text-xs sm:text-sm md:text-[14px] tracking-[0.16em] text-[#111827]">PUMA</span>
-      </div>
-    )
-  },
-  {
-    name: 'Sony',
-    cat: 'Electronics',
-    renderLogo: () => (
-      <span className="font-serif font-black text-sm sm:text-base md:text-lg tracking-[0.22em] text-gray-950">SONY</span>
-    )
-  },
-  {
-    name: 'Bose',
-    cat: 'Electronics',
-    renderLogo: () => (
-      <span className="font-serif italic font-black text-sm sm:text-base md:text-lg tracking-[0.16em] text-gray-950">BOSE</span>
-    )
-  },
-  {
-    name: 'Dell',
-    cat: 'Laptops',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5">
-        <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-5 sm:w-6 fill-current text-[#0076CE]">
-          <path d={siDell.path} />
-        </svg>
-        <span className="font-sans font-bold text-xs sm:text-sm md:text-[14px] tracking-[0.14em] text-[#0076CE]">DELL</span>
-      </div>
-    )
-  },
-  {
-    name: 'Zara',
-    cat: 'Clothes & Fashion',
-    renderLogo: () => (
-      <span className="font-serif font-black text-sm sm:text-base md:text-lg tracking-[0.28em] text-gray-950">ZARA</span>
-    )
-  },
-  {
-    name: 'Hidesign',
-    cat: 'Bags & Wallets',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5">
-        <span className="text-amber-800 text-xs sm:text-sm">🦌</span>
-        <span className="font-serif font-bold text-xs sm:text-xs md:text-sm tracking-[0.2em] text-gray-900">HIDESIGN</span>
-      </div>
-    )
-  },
-  {
-    name: 'Ray-Ban',
-    cat: 'Fashion Accessories',
-    renderLogo: () => (
-      <span className="font-serif italic font-black text-sm sm:text-base md:text-lg text-[#E31837] tracking-tight">Ray•Ban</span>
-    )
-  },
-  {
-    name: 'Razer',
-    cat: 'Gaming',
-    renderLogo: () => (
-      <div className="flex items-center gap-1.5">
-        <svg viewBox="0 0 24 24" className="h-5 sm:h-6 w-5 sm:w-6 fill-current text-[#00E700]">
-          <path d={siRazer.path} />
-        </svg>
-        <span className="font-sans font-black text-xs sm:text-xs md:text-sm tracking-[0.18em] text-gray-900">RAZER</span>
-      </div>
-    )
-  }
 ];
 
 export default function Home() {
@@ -374,7 +194,7 @@ export default function Home() {
     return sorted.slice(0, 4);
   }, [products]);
 
-  // Check Out What's New (New Arrivals) - Fresh novelties from catalog
+  // Check Out What's New (New Arrivals)
   const newArrivals = useMemo(() => {
     const bestSellerIds = new Set(bestSellers.map((p) => p.id));
     const sortedNew = [...products]
@@ -382,24 +202,13 @@ export default function Home() {
       .sort((a, b) => (b.id || 0) - (a.id || 0));
 
     if (sortedNew.length >= 4) {
-      return sortedNew.slice(0, 4);
+      return sortedNew;
     }
-    return [...products].slice(0, 4);
+    return products;
   }, [products, bestSellers]);
 
   const getProductCountForCategory = (catName) => {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
-  };
-
-  const handleAddToCart = (product) => {
-    addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
-    setToastMessage(`✓ Added "${product.name}" to your bag`);
-    setTimeout(() => setToastMessage(''), 3500);
-  };
-
-  const handleBuyNow = (product) => {
-    addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
-    navigate('/checkout');
   };
 
   return (
@@ -534,7 +343,12 @@ export default function Home() {
       <HomeDiscoveryStrip />
 
       {/* =========================================================
-          4. SHOP BY CATEGORY (CURATED CAROUSEL)
+          4. OFFICIAL BRAND PARTNERS (CAPSULE SHOWCASE)
+      ========================================================= */}
+      <FeaturedBrandsSection />
+
+      {/* =========================================================
+          5. SHOP BY CATEGORY (CURATED CAROUSEL)
       ========================================================= */}
       <ShopByCategorySection
         categories={categoryList}
@@ -542,12 +356,57 @@ export default function Home() {
       />
 
       {/* =========================================================
-          5. FLASH PROMOTIONAL VOUCHER BANNER
+          6. TOP PICKS FOR YOU — BEST SELLERS (RANKED LUXURY CARDS)
+      ========================================================= */}
+      <BestSellersSection
+        products={bestSellers}
+        onToast={setToastMessage}
+      />
+
+      {/* =========================================================
+          7. FLASH PROMOTIONAL VOUCHER BANNER
       ========================================================= */}
       <PromoVoucherBanner onToast={setToastMessage} />
 
       {/* =========================================================
-          6. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
+          8. PRICE TIER: UNDER ₹5,000 (COMPACT QUICK-PICKS GRID)
+      ========================================================= */}
+      <PriceTierUnder5k
+        products={products}
+        onToast={setToastMessage}
+      />
+
+      {/* =========================================================
+          9. CURATED EDITORIAL SPOTLIGHT (DUAL LUXURY BANNERS)
+      ========================================================= */}
+      <EditorialSpotlightSection />
+
+      {/* =========================================================
+          10. PRICE TIER: UNDER ₹10,000 (HORIZONTAL SPLIT CARDS)
+      ========================================================= */}
+      <PriceTierUnder10k
+        products={products}
+        onToast={setToastMessage}
+      />
+
+      {/* =========================================================
+          11. THE NEW ARRIVALS (NUMBERED EDITORIAL CAROUSEL)
+      ========================================================= */}
+      <NewArrivalsSection
+        products={newArrivals}
+        onToast={setToastMessage}
+      />
+
+      {/* =========================================================
+          12. PRICE TIER: EXECUTIVE SPOTLIGHT ₹15,000–₹20,000+ (ASYMMETRY)
+      ========================================================= */}
+      <PriceTierUnder15k
+        products={products}
+        onToast={setToastMessage}
+      />
+
+      {/* =========================================================
+          13. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
       ========================================================= */}
       <FeaturedTrendingSection
         products={products}
@@ -555,187 +414,17 @@ export default function Home() {
       />
 
       {/* =========================================================
-          7. CURATED EDITORIAL SPOTLIGHT (DUAL LUXURY BANNERS)
-      ========================================================= */}
-      <EditorialSpotlightSection />
-
-      {/* =========================================================
-          8. TOP PICKS FOR YOU — BEST SELLERS ♡
-      ========================================================= */}
-      <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <Reveal direction="up" delay={50}>
-            <div className="text-center mb-10 sm:mb-12">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-                TOP PICKS FOR YOU
-              </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 flex items-center gap-2">
-                  <span>Best Sellers</span>
-                  <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
-                </h2>
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Client favorites across timepieces, designer sunglasses, and premium audio.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* 4 Cards Grid */}
-          {bestSellers.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {bestSellers.map((product, idx) => (
-                <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                    showRating={true}
-                  />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No products found.</p>
-            </div>
-          )}
-
-        </div>
-      </section>
-
-      {/* =========================================================
-          9. CHECK OUT WHAT'S NEW — NEW ARRIVALS
-      ========================================================= */}
-      <section className="bg-[#FAFAFB] py-14 sm:py-20 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <Reveal direction="up" delay={50}>
-            <div className="text-center mb-10 sm:mb-12">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-                CHECK OUT WHAT&apos;S NEW
-              </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900">
-                  New Arrivals
-                </h2>
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Fresh seasonal releases, novelties, and smart devices straight to catalog.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* 4 Cards Grid */}
-          {newArrivals.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {newArrivals.map((product, idx) => (
-                <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                    showRating={true}
-                  />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No new arrivals found.</p>
-            </div>
-          )}
-
-        </div>
-      </section>
-
-      {/* =========================================================
-          10. OFFICIAL BRAND PARTNERS (CAPSULE SHOWCASE)
-      ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8">
-        <Reveal direction="up" delay={50}>
-          <div className="text-center mb-8 sm:mb-10">
-            <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-              AUTHENTICITY GUARANTEED
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
-              Explore by Brand
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
-              Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
-            </p>
-          </div>
-        </Reveal>
-
-        {/* Dual Capsule Infinite Scrolling Carousel Strips */}
-        <Reveal direction="up" delay={120}>
-          <div className="space-y-3.5 sm:space-y-4">
-
-            {/* Track 1 (Row 1 Brands - Scrolling Left) */}
-            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2.5 sm:p-3 sm:px-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
-
-              <div className="animate-marquee flex items-center gap-3 py-1">
-                {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
-                  <Link
-                    key={`${b.name}-t1-${idx}`}
-                    to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                    className="group relative flex-shrink-0 flex items-center justify-center w-[145px] sm:w-[165px] md:w-[180px] h-16 sm:h-19 px-4 rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-300 hover:border-amber-400 hover:shadow-md hover:scale-[1.03] active:scale-98"
-                    title={`${b.name} • ${b.cat}`}
-                  >
-                    <div className="transition-transform duration-300 group-hover:scale-108">
-                      {b.renderLogo()}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
-            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2.5 sm:p-3 sm:px-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
-
-              <div className="animate-marquee-reverse flex items-center gap-3 py-1">
-                {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
-                  <Link
-                    key={`${b.name}-t2-${idx}`}
-                    to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                    className="group relative flex-shrink-0 flex items-center justify-center w-[145px] sm:w-[165px] md:w-[180px] h-16 sm:h-19 px-4 rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-300 hover:border-amber-400 hover:shadow-md hover:scale-[1.03] active:scale-98"
-                    title={`${b.name} • ${b.cat}`}
-                  >
-                    <div className="transition-transform duration-300 group-hover:scale-108">
-                      {b.renderLogo()}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </Reveal>
-      </section>
-
-      {/* =========================================================
-          11. WHY CHOOSE US (THE DIFFERENCE)
+          14. WHY CHOOSE US (THE KRISHNA PROMISE)
       ========================================================= */}
       <WhyChooseUsSection />
 
       {/* =========================================================
-          12. CUSTOMER REVIEWS (CAROUSEL)
+          15. CUSTOMER REVIEWS (VERIFIED TESTIMONIALS CAROUSEL)
       ========================================================= */}
       <CustomerReviewsSection />
 
       {/* =========================================================
-          13. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
+          16. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
       ========================================================= */}
       <InstagramClubSection />
 
