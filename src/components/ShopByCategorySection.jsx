@@ -103,24 +103,7 @@ export default function ShopByCategorySection({
             </Link>
 
             {/* Left / Right Carousel Controls */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => scroll('left')}
-                disabled={!canScrollLeft}
-                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
-                aria-label="Previous categories"
-              >
-                <ChevronLeftIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-              </button>
-              <button
-                onClick={() => scroll('right')}
-                disabled={!canScrollRight}
-                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
-                aria-label="Next categories"
-              >
-                <ChevronRightIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-              </button>
-            </div>
+          
           </div>
         </div>
       </Reveal>
