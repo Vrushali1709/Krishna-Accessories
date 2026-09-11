@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRightIcon,
@@ -7,133 +8,85 @@ import {
   TruckIcon
 } from './Icons';
 
-const benefits = [
+const features = [
   {
+    id: 'shipping',
     title: 'Free Shipping',
-    subtitle: 'On orders above ₹2,000',
+    subtitle: 'On all orders above ₹2,000',
+    tag: 'Pan-India Express',
     icon: TruckIcon,
-    to: '/shop'
+    to: '/shop',
+    accent: 'from-amber-500/10 to-transparent'
   },
   {
+    id: 'returns',
     title: 'Easy Returns',
-    subtitle: '7 days return policy',
+    subtitle: '7-day replacement guarantee',
+    tag: 'Hassle-Free',
     icon: RefreshIcon,
-    to: '/terms-conditions'
+    to: '/terms-conditions',
+    accent: 'from-emerald-500/10 to-transparent'
   },
   {
+    id: 'payments',
     title: 'Secure Payments',
-    subtitle: '100% secure checkout',
+    subtitle: '100% encrypted & safe checkout',
+    tag: 'SSL 256-Bit',
     icon: ShieldCheckIcon,
-    to: '/checkout'
+    to: '/checkout',
+    accent: 'from-blue-500/10 to-transparent'
   },
   {
+    id: 'support',
     title: '24/7 Support',
-    subtitle: "We're here to help",
+    subtitle: "We're here to assist anytime",
+    tag: 'Dedicated Care',
     icon: HeadphonesIcon,
-    to: '/contact-us'
+    to: '/contact-us',
+    accent: 'from-rose-500/10 to-transparent'
   }
 ];
 
-const categoryIcons = {
-  'New Arrivals': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=220',
-  Watches: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=220',
-  'Bags & Wallets': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=220',
-  Shoes: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=220',
-  Mobiles: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=220',
-  Electronics: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=220',
-  'Smart Gadgets': 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=220',
-  Gaming: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=220',
-  Fitness: 'https://images.unsplash.com/photo-1576243345690-4e4b79b63288?w=220',
-  'Fashion Accessories': 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=220'
-};
-
-const categoryLinks = [
-  { label: 'New Arrivals', category: null, badge: 'NEW' },
-  { label: 'Watches', category: 'Watches' },
-  { label: 'Bags & Wallets', category: 'Bags & Wallets' },
-  { label: 'Shoes', category: 'Shoes' },
-  { label: 'Mobiles', category: 'Mobiles' },
-  { label: 'Electronics', category: 'Electronics' },
-  { label: 'Smart Gadgets', category: 'Smart Gadgets' },
-  { label: 'Gaming', category: 'Gaming' },
-  { label: 'Fitness', category: 'Fitness' },
-  { label: 'Fashion Accessories', category: 'Fashion Accessories' }
-];
-
-export default function HomeDiscoveryStrip({ categories = [] }) {
-  const availableCategories = new Set(categories.map((item) => item.name));
-  const visibleCategories = categoryLinks.filter(
-    (item) => !item.category || availableCategories.has(item.category)
-  );
-
+export default function HomeDiscoveryStrip() {
   return (
-    <section className="bg-[#FAFAFB] px-3 py-5 sm:px-6 sm:py-7 lg:px-8">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[18px] border border-gray-200/90 bg-white shadow-[0_4px_24px_rgba(15,23,42,0.035)]">
-        <div className="grid grid-cols-2 divide-x divide-y divide-gray-200/80 sm:grid-cols-4 sm:divide-y-0">
-          {benefits.map(({ title, subtitle, icon: Icon, to }, index) => (
+    <section className="relative w-full py-5 sm:py-7 lg:py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* 4-Feature Interactive Grid */}
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+          {features.map(({ id, title, subtitle, tag, icon: Icon, to }) => (
             <Link
-              key={title}
+              key={id}
               to={to}
-              className={`group flex min-h-[82px] items-center gap-3 px-3.5 py-3.5 transition-colors hover:bg-gray-50 sm:px-5 lg:px-7 ${index > 1 ? 'border-t-0' : ''}`}
+              className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-400 hover:shadow-[0_10px_25px_rgba(0,0,0,0.06)]"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F7F7F5] text-gray-900 ring-1 ring-gray-200/80 transition-transform group-hover:scale-105">
-                <Icon className="h-5 w-5" />
-              </span>
-              <span className="min-w-0">
-                <strong className="block truncate text-[11px] font-bold text-gray-950 sm:text-xs">{title}</strong>
-                <span className="mt-0.5 block truncate text-[10px] text-gray-500 sm:text-[11px]">{subtitle}</span>
-              </span>
+              <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+                {/* Icon Badge */}
+                <div className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-[#F7F7F8] text-gray-900 ring-1 ring-gray-200/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-gray-950 group-hover:text-white group-hover:ring-gray-950 shadow-2xs">
+                  <Icon className="h-5 w-5 sm:h-5.5 sm:w-5.5 transition-transform duration-300 group-hover:scale-110" />
+                </div>
+
+                {/* Content */}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="truncate text-sm sm:text-[14.5px] font-bold text-gray-950 transition-colors group-hover:text-black">
+                      {title}
+                    </h3>
+                  </div>
+                  <p className="mt-0.5 truncate text-[11px] sm:text-xs text-gray-500 transition-colors group-hover:text-gray-700">
+                    {subtitle}
+                  </p>
+                  <span className="mt-1.5 inline-block rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gray-600 transition-colors group-hover:bg-amber-100 group-hover:text-amber-900">
+                    {tag}
+                  </span>
+                </div>
+              </div>
+
+              {/* Hover Cue Arrow */}
+              <div className="ml-2 shrink-0 text-gray-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-gray-950">
+                <ArrowRightIcon className="h-4 w-4" />
+              </div>
             </Link>
           ))}
-        </div>
-
-        <div className="border-t border-gray-200/80 px-3 py-4 sm:px-6 sm:py-5 lg:px-7">
-          <div className="flex snap-x gap-4 overflow-x-auto pb-1 no-scrollbar sm:justify-between sm:gap-3">
-            {visibleCategories.map(({ label, category, badge }) => {
-              const to = label === 'New Arrivals'
-                ? '/new-arrivals'
-                : `/shop?category=${encodeURIComponent(category)}`;
-              const image = categoryIcons[label];
-
-              return (
-                <Link
-                  key={label}
-                  to={to}
-                  className="group flex w-[74px] shrink-0 snap-start flex-col items-center gap-2 text-center sm:w-[84px]"
-                >
-                  <span className="relative block h-[68px] w-[68px] overflow-visible rounded-full bg-gray-100 ring-1 ring-gray-200/80 sm:h-[76px] sm:w-[76px]">
-                    <img
-                      src={image}
-                      alt=""
-                      loading="lazy"
-                      className="h-full w-full rounded-full object-cover transition duration-300 group-hover:scale-105"
-                    />
-                    {badge && (
-                      <span className="absolute -right-1 -bottom-1 rounded-full border-2 border-white bg-gray-950 px-1.5 py-0.5 text-[8px] font-bold text-white">
-                        {badge}
-                      </span>
-                    )}
-                  </span>
-                  <span className="whitespace-nowrap text-[10px] font-semibold text-gray-700 transition-colors group-hover:text-gray-950 sm:text-[11px]">
-                    {label}
-                  </span>
-                </Link>
-              );
-            })}
-
-            <Link
-              to="/shop"
-              className="group flex w-[74px] shrink-0 snap-start flex-col items-center gap-2 text-center sm:w-[84px]"
-            >
-              <span className="flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#F4F5F6] text-gray-950 ring-1 ring-gray-200 transition group-hover:bg-gray-950 group-hover:text-white sm:h-[76px] sm:w-[76px]">
-                <span className="flex flex-col items-center gap-0.5">
-                  <span className="text-[10px] font-bold leading-tight">View All</span>
-                  <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </span>
-              <span className="whitespace-nowrap text-[10px] font-semibold text-gray-700 sm:text-[11px]">Categories</span>
-            </Link>
-          </div>
         </div>
       </div>
     </section>
