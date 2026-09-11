@@ -4,13 +4,14 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { isInWishlist, toggleWishlist } from '../utils/productStore';
-import { HeartIcon } from './Icons';
+import { HeartIcon, BagIcon } from './Icons';
 
 export default function ProductCard({
   product,
   onAddToCart,
   onBuyNow,
-  showRating = true
+  showRating = true,
+  buttonLabel = 'Add to Cart'
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -163,7 +164,7 @@ export default function ProductCard({
           </div>
         </div>
 
-        {/* 3. Dark Forest Green "SHOP NOW" Action Button */}
+        {/* 3. Action Button with Add to Cart / Shop Now */}
         <div className="mt-3">
           <button
             type="button"
@@ -171,10 +172,17 @@ export default function ProductCard({
             className={`w-full py-2.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-white transition-all duration-200 active:scale-98 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
               justAdded
                 ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200'
-                : 'bg-[#133827] hover:bg-[#0c261a] hover:shadow-md'
+                : 'bg-[#111827] hover:bg-black hover:shadow-md'
             }`}
           >
-            <span>{justAdded ? '✓ Added' : 'SHOP NOW'}</span>
+            {justAdded ? (
+              <span>✓ Added to Cart</span>
+            ) : (
+              <>
+                <BagIcon className="w-3.5 h-3.5 text-amber-300" />
+                <span>{buttonLabel}</span>
+              </>
+            )}
           </button>
         </div>
 

@@ -20,6 +20,7 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
+import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import { getProducts, getCategories } from '../utils/productStore';
@@ -549,47 +550,12 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          SECTION 1: TOP PICKS FOR YOU — BEST SELLERS ♡
+          FEATURED / TRENDING PRODUCTS SECTION (4-8 CARDS)
       ========================================================= */}
-      <section className="bg-white py-10 sm:py-14 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-600">
-              TOP PICKS FOR YOU
-            </p>
-            <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1.5">
-              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-normal text-neutral-900 flex items-center gap-2">
-                <span>Best Sellers</span>
-                <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
-              </h2>
-              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-            </div>
-          </div>
-
-          {/* 4 Cards Grid */}
-          {bestSellers.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
-              {bestSellers.map((product) => (
-                <ProductCard
-                  key={`bestseller-${product.id}`}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onBuyNow={handleBuyNow}
-                  showRating={true}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No products found.</p>
-            </div>
-          )}
-
-        </div>
-      </section>
+      <FeaturedTrendingSection
+        products={products}
+        onToast={setToastMessage}
+      />
 
       {/* =========================================================
           SECTION 2: CHECK OUT WHAT'S NEW — NEW ARRIVALS
