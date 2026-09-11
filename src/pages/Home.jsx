@@ -23,6 +23,7 @@ import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
+import PromotionalBanner from '../components/PromotionalBanner';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -524,30 +525,8 @@ export default function Home() {
         getProductCount={getProductCountForCategory}
       />
 
-      {/* ================= PROMOTIONAL VOUCHER ================= */}
-      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
-        <div className="rounded-2xl bg-[#0F172A] text-white p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 shadow-sm border border-slate-800">
-          <div className="flex items-center gap-3 w-full md:w-auto min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-base border border-white/10">
-              🎁
-            </div>
-            <div className="min-w-0">
-              <span className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-amber-300">Exclusive Privé</span>
-              <h3 className="text-sm sm:text-base font-bold text-white leading-snug truncate">Save 10% Instant Discount &gt; ₹1,000</h3>
-              <p className="text-[10px] sm:text-[10.5px] text-gray-400 truncate">
-                Coupon code:{' '}
-                <strong className="text-white font-mono bg-white/10 px-1 py-0.2 rounded border border-white/10">KRISHNA10</strong>
-              </p>
-            </div>
-          </div>
-          <Link
-            to="/shop"
-            className="w-full md:w-auto text-center rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-gray-100 transition shrink-0 shadow-2xs"
-          >
-            Claim Offer →
-          </Link>
-        </div>
-      </section>
+      {/* ================= PROMOTIONAL BANNER ================= */}
+      <PromotionalBanner onToast={setToastMessage} />
 
       {/* =========================================================
           FEATURED / TRENDING PRODUCTS SECTION (4-8 CARDS)
