@@ -152,9 +152,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-neutral-500">
-                CURATED SELECTION
-              </span>
+             
             </div>
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-950 tracking-tight flex items-center gap-2.5">
               <span>Featured / Trending Products</span>
@@ -247,31 +245,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
           </div>
 
           {/* Cards Display Selector (4 vs 8) */}
-          <div className="flex items-center justify-between sm:justify-end gap-3 text-xs font-semibold text-neutral-600 shrink-0">
-            <span className="hidden md:inline text-neutral-400">Showing {filteredProducts.length} items</span>
-            <div className="flex items-center rounded-lg border border-neutral-200 bg-neutral-50 p-0.5">
-              <button
-                type="button"
-                onClick={() => setCardLimit(4)}
-                className={`px-2.5 py-1 rounded-md transition cursor-pointer ${
-                  cardLimit === 4 ? 'bg-white text-neutral-950 font-bold shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
-                }`}
-                title="Show 4 products"
-              >
-                4 Cards
-              </button>
-              <button
-                type="button"
-                onClick={() => setCardLimit(8)}
-                className={`px-2.5 py-1 rounded-md transition cursor-pointer ${
-                  cardLimit === 8 ? 'bg-white text-neutral-950 font-bold shadow-2xs' : 'text-neutral-500 hover:text-neutral-900'
-                }`}
-                title="Show 8 products"
-              >
-                8 Cards
-              </button>
-            </div>
-          </div>
+         
         </div>
 
         {/* ============================================================
