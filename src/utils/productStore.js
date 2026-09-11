@@ -1183,6 +1183,18 @@ export function getBrandsByCategory(categoryName) {
   return brandsInCat.size > 0 ? Array.from(brandsInCat) : getBrands().slice(0, 6);
 }
 
+// Dynamic Subcategory / Product Type finder for specific category
+export function getSubcategoriesByCategory(categoryName) {
+  const products = getProducts();
+  let filtered = products;
+  if (categoryName && categoryName !== 'All') {
+    filtered = products.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase());
+  }
+  const subcats = new Set(filtered.map(p => p.subcategory).filter(Boolean));
+  return Array.from(subcats);
+}
+
+
 // ================= WISHLIST MANAGEMENT =================
 
 export function getWishlist() {
