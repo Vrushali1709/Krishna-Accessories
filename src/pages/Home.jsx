@@ -130,17 +130,66 @@ const watchHeroSlides = [
 ];
 
 // ============================================================
-// CONTINUOUS SCROLLING TICKER ITEMS (STORE HIGHLIGHTS)
+// CONTINUOUS SCROLLING TICKER ITEMS (STORE OFFERS & HIGHLIGHTS)
 // ============================================================
 const storeTickerItems = [
-  { title: "100% CERTIFIED AUTHENTIC", subtitle: "Official Brand Warranty Included" },
-  { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Seiko • Apple • Sony" },
-  { title: "MUMBAI FLAGSHIP SANCTUARY", subtitle: "Heera Panna Shopping Center, Haji Ali" },
-  { title: "INSURED EXPRESS LOGISTICS", subtitle: "BlueDart & Delhivery Across India" },
-  { title: "HANDCRAFTED LEATHER GOODS", subtitle: "Hidesign • Wildcraft • Tommy Hilfiger" },
-  { title: "7-DAY PEACE-OF-MIND GUARANTEE", subtitle: "100% Client Satisfaction" },
-  { title: "PREMIUM AUDIO & FLAGSHIP TECH", subtitle: "Sony • Bose • Samsung • boAt" },
-  { title: "POLARIZED & LUXURY EYEWEAR", subtitle: "Ray-Ban • Police • Fastrack" },
+  {
+    badge: 'SPECIAL OFFER',
+    badgeColor: 'bg-amber-400/20 text-amber-300 border-amber-400/40',
+    title: 'FLAT 10% OFF SITEWIDE',
+    subtitle: 'Use Code: KRISHNA10 on orders above ₹1,000',
+    code: 'KRISHNA10',
+    isOffer: true
+  },
+  {
+    badge: 'FREE DELIVERY',
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    title: 'INSURED EXPRESS SHIPPING',
+    subtitle: 'Free across India on prepaid orders above ₹2,000',
+    isOffer: true
+  },
+  {
+    badge: 'FESTIVE SALE',
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+    title: 'UP TO 40% OFF LUXURY CATALOG',
+    subtitle: 'Watches • Sunglasses • Premium Audio • Leather',
+    isOffer: true
+  },
+  {
+    badge: 'BUY 2 SAVE MORE',
+    badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+    title: 'EXTRA 5% COMBO SAVINGS',
+    subtitle: 'Auto-applied at checkout on 2+ items',
+    isOffer: true
+  },
+  {
+    badge: '100% AUTHENTIC',
+    badgeColor: 'bg-amber-400/20 text-amber-300 border-amber-400/40',
+    title: 'OFFICIAL BRAND WARRANTY',
+    subtitle: 'Titan • Casio • Fossil • Seiko • Apple • Sony',
+    isOffer: false
+  },
+  {
+    badge: 'PEACE OF MIND',
+    badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/40',
+    title: '7-DAY HASSLE-FREE RETURNS',
+    subtitle: '100% Client satisfaction guarantee',
+    isOffer: false
+  },
+  {
+    badge: 'LEATHER LUXE',
+    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    title: 'HANDCRAFTED LEATHER GOODS',
+    subtitle: 'Hidesign • Wildcraft • Tommy Hilfiger',
+    isOffer: false
+  },
+  {
+    badge: 'FLAGSHIP STORE',
+    badgeColor: 'bg-neutral-500/20 text-neutral-300 border-neutral-500/40',
+    title: 'MUMBAI SANCTUARY',
+    subtitle: 'Visit Heera Panna Shopping Center, Haji Ali',
+    isOffer: false
+  }
 ];
 
 // ============================================================
@@ -397,6 +446,22 @@ export default function Home() {
     setTimeout(() => setToastMessage(''), 3500);
   };
 
+  const handleCopyCode = (code, e) => {
+    if (e) e.stopPropagation();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code);
+    } else {
+      const input = document.createElement('input');
+      input.value = code;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
+    setToastMessage(`🎉 Coupon code "${code}" copied to clipboard!`);
+    setTimeout(() => setToastMessage(''), 3500);
+  };
+
   const handleBuyNow = (product) => {
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     navigate('/checkout');
@@ -504,23 +569,58 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          2. CONTINUOUS SCROLLING TRUST TICKER LINE
+          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER LINE
       ========================================================= */}
-      <div className="relative bg-[#07090E] text-white border-y border-neutral-800/90 py-3.5 overflow-hidden select-none">
+      <div className="relative bg-[#07090E] text-white border-y border-[#C5A880]/30 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
         <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-[#07090E] to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-[#07090E] to-transparent z-10" />
 
         <div className="animate-marquee flex items-center gap-6 sm:gap-8">
           {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
-            <div key={idx} className="inline-flex items-center gap-3 sm:gap-4 shrink-0">
+            <div
+              key={idx}
+              onClick={() => item.code && handleCopyCode(item.code)}
+              className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
+            >
               <span className="text-amber-400 text-xs">✦</span>
-              <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.2em] text-neutral-100">
+              
+              {/* Offer / Category Badge */}
+              {item.badge && (
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
+                  {item.isOffer && (
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-300"></span>
+                    </span>
+                  )}
+                  {item.badge}
+                </span>
+              )}
+
+              {/* Title */}
+              <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-neutral-100">
                 {item.title}
               </span>
-              <span className="hidden sm:inline-block text-[10.5px] font-normal text-amber-200/70 tracking-wider">
+
+              {/* Subtitle */}
+              <span className="text-[10.5px] sm:text-[11px] font-normal text-amber-100/75 tracking-wide">
                 ({item.subtitle})
               </span>
-              <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1" />
+
+              {/* Clickable Code Tag */}
+              {item.code && (
+                <button
+                  type="button"
+                  onClick={(e) => handleCopyCode(item.code, e)}
+                  title="Click to copy coupon code"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 hover:bg-amber-400/25 px-2 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-amber-300 border border-amber-400/40 transition active:scale-95 cursor-pointer shadow-xs"
+                >
+                  <span>CODE: {item.code}</span>
+                  <span className="text-[10px]">📋</span>
+                </button>
+              )}
+
+              <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
             </div>
           ))}
         </div>
