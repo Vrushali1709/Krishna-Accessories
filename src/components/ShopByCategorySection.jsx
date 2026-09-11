@@ -81,12 +81,7 @@ export default function ShopByCategorySection({
         {/* Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 sm:mb-8">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#C5A880]" />
-              <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
-                CURATED DEPARTMENTS
-              </span>
-            </div>
+          
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
               Shop by Category
             </h2>
