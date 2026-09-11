@@ -19,6 +19,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
+import ShopByCategorySection from '../components/ShopByCategorySection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import { getProducts, getCategories } from '../utils/productStore';
@@ -316,16 +317,6 @@ export default function Home() {
   const [toastMessage, setToastMessage] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Category Carousel State
-  const carouselRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [hasMoved, setHasMoved] = useState(false);
-
   // Category List with dynamically synced categories
   const [categoryList, setCategoryList] = useState(() => {
     const storedCats = getCategories();
@@ -373,65 +364,6 @@ export default function Home() {
       window.removeEventListener('categoriesUpdated', handleUpdate);
     };
   }, []);
-
-  const checkScroll = useCallback(() => {
-    if (!carouselRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    const maxScroll = scrollWidth - clientWidth;
-    setScrollProgress(maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0);
-  }, []);
-
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-    checkScroll();
-    el.addEventListener('scroll', checkScroll, { passive: true });
-    window.addEventListener('resize', checkScroll);
-    return () => {
-      el.removeEventListener('scroll', checkScroll);
-      window.removeEventListener('resize', checkScroll);
-    };
-  }, [checkScroll, categoryList]);
-
-  const scrollCarousel = (direction) => {
-    if (!carouselRef.current) return;
-    const container = carouselRef.current;
-    const cardWidth = container.firstElementChild?.clientWidth || 220;
-    const scrollAmount = (cardWidth + 14) * 2;
-    container.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    });
-  };
-
-  const handleMouseDown = (e) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setHasMoved(false);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging || !carouselRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    if (Math.abs(walk) > 5) setHasMoved(true);
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleCategoryClick = (e) => {
-    if (hasMoved) {
-      e.preventDefault();
-    }
-  };
 
   // Top Picks For You (Best Sellers) - Sorted by rating and popularity
   const bestSellers = useMemo(() => {
@@ -596,105 +528,11 @@ export default function Home() {
 
 
 
-      {/* ================= CURATED DEPARTMENTS CAROUSEL ================= */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 relative">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
-          <div>
-            <div className="flex items-center gap-2">
-
-            </div>
-            <h2 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-              Shop by Category
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-2.5 self-end sm:self-auto">
-            <Link
-              to="/shop"
-              className="text-xs font-semibold text-gray-700 hover:text-black hover:underline flex items-center gap-1 shrink-0 mr-1.5"
-            >
-              <span>View All</span>
-            </Link>
-
-
-
-
-          </div>
-        </div>
-
-        <div
-          ref={carouselRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          className={`flex gap-3 sm:gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-            }`}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {categoryList.map((c) => {
-            const count = getProductCountForCategory(c.name);
-            return (
-              <Link
-                key={c.name}
-                to={`/shop?category=${encodeURIComponent(c.name)}`}
-                onClick={handleCategoryClick}
-                className="group relative flex-shrink-0 w-[205px] sm:w-[230px] md:w-[250px] lg:w-[260px] p-2.5 sm:p-3 rounded-[24px] bg-white border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.10)] transition-all duration-300 hover:-translate-y-1 snap-start flex flex-col justify-between"
-              >
-                {/* Image Container with Inset Badges */}
-                <div className="relative w-full aspect-[1/0.95] overflow-hidden rounded-[18px] bg-gray-100">
-                  <img
-                    src={c.image}
-                    alt={c.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-106 pointer-events-none"
-                  />
-
-                  {/* Top Left Badge */}
-                  <div className="absolute top-2.5 left-2.5 pointer-events-none">
-                    <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-md px-2.5 py-1 text-[10px] sm:text-[10.5px] font-medium text-white border border-white/15 shadow-2xs">
-                      {count > 0 ? `${count} ${count === 1 ? 'item' : 'items'}` : 'Top rated'}
-                    </span>
-                  </div>
-
-                  {/* Top Right Action Icon */}
-                  <div className="absolute top-2.5 right-2.5 pointer-events-none">
-                    <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-black/70 backdrop-blur-md text-white border border-white/20 shadow-2xs transition-all duration-300 group-hover:bg-black group-hover:scale-110">
-                      <svg
-                        className="w-3.5 h-3.5 text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5L19.5 4.5m0 0H8.25m11.25 0v11.25" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Bottom Card Content */}
-                <div className="pt-3 pb-1 px-1 flex flex-col gap-2.5">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="text-[14px] sm:text-[15px] font-bold text-gray-900 tracking-tight group-hover:text-black transition-colors truncate">
-                      {c.name}
-                    </h3>
-                    <span className="text-[10.5px] sm:text-[11px] text-gray-400 font-normal truncate max-w-[48%] text-right">
-                      {c.tag || c.description}
-                    </span>
-                  </div>
-
-                  {/* Pill Action Button */}
-                  <div className="w-full py-2 sm:py-2.5 rounded-full bg-[#181a1f] group-hover:bg-black text-white text-[11px] sm:text-xs font-semibold tracking-wide flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] shadow-2xs">
-                    <span>Explore Now</span>
-                    <ArrowRightIcon className="w-3 h-3 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5" />
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
+      {/* ================= SHOP BY CATEGORY SECTION ================= */}
+      <ShopByCategorySection
+        categories={categoryList}
+        getProductCount={getProductCountForCategory}
+      />
 
       {/* ================= PROMOTIONAL VOUCHER ================= */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
