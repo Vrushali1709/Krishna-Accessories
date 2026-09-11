@@ -41,8 +41,7 @@ export function getCart() {
       quantity: Math.max(1, parseInt(item.quantity, 10) || 1),
       price: Number(item.price) || 0,
       color: item.color || item.selectedColor || '',
-      variant: item.variant || item.selectedVariant || '',
-      size: item.size || item.selectedSize || ''
+      variant: item.variant || item.selectedVariant || ''
     }));
   } catch (error) {
     console.error('Cart read error:', error);
@@ -63,9 +62,9 @@ export function saveCart(cart) {
 }
 
 /**
- * Adds a product into the cart with specific color/variant/size specifications.
+ * Adds a product into the cart with specific color/variant specifications.
  */
-export function addToCart(product, quantity = 1, color = '', variant = '', size = '', customPrice = null, customImage = '') {
+export function addToCart(product, quantity = 1, color = '', variant = '') {
   if (!product || product.id === undefined || product.id === null) {
     return getCart();
   }
@@ -74,36 +73,25 @@ export function addToCart(product, quantity = 1, color = '', variant = '', size 
   const qtyToAdd = Math.max(1, parseInt(quantity, 10) || 1);
   const targetColor = typeof color === 'string' ? color.trim() : '';
   const targetVariant = typeof variant === 'string' ? variant.trim() : '';
-  const targetSize = typeof size === 'string' ? size.trim() : '';
-  const effectivePrice = (customPrice !== null && !isNaN(customPrice) && Number(customPrice) > 0)
-    ? Number(customPrice)
-    : (Number(product.price) || 0);
 
   const existingIndex = cart.findIndex((item) => {
     const itemColor = (item.color || item.selectedColor || '').trim();
     const itemVariant = (item.variant || item.selectedVariant || '').trim();
-    const itemSize = (item.size || item.selectedSize || '').trim();
     return (
       String(item.id) === String(product.id) &&
       itemColor === targetColor &&
-      itemVariant === targetVariant &&
-      itemSize === targetSize
+      itemVariant === targetVariant
     );
   });
 
   if (existingIndex > -1) {
     cart[existingIndex].quantity = (cart[existingIndex].quantity || 0) + qtyToAdd;
-    if (customPrice && Number(customPrice) > 0) {
-      cart[existingIndex].price = effectivePrice;
-    }
   } else {
-    let productImage = customImage || '';
-    if (!productImage) {
-      if (Array.isArray(product.images) && product.images.length > 0) {
-        productImage = product.images[0];
-      } else if (product.image) {
-        productImage = product.image;
-      }
+    let productImage = '';
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      productImage = product.images[0];
+    } else if (product.image) {
+      productImage = product.image;
     }
 
     cart.push({
@@ -113,12 +101,11 @@ export function addToCart(product, quantity = 1, color = '', variant = '', size 
       category: product.category || 'Luxury Goods',
       sku: product.sku || `KA-${product.id}`,
       supplier: product.supplier || 'Krishna Accessories',
-      price: effectivePrice,
+      price: Number(product.price) || 0,
       oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
       image: productImage,
       color: targetColor,
       variant: targetVariant,
-      size: targetSize,
       quantity: qtyToAdd,
     });
   }
@@ -130,16 +117,14 @@ export function addToCart(product, quantity = 1, color = '', variant = '', size 
 /**
  * Updates the quantity of a specific item in the cart.
  * Signature supports:
- *   updateCartQuantity(id, color, variant, size, quantity)
  *   updateCartQuantity(id, color, variant, quantity)
  *   updateCartQuantity(id, color, quantity)
  *   updateCartQuantity(id, quantity)
  */
-export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', sizeOrQty = '', quantityParam = 1) {
+export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', quantityParam = 1) {
   const cart = getCart();
   let targetColor = '';
   let targetVariant = '';
-  let targetSize = '';
   let newQuantity = 1;
 
   if (typeof colorOrQty === 'number') {
@@ -147,30 +132,24 @@ export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', sizeO
   } else if (typeof variantOrQty === 'number') {
     targetColor = typeof colorOrQty === 'string' ? colorOrQty.trim() : '';
     newQuantity = variantOrQty;
-  } else if (typeof sizeOrQty === 'number') {
-    targetColor = typeof colorOrQty === 'string' ? colorOrQty.trim() : '';
-    targetVariant = typeof variantOrQty === 'string' ? variantOrQty.trim() : '';
-    newQuantity = sizeOrQty;
   } else {
     targetColor = typeof colorOrQty === 'string' ? colorOrQty.trim() : '';
     targetVariant = typeof variantOrQty === 'string' ? variantOrQty.trim() : '';
-    targetSize = typeof sizeOrQty === 'string' ? sizeOrQty.trim() : '';
     newQuantity = typeof quantityParam === 'number' ? quantityParam : parseInt(quantityParam, 10) || 1;
   }
 
   if (newQuantity <= 0) {
-    return removeFromCart(id, targetColor, targetVariant, targetSize);
+    return removeFromCart(id, targetColor, targetVariant);
   }
 
   const item = cart.find((p) => {
     const pColor = (p.color || p.selectedColor || '').trim();
     const pVariant = (p.variant || p.selectedVariant || '').trim();
-    const pSize = (p.size || p.selectedSize || '').trim();
-    const matchId = String(p.id) === String(id);
-    const matchColor = pColor === targetColor;
-    const matchVariant = !targetVariant || pVariant === targetVariant;
-    const matchSize = !targetSize || pSize === targetSize;
-    return matchId && matchColor && matchVariant && matchSize;
+    return (
+      String(p.id) === String(id) &&
+      pColor === targetColor &&
+      pVariant === targetVariant
+    );
   });
 
   if (item) {
@@ -182,23 +161,21 @@ export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', sizeO
 }
 
 /**
- * Removes an item from the cart matching id, color, variant, and size.
+ * Removes an item from the cart matching id, color, and variant.
  */
-export function removeFromCart(id, color = '', variant = '', size = '') {
+export function removeFromCart(id, color = '', variant = '') {
   const cart = getCart();
   const targetColor = typeof color === 'string' ? color.trim() : '';
   const targetVariant = typeof variant === 'string' ? variant.trim() : '';
-  const targetSize = typeof size === 'string' ? size.trim() : '';
 
   const updatedCart = cart.filter((item) => {
     const itemColor = (item.color || item.selectedColor || '').trim();
     const itemVariant = (item.variant || item.selectedVariant || '').trim();
-    const itemSize = (item.size || item.selectedSize || '').trim();
-    const matchId = String(item.id) === String(id);
-    const matchColor = itemColor === targetColor;
-    const matchVariant = !targetVariant || itemVariant === targetVariant;
-    const matchSize = !targetSize || itemSize === targetSize;
-    return !(matchId && matchColor && matchVariant && matchSize);
+    const matches =
+      String(item.id) === String(id) &&
+      itemColor === targetColor &&
+      itemVariant === targetVariant;
+    return !matches;
   });
 
   saveCart(updatedCart);

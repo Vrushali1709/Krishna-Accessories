@@ -59,7 +59,7 @@ export default function ProductCard({
     if (onAddToCart) {
       onAddToCart(product);
     } else {
-      addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '', product.sizes?.[0] || '');
+      addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
     }
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
@@ -71,7 +71,7 @@ export default function ProductCard({
     if (onBuyNow) {
       onBuyNow(product);
     } else {
-      addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '', product.sizes?.[0] || '');
+      addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
       navigate('/checkout');
     }
   };

@@ -53,11 +53,11 @@ export default function Cart() {
       handleRemove(item);
       return;
     }
-    updateCartQuantity(item.id, item.color || '', item.variant || '', item.size || '', qty);
+    updateCartQuantity(item.id, item.color || '', item.variant || '', qty);
   };
 
   const handleRemove = (item) => {
-    removeFromCart(item.id, item.color || '', item.variant || '', item.size || '');
+    removeFromCart(item.id, item.color || '', item.variant || '');
   };
 
   const handleClearAll = () => {
@@ -214,12 +214,11 @@ export default function Cart() {
                 {cart.map((item, idx) => {
                   const itemColor = (item.color || item.selectedColor || '').trim();
                   const itemVariant = (item.variant || item.selectedVariant || '').trim();
-                  const itemSize = (item.size || item.selectedSize || '').trim();
                   const lineTotal = (Number(item.price) || 0) * (item.quantity || 1);
 
                   return (
                     <div
-                      key={`${item.id}-${itemColor}-${itemVariant}-${itemSize}-${idx}`}
+                      key={`${item.id}-${itemColor}-${itemVariant}-${idx}`}
                       className="py-4 sm:py-5 first:pt-4 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
 
@@ -266,8 +265,8 @@ export default function Cart() {
                             {item.name}
                           </Link>
 
-                          {/* Selected Color, Size & Variant Spec Chips */}
-                          {(itemColor || itemVariant || itemSize) && (
+                          {/* Selected Color & Variant Spec Chips */}
+                          {(itemColor || itemVariant) && (
                             <div className="flex items-center gap-2 mt-1 flex-wrap">
                               {itemColor && (
                                 <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
@@ -275,15 +274,9 @@ export default function Cart() {
                                   <strong className="font-semibold text-gray-900">{itemColor}</strong>
                                 </span>
                               )}
-                              {itemSize && (
-                                <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
-                                  <span>Size:</span>
-                                  <strong className="font-semibold text-gray-900">{itemSize}</strong>
-                                </span>
-                              )}
                               {itemVariant && (
                                 <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
-                                  <span>Edition:</span>
+                                  <span>Spec:</span>
                                   <strong className="font-semibold text-gray-900">{itemVariant}</strong>
                                 </span>
                               )}
@@ -443,8 +436,8 @@ export default function Cart() {
                         <div
                           key={c.code}
                           className={`flex items-center justify-between p-2 rounded-xl border text-[11px] transition ${isApplied
-                              ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                              : 'bg-gray-50/80 border-gray-200/80 text-gray-700 hover:border-gray-300'
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                            : 'bg-gray-50/80 border-gray-200/80 text-gray-700 hover:border-gray-300'
                             }`}
                         >
                           <div className="min-w-0 pr-2">
@@ -456,8 +449,8 @@ export default function Cart() {
                               type="button"
                               onClick={() => handleApplyCoupon(null, c.code)}
                               className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition shrink-0 cursor-pointer ${eligible
-                                  ? 'bg-gray-900 text-white hover:bg-black'
-                                  : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
+                                ? 'bg-gray-900 text-white hover:bg-black'
+                                : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
                                 }`}
                               title={eligible ? 'Apply this coupon' : `Min. spend ₹${c.minSpend}`}
                             >
