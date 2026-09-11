@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { isInWishlist, toggleWishlist } from '../utils/productStore';
+import { Reveal } from './useScrollReveal';
 import {
   HeartIcon,
   BagIcon,
@@ -103,7 +104,6 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
     // Filter & Sort by Tab
     switch (activeTab) {
       case 'trending':
-        // Trending: Products with highest reviews and rating score
         list.sort((a, b) => {
           const scoreB = (Number(b.reviews) || 0) * 2 + (Number(b.rating) || 4.5) * 10;
           const scoreA = (Number(a.reviews) || 0) * 2 + (Number(a.rating) || 4.5) * 10;
@@ -112,7 +112,6 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         break;
 
       case 'featured':
-        // Featured: Hand-picked luxury flagships across brands
         list.sort((a, b) => {
           const isLuxuryA = ['Rolex', 'Titan', 'Apple', 'Dell', 'Hidesign', 'Jordan', 'Samsung'].includes(a.brand) ? 1 : 0;
           const isLuxuryB = ['Rolex', 'Titan', 'Apple', 'Dell', 'Hidesign', 'Jordan', 'Samsung'].includes(b.brand) ? 1 : 0;
@@ -121,12 +120,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         break;
 
       case 'top-rated':
-        // Top Rated: Highest rating score
         list.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
         break;
 
       case 'best-deals':
-        // Best Deals: Highest discount percentage
         list.sort((a, b) => {
           const discB = b.discount || (b.oldPrice && b.oldPrice > b.price ? Math.round(((b.oldPrice - b.price) / b.oldPrice) * 100) : 0);
           const discA = a.discount || (a.oldPrice && a.oldPrice > a.price ? Math.round(((a.oldPrice - a.price) / a.oldPrice) * 100) : 0);
@@ -142,106 +139,110 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
   }, [products, activeTab, selectedCategory, cardLimit]);
 
   return (
-    <section className="bg-white py-12 sm:py-16 border-t border-b border-gray-200/80">
+    <section className="bg-white py-14 sm:py-20 border-t border-b border-gray-200/80">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* ============================================================
             1. SECTION HEADER
         ============================================================ */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-          <div>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-950 tracking-tight">
-              Featured / Trending Products
-            </h2>
-            <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl">
-              Discover our handpicked showcase of top-rated accessories, trending flagship essentials, and exclusive luxury pieces.
-            </p>
+        <Reveal direction="up" delay={50}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+            <div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
+                CURATED SHOWCASE
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-950 tracking-tight mt-1">
+                Featured / Trending Products
+              </h2>
+              <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl">
+                Discover our handpicked showcase of top-rated accessories, trending flagship essentials, and exclusive luxury pieces.
+              </p>
+            </div>
+
+            {/* Interactive Feature Tabs */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1 bg-neutral-100 rounded-2xl border border-neutral-200/80 shrink-0">
+              <button
+                type="button"
+                onClick={() => setActiveTab('trending')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'trending'
+                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
+                }`}
+              >
+                <span>🔥</span>
+                <span>Trending Now</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('featured')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'featured'
+                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
+                }`}
+              >
+                <span>✦</span>
+                <span>Featured</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('top-rated')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'top-rated'
+                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
+                }`}
+              >
+                <span>⭐</span>
+                <span>Top Rated</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('best-deals')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === 'best-deals'
+                    ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
+                }`}
+              >
+                <span>🏷️</span>
+                <span>Best Deals</span>
+              </button>
+            </div>
           </div>
-
-          {/* Interactive Feature Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1 bg-neutral-100 rounded-2xl border border-neutral-200/80 shrink-0">
-            <button
-              type="button"
-              onClick={() => setActiveTab('trending')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'trending'
-                  ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                  : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-              }`}
-            >
-              <span>🔥</span>
-              <span>Trending Now</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('featured')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'featured'
-                  ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                  : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-              }`}
-            >
-              <span>✦</span>
-              <span>Featured</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('top-rated')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'top-rated'
-                  ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                  : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-              }`}
-            >
-              <span>⭐</span>
-              <span>Top Rated</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('best-deals')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'best-deals'
-                  ? 'bg-white text-neutral-950 shadow-xs scale-[1.02]'
-                  : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/50'
-              }`}
-            >
-              <span>🏷️</span>
-              <span>Best Deals</span>
-            </button>
-          </div>
-        </div>
+        </Reveal>
 
         {/* ============================================================
-            2. SUB-BAR: CATEGORY PILLS & CARD COUNT TOGGLE (4 vs 8)
+            2. SUB-BAR: CATEGORY PILLS
         ============================================================ */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-neutral-100">
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar">
-            {categoryFilters.map((cat) => {
-              const isActive = selectedCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer ${
-                    isActive
-                      ? 'bg-neutral-900 text-white shadow-xs'
-                      : 'bg-neutral-50 text-neutral-600 border border-neutral-200/70 hover:bg-neutral-100 hover:text-neutral-900'
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
+        <Reveal direction="up" delay={100}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-neutral-100">
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {categoryFilters.map((cat) => {
+                const isActive = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-3.5 py-1.2 text-xs font-bold rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                      isActive
+                        ? 'bg-neutral-900 text-white shadow-xs scale-[1.02]'
+                        : 'bg-neutral-50 text-neutral-600 border border-neutral-200/70 hover:bg-neutral-100 hover:text-neutral-900'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-
-          {/* Cards Display Selector (4 vs 8) */}
-         
-        </div>
+        </Reveal>
 
         {/* ============================================================
             3. PRODUCT CARDS GRID (4–8 CARDS)
@@ -277,130 +278,129 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
               }
 
               return (
-                <div
-                  key={`feat-trend-${product.id}`}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-gray-200/90 bg-white p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_14px_30px_rgba(0,0,0,0.09)] hover:border-gray-300 hover:-translate-y-1.5"
-                >
-                  {/* 1. Product Image Frame with Hover Effects */}
-                  <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F5F4F0]">
-                    <Link
-                      to={`/product/${product.id}`}
-                      className="flex h-full w-full items-center justify-center cursor-pointer"
-                    >
-                      <img
-                        src={product.image || product.images?.[0]}
-                        alt={product.name}
-                        className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-108"
-                        loading="lazy"
-                      />
-                    </Link>
-
-                    {/* Top Badges & Actions */}
-                    <div className="absolute top-2 inset-x-2 z-10 flex items-center justify-between pointer-events-none">
-                      {/* Dynamic Badge */}
-                      <span className={`rounded-md px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider shadow-xs backdrop-blur-xs ${badgeColor}`}>
-                        {badgeText}
-                      </span>
-
-                      {/* Wishlist Button */}
-                      <button
-                        type="button"
-                        onClick={(e) => handleWishlistToggle(e, product)}
-                        aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                        className={`pointer-events-auto flex h-7.5 w-7.5 items-center justify-center rounded-full shadow-xs backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer ${
-                          isWish
-                            ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
-                            : 'bg-white/90 text-gray-700 hover:text-rose-600 border border-gray-200/80 hover:bg-white'
-                        }`}
-                        title={isWish ? 'In Wishlist' : 'Add to Wishlist'}
-                      >
-                        <HeartIcon className="w-3.5 h-3.5 transition-colors" filled={isWish} />
-                      </button>
-                    </div>
-
-                    {/* Category Overlay Tag */}
-                    <div className="absolute bottom-2 left-2 pointer-events-none">
-                      <span className="rounded-md bg-black/60 backdrop-blur-xs px-2 py-0.5 text-[9px] font-semibold text-white/90 uppercase tracking-wide">
-                        {product.brand || product.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* 2. Product Information */}
-                  <div className="pt-3 flex flex-1 flex-col justify-between text-center">
-                    <div>
-                      {/* Product Name */}
+                <Reveal key={`feat-trend-${product.id}`} direction="up" delay={(idx % 4) * 70} duration={650}>
+                  <div className="group relative flex flex-col justify-between h-full rounded-2xl border border-gray-200/80 bg-white p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-gray-300 hover:-translate-y-1.5">
+                    {/* 1. Product Image Frame with Hover Effects */}
+                    <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F5F4F0]">
                       <Link
                         to={`/product/${product.id}`}
-                        className="block font-bold text-gray-900 text-[13.5px] sm:text-[14.5px] transition-colors duration-150 hover:text-emerald-800 line-clamp-1 leading-snug"
-                        title={product.name}
+                        className="flex h-full w-full items-center justify-center cursor-pointer overflow-hidden"
                       >
-                        {product.name}
+                        <img
+                          src={product.image || product.images?.[0]}
+                          alt={product.name}
+                          className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
+                          loading="lazy"
+                        />
                       </Link>
 
-                      {/* Rating (Stars + Score + Review count) */}
-                      <div className="flex items-center justify-center gap-1.5 mt-1.5">
-                        <div className="flex items-center text-[#F59E0B]">
-                          {[...Array(5)].map((_, starI) => (
-                            <StarIcon key={starI} className="w-3 h-3 text-[#F59E0B]" filled={true} />
-                          ))}
-                        </div>
-                        <span className="font-bold text-gray-800 text-[11.5px]">
-                          {product.rating ? Number(product.rating).toFixed(1) : '4.8'}
+                      {/* Top Badges & Actions */}
+                      <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
+                        {/* Dynamic Badge */}
+                        <span className={`rounded-md px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider shadow-xs backdrop-blur-md border border-white/10 ${badgeColor}`}>
+                          {badgeText}
                         </span>
-                        <span className="text-gray-400 text-[10.5px]">
-                          ({product.reviews || 45})
-                        </span>
+
+                        {/* Wishlist Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => handleWishlistToggle(e, product)}
+                          aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
+                          className={`pointer-events-auto flex h-7.5 w-7.5 items-center justify-center rounded-full shadow-xs backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
+                            isWish
+                              ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100 scale-105'
+                              : 'bg-white/90 text-gray-700 hover:text-rose-600 border border-gray-200/80 hover:bg-white'
+                          }`}
+                          title={isWish ? 'In Wishlist' : 'Add to Wishlist'}
+                        >
+                          <HeartIcon className="w-3.5 h-3.5 transition-colors" filled={isWish} />
+                        </button>
                       </div>
 
-                      {/* Price Row (Current Price + Old Price) */}
-                      <div className="flex items-baseline justify-center gap-2 mt-2">
-                        <span className="text-base sm:text-lg font-bold text-gray-950 tabular-nums">
-                          ₹{Number(product.price).toLocaleString('en-IN')}
+                      {/* Category Overlay Tag */}
+                      <div className="absolute bottom-2 left-2 pointer-events-none">
+                        <span className="rounded-md bg-black/60 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white/90 uppercase tracking-wide">
+                          {product.brand || product.category}
                         </span>
-
-                        {product.oldPrice && product.oldPrice > product.price && (
-                          <span className="text-xs sm:text-sm text-gray-400 line-through tabular-nums">
-                            ₹{Number(product.oldPrice).toLocaleString('en-IN')}
-                          </span>
-                        )}
-
-                        {discount > 0 && (
-                          <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
-                            {discount}% OFF
-                          </span>
-                        )}
                       </div>
                     </div>
 
-                    {/* 3. Add to Cart Button */}
-                    <div className="mt-3.5">
-                      <button
-                        type="button"
-                        onClick={(e) => handleAddToCart(e, product)}
-                        className={`w-full py-2.5 px-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 active:scale-98 shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
-                          isAdded
-                            ? 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700'
-                            : 'bg-[#111827] text-white hover:bg-black hover:shadow-md'
-                        }`}
-                      >
-                        {isAdded ? (
-                          <>
-                            <span className="text-sm">✓</span>
-                            <span>Added to Cart</span>
-                          </>
-                        ) : (
-                          <>
-                            <BagIcon className="w-3.5 h-3.5 text-amber-300" />
-                            <span>Add to Cart</span>
-                          </>
-                        )}
-                      </button>
+                    {/* 2. Product Information */}
+                    <div className="pt-3.5 flex flex-1 flex-col justify-between text-center">
+                      <div>
+                        {/* Product Name */}
+                        <Link
+                          to={`/product/${product.id}`}
+                          className="block font-bold text-gray-900 text-[13.5px] sm:text-[14.5px] transition-colors duration-200 hover:text-black line-clamp-1 leading-snug"
+                          title={product.name}
+                        >
+                          {product.name}
+                        </Link>
+
+                        {/* Rating (Stars + Score + Review count) */}
+                        <div className="flex items-center justify-center gap-1.5 mt-1.5">
+                          <div className="flex items-center text-amber-500">
+                            {[...Array(5)].map((_, starI) => (
+                              <StarIcon key={starI} className="w-3 h-3 text-amber-500" filled={true} />
+                            ))}
+                          </div>
+                          <span className="font-bold text-gray-800 text-[11.5px] tabular-nums">
+                            {product.rating ? Number(product.rating).toFixed(1) : '4.8'}
+                          </span>
+                          <span className="text-gray-400 text-[10.5px] tabular-nums">
+                            ({product.reviews || 45})
+                          </span>
+                        </div>
+
+                        {/* Price Row (Current Price + Old Price) */}
+                        <div className="flex items-baseline justify-center gap-2 mt-2">
+                          <span className="text-base sm:text-lg font-extrabold text-gray-950 tabular-nums">
+                            ₹{Number(product.price).toLocaleString('en-IN')}
+                          </span>
+
+                          {product.oldPrice && product.oldPrice > product.price && (
+                            <span className="text-xs sm:text-sm text-gray-400 line-through tabular-nums font-normal">
+                              ₹{Number(product.oldPrice).toLocaleString('en-IN')}
+                            </span>
+                          )}
+
+                          {discount > 0 && (
+                            <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
+                              {discount}% OFF
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* 3. Add to Cart Button */}
+                      <div className="mt-3.5">
+                        <button
+                          type="button"
+                          onClick={(e) => handleAddToCart(e, product)}
+                          className={`w-full py-2.5 px-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
+                            isAdded
+                              ? 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700 scale-[1.02]'
+                              : 'bg-[#111827] text-white hover:bg-black hover:shadow-md'
+                          }`}
+                        >
+                          {isAdded ? (
+                            <>
+                              <span className="text-sm">✓</span>
+                              <span>Added to Bag</span>
+                            </>
+                          ) : (
+                            <>
+                              <BagIcon className="w-3.5 h-3.5 text-amber-300 transition-transform group-hover:scale-110" />
+                              <span>Add to Bag</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
                     </div>
 
                   </div>
-
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -420,23 +420,25 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         {/* ============================================================
             4. SECTION FOOTER CALL TO ACTION
         ============================================================ */}
-        <div className="mt-10 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            to="/shop"
-            className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-98 shadow-xs"
-          >
-            <span>Explore All {products.length} Products</span>
-            <ArrowRightIcon className="w-4 h-4 text-amber-300" />
-          </Link>
+        <Reveal direction="up" delay={150}>
+          <div className="mt-12 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-98 shadow-xs"
+            >
+              <span>Explore All {products.length} Products</span>
+              <ArrowRightIcon className="w-4 h-4 text-amber-300" />
+            </Link>
 
-          <Link
-            to="/shop?filter=offers"
-            className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 transition hover:border-neutral-500 hover:bg-neutral-50 shadow-2xs"
-          >
-            <TagIcon className="w-4 h-4 text-rose-600" />
-            <span>View Today&apos;s Deals</span>
-          </Link>
-        </div>
+            <Link
+              to="/shop?filter=offers"
+              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-6 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-neutral-800 transition-all duration-300 hover:border-neutral-500 hover:bg-neutral-50 shadow-2xs active:scale-98"
+            >
+              <TagIcon className="w-4 h-4 text-rose-600" />
+              <span>View Today&apos;s Deals</span>
+            </Link>
+          </div>
+        </Reveal>
 
       </div>
     </section>

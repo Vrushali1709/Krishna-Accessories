@@ -18,18 +18,23 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
+import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
+import InstagramClubSection from '../components/InstagramClubSection';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import {
   ArrowRightIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  TagIcon,
+  CheckIcon
 } from '../components/Icons';
 
 // ============================================================
@@ -98,25 +103,28 @@ const defaultCategoryBanners = [
 // ============================================================
 const watchHeroSlides = [
   {
-    tag: 'NEW COLLECTION',
+    tag: 'NEW COLLECTION 2026',
     titleLine1: 'PRECISION.',
     titleLine2: 'CRAFTED FOR TIME.',
-    description: 'Where timeless design meets modern performance.',
-    image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg'
+    description: 'Where timeless Swiss horology meets modern prestige performance.',
+    image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg',
+    category: 'Watches'
   },
   {
-    tag: 'LIMITED EDITION',
+    tag: 'LIMITED BESPOKE EDITION',
     titleLine1: 'HERITAGE.',
-    titleLine2: 'SWISS CHRONOGRAPHS.',
-    description: 'Engineered for absolute accuracy and prestige.',
-    image: 'https://i.pinimg.com/736x/e6/df/98/e6df982c03d41dbf66fe9470007838c2.jpg'
+    titleLine2: 'CHRONOGRAPH LUXE.',
+    description: 'Engineered for absolute accuracy, ceramic durability, and distinguished style.',
+    image: 'https://i.pinimg.com/736x/e6/df/98/e6df982c03d41dbf66fe9470007838c2.jpg',
+    category: 'Watches'
   },
   {
-    tag: 'AUTOMATIC SERIES',
+    tag: 'AUTOMATIC MASTERPIECES',
     titleLine1: 'TIMELESS.',
-    titleLine2: 'MASTERPIECE WATCHES.',
-    description: 'Crafted with sapphire crystal and fine leather.',
-    image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg'
+    titleLine2: 'SAPPHIRE LUXURY.',
+    description: 'Crafted with genuine sapphire crystal, mechanical movements, and calfskin straps.',
+    image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg',
+    category: 'Watches'
   }
 ];
 
@@ -124,12 +132,12 @@ const watchHeroSlides = [
 // CONTINUOUS SCROLLING TICKER ITEMS (STORE HIGHLIGHTS)
 // ============================================================
 const storeTickerItems = [
-  { title: "100% CERTIFIED AUTHENTIC", subtitle: "Official Brand Warranty" },
-  { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Seiko • Apple" },
+  { title: "100% CERTIFIED AUTHENTIC", subtitle: "Official Brand Warranty Included" },
+  { title: "DIRECT FACTORY SOURCING", subtitle: "Titan • Casio • Fossil • Seiko • Apple • Sony" },
   { title: "MUMBAI FLAGSHIP SANCTUARY", subtitle: "Heera Panna Shopping Center, Haji Ali" },
-  { title: "INSURED EXPRESS LOGISTICS", subtitle: "BlueDart & Delhivery" },
-  { title: "HANDCRAFTED LEATHER GOODS", subtitle: "Hidesign • Wildcraft • Tommy" },
-  { title: "7-DAY REPLACEMENT GUARANTEE", subtitle: "100% Client Peace of Mind" },
+  { title: "INSURED EXPRESS LOGISTICS", subtitle: "BlueDart & Delhivery Across India" },
+  { title: "HANDCRAFTED LEATHER GOODS", subtitle: "Hidesign • Wildcraft • Tommy Hilfiger" },
+  { title: "7-DAY PEACE-OF-MIND GUARANTEE", subtitle: "100% Client Satisfaction" },
   { title: "PREMIUM AUDIO & FLAGSHIP TECH", subtitle: "Sony • Bose • Samsung • boAt" },
   { title: "POLARIZED & LUXURY EYEWEAR", subtitle: "Ray-Ban • Police • Fastrack" },
 ];
@@ -306,6 +314,7 @@ export default function Home() {
   const [products, setProducts] = useState(() => getProducts());
   const [toastMessage, setToastMessage] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [copiedCoupon, setCopiedCoupon] = useState(false);
 
   // Category List with dynamically synced categories
   const [categoryList, setCategoryList] = useState(() => {
@@ -393,60 +402,73 @@ export default function Home() {
     navigate('/checkout');
   };
 
+  const handleCopyCoupon = () => {
+    navigator.clipboard?.writeText('KRISHNA10');
+    setCopiedCoupon(true);
+    setToastMessage('🎉 Coupon "KRISHNA10" copied to clipboard!');
+    setTimeout(() => {
+      setCopiedCoupon(false);
+      setToastMessage('');
+    }, 3500);
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip select-none sm:select-auto">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip selection:bg-neutral-900 selection:text-white">
       <Navbar />
 
       {/* Floating Alert Toast */}
       {toastMessage && (
-        <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-900 shadow-xl animate-slide-up max-w-[calc(100vw-32px)]">
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs">✓</span>
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-2xl border border-gray-200 bg-white/95 backdrop-blur-md px-4 py-3 text-xs font-semibold text-gray-900 shadow-2xl animate-slide-up max-w-[calc(100vw-32px)]">
+          <span className="flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">✓</span>
           <span className="truncate">{toastMessage}</span>
           <Link
             to="/cart"
-            className="ml-1 rounded-full bg-[#111827] px-2.5 py-0.5 text-[10px] font-semibold text-white hover:bg-black transition shrink-0"
+            className="ml-2 rounded-full bg-[#111827] px-3 py-1 text-[11px] font-bold text-white hover:bg-black transition shrink-0 shadow-xs"
           >
-            Bag
+            View Bag
           </Link>
         </div>
       )}
 
-      {/* ================= LUXURY WATCH HERO SECTION ================= */}
-      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[670px] lg:min-h-[670px]">
+      {/* =========================================================
+          1. LUXURY WATCH HERO SLIDER SECTION
+      ========================================================= */}
+      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[700px] lg:min-h-[700px]">
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
             <div
               key={slide.titleLine1}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
             >
-              <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[56%] xl:w-[50%] 2xl:w-[46%] h-full w-full">
+              <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[58%] xl:w-[52%] 2xl:w-[48%] h-full w-full">
                 <img
                   src={slide.image}
                   alt={slide.titleLine1}
-                  className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center scale-[1.02] lg:scale-100"
+                  className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center scale-[1.02] lg:scale-100 transition-transform duration-10000 ease-out"
                 />
                 <div className="hidden lg:block absolute inset-y-0 left-0 w-48 xl:w-64 bg-gradient-to-r from-[#070808] to-transparent pointer-events-none" />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/10 lg:from-[#070808] lg:via-[#070808]/90 lg:via-45% lg:to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-black/90 via-black/30 to-transparent lg:from-[#070808] lg:via-[#070808]/60 pointer-events-none" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.08)_45%,rgba(0,0,0,0.35)_100%)] lg:bg-[radial-gradient(ellipse_at_75%_50%,transparent_30%,rgba(7,8,8,0.4)_75%,#070808_100%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/10 lg:from-[#070808] lg:via-[#070808]/90 lg:via-48% lg:to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/95 via-black/40 to-transparent lg:from-[#070808] lg:via-[#070808]/70 pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.1)_45%,rgba(0,0,0,0.4)_100%)] lg:bg-[radial-gradient(ellipse_at_75%_50%,transparent_30%,rgba(7,8,8,0.4)_75%,#070808_100%)] pointer-events-none" />
             </div>
           ))}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[560px] sm:min-h-[590px] lg:min-h-[670px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-6 flex flex-col justify-between">
-          <div className="max-w-[620px] lg:my-auto lg:py-6">
-            <div className="mb-5 flex items-center gap-3">
+        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
+          <div className="max-w-[620px] lg:my-auto lg:py-8">
+            <div className="mb-5 flex items-center gap-3 animate-fade-in">
               <span className="h-px w-8 bg-[#C5A880]" />
-              <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-[#D5C2A5]">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#D5C2A5]">
                 {watchHeroSlides[currentSlide].tag}
               </span>
             </div>
 
-            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-semibold sm:text-5xl lg:text-[68px] xl:text-[74px]">
-              <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
+            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-semibold sm:text-5xl lg:text-[68px] xl:text-[76px]">
+              <span className="block text-white font-serif">{watchHeroSlides[currentSlide].titleLine1}</span>
               <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
             </h1>
 
@@ -457,7 +479,7 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 to="/shop?category=Watches"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-black transition hover:bg-[#E5D7C5]"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
               >
                 <span>Shop Watches</span>
                 <ArrowRightIcon className="w-4 h-4 text-black" />
@@ -465,7 +487,7 @@ export default function Home() {
 
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white transition hover:border-neutral-500 hover:bg-black/60"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
               >
                 <span>All Collections</span>
               </Link>
@@ -478,25 +500,27 @@ export default function Home() {
                 <button
                   key={i}
                   onClick={() => setCurrentSlide(i)}
-                  className={`h-1.5 transition-all duration-300 rounded-full ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
-                    }`}
+                  className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+                    i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
+                  }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
               ))}
             </div>
 
-            <span className="text-[11px] font-medium text-neutral-400 tracking-wider">
+            <span className="text-[11px] font-mono font-medium text-neutral-400 tracking-wider">
               0{currentSlide + 1} / 0{watchHeroSlides.length}
             </span>
           </div>
         </div>
       </section>
 
-      {/* ================= CONTINUOUS TICKER LINE (INFINITE MARQUEE) ================= */}
-      <div className="relative bg-[#07090E] text-white border-y border-neutral-800/90 py-3 sm:py-3.5 overflow-hidden select-none">
-        {/* Left & Right subtle gradient masks for smooth fade edge */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-24 bg-gradient-to-r from-[#07090E] to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-24 bg-gradient-to-l from-[#07090E] to-transparent z-10" />
+      {/* =========================================================
+          2. CONTINUOUS SCROLLING TRUST TICKER LINE
+      ========================================================= */}
+      <div className="relative bg-[#07090E] text-white border-y border-neutral-800/90 py-3.5 overflow-hidden select-none">
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-[#07090E] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-[#07090E] to-transparent z-10" />
 
         <div className="animate-marquee flex items-center gap-6 sm:gap-8">
           {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
@@ -514,43 +538,76 @@ export default function Home() {
         </div>
       </div>
 
-      <HomeDiscoveryStrip categories={categoryList} />
+      {/* =========================================================
+          3. CORE VALUE PILLARS (4-FEATURE DISCOVERY STRIP)
+      ========================================================= */}
+      <HomeDiscoveryStrip />
 
-
-
-      {/* ================= SHOP BY CATEGORY SECTION ================= */}
+      {/* =========================================================
+          4. SHOP BY CATEGORY (CURATED CAROUSEL)
+      ========================================================= */}
       <ShopByCategorySection
         categories={categoryList}
         getProductCount={getProductCountForCategory}
       />
 
-      {/* ================= PROMOTIONAL VOUCHER ================= */}
-      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-6">
-        <div className="rounded-2xl bg-[#0F172A] text-white p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 shadow-sm border border-slate-800">
-          <div className="flex items-center gap-3 w-full md:w-auto min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-base border border-white/10">
-              🎁
+      {/* =========================================================
+          5. FLASH PROMOTIONAL VOUCHER BANNER
+      ========================================================= */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <Reveal direction="zoom" delay={50}>
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white p-5 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-5 shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-slate-700/80">
+            {/* Ambient decorative glow */}
+            <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-amber-500/15 blur-2xl" />
+
+            <div className="flex items-center gap-4 w-full md:w-auto min-w-0">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-xl border border-white/15 shadow-inner">
+                🎁
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-amber-300">
+                    LIMITED PRIVÉ PRIVILEGE
+                  </span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white leading-snug truncate mt-0.5">
+                  Save 10% Instant Discount on all orders &gt; ₹1,000
+                </h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-xs text-gray-300">Use Promo Code:</p>
+                  <button
+                    type="button"
+                    onClick={handleCopyCoupon}
+                    className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-amber-200 bg-white/10 hover:bg-white/20 px-2.5 py-0.5 rounded-md border border-white/20 transition-colors cursor-pointer"
+                    title="Click to copy coupon code"
+                  >
+                    <span>KRISHNA10</span>
+                    <span className="text-[10px] text-gray-300">📋</span>
+                  </button>
+                  {copiedCoupon && (
+                    <span className="text-[10px] font-bold text-emerald-400 animate-fade-in">
+                      ✓ Copied!
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="min-w-0">
-              <span className="text-[8.5px] font-bold uppercase tracking-[0.14em] text-amber-300">Exclusive Privé</span>
-              <h3 className="text-sm sm:text-base font-bold text-white leading-snug truncate">Save 10% Instant Discount &gt; ₹1,000</h3>
-              <p className="text-[10px] sm:text-[10.5px] text-gray-400 truncate">
-                Coupon code:{' '}
-                <strong className="text-white font-mono bg-white/10 px-1 py-0.2 rounded border border-white/10">KRISHNA10</strong>
-              </p>
+
+            <div className="flex items-center gap-3 w-full md:w-auto shrink-0 justify-end">
+              <Link
+                to="/shop"
+                className="w-full md:w-auto text-center rounded-full bg-white px-7 py-3 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-[#E5D7C5] transition-all duration-300 shadow-md active:scale-95"
+              >
+                Claim Offer Now →
+              </Link>
             </div>
           </div>
-          <Link
-            to="/shop"
-            className="w-full md:w-auto text-center rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wider text-gray-950 hover:bg-gray-100 transition shrink-0 shadow-2xs"
-          >
-            Claim Offer →
-          </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* =========================================================
-          FEATURED / TRENDING PRODUCTS SECTION (4-8 CARDS)
+          6. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
       ========================================================= */}
       <FeaturedTrendingSection
         products={products}
@@ -558,37 +615,48 @@ export default function Home() {
       />
 
       {/* =========================================================
-          SECTION 1: TOP PICKS FOR YOU — BEST SELLERS ♡
+          7. CURATED EDITORIAL SPOTLIGHT (DUAL LUXURY BANNERS)
       ========================================================= */}
-      <section className="bg-white py-10 sm:py-14 border-t border-gray-200/80">
+      <EditorialSpotlightSection />
+
+      {/* =========================================================
+          8. TOP PICKS FOR YOU — BEST SELLERS ♡
+      ========================================================= */}
+      <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-600">
-              TOP PICKS FOR YOU
-            </p>
-            <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1.5">
-              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-normal text-neutral-900 flex items-center gap-2">
-                <span>Best Sellers</span>
-                <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
-              </h2>
-              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+          <Reveal direction="up" delay={50}>
+            <div className="text-center mb-10 sm:mb-12">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+                TOP PICKS FOR YOU
+              </p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 flex items-center gap-2">
+                  <span>Best Sellers</span>
+                  <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
+                </h2>
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              </div>
+              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
+                Client favorites across timepieces, designer sunglasses, and premium audio.
+              </p>
             </div>
-          </div>
+          </Reveal>
 
           {/* 4 Cards Grid */}
           {bestSellers.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
-              {bestSellers.map((product) => (
-                <ProductCard
-                  key={`bestseller-${product.id}`}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onBuyNow={handleBuyNow}
-                  showRating={true}
-                />
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {bestSellers.map((product, idx) => (
+                <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
+                    showRating={true}
+                  />
+                </Reveal>
               ))}
             </div>
           ) : (
@@ -601,36 +669,42 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          SECTION 2: CHECK OUT WHAT'S NEW — NEW ARRIVALS
+          9. CHECK OUT WHAT'S NEW — NEW ARRIVALS
       ========================================================= */}
-      <section className="bg-white py-10 sm:py-14 border-t border-gray-100">
+      <section className="bg-[#FAFAFB] py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-600">
-              CHECK OUT WHAT&apos;S NEW
-            </p>
-            <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1.5">
-              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-normal text-neutral-900">
-                New Arrivals
-              </h2>
-              <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+          <Reveal direction="up" delay={50}>
+            <div className="text-center mb-10 sm:mb-12">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+                CHECK OUT WHAT&apos;S NEW
+              </p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900">
+                  New Arrivals
+                </h2>
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              </div>
+              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
+                Fresh seasonal releases, novelties, and smart devices straight to catalog.
+              </p>
             </div>
-          </div>
+          </Reveal>
 
           {/* 4 Cards Grid */}
           {newArrivals.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
-              {newArrivals.map((product) => (
-                <ProductCard
-                  key={`newarrival-${product.id}`}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onBuyNow={handleBuyNow}
-                  showRating={true}
-                />
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {newArrivals.map((product, idx) => (
+                <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
+                    showRating={true}
+                  />
+                </Reveal>
               ))}
             </div>
           ) : (
@@ -642,79 +716,92 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ======================================================
-          OFFICIAL BRAND PARTNERS - CAPSULE SHOWCASE (MATCHING USER REFERENCE UI)
-      ====================================================== */}
-      <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8">
-        <div className="text-center mb-7 sm:mb-9">
-
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
-            Explore by Brand
-          </h2>
-          <p className="mt-1.5 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
-            Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
-          </p>
-        </div>
+      {/* =========================================================
+          10. OFFICIAL BRAND PARTNERS (CAPSULE SHOWCASE)
+      ========================================================= */}
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8">
+        <Reveal direction="up" delay={50}>
+          <div className="text-center mb-8 sm:mb-10">
+            <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+              AUTHENTICITY GUARANTEED
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
+              Explore by Brand
+            </h2>
+            <p className="mt-2 text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
+              Discover 100% certified authentic luxury pieces direct from authorized heritage houses and global makers.
+            </p>
+          </div>
+        </Reveal>
 
         {/* Dual Capsule Infinite Scrolling Carousel Strips */}
-        <div className="space-y-3 sm:space-y-3.5">
+        <Reveal direction="up" delay={120}>
+          <div className="space-y-3.5 sm:space-y-4">
 
-          {/* Track 1 (Row 1 Brands - Scrolling Left) */}
-          <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            {/* Left & Right fade masks */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
+            {/* Track 1 (Row 1 Brands - Scrolling Left) */}
+            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2.5 sm:p-3 sm:px-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
 
-            <div className="animate-marquee flex items-center gap-2.5 sm:gap-3 py-0.5">
-              {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
-                <Link
-                  key={`${b.name}-t1-${idx}`}
-                  to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                  className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
-                  title={`${b.name} • ${b.cat}`}
-                >
-                  <div className="transition-transform duration-200 group-hover:scale-105">
-                    {b.renderLogo()}
-                  </div>
-                </Link>
-              ))}
+              <div className="animate-marquee flex items-center gap-3 py-1">
+                {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
+                  <Link
+                    key={`${b.name}-t1-${idx}`}
+                    to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
+                    className="group relative flex-shrink-0 flex items-center justify-center w-[145px] sm:w-[165px] md:w-[180px] h-16 sm:h-19 px-4 rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-300 hover:border-amber-400 hover:shadow-md hover:scale-[1.03] active:scale-98"
+                    title={`${b.name} • ${b.cat}`}
+                  >
+                    <div className="transition-transform duration-300 group-hover:scale-108">
+                      {b.renderLogo()}
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
 
+            {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
+            <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2.5 sm:p-3 sm:px-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
 
-
-          {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
-          <div className="relative overflow-hidden rounded-[24px] sm:rounded-[32px] border border-gray-200/90 bg-[#F9FAFB]/90 p-2 sm:p-2.5 sm:px-3 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            {/* Left & Right fade masks */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 rounded-l-[24px] sm:rounded-l-[32px]" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 rounded-r-[24px] sm:rounded-r-[32px]" />
-
-            <div className="animate-marquee-reverse flex items-center gap-2.5 sm:gap-3 py-0.5">
-              {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
-                <Link
-                  key={`${b.name}-t2-${idx}`}
-                  to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
-                  className="group relative flex-shrink-0 flex items-center justify-center w-[140px] sm:w-[160px] md:w-[175px] h-15 sm:h-18 lg:h-19 px-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-200 hover:border-amber-400/90 hover:shadow-md hover:scale-[1.03] active:scale-98"
-                  title={`${b.name} • ${b.cat}`}
-                >
-                  <div className="transition-transform duration-200 group-hover:scale-105">
-                    {b.renderLogo()}
-                  </div>
-                </Link>
-              ))}
+              <div className="animate-marquee-reverse flex items-center gap-3 py-1">
+                {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
+                  <Link
+                    key={`${b.name}-t2-${idx}`}
+                    to={`/shop?category=${encodeURIComponent(b.cat)}&brand=${encodeURIComponent(b.name)}`}
+                    className="group relative flex-shrink-0 flex items-center justify-center w-[145px] sm:w-[165px] md:w-[180px] h-16 sm:h-19 px-4 rounded-2xl border border-gray-200/80 bg-white shadow-2xs transition-all duration-300 hover:border-amber-400 hover:shadow-md hover:scale-[1.03] active:scale-98"
+                    title={`${b.name} • ${b.cat}`}
+                  >
+                    <div className="transition-transform duration-300 group-hover:scale-108">
+                      {b.renderLogo()}
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
 
-        </div>
+          </div>
+        </Reveal>
       </section>
 
-      {/* ================= WHY CHOOSE US (THE DIFFERENCE) ================= */}
+      {/* =========================================================
+          11. WHY CHOOSE US (THE DIFFERENCE)
+      ========================================================= */}
       <WhyChooseUsSection />
 
-      {/* ================= CUSTOMER REVIEWS (CAROUSEL) ================= */}
+      {/* =========================================================
+          12. CUSTOMER REVIEWS (CAROUSEL)
+      ========================================================= */}
       <CustomerReviewsSection />
 
-      {/* ================= FOOTER ================= */}
+      {/* =========================================================
+          13. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
+      ========================================================= */}
+      <InstagramClubSection />
+
+      {/* =========================================================
+          FOOTER
+      ========================================================= */}
       <Footer />
     </div>
   );

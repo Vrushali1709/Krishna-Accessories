@@ -1,5 +1,6 @@
 // src/components/CustomerReviewsSection.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Reveal } from './useScrollReveal';
 import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
 
 const DEFAULT_REVIEWS = [
@@ -175,7 +176,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
 
   return (
     <section
-      className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 select-none"
+      className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);
@@ -183,97 +184,121 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
       }}
     >
       {/* Section Header */}
-      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-amber-500"></span>
-            <span className="text-[10.5px] font-bold uppercase tracking-[0.24em] text-amber-900/90">
-              Verified Client Feedback
-            </span>
-          </div>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl">
-            Customer Reviews & Testimonials
-          </h2>
-          <p className="mt-1 text-xs sm:text-sm text-gray-500">
-            Real experiences from clients who trust Krishna Accessories for 100% certified authentic luxury.
-          </p>
-        </div>
-
-        {/* Rating Score & Navigation Controls */}
-        <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-          <div className="flex items-center gap-2 rounded-full border border-gray-200/90 bg-white px-3.5 py-1.5 shadow-2xs">
-            <span className="flex items-center gap-0.5 text-xs text-[#B48A4A]">
-              {'★'.repeat(5)}
-            </span>
-            <span className="text-xs font-bold text-gray-800">
-              4.9 / 5 <span className="text-gray-400 font-normal hidden sm:inline">(2,840+ verified reviews)</span>
-            </span>
+      <Reveal direction="up" delay={50}>
+        <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span className="text-[10.5px] font-bold uppercase tracking-[0.24em] text-neutral-400">
+                VERIFIED CLIENT FEEDBACK
+              </span>
+            </div>
+            <h2 className="mt-1 font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-gray-950">
+              Customer Reviews & Testimonials
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-xl">
+              Real experiences from clients who trust Krishna Accessories for 100% certified authentic luxury.
+            </p>
           </div>
 
-          {/* Carousel Arrow Controls */}
-
-        </div>
-      </div>
-
-      {/* Carousel Track */}
-      <div
-        ref={carouselRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        className={`flex gap-4 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {reviews.map((review, idx) => (
-          <div
-            key={review.id || review.name || idx}
-            className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[390px] snap-start flex flex-col justify-between rounded-[24px] border border-gray-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:-translate-y-1 relative"
-          >
-            <div>
-              {/* Top Row: Stars + Category/Product Badge */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1 text-sm text-[#B48A4A]">
-                  {'★'.repeat(review.rating || 5)}
-                </div>
-                {review.product && (
-                  <span className="truncate max-w-[190px] text-[10px] font-semibold text-amber-900 bg-amber-50/90 border border-amber-200/80 rounded-full px-2.5 py-0.5">
-                    {review.product}
-                  </span>
-                )}
-              </div>
-
-              {/* Review Quote Text */}
-              <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-700 font-normal">
-                “{review.text}”
-              </p>
+          {/* Rating Score & Navigation Controls */}
+          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+            <div className="flex items-center gap-2 rounded-full border border-gray-200/90 bg-white px-4 py-1.5 shadow-2xs">
+              <span className="flex items-center gap-0.5 text-xs text-amber-500">
+                {'★'.repeat(5)}
+              </span>
+              <span className="text-xs font-bold text-gray-800">
+                4.9 / 5 <span className="text-gray-400 font-normal hidden sm:inline">(2,840+ verified reviews)</span>
+              </span>
             </div>
 
-            {/* Author Footer */}
-            <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+            {/* Left / Right Navigation Buttons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => scrollCarousel('left')}
+                disabled={!canScrollLeft}
+                className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
+                aria-label="Previous review"
+              >
+                <ChevronLeftIcon className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollCarousel('right')}
+                disabled={!canScrollRight}
+                className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
+                aria-label="Next review"
+              >
+                <ChevronRightIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
+      {/* Carousel Track */}
+      <Reveal direction="up" delay={120}>
+        <div
+          ref={carouselRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          className={`flex gap-4 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {reviews.map((review, idx) => (
+            <div
+              key={review.id || review.name || idx}
+              className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[390px] snap-start flex flex-col justify-between rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.08)] hover:-translate-y-1 relative"
+            >
               <div>
-                <div className="flex items-center gap-1.5">
-                  <h3 className="text-xs sm:text-[13px] font-bold text-gray-950">
-                    {review.name}
-                  </h3>
-                  <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
-                    <span>✓</span> Verified Buyer
-                  </span>
+                {/* Top Row: Stars + Category/Product Badge */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1 text-sm text-amber-500">
+                    {'★'.repeat(review.rating || 5)}
+                  </div>
+                  {review.product && (
+                    <span className="truncate max-w-[190px] text-[10px] font-semibold text-neutral-800 bg-neutral-100 border border-neutral-200/80 rounded-full px-2.5 py-0.5">
+                      {review.product}
+                    </span>
+                  )}
                 </div>
-                <p className="mt-0.5 text-[10px] sm:text-[11px] text-gray-400">
-                  {review.location}
+
+                {/* Review Quote Text */}
+                <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-700 font-normal">
+                  “{review.text}”
                 </p>
               </div>
 
-              {/* Avatar Initial with Stylish Gradient */}
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-tr from-slate-900 to-slate-700 text-xs font-bold text-amber-300 border border-slate-700 shadow-2xs shrink-0">
-                {review.name.charAt(0)}
-              </span>
+              {/* Author Footer */}
+              <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-xs sm:text-[13.5px] font-bold text-gray-950">
+                      {review.name}
+                    </h3>
+                    <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+                      <span>✓</span> Verified
+                    </span>
+                  </div>
+                  <p className="mt-0.5 text-[10px] sm:text-[11px] text-gray-400">
+                    {review.location}
+                  </p>
+                </div>
+
+                {/* Avatar Initial with Stylish Gradient */}
+                <span className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-[#111827] text-xs font-bold text-amber-300 border border-neutral-700 shadow-2xs shrink-0">
+                  {review.name.charAt(0)}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </Reveal>
 
       {/* Slide Progress Indicator Dots */}
       <div className="mt-4 flex items-center justify-center gap-1.5">
@@ -283,14 +308,14 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             type="button"
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
-            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
-              ? 'w-7 bg-gray-950'
-              : 'w-1.5 bg-gray-300 hover:bg-gray-400'
-              }`}
+            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+              i === activeIndex
+                ? 'w-7 bg-gray-950'
+                : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+            }`}
           />
         ))}
       </div>
     </section>
   );
 }
-
