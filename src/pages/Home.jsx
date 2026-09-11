@@ -19,7 +19,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
-import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
@@ -627,12 +626,7 @@ export default function Home() {
       </div>
 
       {/* =========================================================
-          3. CORE VALUE PILLARS (4-FEATURE DISCOVERY STRIP)
-      ========================================================= */}
-      <HomeDiscoveryStrip />
-
-      {/* =========================================================
-          4. SHOP BY CATEGORY (CURATED CAROUSEL)
+          3. SHOP BY CATEGORY (CURATED CAROUSEL)
       ========================================================= */}
       <ShopByCategorySection
         categories={categoryList}
