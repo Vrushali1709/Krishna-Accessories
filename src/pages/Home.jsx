@@ -403,7 +403,7 @@ export default function Home() {
   };
 
   return (
-    <div className="home-page min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip selection:bg-neutral-900 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip selection:bg-neutral-900 selection:text-white">
       <Navbar />
 
       {/* Floating Alert Toast */}
@@ -423,7 +423,7 @@ export default function Home() {
       {/* =========================================================
           1. LUXURY WATCH HERO SLIDER SECTION
       ========================================================= */}
-      <section className="home-hero relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[700px] lg:min-h-[700px]">
+      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[700px] lg:min-h-[700px]">
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
             <div
@@ -506,7 +506,7 @@ export default function Home() {
       {/* =========================================================
           2. CONTINUOUS SCROLLING TRUST TICKER LINE
       ========================================================= */}
-      <div className="home-ticker relative bg-[#07090E] text-white border-y border-neutral-800/90 py-3.5 overflow-hidden select-none">
+      <div className="relative bg-[#07090E] text-white border-y border-neutral-800/90 py-3.5 overflow-hidden select-none">
         <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-[#07090E] to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-[#07090E] to-transparent z-10" />
 
@@ -560,7 +560,7 @@ export default function Home() {
       {/* =========================================================
           8. TOP PICKS FOR YOU — BEST SELLERS ♡
       ========================================================= */}
-      <section className="home-section home-best-sellers bg-white py-14 sm:py-20 border-t border-gray-200/80">
+      <section className="bg-white py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
@@ -585,19 +585,15 @@ export default function Home() {
 
           {/* 4 Cards Grid */}
           {bestSellers.length > 0 ? (
-            <div className="home-ranked-grid grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
               {bestSellers.map((product, idx) => (
                 <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <div className="home-ranked-item relative h-full">
-                    <span className="home-rank-number" aria-hidden="true">0{idx + 1}</span>
-                    <ProductCard
-                      product={product}
-                      onAddToCart={handleAddToCart}
-                      onBuyNow={handleBuyNow}
-                      showRating={true}
-                      variant="ranked"
-                    />
-                  </div>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
+                    showRating={true}
+                  />
                 </Reveal>
               ))}
             </div>
@@ -613,7 +609,7 @@ export default function Home() {
       {/* =========================================================
           9. CHECK OUT WHAT'S NEW — NEW ARRIVALS
       ========================================================= */}
-      <section className="home-section home-new-arrivals bg-[#FAFAFB] py-14 sm:py-20 border-t border-gray-200/80">
+      <section className="bg-[#FAFAFB] py-14 sm:py-20 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
@@ -637,7 +633,7 @@ export default function Home() {
 
           {/* 4 Cards Grid */}
           {newArrivals.length > 0 ? (
-            <div className="home-editorial-grid grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
               {newArrivals.map((product, idx) => (
                 <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
                   <ProductCard
@@ -645,7 +641,6 @@ export default function Home() {
                     onAddToCart={handleAddToCart}
                     onBuyNow={handleBuyNow}
                     showRating={true}
-                    variant="editorial"
                   />
                 </Reveal>
               ))}

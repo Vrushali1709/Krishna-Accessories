@@ -12,8 +12,7 @@ export default function ProductCard({
   onBuyNow,
   showRating = true,
   buttonLabel = 'Add to Cart',
-  showBrand = true,
-  variant = 'standard'
+  showBrand = true
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -86,7 +85,7 @@ export default function ProductCard({
   };
 
   return (
-    <div className={`product-card product-card--${variant} group relative flex flex-col justify-between rounded-2xl border border-gray-200/70 bg-white p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-gray-300 hover:-translate-y-1.5`}>
+    <div className="group relative flex flex-col justify-between rounded-2xl border border-gray-200/70 bg-white p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_36px_rgba(0,0,0,0.08)] hover:border-gray-300 hover:-translate-y-1.5">
 
       {/* 1. Clean Rounded Image Frame with Warm Canvas & Zoom */}
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F4F3F0]">
