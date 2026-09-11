@@ -25,7 +25,6 @@ import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
-import PromoVoucherBanner from '../components/PromoVoucherBanner';
 import { getProducts, getCategories } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
@@ -634,12 +633,7 @@ export default function Home() {
       />
 
       {/* =========================================================
-          5. FLASH PROMOTIONAL VOUCHER BANNER
-      ========================================================= */}
-      <PromoVoucherBanner onToast={setToastMessage} />
-
-      {/* =========================================================
-          6. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
+          4. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
       ========================================================= */}
       <FeaturedTrendingSection
         products={products}
