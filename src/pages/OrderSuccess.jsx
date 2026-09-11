@@ -124,7 +124,9 @@ export default function OrderSuccess() {
                   <img src={item.image} alt={item.name} className="h-10 w-10 rounded-lg object-contain bg-[#F4F4F6] border border-gray-200 p-0.5 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-gray-950 truncate">{item.name}</p>
-                    <p className="text-[10.5px] text-gray-500 truncate">{item.brand} &bull; Qty: {item.quantity} {item.color && `&bull; ${item.color}`}</p>
+                    <p className="text-[10.5px] text-gray-500 truncate">
+                      {item.brand} &bull; Qty: {item.quantity} {item.color && `&bull; ${item.color}`} {item.size && `&bull; ${item.size}`} {item.variant && `&bull; ${item.variant}`}
+                    </p>
                   </div>
                   <span className="text-xs font-bold text-gray-950 shrink-0">
                     ₹{(item.price * item.quantity).toLocaleString('en-IN')}

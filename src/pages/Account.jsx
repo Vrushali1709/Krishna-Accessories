@@ -529,7 +529,9 @@ export default function Account() {
                             <img src={it.image} alt="" className="h-11 w-11 rounded-xs object-contain bg-[#FAF9F5] border border-stone-200 p-1" />
                             <div>
                               <p className="font-bold text-stone-950">{it.name}</p>
-                              <span className="text-[10px] text-stone-400">{it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}</span>
+                              <span className="text-[10px] text-stone-400">
+                                {it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`} {it.size && `&bull; ${it.size}`} {it.variant && `&bull; ${it.variant}`}
+                              </span>
                             </div>
                           </div>
                           <span className="font-bold text-stone-950">
@@ -872,7 +874,7 @@ export default function Account() {
                             <div>
                               <p className="font-bold text-stone-950">{it.name}</p>
                               <span className="text-[10px] text-stone-400">
-                                {it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}
+                                {it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`} {it.size && `&bull; ${it.size}`} {it.variant && `&bull; ${it.variant}`}
                               </span>
                             </div>
                           </div>

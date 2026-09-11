@@ -310,7 +310,9 @@ export default function OrderTracking() {
                       <img src={it.image} alt="" className="h-12 w-12 rounded-xl object-contain bg-[#F4F4F6] border border-gray-200 p-1 shrink-0" />
                       <div className="min-w-0">
                         <p className="font-bold text-gray-950 truncate">{it.name}</p>
-                        <span className="text-[10px] text-gray-400 truncate block">{it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}</span>
+                        <span className="text-[10px] text-gray-400 truncate block">
+                          {it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`} {it.size && `&bull; ${it.size}`} {it.variant && `&bull; ${it.variant}`}
+                        </span>
                       </div>
                     </div>
                     <span className="font-bold text-gray-950 shrink-0 text-xs">
