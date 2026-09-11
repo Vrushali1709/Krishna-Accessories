@@ -176,7 +176,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
 
   return (
     <section
-      className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8 select-none"
+      className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);
@@ -185,7 +185,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
     >
       {/* Section Header */}
       <Reveal direction="up" delay={50}>
-        <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div className="mb-6 sm:mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
