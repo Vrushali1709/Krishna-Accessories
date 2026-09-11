@@ -14,7 +14,7 @@ export default function EditorialSpotlightSection() {
           <div className="group relative h-[380px] sm:h-[440px] rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.12)] border border-neutral-800">
             {/* Background Image with Zoom */}
             <img
-              src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&auto=format&fit=crop&q=80"
+              src="https://i.pinimg.com/736x/c3/7a/84/c37a8441b798d917defa413de43a72a6.jpg"
               alt="Luxury Chronographs"
               className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-108"
             />
