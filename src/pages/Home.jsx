@@ -32,85 +32,63 @@ import {
 } from '../components/Icons';
 
 // ============================================================
-// DEFAULT CATEGORY BANNERS (MATCHING REFERENCE SHOWCASE)
+// DEFAULT CATEGORY BANNERS (11 STORE CATEGORIES)
 // ============================================================
 const defaultCategoryBanners = [
   {
-    name: 'Backpacks',
-    targetCategory: 'Bags & Wallets',
-    itemCount: '120+ Items',
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=80',
-    description: 'Urban Backpacks & Travel Bags'
-  },
-  {
-    name: 'Headphones',
-    targetCategory: 'Electronics',
-    itemCount: '150+ Items',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80',
-    description: 'Audiophile Noise-Cancelling Sound'
-  },
-  {
     name: 'Watches',
-    targetCategory: 'Watches',
-    itemCount: '80+ Items',
     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80',
     description: 'Heritage Swiss & Smart Chronographs'
   },
   {
-    name: 'Wallets',
-    targetCategory: 'Bags & Wallets',
-    itemCount: '90+ Items',
-    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=80',
-    description: 'Genuine Leather Wallets & Cardholders'
-  },
-  {
-    name: 'Gaming',
-    targetCategory: 'Gaming',
-    itemCount: '110+ Items',
-    image: 'https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=500&auto=format&fit=crop&q=80',
-    description: 'RGB Mechanical Gear & Consoles'
-  },
-  {
-    name: 'Sunglasses',
-    targetCategory: 'Fashion Accessories',
-    itemCount: '70+ Items',
-    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=80',
-    description: 'Polarized Eyewear & Shades'
-  },
-  {
-    name: 'Travel',
-    targetCategory: 'Bags & Wallets',
-    itemCount: '60+ Items',
-    image: 'https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=500&auto=format&fit=crop&q=80',
-    description: 'Hard-Shell Suitcases & Travel Gear'
+    name: 'Bags & Wallets',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=80',
+    description: 'Genuine Leather & Urban Backpacks'
   },
   {
     name: 'Shoes',
-    targetCategory: 'Shoes',
-    itemCount: '95+ Items',
     image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=80',
     description: 'Handcrafted Sneakers & Footwear'
   },
   {
     name: 'Mobiles',
-    targetCategory: 'Mobiles',
-    itemCount: '45+ Items',
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=80',
     description: 'Flagship Titanium Handsets & Gear'
   },
   {
     name: 'Clothes & Fashion',
-    targetCategory: 'Clothes & Fashion',
-    itemCount: '130+ Items',
     image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop&q=80',
-    description: 'Tailored Suits & Luxury Apparel'
+    description: 'Tailored Suits, Denim & Luxury Apparel'
   },
   {
     name: 'Laptops',
-    targetCategory: 'Laptops',
-    itemCount: '35+ Items',
     image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop&q=80',
-    description: 'High-Performance Workstations'
+    description: 'High-Performance OLED Workstations'
+  },
+  {
+    name: 'Electronics',
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80',
+    description: 'Audiophile Noise-Cancelling Sound'
+  },
+  {
+    name: 'Smart Gadgets',
+    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500&auto=format&fit=crop&q=80',
+    description: 'Smart Rings, AI Devices & Wearables'
+  },
+  {
+    name: 'Gaming',
+    image: 'https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?w=500&auto=format&fit=crop&q=80',
+    description: 'RGB Mechanical Gear & Consoles'
+  },
+  {
+    name: 'Fitness',
+    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=500&auto=format&fit=crop&q=80',
+    description: 'GPS Multi-Sport Trackers & Health'
+  },
+  {
+    name: 'Fashion Accessories',
+    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&auto=format&fit=crop&q=80',
+    description: 'Polarized Eyewear & Belts'
   }
 ];
 
