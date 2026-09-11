@@ -234,8 +234,8 @@ export default function Navbar() {
                 className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105"
               />
               <div className="flex flex-col">
-                <span className="font-serif font-bold text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors">
-                  Krishna <span className="text-amber-700 font-extrabold">Accessories</span>
+                <span className="font-extrabold text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors">
+                  Krishna <span className="text-amber-700">Accessories</span>
                 </span>
                 <span className="text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5">
                   Curated Luxury
@@ -788,7 +788,7 @@ export default function Navbar() {
               className="h-10 w-10 object-contain rounded-xl bg-white p-0.5 border border-amber-500/30 shadow-2xs"
             />
             <div className="flex flex-col">
-              <span className="font-serif font-bold text-sm text-gray-950 leading-tight">
+              <span className="font-extrabold text-sm text-gray-950 leading-tight">
                 Krishna <span className="text-amber-700">Accessories</span>
               </span>
               <span className="text-[9px] uppercase tracking-widest text-gray-400 font-semibold">

@@ -193,8 +193,8 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
                 VERIFIED CLIENT FEEDBACK
               </span>
             </div>
-            <h2 className="mt-1 font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-gray-950">
-              Customer Reviews & Testimonials
+            <h2 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
+              Customer Reviews &amp; Testimonials
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-xl">
               Real experiences from clients who trust Krishna Accessories for 100% certified authentic luxury.

@@ -180,7 +180,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                   CURATED SELECTION
                 </span>
               </div>
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-gray-950 tracking-tight mt-1.5">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1.5">
                 Featured &amp; Trending Products
               </h2>
               <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl leading-relaxed">

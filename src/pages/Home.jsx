@@ -519,8 +519,8 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-semibold sm:text-5xl lg:text-[68px] xl:text-[76px]">
-              <span className="block text-white font-serif">{watchHeroSlides[currentSlide].titleLine1}</span>
+            <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-extrabold sm:text-5xl lg:text-[68px] xl:text-[76px]">
+              <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
               <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
             </h1>
 
@@ -659,7 +659,7 @@ export default function Home() {
               </p>
               <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 flex items-center gap-2">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950 flex items-center gap-2">
                   <span>Best Sellers</span>
                   <span className="text-xl sm:text-2xl font-light text-rose-500 leading-none">♡</span>
                 </h2>
@@ -708,7 +708,7 @@ export default function Home() {
               </p>
               <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
                   New Arrivals
                 </h2>
                 <span className="h-px w-10 sm:w-16 bg-neutral-300" />

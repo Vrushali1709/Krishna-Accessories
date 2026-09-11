@@ -61,8 +61,8 @@ export default function InstagramClubSection() {
               <InstagramIcon className="w-3.5 h-3.5 text-pink-600" />
               <span>Community Style</span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-gray-950">
-              Follow Us <span className="font-serif italic font-bold">@krishnaaccessories</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
+              Follow Us <span className="font-extrabold text-[#C5A880]">@krishnaaccessories</span>
             </h2>
             <p className="mt-2 text-xs sm:text-sm text-gray-500">
               Tag us in your styling stories to be featured in our seasonal Mumbai flagship editorial gallery.
@@ -107,7 +107,7 @@ export default function InstagramClubSection() {
               <span className="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] text-amber-300 mb-2">
                 EXCLUSIVE PRIVILEGES
               </span>
-              <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-white">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
                 Join The Privé Club
               </h3>
               <p className="mt-3 text-xs sm:text-sm text-neutral-400 max-w-md mx-auto leading-relaxed">

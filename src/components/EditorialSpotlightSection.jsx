@@ -39,7 +39,7 @@ export default function EditorialSpotlightSection() {
                 <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-[#C5A880]">
                   Heritage Precision
                 </p>
-                <h3 className="mt-1.5 font-serif text-2xl sm:text-3xl lg:text-[32px] font-normal text-white leading-tight">
+                <h3 className="mt-1.5 font-bold text-2xl sm:text-3xl lg:text-[32px] text-white leading-tight tracking-tight">
                   Swiss Chronographs & Automatic Watches
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm text-neutral-300 font-light max-w-md line-clamp-2">
@@ -90,7 +90,7 @@ export default function EditorialSpotlightSection() {
                 <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-[#D8B48D]">
                   Pure Full-Grain
                 </p>
-                <h3 className="mt-1.5 font-serif text-2xl sm:text-3xl lg:text-[32px] font-normal text-white leading-tight">
+                <h3 className="mt-1.5 font-bold text-2xl sm:text-3xl lg:text-[32px] text-white leading-tight tracking-tight">
                   Handcrafted Leather Bags & Executive Wallets
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm text-neutral-300 font-light max-w-md line-clamp-2">

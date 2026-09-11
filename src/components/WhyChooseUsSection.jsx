@@ -39,7 +39,7 @@ export default function WhyChooseUsSection({ items = DIFFERENCE_ITEMS }) {
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
             THE KRISHNA PROMISE
           </span>
-          <h2 className="mt-1.5 font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-gray-950">
+          <h2 className="mt-1.5 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
             Why Shop With Us?
           </h2>
           <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed text-gray-500 sm:text-sm">
