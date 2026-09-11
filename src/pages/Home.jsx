@@ -738,7 +738,7 @@ export default function Home() {
       {/* =========================================================
           7. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
       ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-12 pb-10 sm:pb-14 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
            

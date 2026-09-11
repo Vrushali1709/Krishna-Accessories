@@ -32,10 +32,10 @@ const DIFFERENCE_ITEMS = [
 
 export default function WhyChooseUsSection({ items = DIFFERENCE_ITEMS }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8">
       {/* Header */}
       <Reveal direction="up" delay={50}>
-        <div className="mb-10 sm:mb-12 text-center">
+        <div className="mb-7 sm:mb-9 text-center">
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
             THE KRISHNA PROMISE
           </span>
