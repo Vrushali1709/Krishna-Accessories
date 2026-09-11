@@ -21,6 +21,7 @@ import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
+import ProductsByPriceSection from '../components/ProductsByPriceSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
@@ -700,7 +701,16 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          6. CHECK OUT WHAT'S NEW — NEW ARRIVALS
+          6. PRODUCTS BY PRICE (CURATED BUDGET TIERS)
+      ========================================================= */}
+      <ProductsByPriceSection
+        products={products}
+        onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNow}
+      />
+
+      {/* =========================================================
+          7. CHECK OUT WHAT'S NEW — NEW ARRIVALS
       ========================================================= */}
       <section className="bg-[#FAFAFB] pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
