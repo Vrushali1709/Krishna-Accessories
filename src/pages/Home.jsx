@@ -19,7 +19,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
-import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import ProductsByPriceSection from '../components/ProductsByPriceSection';
@@ -593,7 +592,7 @@ export default function Home() {
                 className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
               >
                 <span className="text-amber-400 text-xs">✦</span>
-                
+
                 {/* Offer / Category Badge */}
                 {item.badge && (
                   <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
@@ -638,12 +637,7 @@ export default function Home() {
       </Reveal>
 
       {/* =========================================================
-          3. SERVICE & ASSURANCE STRIP (FREE SHIPPING, EASY RETURNS, SECURE PAYMENT, CONCIERGE)
-      ========================================================= */}
-      <HomeDiscoveryStrip />
-
-      {/* =========================================================
-          4. SHOP BY CATEGORY (CURATED CAROUSEL WITH ALL CATEGORIES BUTTON)
+          3. SHOP BY CATEGORY (CURATED CAROUSEL)
       ========================================================= */}
       <ShopByCategorySection
         categories={categoryList}
@@ -769,7 +763,7 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
-           
+
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
               Explore by Brand
             </h2>
@@ -782,7 +776,7 @@ export default function Home() {
         {/* Unified Luxury Brand Showcase Box */}
         <Reveal direction="up" delay={120}>
           <div className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-b from-white via-[#F8F9FA] to-[#EFF2F6] p-4 sm:p-7 md:p-8 border border-gray-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.03)]">
-            
+
             {/* Subtle Ambient Gold Glow */}
             <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#C5A880]/10 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
