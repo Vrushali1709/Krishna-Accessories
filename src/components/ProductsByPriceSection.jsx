@@ -132,12 +132,7 @@ export default function ProductsByPriceSection({
         ============================================================ */}
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/70 mb-2">
-              <span className="text-amber-600 text-xs">🏷️</span>
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.24em] text-amber-900">
-                CURATED BUDGET TIERS
-              </span>
-            </div>
+            
 
             <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1">
               <span className="h-px w-8 sm:w-16 bg-neutral-300 hidden sm:inline-block" />
