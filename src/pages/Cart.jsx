@@ -53,11 +53,11 @@ export default function Cart() {
       handleRemove(item);
       return;
     }
-    updateCartQuantity(item.id, item.color || '', item.variant || '', qty);
+    updateCartQuantity(item.id, item.color || '', item.variant || '', qty, item.size || '');
   };
 
   const handleRemove = (item) => {
-    removeFromCart(item.id, item.color || '', item.variant || '');
+    removeFromCart(item.id, item.color || '', item.variant || '', item.size || '');
   };
 
   const handleClearAll = () => {
@@ -214,11 +214,12 @@ export default function Cart() {
                 {cart.map((item, idx) => {
                   const itemColor = (item.color || item.selectedColor || '').trim();
                   const itemVariant = (item.variant || item.selectedVariant || '').trim();
+                  const itemSize = (item.size || item.selectedSize || '').trim();
                   const lineTotal = (Number(item.price) || 0) * (item.quantity || 1);
 
                   return (
                     <div
-                      key={`${item.id}-${itemColor}-${itemVariant}-${idx}`}
+                      key={`${item.id}-${itemColor}-${itemSize}-${itemVariant}-${idx}`}
                       className="py-4 sm:py-5 first:pt-4 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
 
@@ -266,12 +267,18 @@ export default function Cart() {
                           </Link>
 
                           {/* Selected Color & Variant Spec Chips */}
-                          {(itemColor || itemVariant) && (
+                          {(itemColor || itemSize || itemVariant) && (
                             <div className="flex items-center gap-2 mt-1 flex-wrap">
                               {itemColor && (
                                 <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
                                   <span>Color:</span>
                                   <strong className="font-semibold text-gray-900">{itemColor}</strong>
+                                </span>
+                              )}
+                              {itemSize && (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
+                                  <span>Size:</span>
+                                  <strong className="font-semibold text-gray-900">{itemSize}</strong>
                                 </span>
                               )}
                               {itemVariant && (

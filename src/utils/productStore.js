@@ -6,6 +6,65 @@ const BRANDS_KEY = "krishna_brands";
 const WISHLIST_KEY = "krishna_wishlist";
 const REVIEWS_KEY = "krishna_product_reviews";
 
+const DEFAULT_SIZES_BY_CATEGORY = {
+  Watches: ["One Size"],
+  "Bags & Wallets": ["Small", "Medium", "Large"],
+  Shoes: ["UK 6", "UK 7", "UK 8", "UK 9", "UK 10"],
+  Mobiles: ["128 GB", "256 GB", "512 GB"],
+  "Clothes & Fashion": ["S", "M", "L", "XL"],
+  Laptops: ["8 GB / 512 GB", "16 GB / 512 GB", "16 GB / 1 TB"],
+  Electronics: ["Standard"],
+  "Smart Gadgets": ["Standard"],
+  Gaming: ["Standard"],
+  Fitness: ["One Size"],
+  "Fashion Accessories": ["Standard", "Large"],
+};
+
+const DEFAULT_ANGLE_LABELS = ["Front View", "Side Profile", "Back View", "Detail View"];
+
+function withImageQuery(url, crop) {
+  if (!url) return url;
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}fit=crop&crop=${crop}`;
+}
+
+function normalizeProduct(product) {
+  const sourceImages = Array.isArray(product.images) && product.images.length
+    ? product.images.filter(Boolean)
+    : [product.image].filter(Boolean);
+  const baseImage = sourceImages[0] || product.image || "";
+  const images = [...sourceImages];
+  ["center", "right", "left", "top"].forEach((crop) => {
+    if (images.length < 4) images.push(withImageQuery(baseImage, crop));
+  });
+  const colors = Array.isArray(product.colors) && product.colors.length ? product.colors : ["Standard"];
+  const variants = Array.isArray(product.variants) && product.variants.length ? product.variants : ["Standard"];
+  const sizes = Array.isArray(product.sizes) && product.sizes.length
+    ? product.sizes
+    : (DEFAULT_SIZES_BY_CATEGORY[product.category] || ["Standard"]);
+  const colorImages = { ...(product.colorImages || {}) };
+  colors.forEach((color, index) => {
+    if (!colorImages[color]) colorImages[color] = images[index % images.length];
+  });
+  const variantPriceDeltas = { ...(product.variantPriceDeltas || {}) };
+  variants.forEach((variant) => {
+    if (variantPriceDeltas[variant] === undefined) variantPriceDeltas[variant] = 0;
+  });
+
+  return {
+    ...product,
+    image: baseImage,
+    images,
+    imageAngles: product.imageAngles?.length === 4 ? product.imageAngles : DEFAULT_ANGLE_LABELS,
+    colors,
+    sizes,
+    variants,
+    colorImages,
+    variantPriceDeltas,
+    variationStock: { ...(product.variationStock || {}) },
+  };
+}
+
 export const defaultCategories = [
   "Watches",
   "Bags & Wallets",
@@ -1024,13 +1083,14 @@ export function getProducts() {
       list = defaultProducts;
     }
   } else {
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(defaultProducts));
-    return defaultProducts;
+    const normalizedDefaults = defaultProducts.map(normalizeProduct);
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(normalizedDefaults));
+    return normalizedDefaults;
   }
 
   // Clean up any legacy replica data or watchType properties
   const sanitized = list.map(p => {
-    const clean = { ...p };
+    const clean = normalizeProduct(p);
     delete clean.watchType;
     if (clean.specifications && clean.specifications["Quality Type"]) {
       const specs = { ...clean.specifications };

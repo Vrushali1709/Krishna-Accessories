@@ -117,6 +117,8 @@ export default function ProductDetails() {
 
   const basePrice = Number(product.price) || 0;
   const effectivePrice = Math.max(0, basePrice + variantDelta);
+  const variationKey = [selectedColor, selectedSize, selectedVariant].filter(Boolean).join(' / ');
+  const effectiveStock = Number(product.variationStock?.[variationKey] ?? product.variationStock?.[selectedVariant] ?? product.stock) || 0;
   const effectiveOldPrice = product.oldPrice ? Number(product.oldPrice) + variantDelta : null;
   const savings = effectiveOldPrice && effectiveOldPrice > effectivePrice ? effectiveOldPrice - effectivePrice : 0;
   const discount = effectiveOldPrice && effectiveOldPrice > effectivePrice
@@ -371,7 +373,7 @@ export default function ProductDetails() {
               </div>
               <span className="text-gray-300">&bull;</span>
               <span className="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[10.5px]">
-                ● In Stock ({product.stock || 12} units ready to dispatch)
+                {effectiveStock > 0 ? `● In Stock (${effectiveStock} units ready to dispatch)` : '● Currently unavailable'}
               </span>
             </div>
 
@@ -564,7 +566,7 @@ export default function ProductDetails() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => setQuantity(Math.min(product.stock || 10, quantity + 1))}
+                      onClick={() => setQuantity(Math.min(effectiveStock || 1, quantity + 1))}
                       className="flex h-8 w-8 items-center justify-center text-sm font-bold text-gray-700 hover:text-black transition active:scale-95"
                     >
                       +

@@ -41,7 +41,8 @@ export function getCart() {
       quantity: Math.max(1, parseInt(item.quantity, 10) || 1),
       price: Number(item.price) || 0,
       color: item.color || item.selectedColor || '',
-      variant: item.variant || item.selectedVariant || ''
+      variant: item.variant || item.selectedVariant || '',
+      size: item.size || item.selectedSize || ''
     }));
   } catch (error) {
     console.error('Cart read error:', error);
@@ -64,7 +65,7 @@ export function saveCart(cart) {
 /**
  * Adds a product into the cart with specific color/variant specifications.
  */
-export function addToCart(product, quantity = 1, color = '', variant = '') {
+export function addToCart(product, quantity = 1, color = '', variant = '', size = '', price = null, image = '') {
   if (!product || product.id === undefined || product.id === null) {
     return getCart();
   }
@@ -73,14 +74,17 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
   const qtyToAdd = Math.max(1, parseInt(quantity, 10) || 1);
   const targetColor = typeof color === 'string' ? color.trim() : '';
   const targetVariant = typeof variant === 'string' ? variant.trim() : '';
+  const targetSize = typeof size === 'string' ? size.trim() : '';
 
   const existingIndex = cart.findIndex((item) => {
     const itemColor = (item.color || item.selectedColor || '').trim();
     const itemVariant = (item.variant || item.selectedVariant || '').trim();
+    const itemSize = (item.size || item.selectedSize || '').trim();
     return (
       String(item.id) === String(product.id) &&
       itemColor === targetColor &&
-      itemVariant === targetVariant
+      itemVariant === targetVariant &&
+      itemSize === targetSize
     );
   });
 
@@ -88,7 +92,9 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
     cart[existingIndex].quantity = (cart[existingIndex].quantity || 0) + qtyToAdd;
   } else {
     let productImage = '';
-    if (Array.isArray(product.images) && product.images.length > 0) {
+    if (image) {
+      productImage = image;
+    } else if (Array.isArray(product.images) && product.images.length > 0) {
       productImage = product.images[0];
     } else if (product.image) {
       productImage = product.image;
@@ -101,11 +107,12 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
       category: product.category || 'Luxury Goods',
       sku: product.sku || `KA-${product.id}`,
       supplier: product.supplier || 'Krishna Accessories',
-      price: Number(product.price) || 0,
+      price: price === null ? Number(product.price) || 0 : Number(price) || 0,
       oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
       image: productImage,
       color: targetColor,
       variant: targetVariant,
+      size: targetSize,
       quantity: qtyToAdd,
     });
   }
@@ -121,7 +128,7 @@ export function addToCart(product, quantity = 1, color = '', variant = '') {
  *   updateCartQuantity(id, color, quantity)
  *   updateCartQuantity(id, quantity)
  */
-export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', quantityParam = 1) {
+export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', quantityParam = 1, size = '') {
   const cart = getCart();
   let targetColor = '';
   let targetVariant = '';
@@ -137,6 +144,7 @@ export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', quant
     targetVariant = typeof variantOrQty === 'string' ? variantOrQty.trim() : '';
     newQuantity = typeof quantityParam === 'number' ? quantityParam : parseInt(quantityParam, 10) || 1;
   }
+  const targetSize = typeof size === 'string' ? size.trim() : '';
 
   if (newQuantity <= 0) {
     return removeFromCart(id, targetColor, targetVariant);
@@ -145,10 +153,12 @@ export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', quant
   const item = cart.find((p) => {
     const pColor = (p.color || p.selectedColor || '').trim();
     const pVariant = (p.variant || p.selectedVariant || '').trim();
+    const pSize = (p.size || p.selectedSize || '').trim();
     return (
       String(p.id) === String(id) &&
       pColor === targetColor &&
-      pVariant === targetVariant
+      pVariant === targetVariant &&
+      pSize === targetSize
     );
   });
 
@@ -163,18 +173,21 @@ export function updateCartQuantity(id, colorOrQty = '', variantOrQty = '', quant
 /**
  * Removes an item from the cart matching id, color, and variant.
  */
-export function removeFromCart(id, color = '', variant = '') {
+export function removeFromCart(id, color = '', variant = '', size = '') {
   const cart = getCart();
   const targetColor = typeof color === 'string' ? color.trim() : '';
   const targetVariant = typeof variant === 'string' ? variant.trim() : '';
+  const targetSize = typeof size === 'string' ? size.trim() : '';
 
   const updatedCart = cart.filter((item) => {
     const itemColor = (item.color || item.selectedColor || '').trim();
     const itemVariant = (item.variant || item.selectedVariant || '').trim();
+    const itemSize = (item.size || item.selectedSize || '').trim();
     const matches =
       String(item.id) === String(id) &&
       itemColor === targetColor &&
-      itemVariant === targetVariant;
+      itemVariant === targetVariant &&
+      itemSize === targetSize;
     return !matches;
   });
 
