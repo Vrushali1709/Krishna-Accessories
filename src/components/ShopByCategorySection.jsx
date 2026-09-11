@@ -76,7 +76,7 @@ export default function ShopByCategorySection({
   if (!categories || categories.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 sm:py-14 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
       <Reveal direction="up" delay={50}>
         {/* Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 sm:mb-8">
