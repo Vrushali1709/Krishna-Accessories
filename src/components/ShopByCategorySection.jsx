@@ -78,11 +78,10 @@ export default function ShopByCategorySection({
   return (
     <section className="mx-auto max-w-7xl px-4 pt-6 sm:pt-8 md:pt-10 pb-6 sm:pb-8 lg:px-8">
       
-      {/* 1. Header Row with Title, Subtitle, Carousel Arrows & View All Link */}
+      {/* 1. Header Row with Title, Subtitle, Carousel Arrows & View All Link (Desktop) */}
       <Reveal direction="up" delay={50}>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
-           
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
               Shop by Category
             </h2>
@@ -91,9 +90,9 @@ export default function ShopByCategorySection({
             </p>
           </div>
 
-          {/* Action Buttons: Carousel Left/Right & View All Link */}
-          <div className="flex items-center gap-3 self-end sm:self-auto">
-            <div className="hidden sm:flex items-center gap-1.5">
+          {/* Action Buttons (Desktop: Arrows + View All Link) */}
+          <div className="hidden sm:flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => scroll('left')}
@@ -275,7 +274,19 @@ export default function ShopByCategorySection({
             </div>
           </Link>
         </div>
+
+        {/* 4. Mobile Bottom View All Categories Button */}
+        <div className="mt-3 sm:hidden flex justify-center">
+          <Link
+            to="/shop"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-[#111827] py-3 px-5 text-xs font-bold uppercase tracking-wider text-white shadow-md active:scale-95 hover:bg-black transition"
+          >
+            <span>All Categories ({categories.length}+)</span>
+            <ArrowRightIcon className="w-4 h-4 text-amber-300" />
+          </Link>
+        </div>
       </Reveal>
     </section>
   );
 }
+

@@ -172,19 +172,18 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             1. SECTION HEADER WITH TABS
         ============================================================ */}
         <Reveal direction="up" delay={50}>
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
             <div>
-            
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1.5">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
                 Featured &amp; Trending Products
               </h2>
-              <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 max-w-xl leading-relaxed">
+              <p className="mt-1 text-xs sm:text-sm text-neutral-500 max-w-xl leading-relaxed">
                 Explore our handpicked curation of best-selling luxury timepieces, leather goods, smart electronics, and footwear.
               </p>
             </div>
 
-            {/* Interactive Feature Tabs */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 bg-neutral-200/60 backdrop-blur-md rounded-2xl border border-neutral-300/60 shadow-xs self-start lg:self-auto">
+            {/* Interactive Feature Tabs (Clean 2x2 grid on Mobile, Flex on Desktop) */}
+            <div className="grid grid-cols-2 gap-1.5 p-1.5 bg-neutral-200/70 backdrop-blur-md rounded-2xl border border-neutral-300/60 shadow-xs w-full lg:w-auto sm:flex sm:flex-wrap sm:items-center sm:gap-2">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -192,14 +191,14 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                    className={`w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 text-center ${
                       isActive
-                        ? 'bg-neutral-950 text-white shadow-md scale-[1.02]'
-                        : 'text-neutral-700 hover:text-black hover:bg-white/70'
+                        ? 'bg-neutral-950 text-white shadow-sm font-extrabold scale-[1.01]'
+                        : 'text-neutral-700 hover:text-black hover:bg-white/80 bg-white/40 sm:bg-transparent'
                     }`}
                   >
-                    <span>{tab.icon}</span>
-                    <span>{tab.label}</span>
+                    <span className="text-sm shrink-0">{tab.icon}</span>
+                    <span className="truncate">{tab.label}</span>
                   </button>
                 );
               })}
@@ -211,7 +210,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             2. CATEGORY FILTER SUB-BAR
         ============================================================ */}
         <Reveal direction="up" delay={100}>
-          <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar scroll-smooth">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2.5 mb-6 sm:mb-8 no-scrollbar scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0">
             {categoryFilters.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
@@ -219,10 +218,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-1.5 text-xs sm:text-[12.5px] font-bold rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer shadow-2xs ${
+                  className={`shrink-0 px-3.5 sm:px-4 py-1.5 text-xs sm:text-[12.5px] font-bold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer shadow-2xs ${
                     isActive
-                      ? 'bg-white text-gray-950 border-2 border-gray-950 shadow-xs font-black scale-[1.03]'
-                      : 'bg-white text-gray-600 border border-gray-200/90 hover:border-gray-400 hover:text-gray-950 hover:bg-gray-50'
+                      ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-xs font-black scale-[1.02]'
+                      : 'bg-white text-gray-700 border border-gray-200/90 hover:border-gray-400 hover:text-gray-950 hover:bg-gray-50'
                   }`}
                 >
                   {cat}
@@ -236,7 +235,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             3. PRODUCT CARDS GRID (PROPER SIZES & LUXURY SPACING)
         ============================================================ */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-7">
             {filteredProducts.map((product, idx) => {
               const isWish = Boolean(wishlistMap[product.id]);
               const isAdded = Boolean(addedMap[product.id]);
@@ -267,10 +266,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
 
               return (
                 <Reveal key={`feat-trend-${activeTab}-${selectedCategory}-${product.id}`} direction="up" delay={(idx % 4) * 80} duration={650}>
-                  <div className="group relative flex flex-col justify-between h-full rounded-[24px] sm:rounded-[28px] border border-gray-200/90 bg-white p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-400 hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] hover:border-amber-400/70 hover:-translate-y-2">
+                  <div className="group relative flex flex-col justify-between h-full rounded-[20px] sm:rounded-[28px] border border-gray-200/90 bg-white p-3 sm:p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-400 hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] hover:border-amber-400/70 hover:-translate-y-2">
                     
                     {/* 1. Product Image Frame with Hover Canvas */}
-                    <div className="relative aspect-square w-full overflow-hidden rounded-[20px] bg-gradient-to-b from-[#F7F7F8] to-[#EDEDF0] mb-4">
+                    <div className="relative aspect-square w-full overflow-hidden rounded-[16px] sm:rounded-[20px] bg-gradient-to-b from-[#F7F7F8] to-[#EDEDF0] mb-3 sm:mb-4">
                       <Link
                         to={`/product/${product.id}`}
                         className="flex h-full w-full items-center justify-center cursor-pointer overflow-hidden"
@@ -284,9 +283,9 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                       </Link>
 
                       {/* Top Badges & Actions Overlay */}
-                      <div className="absolute top-3 inset-x-3 z-10 flex items-center justify-between pointer-events-none">
+                      <div className="absolute top-2 sm:top-3 inset-x-2 sm:inset-x-3 z-10 flex items-center justify-between pointer-events-none">
                         {/* Dynamic Badge */}
-                        <span className={`rounded-lg px-2.5 py-1 text-[9.5px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md border border-white/10 ${badgeColor}`}>
+                        <span className={`rounded-md sm:rounded-lg px-2 sm:px-2.5 py-0.5 sm:py-1 text-[8.5px] sm:text-[9.5px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md border border-white/10 ${badgeColor}`}>
                           {badgeText}
                         </span>
 
@@ -295,20 +294,20 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                           type="button"
                           onClick={(e) => handleWishlistToggle(e, product)}
                           aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                          className={`pointer-events-auto flex h-8.5 w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
+                          className={`pointer-events-auto flex h-7.5 w-7.5 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
                             isWish
                               ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100 scale-105'
                               : 'bg-white/95 text-gray-700 hover:text-rose-600 border border-gray-200/90 hover:bg-white'
                           }`}
                           title={isWish ? 'In Wishlist' : 'Add to Wishlist'}
                         >
-                          <HeartIcon className="w-4 h-4 transition-colors" filled={isWish} />
+                          <HeartIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors" filled={isWish} />
                         </button>
                       </div>
 
                       {/* Brand / Category Subtle Floating Bottom Pill */}
-                      <div className="absolute bottom-2.5 left-3 pointer-events-none">
-                        <span className="rounded-full bg-black/65 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold text-white uppercase tracking-wider border border-white/10">
+                      <div className="absolute bottom-2 sm:bottom-2.5 left-2 sm:left-3 pointer-events-none">
+                        <span className="rounded-full bg-black/65 backdrop-blur-md px-2 sm:px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-bold text-white uppercase tracking-wider border border-white/10">
                           {product.brand || product.category}
                         </span>
                       </div>
@@ -318,66 +317,64 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
                         {/* Category & Verified Sourcing */}
-                        <div className="flex items-center justify-between gap-2 mb-1.5">
-                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A880]">
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-[#C5A880] truncate">
                             {product.category}
                           </span>
-                          <span className="text-[10px] font-medium text-neutral-400">
-                            Premium Quality
+                          <span className="text-[9px] sm:text-[10px] font-medium text-neutral-400 hidden xs:inline">
+                            Premium
                           </span>
                         </div>
 
                         {/* Product Title */}
                         <Link
                           to={`/product/${product.id}`}
-                          className="block font-bold text-gray-950 text-[15px] sm:text-[16px] transition-colors duration-200 hover:text-[#9E8362] line-clamp-1 leading-snug"
+                          className="block font-bold text-gray-950 text-[13.5px] sm:text-[16px] transition-colors duration-200 hover:text-[#9E8362] line-clamp-1 leading-snug"
                           title={product.name}
                         >
                           {product.name}
                         </Link>
 
                         {/* Rating Stars & Customer Review Count */}
-                        <div className="flex items-center gap-1.5 mt-2">
+                        <div className="flex items-center gap-1 sm:gap-1.5 mt-1 sm:mt-2">
                           <div className="flex items-center text-amber-500">
-                            {[...Array(5)].map((_, starI) => (
-                              <StarIcon key={starI} className="w-3.5 h-3.5 text-amber-400" filled={true} />
-                            ))}
+                            <StarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" filled={true} />
                           </div>
-                          <span className="font-bold text-gray-900 text-xs tabular-nums ml-0.5">
+                          <span className="font-bold text-gray-900 text-[11px] sm:text-xs tabular-nums">
                             {product.rating ? Number(product.rating).toFixed(1) : '4.9'}
                           </span>
-                          <span className="text-gray-400 text-[11px] tabular-nums">
-                            ({product.reviews || 48} reviews)
+                          <span className="text-gray-400 text-[10px] sm:text-[11px] tabular-nums truncate">
+                            ({product.reviews || 48})
                           </span>
                         </div>
 
                         {/* Price Architecture (Price + MRP + Save Pill) */}
-                        <div className="flex items-baseline gap-2 mt-3 pt-2.5 border-t border-gray-100">
-                          <span className="text-lg sm:text-xl font-black text-gray-950 tabular-nums">
+                        <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2 mt-2 pt-2 border-t border-gray-100">
+                          <span className="text-base sm:text-xl font-black text-gray-950 tabular-nums">
                             ₹{Number(product.price).toLocaleString('en-IN')}
                           </span>
 
                           {product.oldPrice && product.oldPrice > product.price && (
-                            <span className="text-xs sm:text-sm text-neutral-400 line-through tabular-nums font-normal">
+                            <span className="text-[11px] sm:text-sm text-neutral-400 line-through tabular-nums font-normal">
                               ₹{Number(product.oldPrice).toLocaleString('en-IN')}
                             </span>
                           )}
 
                           {discount > 0 && (
-                            <span className="ml-auto text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
-                              Save {discount}%
+                            <span className="ml-auto text-[9px] sm:text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-full">
+                              -{discount}%
                             </span>
                           )}
                         </div>
                       </div>
 
                       {/* 3. Action Buttons (Add to Bag & Buy Now) */}
-                      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center gap-2">
+                      <div className="mt-3 pt-2.5 border-t border-gray-100 flex flex-col xs:flex-row items-center gap-1.5 sm:gap-2">
                         {/* Primary Add to Bag Button */}
                         <button
                           type="button"
                           onClick={(e) => handleAddToCart(e, product)}
-                          className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
+                          className={`w-full flex-1 py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer ${
                             isAdded
                               ? 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700 scale-[1.02]'
                               : 'bg-neutral-950 text-white hover:bg-black hover:shadow-md'
@@ -385,13 +382,13 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         >
                           {isAdded ? (
                             <>
-                              <CheckIcon className="w-3.5 h-3.5" />
+                              <CheckIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                               <span>Added</span>
                             </>
                           ) : (
                             <>
-                              <BagIcon className="w-3.5 h-3.5 text-amber-300" />
-                              <span>Add to Bag</span>
+                              <BagIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-300" />
+                              <span className="truncate">Add to Bag</span>
                             </>
                           )}
                         </button>
@@ -400,9 +397,9 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         <button
                           type="button"
                           onClick={(e) => handleBuyNow(e, product)}
-                          className="px-3.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider border border-gray-300 bg-white text-gray-800 hover:border-gray-950 hover:bg-gray-50 transition-all duration-300 active:scale-95 cursor-pointer shadow-2xs"
+                          className="w-full xs:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider border border-gray-300 bg-white text-gray-800 hover:border-gray-950 hover:bg-gray-50 transition-all duration-300 active:scale-95 cursor-pointer shadow-2xs shrink-0"
                         >
-                          Buy Now
+                          Buy
                         </button>
                       </div>
 
