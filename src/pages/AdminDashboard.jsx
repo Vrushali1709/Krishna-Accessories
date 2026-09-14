@@ -160,6 +160,13 @@ export default function AdminDashboard() {
     stock: '15',
     supplier: 'Apex Timepieces Ltd.',
     image: 'https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800',
+    image2: '',
+    image3: '',
+    image4: '',
+    angle1: 'Front View',
+    angle2: 'Side Profile',
+    angle3: 'Back View',
+    angle4: 'Detail View',
     description: '',
     material: 'Oystersteel & Sapphire Crystal',
     warranty: '5 Years'
@@ -503,6 +510,13 @@ export default function AdminDashboard() {
       stock: '15',
       supplier: suppliers[0]?.name || 'Apex Timepieces Ltd.',
       image: 'https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800',
+      image2: '',
+      image3: '',
+      image4: '',
+      angle1: 'Front View',
+      angle2: 'Side Profile',
+      angle3: 'Back View',
+      angle4: 'Detail View',
       description: '',
       material: 'Surgical Stainless Steel & Sapphire Glass',
       warranty: '2 Years International'
@@ -512,6 +526,11 @@ export default function AdminDashboard() {
 
   const handleOpenEditProduct = (p) => {
     setEditingProduct(p);
+    const imgList = Array.isArray(p.images) && p.images.length > 0 ? p.images : [p.image || ''];
+    const angles = Array.isArray(p.imageAngles) && p.imageAngles.length === 4
+      ? p.imageAngles
+      : ['Front View', 'Side Profile', 'Back View', 'Detail View'];
+
     setProductForm({
       name: p.name || '',
       brand: p.brand || 'Rolex',
@@ -523,7 +542,14 @@ export default function AdminDashboard() {
       oldPrice: p.oldPrice || '',
       stock: p.stock || 0,
       supplier: p.supplier || suppliers[0]?.name || 'Apex Timepieces Ltd.',
-      image: p.image || p.images?.[0] || '',
+      image: imgList[0] || p.image || '',
+      image2: imgList[1] || '',
+      image3: imgList[2] || '',
+      image4: imgList[3] || '',
+      angle1: angles[0] || 'Front View',
+      angle2: angles[1] || 'Side Profile',
+      angle3: angles[2] || 'Back View',
+      angle4: angles[3] || 'Detail View',
       description: p.description || '',
       material: p.specifications?.Material || '',
       warranty: p.specifications?.Warranty || '2 Years'
@@ -538,6 +564,23 @@ export default function AdminDashboard() {
     const price = Number(productForm.price);
     const oldPrice = Number(productForm.oldPrice) || Math.round(price * 1.25);
     const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+
+    const img1 = (productForm.image || '').trim();
+    const img2 = (productForm.image2 || '').trim();
+    const img3 = (productForm.image3 || '').trim();
+    const img4 = (productForm.image4 || '').trim();
+
+    const rawImages = [img1, img2, img3, img4].filter(Boolean);
+    const fallbackImage = 'https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800';
+    const finalImages = rawImages.length > 0 ? rawImages : [fallbackImage];
+    const mainImage = finalImages[0];
+
+    const finalAngles = [
+      productForm.angle1?.trim() || 'Front View',
+      productForm.angle2?.trim() || 'Side Profile',
+      productForm.angle3?.trim() || 'Back View',
+      productForm.angle4?.trim() || 'Detail View'
+    ].slice(0, Math.max(4, finalImages.length));
 
     const payload = {
       id: editingProduct ? editingProduct.id : Date.now(),
@@ -554,8 +597,9 @@ export default function AdminDashboard() {
       supplier: productForm.supplier,
       rating: editingProduct?.rating || 4.9,
       reviews: editingProduct?.reviews || 50,
-      image: productForm.image || 'https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800',
-      images: [productForm.image || 'https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800'],
+      image: mainImage,
+      images: finalImages,
+      imageAngles: finalAngles,
       description: productForm.description || 'Exclusive luxury piece from Krishna Accessories.',
       specifications: {
         Material: productForm.material || 'Genuine Luxury Material',
@@ -3172,7 +3216,7 @@ export default function AdminDashboard() {
       {/* 1. Add/Edit Product Modal */}
       {productModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl">
+          <div className="w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl">
 
             <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-4">
               <div>
@@ -3307,15 +3351,192 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Product Image URL</label>
-                <input
-                  type="text"
-                  value={productForm.image}
-                  onChange={e => setProductForm({ ...productForm, image: e.target.value })}
-                  placeholder="https://images.unsplash.com/..."
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white"
-                />
+              {/* Multi-Angle Product Gallery (4 Perspectives) */}
+              <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-3.5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="font-semibold text-zinc-900 block text-xs">
+                      Product Multi-Angle Gallery (4 Perspectives)
+                    </label>
+                    <p className="text-[11px] text-zinc-500">
+                      Set up to 4 distinct angles (Front, Side, Back, Detail) for the interactive 360-view customer showcase.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-semibold bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full">
+                    4 Views
+                  </span>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {/* Angle 1: Front View */}
+                  <div className="rounded-lg border border-zinc-200 bg-white p-2.5 shadow-2xs space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-semibold text-zinc-800 flex items-center gap-1.5">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 text-white text-[9px] font-bold">1</span>
+                        Primary / Front View *
+                      </span>
+                      <input
+                        type="text"
+                        value={productForm.angle1}
+                        onChange={e => setProductForm({ ...productForm, angle1: e.target.value })}
+                        placeholder="Front View"
+                        className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
+                        {productForm.image ? (
+                          <img
+                            src={productForm.image}
+                            alt="Angle 1"
+                            className="h-full w-full object-contain p-0.5"
+                            onError={e => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <ImageIcon className="h-5 w-5 text-zinc-300" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          required
+                          value={productForm.image}
+                          onChange={e => setProductForm({ ...productForm, image: e.target.value })}
+                          placeholder="https://... or /images/front.jpg"
+                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                        />
+                        <p className="text-[10px] text-zinc-400 mt-1">Main cover & thumbnail</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Angle 2: Side Profile */}
+                  <div className="rounded-lg border border-zinc-200 bg-white p-2.5 shadow-2xs space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-semibold text-zinc-800 flex items-center gap-1.5">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-700 text-white text-[9px] font-bold">2</span>
+                        Side Profile
+                      </span>
+                      <input
+                        type="text"
+                        value={productForm.angle2}
+                        onChange={e => setProductForm({ ...productForm, angle2: e.target.value })}
+                        placeholder="Side Profile"
+                        className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
+                        {productForm.image2 ? (
+                          <img
+                            src={productForm.image2}
+                            alt="Angle 2"
+                            className="h-full w-full object-contain p-0.5"
+                            onError={e => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <ImageIcon className="h-5 w-5 text-zinc-300" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={productForm.image2}
+                          onChange={e => setProductForm({ ...productForm, image2: e.target.value })}
+                          placeholder="https://... or /images/side.jpg"
+                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                        />
+                        <p className="text-[10px] text-zinc-400 mt-1">45° side perspective</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Angle 3: Back View */}
+                  <div className="rounded-lg border border-zinc-200 bg-white p-2.5 shadow-2xs space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-semibold text-zinc-800 flex items-center gap-1.5">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-700 text-white text-[9px] font-bold">3</span>
+                        Back / Case View
+                      </span>
+                      <input
+                        type="text"
+                        value={productForm.angle3}
+                        onChange={e => setProductForm({ ...productForm, angle3: e.target.value })}
+                        placeholder="Back View"
+                        className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
+                        {productForm.image3 ? (
+                          <img
+                            src={productForm.image3}
+                            alt="Angle 3"
+                            className="h-full w-full object-contain p-0.5"
+                            onError={e => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <ImageIcon className="h-5 w-5 text-zinc-300" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={productForm.image3}
+                          onChange={e => setProductForm({ ...productForm, image3: e.target.value })}
+                          placeholder="https://... or /images/back.jpg"
+                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                        />
+                        <p className="text-[10px] text-zinc-400 mt-1">Back engraving / case view</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Angle 4: Detail View */}
+                  <div className="rounded-lg border border-zinc-200 bg-white p-2.5 shadow-2xs space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-semibold text-zinc-800 flex items-center gap-1.5">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-700 text-white text-[9px] font-bold">4</span>
+                        Detail / In-Use View
+                      </span>
+                      <input
+                        type="text"
+                        value={productForm.angle4}
+                        onChange={e => setProductForm({ ...productForm, angle4: e.target.value })}
+                        placeholder="Detail View"
+                        className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
+                        {productForm.image4 ? (
+                          <img
+                            src={productForm.image4}
+                            alt="Angle 4"
+                            className="h-full w-full object-contain p-0.5"
+                            onError={e => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <ImageIcon className="h-5 w-5 text-zinc-300" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={productForm.image4}
+                          onChange={e => setProductForm({ ...productForm, image4: e.target.value })}
+                          placeholder="https://... or /images/detail.jpg"
+                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                        />
+                        <p className="text-[10px] text-zinc-400 mt-1">Macro zoom or on-wrist shot</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div>
