@@ -82,12 +82,7 @@ export default function ShopByCategorySection({
       <Reveal direction="up" delay={50}>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5 sm:mb-6">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
-                CURATED DEPARTMENTS
-              </span>
-            </div>
+           
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
               Shop by Category
             </h2>

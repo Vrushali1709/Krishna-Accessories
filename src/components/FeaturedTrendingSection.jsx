@@ -174,12 +174,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         <Reveal direction="up" delay={50}>
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#C5A880] animate-pulse" />
-                <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-[#9E8362]">
-                  CURATED SELECTION
-                </span>
-              </div>
+            
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1.5">
                 Featured &amp; Trending Products
               </h2>
