@@ -67,7 +67,7 @@ export default function Shop() {
 
   // Base Products & Categories State
   const [products, setProducts] = useState(() => getProducts());
-  const [categories, setCategories] = useState(() => ['All', ...getCategories()]);
+  const [categories, setCategories] = useState(() => ['All', ...getCategories().map(c => typeof c === 'object' && c !== null ? c.name : String(c)).filter(Boolean)]);
 
   // Filter States
   const [category, setCategory] = useState(urlCategory);
@@ -98,7 +98,7 @@ export default function Shop() {
   useEffect(() => {
     const handleProductsUpdate = () => {
       setProducts(getProducts());
-      setCategories(['All', ...getCategories()]);
+      setCategories(['All', ...getCategories().map(c => typeof c === 'object' && c !== null ? c.name : String(c)).filter(Boolean)]);
     };
     window.addEventListener('productsUpdated', handleProductsUpdate);
     return () => window.removeEventListener('productsUpdated', handleProductsUpdate);
@@ -127,7 +127,7 @@ export default function Shop() {
 
   // Dynamic Brands based on selected category
   const dynamicBrands = useMemo(() => {
-    const brandsList = getBrandsByCategory(category);
+    const brandsList = getBrandsByCategory(category).map(b => typeof b === 'object' && b !== null ? b.name : String(b)).filter(Boolean);
     return ['All', ...brandsList];
   }, [category, products]);
 
@@ -140,7 +140,7 @@ export default function Shop() {
 
   // Dynamic Subcategories (Product Types) for selected category
   const dynamicSubcategories = useMemo(() => {
-    const list = getSubcategoriesByCategory(category);
+    const list = getSubcategoriesByCategory(category).map(s => typeof s === 'object' && s !== null ? s.name : String(s)).filter(Boolean);
     return ['All', ...list];
   }, [category, products]);
 

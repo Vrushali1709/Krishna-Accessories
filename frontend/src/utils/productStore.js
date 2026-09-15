@@ -1184,25 +1184,26 @@ export function deleteCategory(category) {
 // ================= BRANDS MANAGEMENT =================
 
 export function getBrands() {
-  return brandsMemory;
+  return brandsMemory.map(b => (typeof b === 'object' && b !== null ? b.name : b)).filter(Boolean);
 }
 
 export function addBrand(brand, category = "Watches") {
-  const trimmed = brand.trim();
-  if (trimmed && !brandsMemory.some(b => (typeof b === 'string' ? b : b.name).toLowerCase() === trimmed.toLowerCase())) {
+  const brandName = typeof brand === 'object' && brand !== null ? brand.name : String(brand);
+  const trimmed = brandName.trim();
+  if (trimmed && !brandsMemory.some(b => (typeof b === 'object' && b !== null ? b.name : String(b)).toLowerCase() === trimmed.toLowerCase())) {
     brandsMemory = [...brandsMemory, trimmed];
     window.dispatchEvent(new Event('brandsUpdated'));
     brandsApi.create(trimmed, category).catch(err => console.warn('[API] Failed to add brand to backend:', err));
   }
-  return brandsMemory;
+  return getBrands();
 }
 
 export function deleteBrand(brand) {
-  const brandName = typeof brand === 'string' ? brand : brand.name;
-  brandsMemory = brandsMemory.filter(item => (typeof item === 'string' ? item : item.name) !== brandName);
+  const brandName = typeof brand === 'object' && brand !== null ? brand.name : String(brand);
+  brandsMemory = brandsMemory.filter(item => (typeof item === 'object' && item !== null ? item.name : String(item)) !== brandName);
   window.dispatchEvent(new Event('brandsUpdated'));
   brandsApi.delete(brandName).catch(err => console.warn('[API] Failed to delete brand from backend:', err));
-  return brandsMemory;
+  return getBrands();
 }
 
 // ================= BACKEND SYNC =================
@@ -1226,7 +1227,7 @@ export async function syncProductsFromBackend() {
     }
 
     if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
-      const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b : b.name)).filter(Boolean);
+      const brandNames = fetchedBrands.map(b => (typeof b === 'object' && b !== null ? b.name : b)).filter(Boolean);
       brandsMemory = brandNames;
       window.dispatchEvent(new Event('brandsUpdated'));
     }
@@ -1250,11 +1251,14 @@ export function getBrandsByCategory(categoryName) {
     return getBrands();
   }
   if (categoryBrandMap[categoryName]) {
-    return categoryBrandMap[categoryName];
+    return categoryBrandMap[categoryName].map(b => (typeof b === 'object' && b !== null ? b.name : b)).filter(Boolean);
   }
   const products = getProducts();
   const brandsInCat = new Set(
-    products.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase()).map(p => p.brand).filter(Boolean)
+    products
+      .filter(p => p.category?.toLowerCase() === categoryName.toLowerCase())
+      .map(p => (typeof p.brand === 'object' && p.brand !== null ? p.brand.name : p.brand))
+      .filter(Boolean)
   );
   return brandsInCat.size > 0 ? Array.from(brandsInCat) : getBrands().slice(0, 6);
 }
