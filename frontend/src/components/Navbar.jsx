@@ -395,26 +395,6 @@ export default function Navbar() {
               >
                 New Arrivals
               </Link>
-
-              {/* Portal Link: Admin */}
-              {isAdmin() && (
-                <Link
-                  to="/admin"
-                  className="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[9.5px] font-bold text-amber-900 hover:bg-amber-100 transition shadow-2xs"
-                >
-                  ⚙️ Admin Panel
-                </Link>
-              )}
-
-              {/* Portal Link: Supplier */}
-              {isSupplier() && (
-                <Link
-                  to="/supplier"
-                  className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-[9.5px] font-bold text-blue-700 hover:bg-blue-100 transition"
-                >
-                  🏢 Vendor Portal
-                </Link>
-              )}
             </nav>
 
             {/* Right: Actions & Mobile Navigation Toggle */}
