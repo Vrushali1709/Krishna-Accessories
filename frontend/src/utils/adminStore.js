@@ -30,32 +30,6 @@ export const defaultSubcategories = [
   { id: 12, name: "Wireless Earbuds & Headphones", category: "Electronics", code: "ELE-AUD", itemCount: 8 }
 ];
 
-// In-memory reactive state
-let subcategoriesMemory = [...defaultSubcategories];
-let variantsMemory = [...defaultVariants];
-let mediaMemory = [...defaultMediaAssets];
-let promotionsMemory = [...defaultPromotions];
-let rolesMemory = [...defaultRoles];
-let permissionsMemory = { ...defaultPermissionsMatrix };
-let shippingMemory = [...defaultShippingCarriers];
-let systemConfigMemory = { ...defaultSystemConfig };
-
-// Immediate cleanup of legacy database keys from localStorage
-if (typeof window !== 'undefined' && window.localStorage) {
-  try {
-    localStorage.removeItem(SUBCATEGORIES_KEY);
-    localStorage.removeItem(VARIANTS_KEY);
-    localStorage.removeItem(MEDIA_KEY);
-    localStorage.removeItem(PROMOTIONS_KEY);
-    localStorage.removeItem(ROLES_KEY);
-    localStorage.removeItem(PERMISSIONS_KEY);
-    localStorage.removeItem(SHIPPING_KEY);
-    localStorage.removeItem(SYSTEM_CONFIG_KEY);
-  } catch (e) {
-    console.warn('[LocalStorage] Cleanup warning:', e);
-  }
-}
-
 export function getSubcategories() {
   return subcategoriesMemory;
 }
@@ -330,6 +304,32 @@ export const defaultSystemConfig = {
   smsGatewayStatus: "Active (Twilio India SMS)",
   lastBackupDate: "Today at 04:30 AM"
 };
+
+// In-memory reactive state
+let subcategoriesMemory = [...defaultSubcategories];
+let variantsMemory = [...defaultVariants];
+let mediaMemory = [...defaultMediaAssets];
+let promotionsMemory = [...defaultPromotions];
+let rolesMemory = [...defaultRoles];
+let permissionsMemory = { ...defaultPermissionsMatrix };
+let shippingMemory = [...defaultShippingCarriers];
+let systemConfigMemory = { ...defaultSystemConfig };
+
+// Immediate cleanup of legacy database keys from localStorage
+if (typeof window !== 'undefined' && window.localStorage) {
+  try {
+    localStorage.removeItem(SUBCATEGORIES_KEY);
+    localStorage.removeItem(VARIANTS_KEY);
+    localStorage.removeItem(MEDIA_KEY);
+    localStorage.removeItem(PROMOTIONS_KEY);
+    localStorage.removeItem(ROLES_KEY);
+    localStorage.removeItem(PERMISSIONS_KEY);
+    localStorage.removeItem(SHIPPING_KEY);
+    localStorage.removeItem(SYSTEM_CONFIG_KEY);
+  } catch (e) {
+    console.warn('[LocalStorage] Cleanup warning:', e);
+  }
+}
 
 export function getSystemConfig() {
   return systemConfigMemory;
