@@ -8,6 +8,7 @@ import { createOrder, getUserAddresses } from '../utils/orderStore';
 import { getCurrentUser } from '../utils/auth';
 import { sendOrderConfirmationEmail } from '../utils/emailService';
 import { ShieldCheckIcon, LockClosedIcon, BagIcon, ArrowRightIcon } from '../components/Icons';
+import { Reveal } from '../components/useScrollReveal';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
@@ -198,7 +199,7 @@ export default function Checkout() {
         <form onSubmit={handlePlaceOrder} className="grid gap-6 lg:grid-cols-[1fr_320px]">
 
           {/* Left Column: Form Steps */}
-          <div className="space-y-4">
+          <Reveal direction="left" delay={100} className="space-y-4">
 
             {/* Step 1: Contact Information */}
             <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs">
@@ -395,10 +396,10 @@ export default function Checkout() {
               </div>
             </div>
 
-          </div>
+          </Reveal>
 
           {/* Right Column: Order Review Sidebar */}
-          <div className="space-y-4">
+          <Reveal direction="right" delay={150} className="space-y-4">
             <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-3">
 
               <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 border-b border-gray-100 pb-2.5">
@@ -483,7 +484,7 @@ export default function Checkout() {
               </div>
 
             </div>
-          </div>
+          </Reveal>
 
         </form>
 

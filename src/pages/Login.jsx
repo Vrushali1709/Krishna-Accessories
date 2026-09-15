@@ -7,7 +7,8 @@ import { setAdminUser, setSupplierUser, setCustomerUser } from '../utils/auth';
 import { getSuppliers } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendPasswordResetSuccessEmail } from '../utils/emailService';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
-import { Eye, EyeOff, RefreshCw, KeyRound, Mail } from 'lucide-react';
+import { Eye, EyeOff, RefreshCw, KeyRound, Mail, Sparkles } from 'lucide-react';
+import { Reveal } from '../components/useScrollReveal';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
@@ -338,11 +339,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none">
+    <div className="relative min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none">
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
+
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
-        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
+      <main className="relative flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
+        <Reveal direction="up" delay={100} className="w-full max-w-md">
+          <div className="w-full rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
 
           <div className="text-center">
             <img
@@ -651,7 +656,8 @@ export default function Login() {
           </div>
 
         </div>
-      </main>
+      </Reveal>
+    </main>
 
       {/* ================= FORGOT PASSWORD REAL OTP MODAL ================= */}
       {forgotModalOpen && (

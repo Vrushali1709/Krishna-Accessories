@@ -7,6 +7,7 @@ import { getCurrentUser, logout } from '../utils/auth';
 import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn, getOrderById } from '../utils/orderStore';
 import { getWishlist } from '../utils/productStore';
 import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon, SearchIcon, CheckCircleIcon } from '../components/Icons';
+import { Reveal } from '../components/useScrollReveal';
 
 export default function Account() {
   const navigate = useNavigate();
@@ -300,50 +301,52 @@ export default function Account() {
       {/* Header Profile Hero */}
       <section className="border-b border-stone-200/80 bg-white py-8 sm:py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-13 w-13 items-center justify-center rounded-xs bg-[#121316] text-[#CBB080] font-serif font-bold text-2xl border border-[#CBB080]/30 shadow-xs">
-                {(currentUser.name || currentUser.email)[0].toUpperCase()}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="font-editorial-serif text-2xl sm:text-3xl font-normal text-stone-950">
-                    {currentUser.name || 'Client Account'}
-                  </h1>
-                  <span className="rounded-xs bg-stone-100 border border-stone-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-stone-800">
-                    {currentUser.role || 'Customer'}
-                  </span>
+          <Reveal direction="down" delay={100}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-[#121316] text-[#CBB080] font-serif font-bold text-2xl border border-[#CBB080]/30 shadow-xs">
+                  {(currentUser.name || currentUser.email)[0].toUpperCase()}
                 </div>
-                <p className="text-xs text-stone-500 mt-0.5">{currentUser.email} &bull; {currentUser.phone || '+91 98765 12345'}</p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="font-editorial-serif text-2xl sm:text-3xl font-bold text-stone-950">
+                      {currentUser.name || 'Client Account'}
+                    </h1>
+                    <span className="rounded-full bg-stone-100 border border-stone-200 px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-stone-800">
+                      {currentUser.role || 'Customer'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-stone-500 mt-0.5">{currentUser.email} &bull; {currentUser.phone || '+91 98765 12345'}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                {currentUser.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    className="rounded-full bg-[#121316] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition shadow-xs"
+                  >
+                    Admin Console &rarr;
+                  </Link>
+                )}
+                {currentUser.role === 'supplier' && (
+                  <Link
+                    to="/supplier"
+                    className="rounded-full bg-[#9C7C44] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#7A5E30] transition shadow-xs"
+                  >
+                    Vendor Portal &rarr;
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-full border border-stone-300 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-stone-700 hover:bg-stone-100 transition shadow-2xs cursor-pointer"
+                >
+                  Sign Out
+                </button>
               </div>
             </div>
-
-            <div className="flex items-center gap-2.5">
-              {currentUser.role === 'admin' && (
-                <Link
-                  to="/admin"
-                  className="rounded-xs bg-[#121316] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition"
-                >
-                  Admin Console &rarr;
-                </Link>
-              )}
-              {currentUser.role === 'supplier' && (
-                <Link
-                  to="/supplier"
-                  className="rounded-xs bg-[#9C7C44] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#7A5E30] transition"
-                >
-                  Vendor Portal &rarr;
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="rounded-xs border border-stone-300 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-stone-700 hover:bg-stone-100 transition"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
