@@ -47,7 +47,6 @@ export default function Navbar() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
-  const [adminLoggedIn, setAdminLoggedIn] = useState(() => isAdmin());
   const [allCategories, setAllCategories] = useState(() => getCategories());
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -106,7 +105,6 @@ export default function Navbar() {
     setWishlistCount(getWishlist().length);
     setNotifications(getNotifications());
     setCurrentUser(getCurrentUser());
-    setAdminLoggedIn(isAdmin());
     setAllCategories(getCategories());
   };
 
@@ -569,18 +567,6 @@ export default function Navbar() {
                 </span>
               </Link>
 
-              {/* Direct Admin Panel Button on Navbar for Admin */}
-              {adminLoggedIn && (
-                <Link
-                  to="/admin"
-                  className="hidden md:inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-black text-amber-300 hover:text-amber-200 border border-zinc-800 px-3 py-1.5 text-xs font-bold shadow-xs transition hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
-                  title="Open Admin Dashboard Governance"
-                >
-                  <span className="text-xs">⚙️</span>
-                  <span>Admin Panel</span>
-                </Link>
-              )}
-
               {/* User Profile / Menu (Hidden on mobile < md:, fully in drawer) */}
               {currentUser ? (
                 <div className="relative hidden md:block" ref={userMenuRef}>
@@ -859,28 +845,6 @@ export default function Navbar() {
 
             {/* Drawer Scrollable Content */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
-
-              {/* Admin Panel Quick Link Banner if Admin is Logged In */}
-              {adminLoggedIn && (
-                <div className="rounded-2xl bg-zinc-900 text-white p-3 border border-amber-500/40 flex items-center justify-between shadow-xs">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="h-8 w-8 rounded-xl bg-amber-400 text-zinc-950 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                      ⚙️
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-zinc-100 truncate">Admin Governance</p>
-                      <p className="text-[10px] text-amber-400 font-medium truncate">Logged in as Admin</p>
-                    </div>
-                  </div>
-                  <Link
-                    to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-xl bg-amber-400 hover:bg-amber-300 px-3 py-1.5 text-xs font-bold text-zinc-950 transition shadow-xs shrink-0"
-                  >
-                    Open &rarr;
-                  </Link>
-                </div>
-              )}
 
               {/* Quick Actions 4-Grid Strip */}
               <div className="grid grid-cols-4 gap-2">

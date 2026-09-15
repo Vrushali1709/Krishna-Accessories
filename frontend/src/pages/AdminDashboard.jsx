@@ -39,7 +39,6 @@ import {
   Download,
   Layers,
   Store,
-  Home,
   SlidersHorizontal,
   CheckCircle2,
   RefreshCw,
@@ -1012,32 +1011,6 @@ export default function AdminDashboard() {
             </button>
           </div>
 
-          {/* Quick Direct Home Page Link */}
-          <div className="px-3 pt-2.5 pb-1 border-b border-zinc-800/80">
-            <Link
-              to="/"
-              className={`flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-zinc-800/90 to-zinc-800 text-zinc-100 hover:text-white p-2 text-xs font-semibold border border-amber-500/30 hover:border-amber-400/60 transition group shadow-xs cursor-pointer ${
-                sidebarCollapsed ? 'justify-center px-2' : 'justify-between'
-              }`}
-              title="Go to Customer Storefront / Home Page"
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-400 text-zinc-950 font-bold shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                  <Home className="h-3.5 w-3.5" />
-                </div>
-                {!sidebarCollapsed && (
-                  <div className="text-left min-w-0">
-                    <p className="truncate font-bold text-zinc-100 text-[11.5px] leading-tight">Home Page</p>
-                    <p className="text-[9.5px] text-amber-400 font-medium leading-tight">View Live Store &rarr;</p>
-                  </div>
-                )}
-              </div>
-              {!sidebarCollapsed && (
-                <ExternalLink className="h-3 w-3 text-zinc-400 group-hover:text-amber-300 transition shrink-0" />
-              )}
-            </Link>
-          </div>
-
           {/* Navigation Items (Scrollable Hierarchical Accordion) */}
           <nav className="flex-1 overflow-y-auto min-h-0 p-3 space-y-1 text-xs">
             {navSections.map((sec) => {
@@ -1146,11 +1119,11 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-2 gap-1.5 pt-1">
                 <Link
                   to="/"
-                  className="flex items-center justify-center gap-1 rounded-lg bg-zinc-800/80 hover:bg-zinc-800 text-amber-300 hover:text-amber-200 border border-zinc-700/60 py-1.5 text-[10.5px] font-semibold transition truncate px-1 cursor-pointer"
-                  title="Return to Home Page"
+                  target="_blank"
+                  className="flex items-center justify-center gap-1 rounded-lg bg-zinc-800/70 hover:bg-zinc-800 py-1.5 text-[10.5px] font-medium text-zinc-300 transition truncate px-1"
                 >
-                  <Home className="h-3 w-3 text-amber-400" />
-                  <span>Home Page</span>
+                  <span>Storefront</span>
+                  <ExternalLink className="h-2.5 w-2.5" />
                 </Link>
                 <button
                   onClick={handleAdminLogout}
@@ -1162,17 +1135,10 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="flex flex-col items-center gap-2">
-              <Link
-                to="/"
-                title="Go to Home Page"
-                className="text-amber-400 hover:text-amber-300 p-2 cursor-pointer hover:bg-zinc-800 rounded-lg transition"
-              >
-                <Home className="h-4 w-4" />
-              </Link>
               <button
                 onClick={handleAdminLogout}
                 title="Sign Out"
-                className="text-zinc-400 hover:text-rose-400 p-2 cursor-pointer hover:bg-zinc-800 rounded-lg transition"
+                className="text-zinc-400 hover:text-rose-400 p-2 cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -1221,15 +1187,6 @@ export default function AdminDashboard() {
             </button>
 
             <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
-              <Link
-                to="/"
-                className="flex items-center gap-1 text-zinc-500 hover:text-amber-600 font-medium transition shrink-0"
-                title="Go to Home Page"
-              >
-                <Home className="h-3 w-3" />
-                <span>Home</span>
-              </Link>
-              <span className="text-zinc-300 shrink-0">/</span>
               <span className="text-zinc-400 shrink-0">Admin</span>
               <span className="text-zinc-300 shrink-0">/</span>
               <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
@@ -1265,8 +1222,8 @@ export default function AdminDashboard() {
             <div
               title={backendStatus.connected ? "Python FastAPI backend connected & operational on port 8000" : "Python backend offline (running in local storage cache mode)"}
               className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${backendStatus.connected
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-amber-50 text-amber-700 border-amber-200'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-amber-50 text-amber-700 border-amber-200'
                 }`}
             >
               <span className={`h-2 w-2 rounded-full shrink-0 ${backendStatus.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
@@ -1284,14 +1241,14 @@ export default function AdminDashboard() {
               <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync'}</span>
             </button>
 
-            {/* Prominent Home Page Storefront Button */}
             <Link
               to="/"
-              className="flex items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-black text-amber-300 hover:text-amber-200 border border-zinc-700/80 px-3 py-1.5 text-xs font-bold shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shrink-0"
-              title="Go to Home Page Storefront"
+              target="_blank"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 transition shadow-2xs"
             >
-              <Home className="h-3.5 w-3.5 text-amber-400" />
-              <span>Home Page</span>
+              <Store className="h-3.5 w-3.5" />
+              <span>Storefront</span>
+              <ExternalLink className="h-2.5 w-2.5 text-zinc-400" />
             </Link>
 
 
@@ -1378,14 +1335,6 @@ export default function AdminDashboard() {
                     <FileText className="h-3.5 w-3.5 text-zinc-400" />
                     <span>Audit Trail</span>
                   </button>
-                  <Link
-                    to="/"
-                    onClick={() => setUserDropdownOpen(false)}
-                    className="w-full text-left rounded-lg px-2.5 py-1.5 text-amber-700 hover:bg-amber-50 hover:text-amber-900 font-semibold transition cursor-pointer flex items-center gap-2"
-                  >
-                    <Home className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Go to Home Page</span>
-                  </Link>
                   <div className="border-t border-zinc-100 pt-1 mt-1">
                     <button
                       onClick={handleAdminLogout}
