@@ -1,5 +1,6 @@
 // src/utils/adminStore.js
 // Specialized store utilities for Krishna Accessories Advanced Admin Panel
+import { subcategoriesApi, variantsApi, mediaApi, promotionsApi, rolesApi, shippingApi, systemConfigApi } from './api';
 
 const SUBCATEGORIES_KEY = 'krishna_subcategories';
 const VARIANTS_KEY = 'krishna_product_variants';
@@ -9,6 +10,7 @@ const ROLES_KEY = 'krishna_roles';
 const PERMISSIONS_KEY = 'krishna_permissions_matrix';
 const SHIPPING_KEY = 'krishna_shipping_carriers';
 const SYSTEM_CONFIG_KEY = 'krishna_system_config';
+
 
 // -------------------------------------------------------------
 // 1. SUBCATEGORIES STORE
@@ -44,7 +46,7 @@ export function saveSubcategory(subcat) {
     updated = current.map(s => s.id === subcat.id ? { ...s, ...subcat } : s);
   } else {
     const newSubcat = {
-      id: Date.now(),
+      id: subcat.id || Date.now(),
       name: subcat.name.trim(),
       category: subcat.category,
       code: subcat.code || `SUB-${Date.now().toString().slice(-4)}`,
@@ -54,6 +56,7 @@ export function saveSubcategory(subcat) {
   }
   localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('subcategoriesUpdated'));
+  subcategoriesApi.save(subcat).catch(err => console.warn('[API] Failed to save subcategory:', err));
   return updated;
 }
 
@@ -62,6 +65,7 @@ export function deleteSubcategory(id) {
   const updated = current.filter(s => s.id !== Number(id));
   localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('subcategoriesUpdated'));
+  subcategoriesApi.delete(id).catch(err => console.warn('[API] Failed to delete subcategory:', err));
   return updated;
 }
 
@@ -96,7 +100,7 @@ export function saveVariant(variant) {
     updated = current.map(v => v.id === variant.id ? { ...v, ...variant } : v);
   } else {
     const newVariant = {
-      id: Date.now(),
+      id: variant.id || Date.now(),
       productName: variant.productName,
       sku: variant.sku || `VAR-${Date.now().toString().slice(-4)}`,
       attributeType: variant.attributeType || "Attribute",
@@ -109,6 +113,7 @@ export function saveVariant(variant) {
   }
   localStorage.setItem(VARIANTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('variantsUpdated'));
+  variantsApi.save(variant).catch(err => console.warn('[API] Failed to save variant:', err));
   return updated;
 }
 
@@ -117,6 +122,7 @@ export function deleteVariant(id) {
   const updated = current.filter(v => v.id !== Number(id));
   localStorage.setItem(VARIANTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('variantsUpdated'));
+  variantsApi.delete(id).catch(err => console.warn('[API] Failed to delete variant:', err));
   return updated;
 }
 
@@ -144,7 +150,7 @@ export function getMediaAssets() {
 export function addMediaAsset(asset) {
   const current = getMediaAssets();
   const newAsset = {
-    id: Date.now(),
+    id: asset.id || Date.now(),
     title: asset.title || "Catalog Asset",
     category: asset.category || "General",
     size: asset.size || "1.5 MB",
@@ -156,6 +162,7 @@ export function addMediaAsset(asset) {
   const updated = [newAsset, ...current];
   localStorage.setItem(MEDIA_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('mediaUpdated'));
+  mediaApi.save(newAsset).catch(err => console.warn('[API] Failed to save media asset:', err));
   return updated;
 }
 
@@ -164,6 +171,7 @@ export function deleteMediaAsset(id) {
   const updated = current.filter(m => m.id !== Number(id));
   localStorage.setItem(MEDIA_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('mediaUpdated'));
+  mediaApi.delete(id).catch(err => console.warn('[API] Failed to delete media asset:', err));
   return updated;
 }
 
@@ -193,7 +201,7 @@ export function savePromotion(promo) {
     updated = current.map(p => p.id === promo.id ? { ...p, ...promo } : p);
   } else {
     const newPromo = {
-      id: Date.now(),
+      id: promo.id || Date.now(),
       title: promo.title,
       code: promo.code?.toUpperCase() || `PROMO-${Date.now().toString().slice(-4)}`,
       discount: promo.discount || "10% Off",
@@ -209,6 +217,7 @@ export function savePromotion(promo) {
   }
   localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('promotionsUpdated'));
+  promotionsApi.save(promo).catch(err => console.warn('[API] Failed to save promotion:', err));
   return updated;
 }
 
@@ -217,6 +226,7 @@ export function deletePromotion(id) {
   const updated = current.filter(p => p.id !== Number(id));
   localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('promotionsUpdated'));
+  promotionsApi.delete(id).catch(err => console.warn('[API] Failed to delete promotion:', err));
   return updated;
 }
 
@@ -255,7 +265,7 @@ export function saveRole(role) {
     updated = current.map(r => r.id === role.id ? { ...r, ...role } : r);
   } else {
     const newRole = {
-      id: Date.now(),
+      id: role.id || Date.now(),
       name: role.name,
       slug: role.name.toLowerCase().replace(/\s+/g, '_'),
       membersCount: Number(role.membersCount) || 1,
@@ -266,6 +276,7 @@ export function saveRole(role) {
   }
   localStorage.setItem(ROLES_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('rolesUpdated'));
+  rolesApi.save(role).catch(err => console.warn('[API] Failed to save role:', err));
   return updated;
 }
 
@@ -289,6 +300,7 @@ export function updateRolePermission(roleSlug, moduleName, level) {
   };
   localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('permissionsUpdated'));
+  rolesApi.updatePermissions(updated).catch(err => console.warn('[API] Failed to update permissions:', err));
   return updated;
 }
 
@@ -316,6 +328,10 @@ export function toggleCarrierStatus(id) {
   const updated = current.map(c => c.id === Number(id) ? { ...c, active: !c.active } : c);
   localStorage.setItem(SHIPPING_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('shippingUpdated'));
+  const found = updated.find(c => c.id === Number(id));
+  if (found) {
+    shippingApi.update(id, found).catch(err => console.warn('[API] Failed to update shipping carrier:', err));
+  }
   return updated;
 }
 
@@ -354,8 +370,69 @@ export function saveSystemConfig(cfg) {
   const updated = { ...getSystemConfig(), ...cfg };
   localStorage.setItem(SYSTEM_CONFIG_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('systemConfigUpdated'));
+  systemConfigApi.save(updated).catch(err => console.warn('[API] Failed to save system config:', err));
   return updated;
 }
+
+// ================= BACKEND SYNC =================
+export async function syncAdminDataFromBackend() {
+  try {
+    const [subcats, variants, media, promos, roles, perms, carriers, config] = await Promise.all([
+      subcategoriesApi.getAll().catch(() => null),
+      variantsApi.getAll().catch(() => null),
+      mediaApi.getAll().catch(() => null),
+      promotionsApi.getAll().catch(() => null),
+      rolesApi.getAll().catch(() => null),
+      rolesApi.getPermissions().catch(() => null),
+      shippingApi.getAll().catch(() => null),
+      systemConfigApi.get().catch(() => null)
+    ]);
+
+    if (Array.isArray(subcats) && subcats.length > 0) {
+      localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(subcats));
+      window.dispatchEvent(new Event('subcategoriesUpdated'));
+    }
+    if (Array.isArray(variants) && variants.length > 0) {
+      localStorage.setItem(VARIANTS_KEY, JSON.stringify(variants));
+      window.dispatchEvent(new Event('variantsUpdated'));
+    }
+    if (Array.isArray(media) && media.length > 0) {
+      localStorage.setItem(MEDIA_KEY, JSON.stringify(media));
+      window.dispatchEvent(new Event('mediaUpdated'));
+    }
+    if (Array.isArray(promos) && promos.length > 0) {
+      localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(promos));
+      window.dispatchEvent(new Event('promotionsUpdated'));
+    }
+    if (Array.isArray(roles) && roles.length > 0) {
+      localStorage.setItem(ROLES_KEY, JSON.stringify(roles));
+      window.dispatchEvent(new Event('rolesUpdated'));
+    }
+    if (perms && typeof perms === 'object') {
+      localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(perms));
+      window.dispatchEvent(new Event('permissionsUpdated'));
+    }
+    if (Array.isArray(carriers) && carriers.length > 0) {
+      localStorage.setItem(SHIPPING_KEY, JSON.stringify(carriers));
+      window.dispatchEvent(new Event('shippingUpdated'));
+    }
+    if (config && typeof config === 'object') {
+      localStorage.setItem(SYSTEM_CONFIG_KEY, JSON.stringify(config));
+      window.dispatchEvent(new Event('systemConfigUpdated'));
+    }
+
+    return true;
+  } catch (err) {
+    console.warn('[API] Failed syncing admin data from backend:', err);
+    return false;
+  }
+}
+
+// Auto-trigger sync on load in browser
+if (typeof window !== 'undefined') {
+  syncAdminDataFromBackend();
+}
+
 
 // Database Export / Import Backup JSON
 export function exportFullDatabaseBackup() {

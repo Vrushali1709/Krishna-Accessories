@@ -1,10 +1,12 @@
 // src/utils/orderStore.js
+import { ordersApi, suppliersApi, usersApi, notificationsApi } from './api';
 
 const ORDERS_KEY = 'krishna_platform_orders';
 const SUPPLIERS_KEY = 'krishna_platform_suppliers';
 const USERS_KEY = 'krishna_platform_users';
 const NOTIFICATIONS_KEY = 'krishna_platform_notifications';
 const ADDRESSES_KEY = 'krishna_user_addresses';
+
 
 const defaultSuppliers = [
   {
@@ -412,6 +414,10 @@ export function createOrder(orderData) {
   });
 
   window.dispatchEvent(new Event('ordersUpdated'));
+
+  // Background Python API sync
+  ordersApi.create(newOrder).catch(err => console.warn('[API] Failed to sync order to backend:', err));
+
   return newOrder;
 }
 
@@ -441,6 +447,7 @@ export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
       return {
         ...order,
         status: nextStatus,
+        orderStatus: nextStatus,
         courier: courierInfo.courier || order.courier,
         trackingNumber: courierInfo.trackingNumber || order.trackingNumber,
         timeline: newTimeline
@@ -451,8 +458,13 @@ export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
 
   localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('ordersUpdated'));
+
+  // Background Python API sync
+  ordersApi.updateStatus(orderId, nextStatus).catch(err => console.warn('[API] Failed to update order status in backend:', err));
+
   return updated;
 }
+
 
 export function cancelOrder(orderId, reason = "Customer request", cancelledBy = "Customer") {
   const orders = getOrders();
@@ -638,6 +650,7 @@ export function approveSupplier(id) {
   const updated = suppliers.map(s => s.id === Number(id) ? { ...s, status: "Active" } : s);
   localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('suppliersUpdated'));
+  suppliersApi.update(id, { status: "Active" }).catch(err => console.warn('[API] Failed to approve supplier:', err));
   return updated;
 }
 
@@ -646,6 +659,7 @@ export function toggleSupplierStatus(id, newStatus) {
   const updated = suppliers.map(s => s.id === Number(id) ? { ...s, status: newStatus } : s);
   localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('suppliersUpdated'));
+  suppliersApi.update(id, { status: newStatus }).catch(err => console.warn('[API] Failed to toggle supplier status:', err));
   return updated;
 }
 
@@ -653,7 +667,7 @@ export function addSupplier(supplier) {
   const suppliers = getSuppliers();
   const newSupplier = {
     ...supplier,
-    id: Date.now(),
+    id: supplier.id || Date.now(),
     joinedDate: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
     status: supplier.status || "Pending Approval",
     rating: 5.0,
@@ -663,6 +677,7 @@ export function addSupplier(supplier) {
   const updated = [newSupplier, ...suppliers];
   localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('suppliersUpdated'));
+  suppliersApi.create(newSupplier).catch(err => console.warn('[API] Failed to add supplier:', err));
   return updated;
 }
 
@@ -687,6 +702,7 @@ export function toggleUserStatus(id, newStatus) {
   const updated = users.map(u => u.id === Number(id) ? { ...u, status: newStatus } : u);
   localStorage.setItem(USERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('usersUpdated'));
+  usersApi.update(id, { status: newStatus }).catch(err => console.warn('[API] Failed to update user status:', err));
   return updated;
 }
 
@@ -704,7 +720,7 @@ export function getNotifications() {
 export function addNotification(notif) {
   const current = getNotifications();
   const newNotif = {
-    id: Date.now(),
+    id: notif.id || Date.now(),
     title: notif.title,
     message: notif.message,
     date: "Just now",
@@ -714,6 +730,7 @@ export function addNotification(notif) {
   const updated = [newNotif, ...current];
   localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('notificationsUpdated'));
+  notificationsApi.add(newNotif).catch(err => console.warn('[API] Failed to add notification:', err));
   return updated;
 }
 
@@ -722,6 +739,7 @@ export function markNotificationRead(id) {
   const updated = current.map(n => n.id === Number(id) ? { ...n, unread: false } : n);
   localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('notificationsUpdated'));
+  notificationsApi.markRead(id).catch(err => console.warn('[API] Failed to mark notification read:', err));
   return updated;
 }
 
@@ -730,14 +748,59 @@ export function markAllNotificationsRead() {
   const updated = current.map(n => ({ ...n, unread: false }));
   localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('notificationsUpdated'));
+  notificationsApi.markAllRead().catch(err => console.warn('[API] Failed to mark all notifications read:', err));
   return updated;
 }
 
 export function clearNotifications() {
   localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify([]));
   window.dispatchEvent(new Event('notificationsUpdated'));
+  notificationsApi.clear().catch(err => console.warn('[API] Failed to clear notifications:', err));
   return [];
 }
+
+// ================= BACKEND SYNC =================
+export async function syncOrdersFromBackend() {
+  try {
+    const [fetchedOrders, fetchedSuppliers, fetchedUsers, fetchedNotifs] = await Promise.all([
+      ordersApi.getAll().catch(() => null),
+      suppliersApi.getAll().catch(() => null),
+      usersApi.getAll().catch(() => null),
+      notificationsApi.getAll().catch(() => null)
+    ]);
+
+    if (Array.isArray(fetchedOrders) && fetchedOrders.length > 0) {
+      localStorage.setItem(ORDERS_KEY, JSON.stringify(fetchedOrders));
+      window.dispatchEvent(new Event('ordersUpdated'));
+    }
+
+    if (Array.isArray(fetchedSuppliers) && fetchedSuppliers.length > 0) {
+      localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(fetchedSuppliers));
+      window.dispatchEvent(new Event('suppliersUpdated'));
+    }
+
+    if (Array.isArray(fetchedUsers) && fetchedUsers.length > 0) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(fetchedUsers));
+      window.dispatchEvent(new Event('usersUpdated'));
+    }
+
+    if (Array.isArray(fetchedNotifs) && fetchedNotifs.length > 0) {
+      localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(fetchedNotifs));
+      window.dispatchEvent(new Event('notificationsUpdated'));
+    }
+
+    return true;
+  } catch (err) {
+    console.warn('[API] Failed syncing orders/suppliers from backend:', err);
+    return false;
+  }
+}
+
+// Auto-trigger sync on load in browser
+if (typeof window !== 'undefined') {
+  syncOrdersFromBackend();
+}
+
 
 // ================= USER ADDRESSES STORE =================
 

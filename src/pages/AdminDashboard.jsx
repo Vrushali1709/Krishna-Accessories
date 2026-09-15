@@ -38,7 +38,9 @@ import {
   Layers,
   Store,
   SlidersHorizontal,
-  CheckCircle2
+  CheckCircle2,
+  RefreshCw,
+  Server
 } from 'lucide-react';
 import {
   getProducts,
@@ -50,7 +52,8 @@ import {
   getBrands,
   getBrandsByCategory,
   addBrand,
-  deleteBrand
+  deleteBrand,
+  syncProductsFromBackend
 } from '../utils/productStore';
 import {
   getOrders,
@@ -68,7 +71,8 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
   addNotification,
-  clearNotifications
+  clearNotifications,
+  syncOrdersFromBackend
 } from '../utils/orderStore';
 import {
   getSubcategories,
@@ -92,11 +96,14 @@ import {
   getSystemConfig,
   saveSystemConfig,
   exportFullDatabaseBackup,
-  restoreDatabaseBackup
+  restoreDatabaseBackup,
+  syncAdminDataFromBackend
 } from '../utils/adminStore';
 import { getCurrentUser, setCurrentUser, logout, logoutAdmin, isAdmin, getAdminUser } from '../utils/auth';
+import { checkBackendHealth } from '../utils/api';
 
 export default function AdminDashboard() {
+
   const navigate = useNavigate();
 
   // Navigation Hierarchical State
@@ -254,9 +261,33 @@ export default function AdminDashboard() {
   const [toastMessage, setToastMessage] = useState('');
   const [backupJsonInput, setBackupJsonInput] = useState('');
 
+  // Python Backend Connection State
+  const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true });
+  const [isSyncing, setIsSyncing] = useState(false);
+
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 4000);
+  };
+
+  const handleSyncWithBackend = async () => {
+    setIsSyncing(true);
+    showToast('Syncing data with Python backend...');
+    try {
+      await Promise.all([
+        syncProductsFromBackend(),
+        syncOrdersFromBackend(),
+        syncAdminDataFromBackend()
+      ]);
+      const health = await checkBackendHealth();
+      setBackendStatus({ connected: health.connected, checking: false });
+      refreshAll();
+      showToast(health.connected ? 'Data synchronized with Python backend!' : 'Backend offline (using local cache).');
+    } catch (err) {
+      showToast('Sync completed with local cache.');
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   // Audit Logs State
@@ -289,6 +320,15 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     refreshAll();
+
+    // Check Python backend connectivity
+    const checkStatus = async () => {
+      const health = await checkBackendHealth();
+      setBackendStatus({ connected: health.connected, checking: false });
+    };
+    checkStatus();
+    const interval = setInterval(checkStatus, 15000);
+
     const listeners = [
       'productsUpdated', 'categoriesUpdated', 'brandsUpdated', 'suppliersUpdated',
       'ordersUpdated', 'usersUpdated', 'notificationsUpdated', 'authUpdated',
@@ -296,8 +336,12 @@ export default function AdminDashboard() {
       'rolesUpdated', 'permissionsUpdated', 'shippingUpdated', 'systemConfigUpdated'
     ];
     listeners.forEach(ev => window.addEventListener(ev, refreshAll));
-    return () => listeners.forEach(ev => window.removeEventListener(ev, refreshAll));
+    return () => {
+      clearInterval(interval);
+      listeners.forEach(ev => window.removeEventListener(ev, refreshAll));
+    };
   }, []);
+
 
   // Filter Catalog Products
   const filteredProducts = useMemo(() => {
@@ -1138,6 +1182,30 @@ export default function AdminDashboard() {
           {/* Right: Actions, Notifications & Profile */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
 
+            {/* Python Backend Status Pill */}
+            <div
+              title={backendStatus.connected ? "Python FastAPI backend connected & operational on port 8000" : "Python backend offline (running in local storage cache mode)"}
+              className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${
+                backendStatus.connected
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : 'bg-amber-50 text-amber-700 border-amber-200'
+              }`}
+            >
+              <span className={`h-2 w-2 rounded-full shrink-0 ${backendStatus.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+              <span className="truncate">{backendStatus.connected ? 'Python API (Port 8000)' : 'Local Mode'}</span>
+            </div>
+
+            {/* Sync Backend Data Button */}
+            <button
+              onClick={handleSyncWithBackend}
+              disabled={isSyncing}
+              title="Sync all products, orders, and settings with Python backend"
+              className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-700 transition shadow-2xs cursor-pointer"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 text-zinc-600 ${isSyncing ? 'animate-spin text-zinc-900' : ''}`} />
+              <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync'}</span>
+            </button>
+
             <Link
               to="/"
               target="_blank"
@@ -1147,6 +1215,7 @@ export default function AdminDashboard() {
               <span>Storefront</span>
               <ExternalLink className="h-2.5 w-2.5 text-zinc-400" />
             </Link>
+
 
             {/* Notifications Popover */}
             <div className="relative">

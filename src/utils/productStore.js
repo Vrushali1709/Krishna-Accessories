@@ -1,10 +1,12 @@
 // src/utils/productStore.js
+import { productsApi, categoriesApi, brandsApi } from './api';
 
 const PRODUCTS_KEY = "krishna_admin_products";
 const CATEGORIES_KEY = "krishna_categories";
 const BRANDS_KEY = "krishna_brands";
 const WISHLIST_KEY = "krishna_wishlist";
 const REVIEWS_KEY = "krishna_product_reviews";
+
 
 const DEFAULT_SIZES_BY_CATEGORY = {
   Watches: ["One Size"],
@@ -1123,18 +1125,24 @@ export function getProductById(id) {
 export function saveProduct(product) {
   const products = getProducts();
   let updated;
-  if (product.id) {
-    const index = products.findIndex(p => Number(p.id) === Number(product.id));
-    if (index !== -1) {
-      updated = products.map(p => Number(p.id) === Number(product.id) ? { ...p, ...product } : p);
-    } else {
-      updated = [product, ...products];
-    }
+  const isExisting = product.id && products.some(p => Number(p.id) === Number(product.id));
+
+  if (isExisting) {
+    updated = products.map(p => Number(p.id) === Number(product.id) ? { ...p, ...product } : p);
   } else {
-    updated = [{ ...product, id: Date.now() }, ...products];
+    const newProduct = { ...product, id: product.id || Date.now() };
+    updated = [newProduct, ...products];
   }
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('productsUpdated'));
+
+  // Background Python API sync
+  if (isExisting) {
+    productsApi.update(product.id, product).catch(err => console.warn('[API] Failed to update product in backend:', err));
+  } else {
+    productsApi.create(product).catch(err => console.warn('[API] Failed to create product in backend:', err));
+  }
+
   return updated;
 }
 
@@ -1151,6 +1159,10 @@ export function deleteProduct(id) {
   const updated = products.filter(p => Number(p.id) !== Number(id));
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('productsUpdated'));
+
+  // Background Python API sync
+  productsApi.delete(id).catch(err => console.warn('[API] Failed to delete product in backend:', err));
+
   return updated;
 }
 
@@ -1179,6 +1191,7 @@ export function addCategory(category) {
     const updated = [...categories, trimmed];
     localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
     window.dispatchEvent(new Event('categoriesUpdated'));
+    categoriesApi.create(trimmed).catch(err => console.warn('[API] Failed to add category to backend:', err));
     return updated;
   }
   return categories;
@@ -1189,6 +1202,7 @@ export function deleteCategory(category) {
   const updated = categories.filter(item => item !== category);
   localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('categoriesUpdated'));
+  categoriesApi.delete(category).catch(err => console.warn('[API] Failed to delete category from backend:', err));
   return updated;
 }
 
@@ -1208,13 +1222,14 @@ export function getBrands() {
   }
 }
 
-export function addBrand(brand) {
+export function addBrand(brand, category = "Watches") {
   const brands = getBrands();
   const trimmed = brand.trim();
-  if (trimmed && !brands.some(b => b.toLowerCase() === trimmed.toLowerCase())) {
+  if (trimmed && !brands.some(b => (typeof b === 'string' ? b : b.name).toLowerCase() === trimmed.toLowerCase())) {
     const updated = [...brands, trimmed];
     localStorage.setItem(BRANDS_KEY, JSON.stringify(updated));
     window.dispatchEvent(new Event('brandsUpdated'));
+    brandsApi.create(trimmed, category).catch(err => console.warn('[API] Failed to add brand to backend:', err));
     return updated;
   }
   return brands;
@@ -1222,11 +1237,51 @@ export function addBrand(brand) {
 
 export function deleteBrand(brand) {
   const brands = getBrands();
-  const updated = brands.filter(item => item !== brand);
+  const brandName = typeof brand === 'string' ? brand : brand.name;
+  const updated = brands.filter(item => (typeof item === 'string' ? item : item.name) !== brandName);
   localStorage.setItem(BRANDS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('brandsUpdated'));
+  brandsApi.delete(brandName).catch(err => console.warn('[API] Failed to delete brand from backend:', err));
   return updated;
 }
+
+// ================= BACKEND SYNC =================
+export async function syncProductsFromBackend() {
+  try {
+    const [fetchedProducts, fetchedCategories, fetchedBrands] = await Promise.all([
+      productsApi.getAll().catch(() => null),
+      categoriesApi.getAll().catch(() => null),
+      brandsApi.getAll().catch(() => null)
+    ]);
+
+    if (Array.isArray(fetchedProducts) && fetchedProducts.length > 0) {
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(fetchedProducts));
+      window.dispatchEvent(new Event('productsUpdated'));
+    }
+
+    if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
+      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(fetchedCategories));
+      window.dispatchEvent(new Event('categoriesUpdated'));
+    }
+
+    if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
+      const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b.name : b));
+      localStorage.setItem(BRANDS_KEY, JSON.stringify(brandNames));
+      window.dispatchEvent(new Event('brandsUpdated'));
+    }
+
+    return true;
+  } catch (err) {
+    console.warn('[API] Failed syncing products from backend:', err);
+    return false;
+  }
+}
+
+// Auto-trigger sync on load in browser
+if (typeof window !== 'undefined') {
+  syncProductsFromBackend();
+}
+
 
 // Dynamic brand finder for specific category
 export function getBrandsByCategory(categoryName) {

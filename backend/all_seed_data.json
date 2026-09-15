@@ -1,0 +1,1644 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Classic Luxury Automatic Watch",
+      "brand": "Titan",
+      "category": "Watches",
+      "subcategory": "Analog Watches",
+      "sku": "KA-TIT-001",
+      "price": 4999,
+      "oldPrice": 6999,
+      "discount": 29,
+      "stock": 25,
+      "rating": 4.8,
+      "reviews": 128,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700",
+        "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
+        "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700"
+      ],
+      "description": "Handcrafted luxury automatic analog watch with premium sapphire crystal glass, surgical-grade stainless steel dial, and water resistance up to 50 meters.",
+      "specifications": {
+        "Material": "316L Stainless Steel",
+        "Movement": "Japanese Automatic Quartz",
+        "Glass": "Sapphire Crystal",
+        "WaterResistance": "50m / 5 ATM",
+        "Warranty": "2 Years International Warranty"
+      },
+      "colors": [
+        "Gold",
+        "Silver",
+        "Midnight Black"
+      ],
+      "variants": [
+        "Gold Dial",
+        "Silver Dial",
+        "Black Mesh"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Premium Chronograph Royal Blue",
+      "brand": "Fossil",
+      "category": "Watches",
+      "subcategory": "Chronograph Watches",
+      "sku": "KA-FOS-002",
+      "price": 8999,
+      "oldPrice": 11999,
+      "discount": 25,
+      "stock": 18,
+      "rating": 4.7,
+      "reviews": 94,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700",
+        "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
+      ],
+      "description": "Sophisticated multi-dial chronograph watch featuring a sunray royal blue dial, genuine Italian leather strap, and stop-watch micro-second precision.",
+      "specifications": {
+        "Material": "Stainless Steel & Italian Leather",
+        "Movement": "Multi-Function Chronograph",
+        "Glass": "Mineral Glass",
+        "WaterResistance": "50m",
+        "Warranty": "2 Years International Warranty"
+      },
+      "colors": [
+        "Royal Blue",
+        "Deep Black"
+      ],
+      "variants": [
+        "Leather Strap",
+        "Steel Bracelet"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Edifice Tough Solar Chronograph",
+      "brand": "Casio",
+      "category": "Watches",
+      "subcategory": "Solar Watches",
+      "sku": "KA-CAS-003",
+      "price": 6499,
+      "oldPrice": 12999,
+      "discount": 50,
+      "stock": 14,
+      "rating": 4.9,
+      "reviews": 160,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
+      ],
+      "description": "High-precision solar chronograph powered by light energy with Bluetooth mobile link and 100m water resistance.",
+      "specifications": {
+        "Material": "Solid Stainless Steel",
+        "Movement": "Tough Solar Quartz",
+        "Glass": "Sapphire Anti-Reflective",
+        "WaterResistance": "100m / 10 ATM",
+        "Warranty": "2 Years International Warranty"
+      },
+      "colors": [
+        "Carbon Black",
+        "Silver"
+      ],
+      "variants": [
+        "Solar Steel",
+        "Carbon Edition"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Submariner Date 41mm Oystersteel",
+      "brand": "Rolex",
+      "category": "Watches",
+      "subcategory": "Luxury Watches",
+      "sku": "KA-ROL-004",
+      "price": 49999,
+      "oldPrice": 65999,
+      "discount": 24,
+      "stock": 8,
+      "rating": 4.9,
+      "reviews": 115,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=700",
+        "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
+      ],
+      "description": "Iconic luxury diver timepiece with black Cerachrom unidirectional rotating bezel, Chromalight display, scratch-resistant sapphire crystal, and Calibre 3235 automatic movement.",
+      "specifications": {
+        "Material": "Oystersteel (904L Stainless Steel)",
+        "Movement": "Perpetual Mechanical Self-Winding (Calibre 3235)",
+        "Glass": "Cyclops Sapphire Glass",
+        "WaterResistance": "300m / 30 ATM",
+        "Warranty": "5 Years International Warranty"
+      },
+      "colors": [
+        "Emerald Green",
+        "Onyx Black",
+        "Gold Two-Tone"
+      ],
+      "variants": [
+        "Emerald Green Bezel",
+        "Onyx Black"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Limitless FS2 Smartwatch",
+      "brand": "Fastrack",
+      "category": "Watches",
+      "subcategory": "Smart Watches",
+      "sku": "KA-FAS-005",
+      "price": 2499,
+      "oldPrice": 3999,
+      "discount": 38,
+      "stock": 45,
+      "rating": 4.4,
+      "reviews": 210,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=700"
+      ],
+      "description": "1.91'' UltraVU HD Display with single-sync BT Calling, 100+ sports modes, AI voice assistant, and 7-day battery life.",
+      "specifications": {
+        "Display": "1.91 inch HD Curved Display",
+        "Battery": "7 Days Typical Usage",
+        "Connectivity": "Bluetooth 5.3",
+        "WaterResistance": "IP68 Water & Dust Resistant",
+        "Warranty": "1 Year Manufacturer Warranty"
+      },
+      "colors": [
+        "Pitch Black",
+        "Teal Blue",
+        "Olive Green"
+      ],
+      "variants": [
+        "Standard Strap",
+        "Magnetic Strap"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Heritage Visodate Automatic Chronograph",
+      "brand": "Tissot",
+      "category": "Watches",
+      "subcategory": "Swiss Made Watches",
+      "sku": "KA-TIS-006",
+      "price": 18999,
+      "oldPrice": 24999,
+      "discount": 24,
+      "stock": 8,
+      "rating": 4.9,
+      "reviews": 58,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=700",
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
+      ],
+      "description": "Prestigious Swiss-made vintage automatic timepiece featuring domed sapphire crystal, exhibition case back with engraved rotor, and genuine embossed leather strap.",
+      "specifications": {
+        "Material": "316L Stainless Steel & Embossed Calfskin Leather",
+        "Movement": "Swiss Automatic Powermatic 80",
+        "Glass": "Domed Scratch-Resistant Sapphire",
+        "WaterResistance": "100m / 10 ATM",
+        "Warranty": "2 Years International Warranty"
+      },
+      "colors": [
+        "Silver Dial / Brown Strap",
+        "Black Dial / Black Strap"
+      ],
+      "variants": [
+        "Leather Strap",
+        "Steel Bracelet"
+      ]
+    },
+    {
+      "id": 101,
+      "name": "Cosmograph Daytona Chronograph",
+      "brand": "Rolex",
+      "category": "Watches",
+      "subcategory": "Chronograph Watches",
+      "sku": "KA-ROL-DAY01",
+      "price": 64999,
+      "oldPrice": 79999,
+      "discount": 19,
+      "stock": 6,
+      "rating": 4.9,
+      "reviews": 62,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=700"
+      ],
+      "description": "High-precision luxury chronograph with engraved tachymetric scale bezel, triple sub-dials, Oystersteel bracelet, and certified chronometer mechanical movement.",
+      "specifications": {
+        "Material": "Oystersteel 904L & Cerachrom",
+        "Movement": "Calibre 4130 Perpetual Chronograph",
+        "Glass": "Scratch-Resistant Sapphire Crystal",
+        "WaterResistance": "100m / 10 ATM",
+        "Warranty": "5 Years International Warranty"
+      },
+      "colors": [
+        "Panda White",
+        "Onyx Black"
+      ],
+      "variants": [
+        "Panda White Dial",
+        "All Black"
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Speedmaster Professional Co-Axial Chronograph",
+      "brand": "Omega",
+      "category": "Watches",
+      "subcategory": "Chronograph Watches",
+      "sku": "KA-OMG-SPD02",
+      "price": 45999,
+      "oldPrice": 59999,
+      "discount": 23,
+      "stock": 10,
+      "rating": 4.8,
+      "reviews": 44,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700"
+      ],
+      "description": "Legendary Speedmaster Moonwatch chronograph featuring a black step dial, sapphire crystal, and Master Chronometer certified co-axial movement.",
+      "specifications": {
+        "Material": "Stainless Steel Case & Bracelet",
+        "Movement": "Co-Axial Master Chronometer Calibre 3861",
+        "Glass": "Sapphire Crystal with Anti-Reflective Treatment",
+        "WaterResistance": "50m / 5 ATM",
+        "Warranty": "5 Years International Warranty"
+      },
+      "colors": [
+        "Racing Black",
+        "Blue Accent"
+      ],
+      "variants": [
+        "Steel Bracelet",
+        "Leather Strap"
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Seiko 5 Sports Automatic Day-Date",
+      "brand": "Seiko",
+      "category": "Watches",
+      "subcategory": "Analog Watches",
+      "sku": "KA-SEI-SPO03",
+      "price": 14299,
+      "oldPrice": 19999,
+      "discount": 28,
+      "stock": 15,
+      "rating": 4.8,
+      "reviews": 36,
+      "status": "Active",
+      "supplier": "Apex Timepieces Ltd.",
+      "image": "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=700"
+      ],
+      "description": "Premium Seiko 5 Sports automatic timepiece, thoroughly crafted with LumiBrite hands, exhibition case back, and tested for precise timekeeping.",
+      "specifications": {
+        "Material": "Solid Stainless Steel",
+        "Movement": "Seiko 4R36 24-Jewel Automatic",
+        "Glass": "Hardlex Crystal",
+        "WaterResistance": "100m / 10 ATM",
+        "Warranty": "2 Years International Warranty"
+      },
+      "colors": [
+        "Sunburst Silver",
+        "Champagne Gold"
+      ],
+      "variants": [
+        "Steel Jubilee",
+        "Leather Strap"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Executive Top-Grain Leather Briefcase",
+      "brand": "Hidesign",
+      "category": "Bags & Wallets",
+      "subcategory": "Leather Briefcases",
+      "sku": "KA-HID-007",
+      "price": 8499,
+      "oldPrice": 11999,
+      "discount": 29,
+      "stock": 15,
+      "rating": 4.8,
+      "reviews": 72,
+      "status": "Active",
+      "supplier": "Vogue Apparel India",
+      "image": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700",
+        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"
+      ],
+      "description": "Handcrafted vegetable-tanned genuine leather briefcase with padded 15.6-inch laptop compartment, solid brass hardware, and detachable shoulder strap.",
+      "specifications": {
+        "Material": "100% Genuine Vegetable-Tanned Leather",
+        "Capacity": "Fits up to 15.6-inch Laptops + Documents",
+        "Hardware": "Antique Solid Brass",
+        "Warranty": "1 Year International"
+      },
+      "colors": [
+        "Rich Cognac Brown",
+        "Classic Black"
+      ],
+      "variants": [
+        "Standard Briefcase",
+        "Slim Edition"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Modern Urban Backpack Pro 32L",
+      "brand": "Wildcraft",
+      "category": "Bags & Wallets",
+      "subcategory": "Backpacks",
+      "sku": "KA-WIL-008",
+      "price": 2499,
+      "oldPrice": 3499,
+      "discount": 29,
+      "stock": 40,
+      "rating": 4.6,
+      "reviews": 190,
+      "status": "Active",
+      "supplier": "Vogue Apparel India",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700"
+      ],
+      "description": "Weatherproof 32-liter urban travel backpack with ergonomic AirMesh lumbar support, dedicated USB charging port pass-through, and rain cover included.",
+      "specifications": {
+        "Material": "High-Density Ballistic Polyester",
+        "Volume": "32 Litres",
+        "Compartments": "3 Main + 2 Side Water Bottle Sleeves",
+        "Warranty": "5 Years"
+      },
+      "colors": [
+        "Charcoal Grey",
+        "Navy Blue",
+        "Olive Tactical"
+      ],
+      "variants": [
+        "32 Litres Standard"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Signature Monogram Tote Bag",
+      "brand": "Tommy Hilfiger",
+      "category": "Bags & Wallets",
+      "subcategory": "Women Totes",
+      "sku": "KA-TOM-009",
+      "price": 6999,
+      "oldPrice": 9999,
+      "discount": 30,
+      "stock": 20,
+      "rating": 4.7,
+      "reviews": 84,
+      "status": "Active",
+      "supplier": "Vogue Apparel India",
+      "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700"
+      ],
+      "description": "Chic structured tote bag featuring iconic monogram detailing, premium faux-leather trim, magnetic closure, and removable matching zip pouch.",
+      "specifications": {
+        "Material": "Premium Jacquard Canvas & Vegan Leather",
+        "Closure": "Magnetic Snap with Zip Top",
+        "Dimensions": "38cm x 28cm x 14cm",
+        "Warranty": "1 Year"
+      },
+      "colors": [
+        "Navy / White Stripe",
+        "Black Jacquard"
+      ],
+      "variants": [
+        "Standard Tote Size"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Air Zoom Pegasus Performance Running Shoes",
+      "brand": "Nike",
+      "category": "Shoes",
+      "subcategory": "Running Shoes",
+      "sku": "KA-NIK-010",
+      "price": 5499,
+      "oldPrice": 7499,
+      "discount": 27,
+      "stock": 32,
+      "rating": 4.6,
+      "reviews": 215,
+      "status": "Active",
+      "supplier": "Urban Footwear Co.",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700",
+        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=700"
+      ],
+      "description": "Responsive cushioning in the Nike Air Zoom Pegasus provides a springy feel for everyday road and track runners with engineered breathable mesh.",
+      "specifications": {
+        "Material": "Engineered Mesh Upper",
+        "Sole": "Zoom Air Foam with Waffle Rubber",
+        "Weight": "260g",
+        "Warranty": "6 Months"
+      },
+      "colors": [
+        "Crimson Red",
+        "Triple Black",
+        "Pure White"
+      ],
+      "variants": [
+        "UK 7",
+        "UK 8",
+        "UK 9",
+        "UK 10",
+        "UK 11"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Ultraboost Light Primeknit Sneakers",
+      "brand": "Adidas",
+      "category": "Shoes",
+      "subcategory": "Running Shoes",
+      "sku": "KA-ADI-011",
+      "price": 6999,
+      "oldPrice": 9999,
+      "discount": 30,
+      "stock": 22,
+      "rating": 4.8,
+      "reviews": 180,
+      "status": "Active",
+      "supplier": "Urban Footwear Co.",
+      "image": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=700",
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"
+      ],
+      "description": "Experience epic energy return with Light BOOST cushioning technology and an adaptive Primeknit+ textile upper designed for ultimate comfort.",
+      "specifications": {
+        "Material": "Primeknit+ Textile",
+        "Sole": "Light BOOST with Continental Rubber",
+        "Drop": "10mm",
+        "Warranty": "6 Months"
+      },
+      "colors": [
+        "Core Black",
+        "Cloud White",
+        "Solar Red"
+      ],
+      "variants": [
+        "UK 7",
+        "UK 8",
+        "UK 9",
+        "UK 10"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Nitro Velocity Street Sneakers",
+      "brand": "Puma",
+      "category": "Shoes",
+      "subcategory": "Sneakers",
+      "sku": "KA-PUM-012",
+      "price": 3999,
+      "oldPrice": 5499,
+      "discount": 27,
+      "stock": 19,
+      "rating": 4.5,
+      "reviews": 88,
+      "status": "Active",
+      "supplier": "Urban Footwear Co.",
+      "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=700"
+      ],
+      "description": "Sleek low-boot street design infused with advanced NITRO foam for featherlight responsiveness and all-day urban walking comfort.",
+      "specifications": {
+        "Material": "Synthetic Leather & Mesh",
+        "Sole": "PUMAGRIP High Traction Rubber",
+        "Warranty": "6 Months"
+      },
+      "colors": [
+        "White / Black",
+        "All Black"
+      ],
+      "variants": [
+        "UK 7",
+        "UK 8",
+        "UK 9",
+        "UK 10"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Retro High OG Leather Sneakers",
+      "brand": "Jordan",
+      "category": "Shoes",
+      "subcategory": "High Tops",
+      "sku": "KA-JOR-013",
+      "price": 14999,
+      "oldPrice": 17999,
+      "discount": 17,
+      "stock": 10,
+      "rating": 4.9,
+      "reviews": 140,
+      "status": "Active",
+      "supplier": "Urban Footwear Co.",
+      "image": "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=700"
+      ],
+      "description": "Iconic high-top silhouette in premium genuine tumbled leather with encapsulated Air-Sole unit and legendary basketball legacy.",
+      "specifications": {
+        "Material": "Full-Grain Genuine Leather",
+        "Sole": "Rubber Cupsole with Air Cushioning",
+        "Warranty": "6 Months"
+      },
+      "colors": [
+        "Chicago Red / White / Black",
+        "Shadow Grey"
+      ],
+      "variants": [
+        "UK 8",
+        "UK 9",
+        "UK 10",
+        "UK 11"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Galaxy S26 Ultra 5G (AI Titanium)",
+      "brand": "Samsung",
+      "category": "Mobiles",
+      "subcategory": "Flagship Smartphones",
+      "sku": "KA-SAM-014",
+      "price": 114999,
+      "oldPrice": 129999,
+      "discount": 12,
+      "stock": 12,
+      "rating": 4.9,
+      "reviews": 340,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700",
+        "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700"
+      ],
+      "description": "Next-generation titanium design equipped with Galaxy AI, 200MP Quad Telephoto Camera system, S-Pen built-in, and Snapdragon 8 Gen 4 chipset.",
+      "specifications": {
+        "Display": "6.8 inch Dynamic AMOLED 2X 120Hz",
+        "Storage": "256GB / 512GB UFS 4.0",
+        "RAM": "12GB LPDDR5X",
+        "Camera": "200MP + 50MP + 12MP + 10MP",
+        "Battery": "5000mAh with 45W Fast Charging",
+        "Warranty": "1 Year Brand Warranty"
+      },
+      "colors": [
+        "Titanium Black",
+        "Titanium Gray",
+        "Titanium Violet"
+      ],
+      "variants": [
+        "12GB / 256GB",
+        "12GB / 512GB"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "iPhone 16 Pro Max (Grade 5 Titanium)",
+      "brand": "Apple",
+      "category": "Mobiles",
+      "subcategory": "Flagship Smartphones",
+      "sku": "KA-APP-015",
+      "price": 139900,
+      "oldPrice": 149900,
+      "discount": 7,
+      "stock": 8,
+      "rating": 5,
+      "reviews": 520,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=700",
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700"
+      ],
+      "description": "Forged in grade 5 titanium with Apple Intelligence, revolutionary A18 Pro chip, 48MP Fusion camera with 5x Telephoto, and industry-leading battery longevity.",
+      "specifications": {
+        "Display": "6.9 inch Super Retina XDR ProMotion",
+        "Storage": "256GB / 512GB / 1TB NVMe",
+        "Chipset": "Apple A18 Pro Bionic",
+        "Camera": "48MP Main + 48MP Ultra-Wide + 12MP 5x Telephoto",
+        "Warranty": "1 Year Apple India Warranty"
+      },
+      "colors": [
+        "Desert Titanium",
+        "Natural Titanium",
+        "Black Titanium"
+      ],
+      "variants": [
+        "256GB",
+        "512GB",
+        "1TB"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "OnePlus 13 5G Hasselblad Edition",
+      "brand": "OnePlus",
+      "category": "Mobiles",
+      "subcategory": "Flagship Smartphones",
+      "sku": "KA-ONE-016",
+      "price": 64999,
+      "oldPrice": 69999,
+      "discount": 7,
+      "stock": 15,
+      "rating": 4.7,
+      "reviews": 140,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=700"
+      ],
+      "description": "Hasselblad 4th Gen Mobile Camera, 100W SUPERVOOC fast charge with 6000mAh silicon-carbon battery and ultra-smooth 2K 120Hz Oriental Screen.",
+      "specifications": {
+        "Display": "6.82 inch 2K ProXDR 120Hz",
+        "Storage": "256GB / 512GB",
+        "RAM": "16GB LPDDR5X",
+        "Battery": "6000mAh with 100W Charging",
+        "Warranty": "1 Year"
+      },
+      "colors": [
+        "Emerald Silk",
+        "Midnight Obsidian"
+      ],
+      "variants": [
+        "16GB / 256GB",
+        "16GB / 512GB"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Original 501 Straight Fit Denim Jeans",
+      "brand": "Levis",
+      "category": "Clothes & Fashion",
+      "subcategory": "Denim & Jeans",
+      "sku": "KA-LEV-017",
+      "price": 2999,
+      "oldPrice": 3999,
+      "discount": 25,
+      "stock": 36,
+      "rating": 4.7,
+      "reviews": 95,
+      "status": "Active",
+      "supplier": "Vogue Apparel India",
+      "image": "https://images.unsplash.com/photo-1542272604-780c96856592?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1542272604-780c96856592?w=700"
+      ],
+      "description": "The iconic straight fit with signature button fly crafted from 100% heavyweight cotton denim that molds uniquely to your body over time.",
+      "specifications": {
+        "Material": "100% Premium Cotton Denim",
+        "Fit": "Original Straight Leg",
+        "Closure": "Button Fly",
+        "Care": "Machine Wash Cold"
+      },
+      "colors": [
+        "Dark Indigo",
+        "Light Stone Wash",
+        "Vintage Black"
+      ],
+      "variants": [
+        "30W 32L",
+        "32W 32L",
+        "34W 32L",
+        "36W 32L"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Tailored Slim Fit Italian Blazer",
+      "brand": "Zara",
+      "category": "Clothes & Fashion",
+      "subcategory": "Blazers & Suits",
+      "sku": "KA-ZAR-018",
+      "price": 5999,
+      "oldPrice": 7999,
+      "discount": 25,
+      "stock": 14,
+      "rating": 4.6,
+      "reviews": 62,
+      "status": "Active",
+      "supplier": "Vogue Apparel India",
+      "image": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700"
+      ],
+      "description": "Modern unstructured slim fit blazer with peak lapels, flap pockets, and breathable stretch wool-blend fabric for business and evening formal wear.",
+      "specifications": {
+        "Material": "Wool & Viscose Blend",
+        "Fit": "Tailored Slim",
+        "Lining": "100% Acetate Silk",
+        "Care": "Dry Clean Only"
+      },
+      "colors": [
+        "Navy Blue",
+        "Charcoal Gray"
+      ],
+      "variants": [
+        "38 (M)",
+        "40 (L)",
+        "42 (XL)"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "XPS 15 OLED InfinityEdge Laptop",
+      "brand": "Dell",
+      "category": "Laptops",
+      "subcategory": "Professional Laptops",
+      "sku": "KA-DEL-019",
+      "price": 134999,
+      "oldPrice": 149999,
+      "discount": 10,
+      "stock": 7,
+      "rating": 4.8,
+      "reviews": 110,
+      "status": "Active",
+      "supplier": "Optima Tech Solutions",
+      "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700",
+        "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=700"
+      ],
+      "description": "Ultra-premium CNC machined aluminum chassis with 3.5K OLED touchscreen, Intel Core Ultra 9 processor, NVIDIA RTX 4070 Graphics, and 64GB DDR5 RAM.",
+      "specifications": {
+        "Processor": "Intel Core Ultra 9 185H (16 Cores)",
+        "Graphics": "NVIDIA GeForce RTX 4070 8GB GDDR6",
+        "RAM": "32GB / 64GB DDR5 5600MHz",
+        "Storage": "1TB / 2TB PCIe Gen4 NVMe SSD",
+        "Display": "15.6 inch 3.5K (3456x2160) OLED Touch",
+        "Warranty": "2 Years On-Site Support"
+      },
+      "colors": [
+        "Platinum Silver with Black Carbon Fiber"
+      ],
+      "variants": [
+        "32GB / 1TB SSD",
+        "64GB / 2TB SSD"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "MacBook Pro 16'' Liquid Retina XDR",
+      "brand": "Apple",
+      "category": "Laptops",
+      "subcategory": "Flagship Laptops",
+      "sku": "KA-APP-020",
+      "price": 199900,
+      "oldPrice": 219900,
+      "discount": 9,
+      "stock": 5,
+      "rating": 5,
+      "reviews": 92,
+      "status": "Active",
+      "supplier": "Optima Tech Solutions",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700"
+      ],
+      "description": "Driven by M3 Max chip with 16-core CPU and 40-core GPU, stunning Liquid Retina XDR display, up to 22 hours battery life, and studio-quality mics.",
+      "specifications": {
+        "Processor": "Apple M3 Max Chip",
+        "RAM": "36GB Unified Memory",
+        "Storage": "1TB NVMe SSD",
+        "Display": "16.2-inch Liquid Retina XDR (3456x2234)",
+        "Warranty": "1 Year AppleCare Coverage"
+      },
+      "colors": [
+        "Space Black",
+        "Silver"
+      ],
+      "variants": [
+        "36GB / 1TB",
+        "48GB / 2TB"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "WH-1000XM5 Noise Cancelling Headphones",
+      "brand": "Sony",
+      "category": "Electronics",
+      "subcategory": "Over-Ear Headphones",
+      "sku": "KA-SON-021",
+      "price": 24990,
+      "oldPrice": 29990,
+      "discount": 17,
+      "stock": 20,
+      "rating": 4.9,
+      "reviews": 286,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+        "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700"
+      ],
+      "description": "Industry-leading noise cancellation with two processors and eight microphones for unprecedented sound clarity, crystal clear hands-free calls, and 30-hour battery.",
+      "specifications": {
+        "BatteryLife": "30 Hours with ANC On (3 min charge = 3 hours playback)",
+        "Driver": "30mm Precision Engineered Carbon Fiber",
+        "Connectivity": "Bluetooth 5.2, LDAC High-Res Audio",
+        "Warranty": "1 Year Brand Warranty"
+      },
+      "colors": [
+        "Silver Grey",
+        "Midnight Black",
+        "Smoky Pink"
+      ],
+      "variants": [
+        "Standard Edition"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "QuietComfort Ultra Spatial Audio Earbuds",
+      "brand": "Bose",
+      "category": "Electronics",
+      "subcategory": "True Wireless Earbuds",
+      "sku": "KA-BOS-022",
+      "price": 21999,
+      "oldPrice": 25999,
+      "discount": 15,
+      "stock": 16,
+      "rating": 4.8,
+      "reviews": 142,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=700"
+      ],
+      "description": "Breakthrough immersive spatial audio, world-class active noise cancellation, and CustomTune technology that personalizes sound to the shape of your ears.",
+      "specifications": {
+        "Battery": "6 Hours (24 Hours with Case)",
+        "NoiseCancellation": "CustomTune Active Noise Cancelling",
+        "WaterResistance": "IPX4 Sweat Resistant",
+        "Warranty": "1 Year"
+      },
+      "colors": [
+        "Black",
+        "White Smoke"
+      ],
+      "variants": [
+        "Single Size with 3 Ear Tip Pairs"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "BlackWidow V4 Pro RGB Mechanical Keyboard",
+      "brand": "Razer",
+      "category": "Gaming",
+      "subcategory": "Gaming Peripherals",
+      "sku": "KA-RAZ-023",
+      "price": 18499,
+      "oldPrice": 21999,
+      "discount": 16,
+      "stock": 11,
+      "rating": 4.8,
+      "reviews": 98,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1595225476474-87563907a212?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1595225476474-87563907a212?w=700"
+      ],
+      "description": "Command dial with 8 dedicated macro keys, Razer Green clicky mechanical switches, magnetic plush wrist rest with underglow, and 8000Hz polling rate.",
+      "specifications": {
+        "Switches": "Razer Green Mechanical Switches (Clicky & Tactile)",
+        "PollingRate": "Up to 8000 Hz",
+        "Lighting": "Razer Chroma RGB Per-Key & 3-Side Underglow",
+        "Warranty": "2 Years"
+      },
+      "colors": [
+        "Classic Black"
+      ],
+      "variants": [
+        "Green Switches",
+        "Yellow Linear Switches"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Aviator Classic Polarized Sunglasses",
+      "brand": "Ray-Ban",
+      "category": "Fashion Accessories",
+      "subcategory": "Luxury Eyewear",
+      "sku": "KA-RAY-024",
+      "price": 7990,
+      "oldPrice": 9990,
+      "discount": 20,
+      "stock": 24,
+      "rating": 4.9,
+      "reviews": 175,
+      "status": "Active",
+      "supplier": "Vogue Apparel India",
+      "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=700"
+      ],
+      "description": "Timeless teardrop pilot shape in polished gold metal frame with crystal green G-15 polarized lenses providing 100% UV protection and glare elimination.",
+      "specifications": {
+        "Frame": "Polished Gold Metal",
+        "Lens": "Crystal Green Polarized G-15",
+        "UVProtection": "100% UV400",
+        "Warranty": "2 Years"
+      },
+      "colors": [
+        "Gold / Green Classic G-15",
+        "Gunmetal / Polarized Grey"
+      ],
+      "variants": [
+        "Standard 58mm",
+        "Large 62mm"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Apple Watch Ultra 2 (Titanium GPS + Cellular)",
+      "brand": "Apple",
+      "category": "Smart Gadgets",
+      "subcategory": "Smart Wearables",
+      "sku": "KA-APP-025",
+      "price": 89900,
+      "oldPrice": 94900,
+      "discount": 5,
+      "stock": 15,
+      "rating": 4.9,
+      "reviews": 130,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=700"
+      ],
+      "description": "Rugged 49mm aerospace-grade titanium casing, dual-frequency precision GPS, up to 72 hours battery life in low power mode, and 100m water resistance.",
+      "specifications": {
+        "Case": "49mm Titanium",
+        "Display": "Always-On Retina 3000 nits",
+        "Battery": "Up to 36 hours (72h Low Power)",
+        "WaterResistance": "100m Water Resistance (EN13319)",
+        "Warranty": "1 Year AppleCare Coverage"
+      },
+      "colors": [
+        "Titanium / Orange Ocean Band",
+        "Titanium / Midnight Ocean Band"
+      ],
+      "variants": [
+        "49mm GPS + Cellular"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Forerunner 965 AMOLED Premium Multisport Watch",
+      "brand": "Garmin",
+      "category": "Fitness",
+      "subcategory": "Fitness Trackers",
+      "sku": "KA-GAR-026",
+      "price": 67490,
+      "oldPrice": 74990,
+      "discount": 10,
+      "stock": 12,
+      "rating": 4.8,
+      "reviews": 86,
+      "status": "Active",
+      "supplier": "Global Gadgets Inc.",
+      "image": "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=700",
+      "images": [
+        "https://images.unsplash.com/photo-1510519138195-068d828884bb?w=700"
+      ],
+      "description": "Brilliant 1.4-inch AMOLED touchscreen display, titanium bezel, advanced training metrics, built-in full-color mapping, and up to 23 days battery life.",
+      "specifications": {
+        "Display": "1.4 inch AMOLED Touchscreen",
+        "Battery": "Up to 23 Days in Smartwatch Mode",
+        "Bezel": "Titanium Bezel",
+        "Sensors": "Multi-Band GNSS & Pulse Ox",
+        "Warranty": "2 Years Garmin Warranty"
+      },
+      "colors": [
+        "Black / Powder Gray",
+        "Whitestone / Powder Gray"
+      ],
+      "variants": [
+        "Standard Titanium Edition"
+      ]
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "Apex Timepieces Ltd.",
+      "email": "apex@timepieces.com",
+      "phone": "+91 98765 43210",
+      "category": "Watches",
+      "status": "Active",
+      "joinedDate": "15 Jan 2026",
+      "rating": 4.9,
+      "productsCount": 6,
+      "totalEarnings": 148500,
+      "address": "Unit 402, Time Center, Ring Road, Surat, Gujarat"
+    },
+    {
+      "id": 2,
+      "name": "Global Gadgets Inc.",
+      "email": "info@globalgadgets.com",
+      "phone": "+91 98234 56789",
+      "category": "Electronics",
+      "status": "Active",
+      "joinedDate": "02 Feb 2026",
+      "rating": 4.8,
+      "productsCount": 8,
+      "totalEarnings": 284000,
+      "address": "Tech Park, SG Highway, Ahmedabad, Gujarat"
+    },
+    {
+      "id": 3,
+      "name": "Urban Footwear Co.",
+      "email": "contact@urbanfootwear.in",
+      "phone": "+91 97123 45678",
+      "category": "Shoes",
+      "status": "Active",
+      "joinedDate": "20 Feb 2026",
+      "rating": 4.7,
+      "productsCount": 4,
+      "totalEarnings": 89400,
+      "address": "Industrial Area Phase 2, Rajkot, Gujarat"
+    },
+    {
+      "id": 4,
+      "name": "Vogue Apparel India",
+      "email": "partner@vogueapparel.in",
+      "phone": "+91 99887 76655",
+      "category": "Clothes & Fashion",
+      "status": "Pending Approval",
+      "joinedDate": "28 Aug 2026",
+      "rating": 4.5,
+      "productsCount": 3,
+      "totalEarnings": 0,
+      "address": "Textile Market, Ring Road, Surat, Gujarat"
+    },
+    {
+      "id": 5,
+      "name": "Optima Tech Solutions",
+      "email": "sales@optimatech.in",
+      "phone": "+91 98990 11223",
+      "category": "Laptops",
+      "status": "Pending Approval",
+      "joinedDate": "30 Aug 2026",
+      "rating": 4.6,
+      "productsCount": 2,
+      "totalEarnings": 0,
+      "address": "Infocity, Gandhinagar, Gujarat"
+    }
+  ],
+  "orders": [
+    {
+      "id": "KA-98421",
+      "customer": {
+        "firstName": "Rahul",
+        "lastName": "Patel",
+        "email": "rahul.patel@example.com",
+        "phone": "9876512345",
+        "address": "B-402, Shivalik Heights, Judges Bungalow Road, Bodakdev",
+        "city": "Ahmedabad",
+        "state": "Gujarat",
+        "pincode": "380054"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Classic Luxury Automatic Watch",
+          "brand": "Titan",
+          "category": "Watches",
+          "price": 4999,
+          "quantity": 1,
+          "color": "Gold",
+          "supplier": "Apex Timepieces Ltd.",
+          "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
+        }
+      ],
+      "subtotal": 4999,
+      "shipping": 0,
+      "discount": 0,
+      "total": 4999,
+      "paymentMethod": "Online Gateway (UPI / Card / NetBanking)",
+      "paymentStatus": "Paid",
+      "status": "Shipped",
+      "courier": "BlueDart Express",
+      "trackingNumber": "BD98234110IN",
+      "date": "31 Aug 2026",
+      "timeline": [
+        {
+          "status": "Order Placed",
+          "date": "31 Aug 2026, 10:15 AM",
+          "done": true,
+          "completed": true,
+          "stage": "Order Placed",
+          "time": "31 Aug 2026, 10:15 AM",
+          "description": "Consignment received and verified"
+        },
+        {
+          "status": "Payment Confirmed",
+          "date": "31 Aug 2026, 10:16 AM",
+          "done": true,
+          "completed": true,
+          "stage": "Payment Confirmed",
+          "time": "31 Aug 2026, 10:16 AM",
+          "description": "256-bit SSL transaction verified"
+        },
+        {
+          "status": "Processing & Packing",
+          "date": "31 Aug 2026, 01:45 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Processing & Packing",
+          "time": "31 Aug 2026, 01:45 PM",
+          "description": "Quality verified & tamper-proof sealed"
+        },
+        {
+          "status": "Shipped",
+          "date": "31 Aug 2026, 05:30 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Shipped",
+          "time": "31 Aug 2026, 05:30 PM",
+          "description": "Handed over to BlueDart courier hub"
+        },
+        {
+          "status": "Out for Delivery",
+          "date": "Expected Tomorrow",
+          "done": false,
+          "completed": false,
+          "stage": "Out for Delivery",
+          "time": "Expected Tomorrow",
+          "description": "Courier courier dispatch for final mile"
+        },
+        {
+          "status": "Delivered",
+          "date": "Expected 02 Sep 2026",
+          "done": false,
+          "completed": false,
+          "stage": "Delivered",
+          "time": "Expected 02 Sep 2026",
+          "description": "Delivery to customer"
+        }
+      ]
+    },
+    {
+      "id": "KA-98420",
+      "customer": {
+        "firstName": "Priya",
+        "lastName": "Shah",
+        "email": "priya.shah@example.com",
+        "phone": "9723456789",
+        "address": "12, Royal Palms Society, Alkapuri",
+        "city": "Vadodara",
+        "state": "Gujarat",
+        "pincode": "390007"
+      },
+      "items": [
+        {
+          "id": 2,
+          "name": "Premium Chronograph Royal Blue",
+          "brand": "Fossil",
+          "category": "Watches",
+          "price": 8999,
+          "quantity": 1,
+          "color": "Silver",
+          "supplier": "Apex Timepieces Ltd.",
+          "image": "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=700"
+        }
+      ],
+      "subtotal": 8999,
+      "shipping": 0,
+      "discount": 0,
+      "total": 8999,
+      "paymentMethod": "Online Gateway (UPI / Card / NetBanking)",
+      "paymentStatus": "Paid",
+      "status": "Processing",
+      "courier": "Delhivery",
+      "trackingNumber": "DL88912304IN",
+      "date": "30 Aug 2026",
+      "timeline": [
+        {
+          "status": "Order Placed",
+          "date": "30 Aug 2026, 02:20 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Order Placed",
+          "time": "30 Aug 2026, 02:20 PM",
+          "description": "Consignment placed by customer"
+        },
+        {
+          "status": "Payment Confirmed",
+          "date": "30 Aug 2026, 02:21 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Payment Confirmed",
+          "time": "30 Aug 2026, 02:21 PM",
+          "description": "UPI payment received successfully"
+        },
+        {
+          "status": "Processing & Packing",
+          "date": "30 Aug 2026, 04:10 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Processing & Packing",
+          "time": "30 Aug 2026, 04:10 PM",
+          "description": "Under inspection at vendor facility"
+        },
+        {
+          "status": "Shipped",
+          "date": "Pending handover",
+          "done": false,
+          "completed": false,
+          "stage": "Shipped",
+          "time": "Pending handover",
+          "description": "Awaiting courier pickup"
+        },
+        {
+          "status": "Out for Delivery",
+          "date": "--",
+          "done": false,
+          "completed": false,
+          "stage": "Out for Delivery",
+          "time": "--",
+          "description": "Pending dispatch"
+        },
+        {
+          "status": "Delivered",
+          "date": "--",
+          "done": false,
+          "completed": false,
+          "stage": "Delivered",
+          "time": "--",
+          "description": "Pending delivery"
+        }
+      ]
+    },
+    {
+      "id": "KA-98419",
+      "customer": {
+        "firstName": "Amit",
+        "lastName": "Mehta",
+        "email": "amit.mehta@example.com",
+        "phone": "9632145678",
+        "address": "405, Silicon Valley, Near Pal RTO, Adajan",
+        "city": "Surat",
+        "state": "Gujarat",
+        "pincode": "395009"
+      },
+      "items": [
+        {
+          "id": 14,
+          "name": "Galaxy S26 Ultra 5G (AI Titanium)",
+          "brand": "Samsung",
+          "category": "Mobiles",
+          "price": 114999,
+          "quantity": 1,
+          "color": "Titanium Black",
+          "supplier": "Global Gadgets Inc.",
+          "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700"
+        }
+      ],
+      "subtotal": 114999,
+      "shipping": 0,
+      "discount": 0,
+      "total": 114999,
+      "paymentMethod": "Online (Credit Card)",
+      "paymentStatus": "Paid",
+      "status": "Delivered",
+      "courier": "BlueDart Express",
+      "trackingNumber": "BD77123984IN",
+      "date": "27 Aug 2026",
+      "timeline": [
+        {
+          "status": "Order Placed",
+          "date": "27 Aug 2026, 11:00 AM",
+          "done": true,
+          "completed": true,
+          "stage": "Order Placed",
+          "time": "27 Aug 2026, 11:00 AM",
+          "description": "Order received"
+        },
+        {
+          "status": "Payment Confirmed",
+          "date": "27 Aug 2026, 11:02 AM",
+          "done": true,
+          "completed": true,
+          "stage": "Payment Confirmed",
+          "time": "27 Aug 2026, 11:02 AM",
+          "description": "Card payment verified"
+        },
+        {
+          "status": "Processing & Packing",
+          "date": "27 Aug 2026, 02:30 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Processing & Packing",
+          "time": "27 Aug 2026, 02:30 PM",
+          "description": "Secured in high-security packaging"
+        },
+        {
+          "status": "Shipped",
+          "date": "28 Aug 2026, 09:15 AM",
+          "done": true,
+          "completed": true,
+          "stage": "Shipped",
+          "time": "28 Aug 2026, 09:15 AM",
+          "description": "Dispatched via air express"
+        },
+        {
+          "status": "Out for Delivery",
+          "date": "29 Aug 2026, 10:30 AM",
+          "done": true,
+          "completed": true,
+          "stage": "Out for Delivery",
+          "time": "29 Aug 2026, 10:30 AM",
+          "description": "Out with delivery associate"
+        },
+        {
+          "status": "Delivered",
+          "date": "29 Aug 2026, 03:45 PM",
+          "done": true,
+          "completed": true,
+          "stage": "Delivered",
+          "time": "29 Aug 2026, 03:45 PM",
+          "description": "Delivered & signed by recipient"
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Rahul Patel",
+      "email": "rahul.patel@example.com",
+      "phone": "+91 98765 12345",
+      "role": "Customer",
+      "status": "Active",
+      "ordersCount": 3,
+      "totalSpent": 42997,
+      "joinedDate": "10 Feb 2026"
+    },
+    {
+      "id": 2,
+      "name": "Priya Shah",
+      "email": "priya.shah@example.com",
+      "phone": "+91 97234 56789",
+      "role": "Customer",
+      "status": "Active",
+      "ordersCount": 2,
+      "totalSpent": 13998,
+      "joinedDate": "18 Mar 2026"
+    },
+    {
+      "id": 3,
+      "name": "Amit Mehta",
+      "email": "amit.mehta@example.com",
+      "phone": "+91 96321 45678",
+      "role": "Customer",
+      "status": "Active",
+      "ordersCount": 1,
+      "totalSpent": 32999,
+      "joinedDate": "05 Apr 2026"
+    },
+    {
+      "id": 4,
+      "name": "Vikram Desai",
+      "email": "vikram@krishna.com",
+      "phone": "+91 99001 22334",
+      "role": "Supplier",
+      "status": "Active",
+      "ordersCount": 0,
+      "totalSpent": 0,
+      "joinedDate": "15 Jan 2026"
+    },
+    {
+      "id": 5,
+      "name": "Neha Trivedi",
+      "email": "neha.trivedi@example.com",
+      "phone": "+91 95432 10987",
+      "role": "Customer",
+      "status": "Blocked",
+      "ordersCount": 0,
+      "totalSpent": 0,
+      "joinedDate": "12 May 2026"
+    }
+  ],
+  "subcategories": [
+    {
+      "id": 1,
+      "name": "Automatic Watches",
+      "category": "Watches",
+      "code": "WAT-AUTO",
+      "itemCount": 12
+    },
+    {
+      "id": 2,
+      "name": "Chronograph",
+      "category": "Watches",
+      "code": "WAT-CHRONO",
+      "itemCount": 8
+    },
+    {
+      "id": 3,
+      "name": "Luxury Smartwatches",
+      "category": "Watches",
+      "code": "WAT-SMART",
+      "itemCount": 5
+    },
+    {
+      "id": 4,
+      "name": "Leather Wallets",
+      "category": "Bags & Wallets",
+      "code": "BAG-WLT",
+      "itemCount": 14
+    },
+    {
+      "id": 5,
+      "name": "Crossbody & Backpacks",
+      "category": "Bags & Wallets",
+      "code": "BAG-CRB",
+      "itemCount": 9
+    },
+    {
+      "id": 6,
+      "name": "Sneakers & Casuals",
+      "category": "Shoes",
+      "code": "SH-SNK",
+      "itemCount": 11
+    },
+    {
+      "id": 7,
+      "name": "Formal Oxfords",
+      "category": "Shoes",
+      "code": "SH-OXF",
+      "itemCount": 7
+    },
+    {
+      "id": 8,
+      "name": "Flagship Smartphones",
+      "category": "Mobiles",
+      "code": "MOB-FLG",
+      "itemCount": 6
+    },
+    {
+      "id": 9,
+      "name": "Designer Shirts",
+      "category": "Clothes & Fashion",
+      "code": "CLT-SHRT",
+      "itemCount": 15
+    },
+    {
+      "id": 10,
+      "name": "Denim & Trousers",
+      "category": "Clothes & Fashion",
+      "code": "CLT-DNM",
+      "itemCount": 10
+    },
+    {
+      "id": 11,
+      "name": "Gaming Laptops",
+      "category": "Laptops",
+      "code": "LAP-GAM",
+      "itemCount": 4
+    },
+    {
+      "id": 12,
+      "name": "Wireless Earbuds & Headphones",
+      "category": "Electronics",
+      "code": "ELE-AUD",
+      "itemCount": 8
+    }
+  ],
+  "variants": [
+    {
+      "id": 1,
+      "productName": "Rolex Submariner Date 41mm",
+      "sku": "KA-WAT-41-BLK",
+      "attributeType": "Dial Color",
+      "value": "Onyx Black",
+      "priceModifier": 0,
+      "stock": 8,
+      "status": "In Stock"
+    },
+    {
+      "id": 2,
+      "productName": "Rolex Submariner Date 41mm",
+      "sku": "KA-WAT-41-GRN",
+      "attributeType": "Dial Color",
+      "value": "Kermit Green",
+      "priceModifier": 25000,
+      "stock": 3,
+      "status": "Low Stock"
+    },
+    {
+      "id": 3,
+      "productName": "Rolex Submariner Date 41mm",
+      "sku": "KA-WAT-41-BLU",
+      "attributeType": "Dial Color",
+      "value": "Royal Blue",
+      "priceModifier": 15000,
+      "stock": 5,
+      "status": "In Stock"
+    },
+    {
+      "id": 4,
+      "productName": "Titan Grandmaster Automatic",
+      "sku": "KA-WAT-TIT-SLV",
+      "attributeType": "Strap Material",
+      "value": "Stainless Mesh",
+      "priceModifier": 0,
+      "stock": 12,
+      "status": "In Stock"
+    },
+    {
+      "id": 5,
+      "productName": "Titan Grandmaster Automatic",
+      "sku": "KA-WAT-TIT-LEA",
+      "attributeType": "Strap Material",
+      "value": "Italian Alligator Leather",
+      "priceModifier": 3500,
+      "stock": 7,
+      "status": "In Stock"
+    },
+    {
+      "id": 6,
+      "productName": "Nike Air Jordan 1 Retro High",
+      "sku": "KA-SH-AJ-09",
+      "attributeType": "Shoe Size",
+      "value": "UK 9 / US 10",
+      "priceModifier": 0,
+      "stock": 14,
+      "status": "In Stock"
+    },
+    {
+      "id": 7,
+      "productName": "Nike Air Jordan 1 Retro High",
+      "sku": "KA-SH-AJ-10",
+      "attributeType": "Shoe Size",
+      "value": "UK 10 / US 11",
+      "priceModifier": 0,
+      "stock": 2,
+      "status": "Low Stock"
+    },
+    {
+      "id": 8,
+      "productName": "Apple iPhone 16 Pro Max",
+      "sku": "KA-MOB-IP16-256",
+      "attributeType": "Storage",
+      "value": "256 GB - Desert Titanium",
+      "priceModifier": 0,
+      "stock": 9,
+      "status": "In Stock"
+    },
+    {
+      "id": 9,
+      "productName": "Apple iPhone 16 Pro Max",
+      "sku": "KA-MOB-IP16-512",
+      "attributeType": "Storage",
+      "value": "512 GB - Natural Titanium",
+      "priceModifier": 20000,
+      "stock": 4,
+      "status": "In Stock"
+    }
+  ]
+}
