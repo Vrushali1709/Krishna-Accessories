@@ -318,7 +318,7 @@ export function getOrderById(id) {
   if (!id) return null;
   const orders = getOrders();
   const normalizedId = id.toString().trim().toUpperCase();
-  return orders.find(o => o.id.toUpperCase() === normalizedId) || null;
+  return orders.find(o => o?.id != null && String(o.id).trim().toUpperCase() === normalizedId) || null;
 }
 
 export function createOrder(orderData) {

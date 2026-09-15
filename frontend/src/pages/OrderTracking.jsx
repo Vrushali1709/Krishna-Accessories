@@ -146,7 +146,7 @@ export default function OrderTracking() {
                       ? 'bg-rose-50 border-rose-200 text-rose-800'
                       : activeOrder.status === 'Refunded'
                         ? 'bg-emerald-100 border-emerald-300 text-emerald-900 font-bold'
-                        : activeOrder.status.includes('Return')
+                        : String(activeOrder.status || '').includes('Return')
                           ? 'bg-purple-50 border-purple-200 text-purple-800'
                           : 'bg-blue-50 border-blue-200 text-blue-800'
                     }`}>
