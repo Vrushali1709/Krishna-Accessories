@@ -1,6 +1,6 @@
 // src/pages/Home.jsx
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   siAdidas,
   siApple,
@@ -17,16 +17,17 @@ import {
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
+import EditorialSpotlightSection from '../components/EditorialSpotlightSection';
 import ProductsByPriceSection from '../components/ProductsByPriceSection';
+import NewArrivalsSection from '../components/NewArrivalsSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
-import { getProducts, getCategories } from '../utils/productStore';
+import { getProducts, getCategories, isInWishlist, toggleWishlist } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import {
@@ -34,7 +35,10 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   TagIcon,
-  CheckIcon
+  CheckIcon,
+  HeartIcon,
+  BagIcon,
+  StarIcon
 } from '../components/Icons';
 
 // ============================================================
@@ -358,11 +362,21 @@ const brandRow2 = [
   }
 ];
 
+const BEST_SELLER_RANKS = [
+  { label: '#01 BESTSELLER', tagColor: 'bg-amber-400 text-black font-black', isTop: true },
+  { label: '#02 TOP CHOICE', tagColor: 'bg-neutral-800 text-amber-300 border border-amber-400/30 font-bold', isTop: false },
+  { label: '#03 CLIENT FAVORITE', tagColor: 'bg-neutral-800 text-amber-300 border border-amber-400/30 font-bold', isTop: false },
+  { label: '#04 HERITAGE ICON', tagColor: 'bg-neutral-800 text-amber-300 border border-amber-400/30 font-bold', isTop: false }
+];
+
 export default function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [products, setProducts] = useState(() => getProducts());
   const [toastMessage, setToastMessage] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [wishlistMap, setWishlistMap] = useState({});
+  const [addedMap, setAddedMap] = useState({});
 
   // Category List with dynamically synced categories
   const [categoryList, setCategoryList] = useState(() => {
@@ -412,6 +426,22 @@ export default function Home() {
     };
   }, []);
 
+  // Wishlist sync
+  const syncWishlist = useCallback(() => {
+    const map = {};
+    products.forEach((p) => {
+      map[p.id] = isInWishlist(p.id);
+    });
+    setWishlistMap(map);
+  }, [products]);
+
+  useEffect(() => {
+    syncWishlist();
+    const handleWishlistChange = () => syncWishlist();
+    window.addEventListener('wishlistUpdated', handleWishlistChange);
+    return () => window.removeEventListener('wishlistUpdated', handleWishlistChange);
+  }, [syncWishlist]);
+
   // Top Picks For You (Best Sellers) - Sorted by rating and popularity
   const bestSellers = useMemo(() => {
     const sorted = [...products].sort((a, b) => {
@@ -422,27 +452,49 @@ export default function Home() {
     return sorted.slice(0, 4);
   }, [products]);
 
-  // Check Out What's New (New Arrivals) - Fresh novelties from catalog
-  const newArrivals = useMemo(() => {
-    const bestSellerIds = new Set(bestSellers.map((p) => p.id));
-    const sortedNew = [...products]
-      .filter((p) => !bestSellerIds.has(p.id))
-      .sort((a, b) => (b.id || 0) - (a.id || 0));
-
-    if (sortedNew.length >= 4) {
-      return sortedNew.slice(0, 4);
-    }
-    return [...products].slice(0, 4);
-  }, [products, bestSellers]);
-
   const getProductCountForCategory = (catName) => {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
   };
 
+  const requireLogin = (action = 'continue') => {
+    if (!getCurrentUser()) {
+      const message = action === 'bag'
+        ? 'Please sign in to add items to your shopping bag.'
+        : action === 'wishlist'
+          ? 'Please sign in to save items to your wishlist.'
+          : 'Please sign in to complete your purchase.';
+
+      navigate('/login', {
+        state: {
+          from: location.pathname + (location.search || ''),
+          message,
+          requiredRole: 'customer'
+        }
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleWishlistToggle = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!requireLogin('wishlist')) return;
+
+    const active = toggleWishlist(product);
+    setWishlistMap((prev) => ({ ...prev, [product.id]: active }));
+    setToastMessage(active ? `♥ Added "${product.name}" to wishlist` : `Removed "${product.name}" from wishlist`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
   const handleAddToCart = (product) => {
     addToCart(product, 1, product.colors?.[0] || '', product.variants?.[0] || '');
+    setAddedMap((prev) => ({ ...prev, [product.id]: true }));
     setToastMessage(`✓ Added "${product.name}" to your bag`);
-    setTimeout(() => setToastMessage(''), 3500);
+    setTimeout(() => {
+      setAddedMap((prev) => ({ ...prev, [product.id]: false }));
+      setToastMessage('');
+    }, 2500);
   };
 
   const handleCopyCode = (code, e) => {
@@ -578,7 +630,7 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (FULL WIDTH)
+          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON
       ========================================================= */}
       <Reveal direction="up" delay={50}>
         <div className="w-full relative bg-[#080B11] text-white border-y border-[#C5A880]/35 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
@@ -638,12 +690,12 @@ export default function Home() {
       </Reveal>
 
       {/* =========================================================
-          3. SERVICE & BENEFIT BUTTONS (FREE SHIPPING, EASY RETURNS, SECURE PAYMENT, CONCIERGE)
+          3. SERVICE & BENEFIT DISCOVERY STRIP
       ========================================================= */}
       <HomeDiscoveryStrip />
 
       {/* =========================================================
-          4. SHOP BY CATEGORY (ALL CATEGORIES & CURATED CAROUSEL)
+          4. SHOP BY CATEGORY (ARCHITECTURAL PORTRAIT TILES)
       ========================================================= */}
       <ShopByCategorySection
         categories={categoryList}
@@ -651,7 +703,7 @@ export default function Home() {
       />
 
       {/* =========================================================
-          4. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
+          5. FEATURED / TRENDING CATALOG (ATELIER GRID)
       ========================================================= */}
       <FeaturedTrendingSection
         products={products}
@@ -659,55 +711,204 @@ export default function Home() {
       />
 
       {/* =========================================================
-          5. TOP PICKS FOR YOU — BEST SELLERS
+          6. EDITORIAL SPOTLIGHT (MAGAZINE SIGNATURE DUOS)
       ========================================================= */}
-      <section className="bg-white pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <EditorialSpotlightSection />
+
+      {/* =========================================================
+          7. TOP PICKS / BEST SELLERS (OBSIDIAN & GOLD PRESTIGE SHOWCASE)
+      ========================================================= */}
+      <section className="bg-[#090C15] text-white py-14 sm:py-20 border-t border-b border-neutral-800 relative overflow-hidden">
+        {/* Ambient Gold & Sapphire Radial Glows */}
+        <div className="pointer-events-none absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 right-1/4 h-96 w-96 rounded-full bg-indigo-500/10 blur-3xl" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <Reveal direction="up" delay={50}>
-            <div className="text-center mb-7 sm:mb-9">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-                TOP PICKS FOR YOU
-              </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
-                  Best Sellers
-                </h2>
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+            <div className="text-center mb-10 sm:mb-12">
+              <div className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-400/30 px-3.5 py-1 mb-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.28em] text-amber-300">
+                  PRESTIGE ATELIER • TOP PICKS
+                </span>
               </div>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Client favorites across timepieces, designer sunglasses, and premium audio.
+
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+                Best Sellers &amp; Client Icons
+              </h2>
+              <p className="mt-2 text-xs sm:text-sm text-neutral-400 max-w-md mx-auto leading-relaxed">
+                The most coveted timepieces, handcrafted leather goods, and signature electronics rated 4.9+ by discerning collectors.
               </p>
             </div>
           </Reveal>
 
-          {/* 4 Cards Grid */}
+          {/* 4 Cards Prestige Grid */}
           {bestSellers.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {bestSellers.map((product, idx) => (
-                <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                    showRating={true}
-                  />
-                </Reveal>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-7">
+              {bestSellers.map((product, idx) => {
+                const rank = BEST_SELLER_RANKS[idx] || BEST_SELLER_RANKS[0];
+                const isWish = Boolean(wishlistMap[product.id]);
+                const isAdded = Boolean(addedMap[product.id]);
+                const discount = product.discount || (
+                  product.oldPrice && product.oldPrice > product.price
+                    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+                    : 0
+                );
+
+                return (
+                  <Reveal key={`prestige-bestseller-${product.id}`} direction="up" delay={idx * 85} duration={650}>
+                    <div className="group relative flex flex-col justify-between h-full rounded-[24px] sm:rounded-[28px] border border-neutral-800/90 bg-[#121622] p-3 sm:p-4 shadow-[0_10px_35px_rgba(0,0,0,0.3)] transition-all duration-400 hover:border-amber-400/80 hover:shadow-[0_20px_50px_rgba(197,168,128,0.18)] hover:-translate-y-2">
+                      
+                      {/* Image Canvas */}
+                      <div className="relative aspect-square w-full overflow-hidden rounded-[18px] sm:rounded-[20px] bg-gradient-to-b from-[#181E2E] to-[#0E121B] mb-3.5">
+                        <Link
+                          to={`/product/${product.id}`}
+                          className="flex h-full w-full items-center justify-center overflow-hidden"
+                        >
+                          <img
+                            src={product.image || product.images?.[0]}
+                            alt={product.name}
+                            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
+                            loading="lazy"
+                          />
+                        </Link>
+
+                        {/* Top Rank Badge */}
+                        <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
+                          <span className={`rounded-lg px-2 sm:px-2.5 py-0.5 sm:py-1 text-[8.5px] sm:text-[9.5px] uppercase tracking-wider shadow-md backdrop-blur-md ${rank.tagColor}`}>
+                            {rank.isTop ? '👑 ' : ''}{rank.label}
+                          </span>
+
+                          {/* Wishlist Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => handleWishlistToggle(e, product)}
+                            aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
+                            className={`pointer-events-auto flex h-7.5 w-7.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer ${
+                              isWish
+                                ? 'bg-rose-950/90 text-rose-400 border border-rose-500/40'
+                                : 'bg-black/60 text-white/80 hover:text-rose-400 border border-white/10'
+                            }`}
+                          >
+                            <HeartIcon className="w-3.5 h-3.5" filled={isWish} />
+                          </button>
+                        </div>
+
+                        {/* Category Floating Tag */}
+                        <div className="absolute bottom-2.5 left-2.5 pointer-events-none">
+                          <span className="rounded-full bg-black/75 backdrop-blur-md px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-bold text-amber-200/90 uppercase tracking-wider border border-white/10">
+                            {product.category}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Product Content Details */}
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div>
+                          {/* Brand */}
+                          <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#D5C2A5] mb-1">
+                            {product.brand || 'ATELIER'}
+                          </p>
+
+                          {/* Title */}
+                          <Link
+                            to={`/product/${product.id}`}
+                            className="block font-bold text-white text-[13.5px] sm:text-[15.5px] leading-snug line-clamp-1 transition-colors hover:text-amber-300"
+                            title={product.name}
+                          >
+                            {product.name}
+                          </Link>
+
+                          {/* Rating Row */}
+                          <div className="flex items-center gap-1.5 mt-1.5">
+                            <span className="text-amber-400 text-xs">★ ★ ★ ★ ★</span>
+                            <span className="font-bold text-neutral-300 text-[11px] sm:text-xs tabular-nums">
+                              {product.rating ? Number(product.rating).toFixed(1) : '4.9'}
+                            </span>
+                          </div>
+
+                          {/* Price Row */}
+                          <div className="flex flex-wrap items-baseline gap-2 mt-2 pt-2 border-t border-white/10">
+                            <span className="text-base sm:text-xl font-black text-white tabular-nums">
+                              ₹{Number(product.price).toLocaleString('en-IN')}
+                            </span>
+                            {product.oldPrice && product.oldPrice > product.price && (
+                              <span className="text-xs sm:text-sm text-neutral-500 line-through tabular-nums">
+                                ₹{Number(product.oldPrice).toLocaleString('en-IN')}
+                              </span>
+                            )}
+                            {discount > 0 && (
+                              <span className="ml-auto text-[9px] font-black text-amber-300 bg-amber-400/15 border border-amber-400/30 px-1.5 py-0.2 rounded">
+                                -{discount}%
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="mt-3.5 pt-2.5 border-t border-white/10 flex flex-col xs:flex-row items-center gap-1.5 sm:gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleAddToCart(product)}
+                            className={`w-full flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-md flex items-center justify-center gap-1.5 cursor-pointer ${
+                              isAdded
+                                ? 'bg-emerald-500 text-black'
+                                : 'bg-white text-black hover:bg-[#E5D7C5]'
+                            }`}
+                          >
+                            {isAdded ? (
+                              <>
+                                <CheckIcon className="w-3.5 h-3.5" />
+                                <span>Added</span>
+                              </>
+                            ) : (
+                              <>
+                                <BagIcon className="w-3.5 h-3.5 text-black" />
+                                <span>Add to Bag</span>
+                              </>
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleBuyNow(product)}
+                            className="w-full xs:w-auto px-3 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider border border-amber-400/40 bg-amber-400/10 text-amber-300 hover:bg-amber-400 hover:text-black transition-all active:scale-95 cursor-pointer shrink-0"
+                          >
+                            Buy
+                          </button>
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </Reveal>
+                );
+              })}
             </div>
           ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No products found.</p>
+            <div className="text-center py-12 rounded-2xl bg-neutral-900 border border-neutral-800">
+              <p className="text-sm font-semibold text-neutral-400">No products found.</p>
             </div>
           )}
+
+          {/* Bottom Explore Best Sellers CTA */}
+          <div className="mt-8 text-center">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-900 hover:border-amber-400 hover:bg-black px-7 py-3 text-xs font-bold uppercase tracking-wider text-white transition-all duration-300 shadow-md group"
+            >
+              <span>Explore Complete Hall of Icons</span>
+              <ArrowRightIcon className="w-3.5 h-3.5 text-amber-300 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
 
         </div>
       </section>
 
       {/* =========================================================
-          6. PRODUCTS BY PRICE (CURATED BUDGET TIERS)
+          8. PRODUCTS BY PRICE (CURATED BUDGET SALONS - LANDSCAPE CARDS)
       ========================================================= */}
       <ProductsByPriceSection
         products={products}
@@ -716,60 +917,24 @@ export default function Home() {
       />
 
       {/* =========================================================
-          7. CHECK OUT WHAT'S NEW — NEW ARRIVALS
+          9. THE NEW ARRIVALS (AVANT-GARDE BOUTIQUE CAROUSEL)
       ========================================================= */}
-      <section className="bg-[#FAFAFB] pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <Reveal direction="up" delay={50}>
-            <div className="text-center mb-7 sm:mb-9">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-                CHECK OUT WHAT&apos;S NEW
-              </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
-                  New Arrivals
-                </h2>
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Fresh seasonal releases, novelties, and smart devices straight to catalog.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* 4 Cards Grid */}
-          {newArrivals.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {newArrivals.map((product, idx) => (
-                <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                    showRating={true}
-                  />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No new arrivals found.</p>
-            </div>
-          )}
-
-        </div>
-      </section>
+      <NewArrivalsSection
+        products={products}
+        onToast={setToastMessage}
+        onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNow}
+      />
 
       {/* =========================================================
-          7. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
+          10. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
       ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-4 sm:pb-6 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
-
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+              HERITAGE HOUSES
+            </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
               Explore by Brand
             </h2>
@@ -836,17 +1001,17 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          11. WHY CHOOSE US (THE DIFFERENCE)
+          11. WHY CHOOSE US (THE PILLARS OF PRESTIGE)
       ========================================================= */}
       <WhyChooseUsSection />
 
       {/* =========================================================
-          12. CUSTOMER REVIEWS (CAROUSEL)
+          12. CUSTOMER REVIEWS & TESTIMONIALS (COLLECTOR'S VOICE)
       ========================================================= */}
       <CustomerReviewsSection />
 
       {/* =========================================================
-          13. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
+          13. INSTAGRAM LIFESTYLE & VIP PRIVÉ CLUB NEWSLETTER
       ========================================================= */}
       <InstagramClubSection />
 
