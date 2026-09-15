@@ -30,20 +30,40 @@ export const defaultSubcategories = [
   { id: 12, name: "Wireless Earbuds & Headphones", category: "Electronics", code: "ELE-AUD", itemCount: 8 }
 ];
 
-export function getSubcategories() {
+// In-memory reactive state
+let subcategoriesMemory = [...defaultSubcategories];
+let variantsMemory = [...defaultVariants];
+let mediaMemory = [...defaultMediaAssets];
+let promotionsMemory = [...defaultPromotions];
+let rolesMemory = [...defaultRoles];
+let permissionsMemory = { ...defaultPermissionsMatrix };
+let shippingMemory = [...defaultShippingCarriers];
+let systemConfigMemory = { ...defaultSystemConfig };
+
+// Immediate cleanup of legacy database keys from localStorage
+if (typeof window !== 'undefined' && window.localStorage) {
   try {
-    const data = localStorage.getItem(SUBCATEGORIES_KEY);
-    return data ? JSON.parse(data) : defaultSubcategories;
-  } catch {
-    return defaultSubcategories;
+    localStorage.removeItem(SUBCATEGORIES_KEY);
+    localStorage.removeItem(VARIANTS_KEY);
+    localStorage.removeItem(MEDIA_KEY);
+    localStorage.removeItem(PROMOTIONS_KEY);
+    localStorage.removeItem(ROLES_KEY);
+    localStorage.removeItem(PERMISSIONS_KEY);
+    localStorage.removeItem(SHIPPING_KEY);
+    localStorage.removeItem(SYSTEM_CONFIG_KEY);
+  } catch (e) {
+    console.warn('[LocalStorage] Cleanup warning:', e);
   }
 }
 
+export function getSubcategories() {
+  return subcategoriesMemory;
+}
+
 export function saveSubcategory(subcat) {
-  const current = getSubcategories();
   let updated;
   if (subcat.id) {
-    updated = current.map(s => s.id === subcat.id ? { ...s, ...subcat } : s);
+    updated = subcategoriesMemory.map(s => s.id === subcat.id ? { ...s, ...subcat } : s);
   } else {
     const newSubcat = {
       id: subcat.id || Date.now(),
@@ -52,21 +72,19 @@ export function saveSubcategory(subcat) {
       code: subcat.code || `SUB-${Date.now().toString().slice(-4)}`,
       itemCount: 0
     };
-    updated = [newSubcat, ...current];
+    updated = [newSubcat, ...subcategoriesMemory];
   }
-  localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(updated));
+  subcategoriesMemory = updated;
   window.dispatchEvent(new Event('subcategoriesUpdated'));
   subcategoriesApi.save(subcat).catch(err => console.warn('[API] Failed to save subcategory:', err));
-  return updated;
+  return subcategoriesMemory;
 }
 
 export function deleteSubcategory(id) {
-  const current = getSubcategories();
-  const updated = current.filter(s => s.id !== Number(id));
-  localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(updated));
+  subcategoriesMemory = subcategoriesMemory.filter(s => s.id !== Number(id));
   window.dispatchEvent(new Event('subcategoriesUpdated'));
   subcategoriesApi.delete(id).catch(err => console.warn('[API] Failed to delete subcategory:', err));
-  return updated;
+  return subcategoriesMemory;
 }
 
 // -------------------------------------------------------------
@@ -85,19 +103,13 @@ export const defaultVariants = [
 ];
 
 export function getVariants() {
-  try {
-    const data = localStorage.getItem(VARIANTS_KEY);
-    return data ? JSON.parse(data) : defaultVariants;
-  } catch {
-    return defaultVariants;
-  }
+  return variantsMemory;
 }
 
 export function saveVariant(variant) {
-  const current = getVariants();
   let updated;
   if (variant.id) {
-    updated = current.map(v => v.id === variant.id ? { ...v, ...variant } : v);
+    updated = variantsMemory.map(v => v.id === variant.id ? { ...v, ...variant } : v);
   } else {
     const newVariant = {
       id: variant.id || Date.now(),
@@ -109,21 +121,19 @@ export function saveVariant(variant) {
       stock: Number(variant.stock) || 0,
       status: Number(variant.stock) > 3 ? "In Stock" : Number(variant.stock) > 0 ? "Low Stock" : "Out of Stock"
     };
-    updated = [newVariant, ...current];
+    updated = [newVariant, ...variantsMemory];
   }
-  localStorage.setItem(VARIANTS_KEY, JSON.stringify(updated));
+  variantsMemory = updated;
   window.dispatchEvent(new Event('variantsUpdated'));
   variantsApi.save(variant).catch(err => console.warn('[API] Failed to save variant:', err));
-  return updated;
+  return variantsMemory;
 }
 
 export function deleteVariant(id) {
-  const current = getVariants();
-  const updated = current.filter(v => v.id !== Number(id));
-  localStorage.setItem(VARIANTS_KEY, JSON.stringify(updated));
+  variantsMemory = variantsMemory.filter(v => v.id !== Number(id));
   window.dispatchEvent(new Event('variantsUpdated'));
   variantsApi.delete(id).catch(err => console.warn('[API] Failed to delete variant:', err));
-  return updated;
+  return variantsMemory;
 }
 
 // -------------------------------------------------------------
@@ -139,16 +149,10 @@ export const defaultMediaAssets = [
 ];
 
 export function getMediaAssets() {
-  try {
-    const data = localStorage.getItem(MEDIA_KEY);
-    return data ? JSON.parse(data) : defaultMediaAssets;
-  } catch {
-    return defaultMediaAssets;
-  }
+  return mediaMemory;
 }
 
 export function addMediaAsset(asset) {
-  const current = getMediaAssets();
   const newAsset = {
     id: asset.id || Date.now(),
     title: asset.title || "Catalog Asset",
@@ -159,20 +163,17 @@ export function addMediaAsset(asset) {
     date: "Just now",
     usage: "Direct Media Link"
   };
-  const updated = [newAsset, ...current];
-  localStorage.setItem(MEDIA_KEY, JSON.stringify(updated));
+  mediaMemory = [newAsset, ...mediaMemory];
   window.dispatchEvent(new Event('mediaUpdated'));
   mediaApi.save(newAsset).catch(err => console.warn('[API] Failed to save media asset:', err));
-  return updated;
+  return mediaMemory;
 }
 
 export function deleteMediaAsset(id) {
-  const current = getMediaAssets();
-  const updated = current.filter(m => m.id !== Number(id));
-  localStorage.setItem(MEDIA_KEY, JSON.stringify(updated));
+  mediaMemory = mediaMemory.filter(m => m.id !== Number(id));
   window.dispatchEvent(new Event('mediaUpdated'));
   mediaApi.delete(id).catch(err => console.warn('[API] Failed to delete media asset:', err));
-  return updated;
+  return mediaMemory;
 }
 
 // -------------------------------------------------------------
@@ -186,19 +187,13 @@ export const defaultPromotions = [
 ];
 
 export function getPromotions() {
-  try {
-    const data = localStorage.getItem(PROMOTIONS_KEY);
-    return data ? JSON.parse(data) : defaultPromotions;
-  } catch {
-    return defaultPromotions;
-  }
+  return promotionsMemory;
 }
 
 export function savePromotion(promo) {
-  const current = getPromotions();
   let updated;
   if (promo.id) {
-    updated = current.map(p => p.id === promo.id ? { ...p, ...promo } : p);
+    updated = promotionsMemory.map(p => p.id === promo.id ? { ...p, ...promo } : p);
   } else {
     const newPromo = {
       id: promo.id || Date.now(),
@@ -213,21 +208,19 @@ export function savePromotion(promo) {
       impressions: 0,
       clicks: 0
     };
-    updated = [newPromo, ...current];
+    updated = [newPromo, ...promotionsMemory];
   }
-  localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(updated));
+  promotionsMemory = updated;
   window.dispatchEvent(new Event('promotionsUpdated'));
   promotionsApi.save(promo).catch(err => console.warn('[API] Failed to save promotion:', err));
-  return updated;
+  return promotionsMemory;
 }
 
 export function deletePromotion(id) {
-  const current = getPromotions();
-  const updated = current.filter(p => p.id !== Number(id));
-  localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(updated));
+  promotionsMemory = promotionsMemory.filter(p => p.id !== Number(id));
   window.dispatchEvent(new Event('promotionsUpdated'));
   promotionsApi.delete(id).catch(err => console.warn('[API] Failed to delete promotion:', err));
-  return updated;
+  return promotionsMemory;
 }
 
 // -------------------------------------------------------------
@@ -250,19 +243,13 @@ export const defaultPermissionsMatrix = {
 };
 
 export function getRoles() {
-  try {
-    const data = localStorage.getItem(ROLES_KEY);
-    return data ? JSON.parse(data) : defaultRoles;
-  } catch {
-    return defaultRoles;
-  }
+  return rolesMemory;
 }
 
 export function saveRole(role) {
-  const current = getRoles();
   let updated;
   if (role.id) {
-    updated = current.map(r => r.id === role.id ? { ...r, ...role } : r);
+    updated = rolesMemory.map(r => r.id === role.id ? { ...r, ...role } : r);
   } else {
     const newRole = {
       id: role.id || Date.now(),
@@ -272,36 +259,30 @@ export function saveRole(role) {
       description: role.description || "Custom assigned role",
       color: "border-slate-500 text-slate-700 bg-slate-50"
     };
-    updated = [...current, newRole];
+    updated = [...rolesMemory, newRole];
   }
-  localStorage.setItem(ROLES_KEY, JSON.stringify(updated));
+  rolesMemory = updated;
   window.dispatchEvent(new Event('rolesUpdated'));
   rolesApi.save(role).catch(err => console.warn('[API] Failed to save role:', err));
-  return updated;
+  return rolesMemory;
 }
 
 export function getPermissionsMatrix() {
-  try {
-    const data = localStorage.getItem(PERMISSIONS_KEY);
-    return data ? JSON.parse(data) : defaultPermissionsMatrix;
-  } catch {
-    return defaultPermissionsMatrix;
-  }
+  return permissionsMemory;
 }
 
 export function updateRolePermission(roleSlug, moduleName, level) {
-  const matrix = getPermissionsMatrix();
   const updated = {
-    ...matrix,
+    ...permissionsMemory,
     [roleSlug]: {
-      ...(matrix[roleSlug] || {}),
+      ...(permissionsMemory[roleSlug] || {}),
       [moduleName]: level
     }
   };
-  localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(updated));
+  permissionsMemory = updated;
   window.dispatchEvent(new Event('permissionsUpdated'));
   rolesApi.updatePermissions(updated).catch(err => console.warn('[API] Failed to update permissions:', err));
-  return updated;
+  return permissionsMemory;
 }
 
 // -------------------------------------------------------------
@@ -315,24 +296,17 @@ export const defaultShippingCarriers = [
 ];
 
 export function getShippingCarriers() {
-  try {
-    const data = localStorage.getItem(SHIPPING_KEY);
-    return data ? JSON.parse(data) : defaultShippingCarriers;
-  } catch {
-    return defaultShippingCarriers;
-  }
+  return shippingMemory;
 }
 
 export function toggleCarrierStatus(id) {
-  const current = getShippingCarriers();
-  const updated = current.map(c => c.id === Number(id) ? { ...c, active: !c.active } : c);
-  localStorage.setItem(SHIPPING_KEY, JSON.stringify(updated));
+  shippingMemory = shippingMemory.map(c => c.id === Number(id) ? { ...c, active: !c.active } : c);
   window.dispatchEvent(new Event('shippingUpdated'));
-  const found = updated.find(c => c.id === Number(id));
+  const found = shippingMemory.find(c => c.id === Number(id));
   if (found) {
     shippingApi.update(id, found).catch(err => console.warn('[API] Failed to update shipping carrier:', err));
   }
-  return updated;
+  return shippingMemory;
 }
 
 // -------------------------------------------------------------
@@ -358,20 +332,14 @@ export const defaultSystemConfig = {
 };
 
 export function getSystemConfig() {
-  try {
-    const data = localStorage.getItem(SYSTEM_CONFIG_KEY);
-    return data ? JSON.parse(data) : defaultSystemConfig;
-  } catch {
-    return defaultSystemConfig;
-  }
+  return systemConfigMemory;
 }
 
 export function saveSystemConfig(cfg) {
-  const updated = { ...getSystemConfig(), ...cfg };
-  localStorage.setItem(SYSTEM_CONFIG_KEY, JSON.stringify(updated));
+  systemConfigMemory = { ...systemConfigMemory, ...cfg };
   window.dispatchEvent(new Event('systemConfigUpdated'));
-  systemConfigApi.save(updated).catch(err => console.warn('[API] Failed to save system config:', err));
-  return updated;
+  systemConfigApi.save(systemConfigMemory).catch(err => console.warn('[API] Failed to save system config:', err));
+  return systemConfigMemory;
 }
 
 // ================= BACKEND SYNC =================
@@ -388,36 +356,36 @@ export async function syncAdminDataFromBackend() {
       systemConfigApi.get().catch(() => null)
     ]);
 
-    if (Array.isArray(subcats)) {
-      localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(subcats));
+    if (Array.isArray(subcats) && subcats.length > 0) {
+      subcategoriesMemory = subcats;
       window.dispatchEvent(new Event('subcategoriesUpdated'));
     }
-    if (Array.isArray(variants)) {
-      localStorage.setItem(VARIANTS_KEY, JSON.stringify(variants));
+    if (Array.isArray(variants) && variants.length > 0) {
+      variantsMemory = variants;
       window.dispatchEvent(new Event('variantsUpdated'));
     }
-    if (Array.isArray(media)) {
-      localStorage.setItem(MEDIA_KEY, JSON.stringify(media));
+    if (Array.isArray(media) && media.length > 0) {
+      mediaMemory = media;
       window.dispatchEvent(new Event('mediaUpdated'));
     }
-    if (Array.isArray(promos)) {
-      localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(promos));
+    if (Array.isArray(promos) && promos.length > 0) {
+      promotionsMemory = promos;
       window.dispatchEvent(new Event('promotionsUpdated'));
     }
-    if (Array.isArray(roles)) {
-      localStorage.setItem(ROLES_KEY, JSON.stringify(roles));
+    if (Array.isArray(roles) && roles.length > 0) {
+      rolesMemory = roles;
       window.dispatchEvent(new Event('rolesUpdated'));
     }
-    if (perms && typeof perms === 'object') {
-      localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(perms));
+    if (perms && typeof perms === 'object' && Object.keys(perms).length > 0) {
+      permissionsMemory = perms;
       window.dispatchEvent(new Event('permissionsUpdated'));
     }
-    if (Array.isArray(carriers)) {
-      localStorage.setItem(SHIPPING_KEY, JSON.stringify(carriers));
+    if (Array.isArray(carriers) && carriers.length > 0) {
+      shippingMemory = carriers;
       window.dispatchEvent(new Event('shippingUpdated'));
     }
-    if (config && typeof config === 'object') {
-      localStorage.setItem(SYSTEM_CONFIG_KEY, JSON.stringify(config));
+    if (config && typeof config === 'object' && Object.keys(config).length > 0) {
+      systemConfigMemory = config;
       window.dispatchEvent(new Event('systemConfigUpdated'));
     }
 
@@ -433,41 +401,23 @@ if (typeof window !== 'undefined') {
   syncAdminDataFromBackend();
 }
 
-
 // Database Export / Import Backup JSON
 export function exportFullDatabaseBackup() {
   const backup = {
     exportTimestamp: new Date().toISOString(),
     version: "2.4.0",
     appName: "Krishna Accessories",
-    storageKeys: {}
-  };
-
-  const keysToBackup = [
-    'krishna_admin_products',
-    'krishna_categories',
-    'krishna_brands',
-    'krishna_platform_orders',
-    'krishna_platform_suppliers',
-    'krishna_platform_users',
-    'krishna_platform_notifications',
-    'krishna_subcategories',
-    'krishna_product_variants',
-    'krishna_media_assets',
-    'krishna_promotions',
-    'krishna_roles',
-    'krishna_permissions_matrix',
-    'krishna_shipping_carriers',
-    'krishna_system_config'
-  ];
-
-  keysToBackup.forEach(k => {
-    try {
-      backup.storageKeys[k] = JSON.parse(localStorage.getItem(k) || 'null');
-    } catch {
-      backup.storageKeys[k] = localStorage.getItem(k);
+    state: {
+      subcategories: subcategoriesMemory,
+      variants: variantsMemory,
+      media: mediaMemory,
+      promotions: promotionsMemory,
+      roles: rolesMemory,
+      permissions: permissionsMemory,
+      shipping: shippingMemory,
+      systemConfig: systemConfigMemory
     }
-  });
+  };
 
   return JSON.stringify(backup, null, 2);
 }
@@ -475,13 +425,16 @@ export function exportFullDatabaseBackup() {
 export function restoreDatabaseBackup(jsonString) {
   try {
     const data = JSON.parse(jsonString);
-    if (!data.storageKeys) throw new Error("Invalid backup format");
-
-    Object.entries(data.storageKeys).forEach(([k, val]) => {
-      if (val !== null && val !== undefined) {
-        localStorage.setItem(k, typeof val === 'object' ? JSON.stringify(val) : String(val));
-      }
-    });
+    if (data.state) {
+      if (data.state.subcategories) subcategoriesMemory = data.state.subcategories;
+      if (data.state.variants) variantsMemory = data.state.variants;
+      if (data.state.media) mediaMemory = data.state.media;
+      if (data.state.promotions) promotionsMemory = data.state.promotions;
+      if (data.state.roles) rolesMemory = data.state.roles;
+      if (data.state.permissions) permissionsMemory = data.state.permissions;
+      if (data.state.shipping) shippingMemory = data.state.shipping;
+      if (data.state.systemConfig) systemConfigMemory = data.state.systemConfig;
+    }
 
     window.dispatchEvent(new Event('productsUpdated'));
     window.dispatchEvent(new Event('categoriesUpdated'));
@@ -498,7 +451,7 @@ export function restoreDatabaseBackup(jsonString) {
     window.dispatchEvent(new Event('shippingUpdated'));
     window.dispatchEvent(new Event('systemConfigUpdated'));
 
-    return { success: true, message: "Database restored successfully!" };
+    return { success: true, message: "Database state restored successfully!" };
   } catch (err) {
     return { success: false, message: err.message || "Failed to restore backup" };
   }

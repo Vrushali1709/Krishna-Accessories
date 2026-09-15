@@ -298,31 +298,39 @@ const defaultNotifications = [
 
 const defaultAddresses = [];
 
+// In-memory reactive state
+let ordersMemory = [...defaultOrders];
+let suppliersMemory = [...defaultSuppliers];
+let usersMemory = [...defaultUsers];
+let notificationsMemory = [...defaultNotifications];
+let addressesMemory = [...defaultAddresses];
+
+// Immediate cleanup of legacy database keys from localStorage
+if (typeof window !== 'undefined' && window.localStorage) {
+  try {
+    localStorage.removeItem(ORDERS_KEY);
+    localStorage.removeItem(SUPPLIERS_KEY);
+    localStorage.removeItem(USERS_KEY);
+    localStorage.removeItem(NOTIFICATIONS_KEY);
+    localStorage.removeItem(ADDRESSES_KEY);
+  } catch (e) {
+    console.warn('[LocalStorage] Cleanup warning:', e);
+  }
+}
+
 // ================= ORDERS STORE =================
 
 export function getOrders() {
-  const data = localStorage.getItem(ORDERS_KEY);
-  if (!data) {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(defaultOrders));
-    return defaultOrders;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultOrders;
-  } catch {
-    return defaultOrders;
-  }
+  return ordersMemory;
 }
 
 export function getOrderById(id) {
   if (!id) return null;
-  const orders = getOrders();
   const normalizedId = id.toString().trim().toUpperCase();
-  return orders.find(o => o?.id != null && String(o.id).trim().toUpperCase() === normalizedId) || null;
+  return ordersMemory.find(o => o?.id != null && String(o.id).trim().toUpperCase() === normalizedId) || null;
 }
 
 export function createOrder(orderData) {
-  const orders = getOrders();
   const orderNumber = `KA-${Math.floor(10000 + Math.random() * 90000)}`;
   const now = new Date();
   const dateFormatted = now.toLocaleDateString('en-IN', {
@@ -371,24 +379,22 @@ export function createOrder(orderData) {
     ]
   };
 
-  const updatedOrders = [newOrder, ...orders];
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(updatedOrders));
+  ordersMemory = [newOrder, ...ordersMemory];
 
   // Update or add user to Platform Users Registry for Admin
   try {
-    const users = getUsers();
     const customerEmail = customerData.email.toLowerCase();
     const customerFullName = `${customerData.firstName} ${customerData.lastName}`.trim() || 'Client';
 
-    const existingUserIndex = users.findIndex(u => u.email?.toLowerCase() === customerEmail);
+    const existingUserIndex = usersMemory.findIndex(u => u.email?.toLowerCase() === customerEmail);
     if (existingUserIndex >= 0) {
-      users[existingUserIndex].ordersCount = (users[existingUserIndex].ordersCount || 0) + 1;
-      users[existingUserIndex].totalSpent = (users[existingUserIndex].totalSpent || 0) + newOrder.total;
-      if (customerData.phone && !users[existingUserIndex].phone) {
-        users[existingUserIndex].phone = customerData.phone;
+      usersMemory[existingUserIndex].ordersCount = (usersMemory[existingUserIndex].ordersCount || 0) + 1;
+      usersMemory[existingUserIndex].totalSpent = (usersMemory[existingUserIndex].totalSpent || 0) + newOrder.total;
+      if (customerData.phone && !usersMemory[existingUserIndex].phone) {
+        usersMemory[existingUserIndex].phone = customerData.phone;
       }
     } else if (customerEmail) {
-      users.unshift({
+      usersMemory = [{
         id: Date.now(),
         name: customerFullName,
         email: customerData.email,
@@ -398,9 +404,8 @@ export function createOrder(orderData) {
         ordersCount: 1,
         totalSpent: newOrder.total,
         joinedDate: dateFormatted
-      });
+      }, ...usersMemory];
     }
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
     window.dispatchEvent(new Event('usersUpdated'));
   } catch (err) {
     console.error("Failed to sync customer profile:", err);
@@ -422,8 +427,7 @@ export function createOrder(orderData) {
 }
 
 export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
-  const orders = getOrders();
-  const updated = orders.map(order => {
+  ordersMemory = ordersMemory.map(order => {
     if (order.id.toUpperCase() === orderId.toUpperCase()) {
       const now = new Date();
       const timeStr = `${now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}, ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
@@ -456,22 +460,19 @@ export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
     return order;
   });
 
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('ordersUpdated'));
 
   // Background Python API sync
   ordersApi.updateStatus(orderId, nextStatus).catch(err => console.warn('[API] Failed to update order status in backend:', err));
 
-  return updated;
+  return ordersMemory;
 }
 
-
 export function cancelOrder(orderId, reason = "Customer request", cancelledBy = "Customer") {
-  const orders = getOrders();
   const now = new Date();
   const dateFormatted = `${now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
 
-  const updated = orders.map(order => {
+  ordersMemory = ordersMemory.map(order => {
     if (order.id.toUpperCase() === orderId.toUpperCase()) {
       const isPaid = order.paymentStatus === 'Paid';
       return {
@@ -500,8 +501,6 @@ export function cancelOrder(orderId, reason = "Customer request", cancelledBy = 
     return order;
   });
 
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
-
   addNotification({
     title: `Order Cancelled: ${orderId}`,
     message: `Order ${orderId} has been successfully cancelled. ${reason ? `Reason: ${reason}` : ''}`,
@@ -509,15 +508,14 @@ export function cancelOrder(orderId, reason = "Customer request", cancelledBy = 
   });
 
   window.dispatchEvent(new Event('ordersUpdated'));
-  return updated;
+  return ordersMemory;
 }
 
 export function requestReturn(orderId, returnData = {}) {
-  const orders = getOrders();
   const now = new Date();
   const dateFormatted = `${now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
 
-  const updated = orders.map(order => {
+  ordersMemory = ordersMemory.map(order => {
     if (order.id.toUpperCase() === orderId.toUpperCase()) {
       return {
         ...order,
@@ -549,8 +547,6 @@ export function requestReturn(orderId, returnData = {}) {
     return order;
   });
 
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
-
   addNotification({
     title: `Return Requested: ${orderId}`,
     message: `Return request for order ${orderId} has been submitted and is under verification.`,
@@ -558,15 +554,14 @@ export function requestReturn(orderId, returnData = {}) {
   });
 
   window.dispatchEvent(new Event('ordersUpdated'));
-  return updated;
+  return ordersMemory;
 }
 
 export function processReturnStatus(orderId, newStatus, resolution = {}) {
-  const orders = getOrders();
   const now = new Date();
   const dateFormatted = `${now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
 
-  const updated = orders.map(order => {
+  ordersMemory = ordersMemory.map(order => {
     if (order.id.toUpperCase() === orderId.toUpperCase()) {
       const isRefunded = newStatus === 'Refunded';
       const refundAmount = resolution.refundAmount || order.total || 0;
@@ -607,8 +602,6 @@ export function processReturnStatus(orderId, newStatus, resolution = {}) {
     return order;
   });
 
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(updated));
-
   addNotification({
     title: `Return Update: ${orderId} (${newStatus})`,
     message: newStatus === 'Refunded'
@@ -618,13 +611,12 @@ export function processReturnStatus(orderId, newStatus, resolution = {}) {
   });
 
   window.dispatchEvent(new Event('ordersUpdated'));
-  return updated;
+  return ordersMemory;
 }
 
 export function getSupplierOrders(supplierName) {
-  const orders = getOrders();
-  if (!supplierName) return orders;
-  return orders.filter(o =>
+  if (!supplierName) return ordersMemory;
+  return ordersMemory.filter(o =>
     o.items && o.items.some(item => !item.supplier || item.supplier.toLowerCase() === supplierName.toLowerCase())
   );
 }
@@ -632,39 +624,24 @@ export function getSupplierOrders(supplierName) {
 // ================= SUPPLIERS STORE =================
 
 export function getSuppliers() {
-  const data = localStorage.getItem(SUPPLIERS_KEY);
-  if (!data) {
-    localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(defaultSuppliers));
-    return defaultSuppliers;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultSuppliers;
-  } catch {
-    return defaultSuppliers;
-  }
+  return suppliersMemory;
 }
 
 export function approveSupplier(id) {
-  const suppliers = getSuppliers();
-  const updated = suppliers.map(s => s.id === Number(id) ? { ...s, status: "Active" } : s);
-  localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(updated));
+  suppliersMemory = suppliersMemory.map(s => s.id === Number(id) ? { ...s, status: "Active" } : s);
   window.dispatchEvent(new Event('suppliersUpdated'));
   suppliersApi.update(id, { status: "Active" }).catch(err => console.warn('[API] Failed to approve supplier:', err));
-  return updated;
+  return suppliersMemory;
 }
 
 export function toggleSupplierStatus(id, newStatus) {
-  const suppliers = getSuppliers();
-  const updated = suppliers.map(s => s.id === Number(id) ? { ...s, status: newStatus } : s);
-  localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(updated));
+  suppliersMemory = suppliersMemory.map(s => s.id === Number(id) ? { ...s, status: newStatus } : s);
   window.dispatchEvent(new Event('suppliersUpdated'));
   suppliersApi.update(id, { status: newStatus }).catch(err => console.warn('[API] Failed to toggle supplier status:', err));
-  return updated;
+  return suppliersMemory;
 }
 
 export function addSupplier(supplier) {
-  const suppliers = getSuppliers();
   const newSupplier = {
     ...supplier,
     id: supplier.id || Date.now(),
@@ -674,51 +651,32 @@ export function addSupplier(supplier) {
     productsCount: 0,
     totalEarnings: 0
   };
-  const updated = [newSupplier, ...suppliers];
-  localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(updated));
+  suppliersMemory = [newSupplier, ...suppliersMemory];
   window.dispatchEvent(new Event('suppliersUpdated'));
   suppliersApi.create(newSupplier).catch(err => console.warn('[API] Failed to add supplier:', err));
-  return updated;
+  return suppliersMemory;
 }
 
 // ================= USERS STORE =================
 
 export function getUsers() {
-  const data = localStorage.getItem(USERS_KEY);
-  if (!data) {
-    localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
-    return defaultUsers;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultUsers;
-  } catch {
-    return defaultUsers;
-  }
+  return usersMemory;
 }
 
 export function toggleUserStatus(id, newStatus) {
-  const users = getUsers();
-  const updated = users.map(u => u.id === Number(id) ? { ...u, status: newStatus } : u);
-  localStorage.setItem(USERS_KEY, JSON.stringify(updated));
+  usersMemory = usersMemory.map(u => u.id === Number(id) ? { ...u, status: newStatus } : u);
   window.dispatchEvent(new Event('usersUpdated'));
   usersApi.update(id, { status: newStatus }).catch(err => console.warn('[API] Failed to update user status:', err));
-  return updated;
+  return usersMemory;
 }
 
 // ================= NOTIFICATIONS STORE =================
 
 export function getNotifications() {
-  try {
-    const data = localStorage.getItem(NOTIFICATIONS_KEY);
-    return data ? JSON.parse(data) : defaultNotifications;
-  } catch {
-    return defaultNotifications;
-  }
+  return notificationsMemory;
 }
 
 export function addNotification(notif) {
-  const current = getNotifications();
   const newNotif = {
     id: notif.id || Date.now(),
     title: notif.title,
@@ -727,33 +685,28 @@ export function addNotification(notif) {
     unread: true,
     type: notif.type || "info"
   };
-  const updated = [newNotif, ...current];
-  localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
+  notificationsMemory = [newNotif, ...notificationsMemory];
   window.dispatchEvent(new Event('notificationsUpdated'));
   notificationsApi.add(newNotif).catch(err => console.warn('[API] Failed to add notification:', err));
-  return updated;
+  return notificationsMemory;
 }
 
 export function markNotificationRead(id) {
-  const current = getNotifications();
-  const updated = current.map(n => n.id === Number(id) ? { ...n, unread: false } : n);
-  localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
+  notificationsMemory = notificationsMemory.map(n => n.id === Number(id) ? { ...n, unread: false } : n);
   window.dispatchEvent(new Event('notificationsUpdated'));
   notificationsApi.markRead(id).catch(err => console.warn('[API] Failed to mark notification read:', err));
-  return updated;
+  return notificationsMemory;
 }
 
 export function markAllNotificationsRead() {
-  const current = getNotifications();
-  const updated = current.map(n => ({ ...n, unread: false }));
-  localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
+  notificationsMemory = notificationsMemory.map(n => ({ ...n, unread: false }));
   window.dispatchEvent(new Event('notificationsUpdated'));
   notificationsApi.markAllRead().catch(err => console.warn('[API] Failed to mark all notifications read:', err));
-  return updated;
+  return notificationsMemory;
 }
 
 export function clearNotifications() {
-  localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify([]));
+  notificationsMemory = [];
   window.dispatchEvent(new Event('notificationsUpdated'));
   notificationsApi.clear().catch(err => console.warn('[API] Failed to clear notifications:', err));
   return [];
@@ -769,23 +722,23 @@ export async function syncOrdersFromBackend() {
       notificationsApi.getAll().catch(() => null)
     ]);
 
-    if (Array.isArray(fetchedOrders)) {
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(fetchedOrders));
+    if (Array.isArray(fetchedOrders) && fetchedOrders.length > 0) {
+      ordersMemory = fetchedOrders;
       window.dispatchEvent(new Event('ordersUpdated'));
     }
 
-    if (Array.isArray(fetchedSuppliers)) {
-      localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(fetchedSuppliers));
+    if (Array.isArray(fetchedSuppliers) && fetchedSuppliers.length > 0) {
+      suppliersMemory = fetchedSuppliers;
       window.dispatchEvent(new Event('suppliersUpdated'));
     }
 
-    if (Array.isArray(fetchedUsers)) {
-      localStorage.setItem(USERS_KEY, JSON.stringify(fetchedUsers));
+    if (Array.isArray(fetchedUsers) && fetchedUsers.length > 0) {
+      usersMemory = fetchedUsers;
       window.dispatchEvent(new Event('usersUpdated'));
     }
 
-    if (Array.isArray(fetchedNotifs)) {
-      localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(fetchedNotifs));
+    if (Array.isArray(fetchedNotifs) && fetchedNotifs.length > 0) {
+      notificationsMemory = fetchedNotifs;
       window.dispatchEvent(new Event('notificationsUpdated'));
     }
 
@@ -805,36 +758,26 @@ if (typeof window !== 'undefined') {
 // ================= USER ADDRESSES STORE =================
 
 export function getUserAddresses() {
-  try {
-    const data = localStorage.getItem(ADDRESSES_KEY);
-    return data ? JSON.parse(data) : defaultAddresses;
-  } catch {
-    return defaultAddresses;
-  }
+  return addressesMemory;
 }
 
 export function saveUserAddress(address) {
-  const addresses = getUserAddresses();
-  let updated;
   if (address.id) {
-    updated = addresses.map(a => a.id === address.id ? { ...a, ...address } : a);
+    addressesMemory = addressesMemory.map(a => a.id === address.id ? { ...a, ...address } : a);
   } else {
     const newAddr = { ...address, id: Date.now() };
     if (newAddr.isDefault) {
-      updated = [newAddr, ...addresses.map(a => ({ ...a, isDefault: false }))];
+      addressesMemory = [newAddr, ...addressesMemory.map(a => ({ ...a, isDefault: false }))];
     } else {
-      updated = [newAddr, ...addresses];
+      addressesMemory = [newAddr, ...addressesMemory];
     }
   }
-  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('addressesUpdated'));
-  return updated;
+  return addressesMemory;
 }
 
 export function deleteUserAddress(id) {
-  const addresses = getUserAddresses();
-  const updated = addresses.filter(a => a.id !== Number(id));
-  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(updated));
+  addressesMemory = addressesMemory.filter(a => a.id !== Number(id));
   window.dispatchEvent(new Event('addressesUpdated'));
-  return updated;
+  return addressesMemory;
 }

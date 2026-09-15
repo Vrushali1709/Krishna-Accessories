@@ -1068,72 +1068,49 @@ const defaultProductReviews = {
   ]
 };
 
+// In-memory reactive state
+let productsMemory = defaultProducts.map(normalizeProduct);
+let categoriesMemory = [...defaultCategories];
+let brandsMemory = [...defaultBrands];
+let wishlistMemory = [];
+let reviewsMemory = { ...defaultProductReviews };
+
+// Immediate cleanup of legacy database keys from localStorage
+if (typeof window !== 'undefined' && window.localStorage) {
+  try {
+    localStorage.removeItem(PRODUCTS_KEY);
+    localStorage.removeItem(CATEGORIES_KEY);
+    localStorage.removeItem(BRANDS_KEY);
+    localStorage.removeItem(WISHLIST_KEY);
+    localStorage.removeItem(REVIEWS_KEY);
+  } catch (e) {
+    console.warn('[LocalStorage] Cleanup warning:', e);
+  }
+}
+
 export function getWatchTypes() {
   return [];
 }
 
 export function getProducts() {
-  const data = localStorage.getItem(PRODUCTS_KEY);
-  let list = defaultProducts;
-  if (data) {
-    try {
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        list = parsed;
-      }
-    } catch {
-      list = defaultProducts;
-    }
-  } else {
-    const normalizedDefaults = defaultProducts.map(normalizeProduct);
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(normalizedDefaults));
-    return normalizedDefaults;
-  }
-
-  // Clean up any legacy replica data or watchType properties
-  const sanitized = list.map(p => {
-    const clean = normalizeProduct(p);
-    delete clean.watchType;
-    if (clean.specifications && clean.specifications["Quality Type"]) {
-      const specs = { ...clean.specifications };
-      delete specs["Quality Type"];
-      clean.specifications = specs;
-    }
-    // Fix any old replica product names if stored in localStorage
-    if (clean.id === 4 && clean.name?.includes("Tribute")) {
-      clean.name = "Submariner Date 41mm Oystersteel";
-    }
-    if (clean.id === 101 && (clean.name?.includes("Replica") || clean.name?.includes("Lookalike"))) {
-      clean.name = "Cosmograph Daytona Chronograph";
-    }
-    if (clean.id === 102 && clean.name?.includes("Racing Edition Quartz")) {
-      clean.name = "Speedmaster Professional Co-Axial Chronograph";
-    }
-    return clean;
-  });
-
-  return sanitized;
+  return productsMemory;
 }
 
 export const getStoredProducts = getProducts;
 
 export function getProductById(id) {
-  const products = getProducts();
-  return products.find(p => Number(p.id) === Number(id)) || null;
+  return productsMemory.find(p => Number(p.id) === Number(id)) || null;
 }
 
 export function saveProduct(product) {
-  const products = getProducts();
-  let updated;
-  const isExisting = product.id && products.some(p => Number(p.id) === Number(product.id));
+  const isExisting = product.id && productsMemory.some(p => Number(p.id) === Number(product.id));
 
   if (isExisting) {
-    updated = products.map(p => Number(p.id) === Number(product.id) ? { ...p, ...product } : p);
+    productsMemory = productsMemory.map(p => Number(p.id) === Number(product.id) ? normalizeProduct({ ...p, ...product }) : p);
   } else {
-    const newProduct = { ...product, id: product.id || Date.now() };
-    updated = [newProduct, ...products];
+    const newProduct = normalizeProduct({ ...product, id: product.id || Date.now() });
+    productsMemory = [newProduct, ...productsMemory];
   }
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('productsUpdated'));
 
   // Background Python API sync
@@ -1143,7 +1120,7 @@ export function saveProduct(product) {
     productsApi.create(product).catch(err => console.warn('[API] Failed to create product in backend:', err));
   }
 
-  return updated;
+  return productsMemory;
 }
 
 export function addStoreProduct(product) {
@@ -1155,15 +1132,13 @@ export function updateStoreProduct(id, updatedProduct) {
 }
 
 export function deleteProduct(id) {
-  const products = getProducts();
-  const updated = products.filter(p => Number(p.id) !== Number(id));
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
+  productsMemory = productsMemory.filter(p => Number(p.id) !== Number(id));
   window.dispatchEvent(new Event('productsUpdated'));
 
   // Background Python API sync
   productsApi.delete(id).catch(err => console.warn('[API] Failed to delete product in backend:', err));
 
-  return updated;
+  return productsMemory;
 }
 
 export const deleteStoreProduct = deleteProduct;
@@ -1171,78 +1146,48 @@ export const deleteStoreProduct = deleteProduct;
 // ================= CATEGORIES MANAGEMENT =================
 
 export function getCategories() {
-  const data = localStorage.getItem(CATEGORIES_KEY);
-  if (!data) {
-    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
-    return defaultCategories;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultCategories;
-  } catch {
-    return defaultCategories;
-  }
+  return categoriesMemory;
 }
 
 export function addCategory(category) {
-  const categories = getCategories();
   const trimmed = category.trim();
-  if (trimmed && !categories.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
-    const updated = [...categories, trimmed];
-    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
+  if (trimmed && !categoriesMemory.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+    categoriesMemory = [...categoriesMemory, trimmed];
     window.dispatchEvent(new Event('categoriesUpdated'));
     categoriesApi.create(trimmed).catch(err => console.warn('[API] Failed to add category to backend:', err));
-    return updated;
   }
-  return categories;
+  return categoriesMemory;
 }
 
 export function deleteCategory(category) {
-  const categories = getCategories();
-  const updated = categories.filter(item => item !== category);
-  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
+  categoriesMemory = categoriesMemory.filter(item => item !== category);
   window.dispatchEvent(new Event('categoriesUpdated'));
   categoriesApi.delete(category).catch(err => console.warn('[API] Failed to delete category from backend:', err));
-  return updated;
+  return categoriesMemory;
 }
 
 // ================= BRANDS MANAGEMENT =================
 
 export function getBrands() {
-  const data = localStorage.getItem(BRANDS_KEY);
-  if (!data) {
-    localStorage.setItem(BRANDS_KEY, JSON.stringify(defaultBrands));
-    return defaultBrands;
-  }
-  try {
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultBrands;
-  } catch {
-    return defaultBrands;
-  }
+  return brandsMemory;
 }
 
 export function addBrand(brand, category = "Watches") {
-  const brands = getBrands();
   const trimmed = brand.trim();
-  if (trimmed && !brands.some(b => (typeof b === 'string' ? b : b.name).toLowerCase() === trimmed.toLowerCase())) {
-    const updated = [...brands, trimmed];
-    localStorage.setItem(BRANDS_KEY, JSON.stringify(updated));
+  if (trimmed && !brandsMemory.some(b => (typeof b === 'string' ? b : b.name).toLowerCase() === trimmed.toLowerCase())) {
+    brandsMemory = [...brandsMemory, trimmed];
     window.dispatchEvent(new Event('brandsUpdated'));
     brandsApi.create(trimmed, category).catch(err => console.warn('[API] Failed to add brand to backend:', err));
-    return updated;
   }
-  return brands;
+  return brandsMemory;
 }
 
 export function deleteBrand(brand) {
-  const brands = getBrands();
   const brandName = typeof brand === 'string' ? brand : brand.name;
-  const updated = brands.filter(item => (typeof item === 'string' ? item : item.name) !== brandName);
-  localStorage.setItem(BRANDS_KEY, JSON.stringify(updated));
+  brandsMemory = brandsMemory.filter(item => (typeof item === 'string' ? item : item.name) !== brandName);
   window.dispatchEvent(new Event('brandsUpdated'));
   brandsApi.delete(brandName).catch(err => console.warn('[API] Failed to delete brand from backend:', err));
-  return updated;
+  return brandsMemory;
 }
 
 // ================= BACKEND SYNC =================
@@ -1254,19 +1199,19 @@ export async function syncProductsFromBackend() {
       brandsApi.getAll().catch(() => null)
     ]);
 
-    if (Array.isArray(fetchedProducts)) {
-      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(fetchedProducts));
+    if (Array.isArray(fetchedProducts) && fetchedProducts.length > 0) {
+      productsMemory = fetchedProducts.map(normalizeProduct);
       window.dispatchEvent(new Event('productsUpdated'));
     }
 
-    if (Array.isArray(fetchedCategories)) {
-      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(fetchedCategories));
+    if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
+      categoriesMemory = fetchedCategories;
       window.dispatchEvent(new Event('categoriesUpdated'));
     }
 
-    if (Array.isArray(fetchedBrands)) {
+    if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
       const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b.name : b));
-      localStorage.setItem(BRANDS_KEY, JSON.stringify(brandNames));
+      brandsMemory = brandNames;
       window.dispatchEvent(new Event('brandsUpdated'));
     }
 
@@ -1313,27 +1258,19 @@ export function getSubcategoriesByCategory(categoryName) {
 // ================= WISHLIST MANAGEMENT =================
 
 export function getWishlist() {
-  try {
-    const data = localStorage.getItem(WISHLIST_KEY);
-    return data ? JSON.parse(data) : [];
-  } catch {
-    return [];
-  }
+  return wishlistMemory;
 }
 
 export function isInWishlist(productId) {
-  const list = getWishlist();
-  return list.some(item => Number(item.id) === Number(productId));
+  return wishlistMemory.some(item => Number(item.id) === Number(productId));
 }
 
 export function toggleWishlist(product) {
-  const list = getWishlist();
-  const exists = list.some(item => Number(item.id) === Number(product.id));
-  let updated;
+  const exists = wishlistMemory.some(item => Number(item.id) === Number(product.id));
   if (exists) {
-    updated = list.filter(item => Number(item.id) !== Number(product.id));
+    wishlistMemory = wishlistMemory.filter(item => Number(item.id) !== Number(product.id));
   } else {
-    updated = [{
+    wishlistMemory = [{
       id: product.id,
       name: product.name,
       brand: product.brand,
@@ -1344,43 +1281,32 @@ export function toggleWishlist(product) {
       rating: product.rating,
       image: product.image || product.images?.[0],
       stock: product.stock
-    }, ...list];
+    }, ...wishlistMemory];
   }
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('wishlistUpdated'));
   return !exists;
 }
 
 export function removeFromWishlist(productId) {
-  const list = getWishlist();
-  const updated = list.filter(item => Number(item.id) !== Number(productId));
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
+  wishlistMemory = wishlistMemory.filter(item => Number(item.id) !== Number(productId));
   window.dispatchEvent(new Event('wishlistUpdated'));
-  return updated;
+  return wishlistMemory;
 }
 
 export function clearWishlist() {
-  localStorage.removeItem(WISHLIST_KEY);
+  wishlistMemory = [];
   window.dispatchEvent(new Event('wishlistUpdated'));
 }
 
 // ================= REVIEWS MANAGEMENT =================
 
 export function getProductReviews(productId) {
-  try {
-    const data = localStorage.getItem(REVIEWS_KEY);
-    const allReviews = data ? JSON.parse(data) : defaultProductReviews;
-    return allReviews[productId] || defaultProductReviews[productId] || [];
-  } catch {
-    return defaultProductReviews[productId] || [];
-  }
+  return reviewsMemory[productId] || defaultProductReviews[productId] || [];
 }
 
 export function addProductReview(productId, review) {
   try {
-    const data = localStorage.getItem(REVIEWS_KEY);
-    const allReviews = data ? JSON.parse(data) : { ...defaultProductReviews };
-    const current = allReviews[productId] || [];
+    const current = reviewsMemory[productId] || defaultProductReviews[productId] || [];
     const newReview = {
       id: Date.now(),
       user: review.user || "Verified Customer",
@@ -1390,10 +1316,10 @@ export function addProductReview(productId, review) {
       text: review.text || "",
       verified: true
     };
-    allReviews[productId] = [newReview, ...current];
-    localStorage.setItem(REVIEWS_KEY, JSON.stringify(allReviews));
+    reviewsMemory[productId] = [newReview, ...current];
     window.dispatchEvent(new Event('reviewsUpdated'));
-    return allReviews[productId];
+    productsApi.addReview({ ...newReview, productId }).catch(err => console.warn('[API] Failed to sync review:', err));
+    return reviewsMemory[productId];
   } catch (err) {
     console.error('Error adding review:', err);
     return [];
