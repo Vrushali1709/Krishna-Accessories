@@ -406,17 +406,6 @@ export default function Navbar() {
                   <span>Admin Panel</span>
                 </Link>
               )}
-
-              {/* Portal Link: Supplier */}
-              {isSupplier() && (
-                <Link
-                  to="/supplier"
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 rounded-full border border-blue-200 bg-blue-50/90 hover:bg-blue-100 hover:border-blue-300 px-3 py-1 text-[11px] font-bold text-blue-700 transition-all shadow-xs normal-case tracking-normal"
-                >
-                  <span className="text-xs">🏢</span>
-                  <span>Vendor Portal</span>
-                </Link>
-              )}
             </nav>
 
             {/* Right: Actions & Mobile Navigation Toggle */}
