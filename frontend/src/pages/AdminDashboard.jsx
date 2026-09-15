@@ -1,5 +1,5 @@
 // src/pages/AdminDashboard.jsx
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -11,6 +11,8 @@ import {
   Settings,
   ChevronDown,
   ChevronRight,
+  ChevronUp,
+  ArrowUp,
   Search,
   Bell,
   ExternalLink,
@@ -121,6 +123,34 @@ export default function AdminDashboard() {
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  // Admin Scroll Container Ref and Scroll-to-Top State
+  const adminContentScrollRef = useRef(null);
+  const [showAdminScrollTop, setShowAdminScrollTop] = useState(false);
+
+  const handleAdminScroll = (e) => {
+    if (e.currentTarget.scrollTop > 200) {
+      setShowAdminScrollTop(true);
+    } else {
+      setShowAdminScrollTop(false);
+    }
+  };
+
+  const scrollToAdminTop = () => {
+    if (adminContentScrollRef.current) {
+      adminContentScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Reset scroll to top when changing active section or sub-tab
+  useEffect(() => {
+    if (adminContentScrollRef.current) {
+      adminContentScrollRef.current.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [activeSection, activeSubTab]);
 
   // Authentication State
   const [currentUser, setCurrentUserState] = useState(() => getCurrentUser());
@@ -931,7 +961,7 @@ export default function AdminDashboard() {
   const currentSubItemObj = currentSectionObj.subItems.find(sub => sub.id === activeSubTab) || currentSectionObj.subItems[0];
 
   return (
-    <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 flex overflow-hidden font-sans selection:bg-zinc-900 selection:text-white">
+    <div className="h-screen max-h-screen w-full bg-[#F9F9F8] text-zinc-900 flex overflow-hidden font-sans selection:bg-zinc-900 selection:text-white">
 
       {/* ==========================================
           TOAST ALERT BANNER
@@ -947,12 +977,12 @@ export default function AdminDashboard() {
           1. DEDICATED HIERARCHICAL SIDEBAR
       ========================================== */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#121316] text-zinc-300 border-r border-zinc-800/80 transition-all duration-300 ease-in-out lg:static lg:translate-x-0 ${mobileSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#121316] text-zinc-300 border-r border-zinc-800/80 transition-all duration-300 ease-in-out lg:static lg:h-screen lg:max-h-screen shrink-0 ${mobileSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
           } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}`}
       >
 
         {/* Sidebar Brand Header */}
-        <div className="flex flex-col min-h-0 flex-1">
+        <div className="flex flex-col min-h-0 flex-1 overflow-hidden">
           <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
             <Link to="/admin" className="flex items-center gap-3 overflow-hidden min-w-0">
               <img
@@ -981,7 +1011,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Navigation Items (Scrollable Hierarchical Accordion) */}
-          <nav className="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
+          <nav className="flex-1 overflow-y-auto min-h-0 p-3 space-y-1 text-xs">
             {navSections.map((sec) => {
               const isSectionActive = activeSection === sec.id;
               const isExpanded = expandedSections[sec.id];
@@ -1128,7 +1158,12 @@ export default function AdminDashboard() {
       {/* ==========================================
           2. MAIN CONTENT WRAPPER WITH TOP HEADER
       ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen bg-[#F9F9F8]">
+      <div
+        ref={adminContentScrollRef}
+        id="admin-main-scroll"
+        onScroll={handleAdminScroll}
+        className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen max-h-screen bg-[#F9F9F8] scroll-smooth relative"
+      >
 
         {/* Top Header */}
         <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b border-zinc-200/80 bg-white/95 px-4 sm:px-6 lg:px-8 backdrop-blur-md">
@@ -3275,6 +3310,19 @@ export default function AdminDashboard() {
           )}
 
         </main>
+
+        {/* Floating Scroll to Top Button for Admin Content */}
+        {showAdminScrollTop && (
+          <button
+            type="button"
+            onClick={scrollToAdminTop}
+            aria-label="Scroll back to top"
+            title="Scroll to Top"
+            className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:bg-black hover:scale-110 active:scale-95 transition-all duration-200 border border-zinc-700/80 cursor-pointer group animate-fade-in"
+          >
+            <ChevronUp className="h-5 w-5 text-white transition-transform group-hover:-translate-y-0.5" />
+          </button>
+        )}
 
       </div>
 
