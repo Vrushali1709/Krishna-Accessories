@@ -388,23 +388,23 @@ export async function syncAdminDataFromBackend() {
       systemConfigApi.get().catch(() => null)
     ]);
 
-    if (Array.isArray(subcats) && subcats.length > 0) {
+    if (Array.isArray(subcats)) {
       localStorage.setItem(SUBCATEGORIES_KEY, JSON.stringify(subcats));
       window.dispatchEvent(new Event('subcategoriesUpdated'));
     }
-    if (Array.isArray(variants) && variants.length > 0) {
+    if (Array.isArray(variants)) {
       localStorage.setItem(VARIANTS_KEY, JSON.stringify(variants));
       window.dispatchEvent(new Event('variantsUpdated'));
     }
-    if (Array.isArray(media) && media.length > 0) {
+    if (Array.isArray(media)) {
       localStorage.setItem(MEDIA_KEY, JSON.stringify(media));
       window.dispatchEvent(new Event('mediaUpdated'));
     }
-    if (Array.isArray(promos) && promos.length > 0) {
+    if (Array.isArray(promos)) {
       localStorage.setItem(PROMOTIONS_KEY, JSON.stringify(promos));
       window.dispatchEvent(new Event('promotionsUpdated'));
     }
-    if (Array.isArray(roles) && roles.length > 0) {
+    if (Array.isArray(roles)) {
       localStorage.setItem(ROLES_KEY, JSON.stringify(roles));
       window.dispatchEvent(new Event('rolesUpdated'));
     }
@@ -412,7 +412,7 @@ export async function syncAdminDataFromBackend() {
       localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(perms));
       window.dispatchEvent(new Event('permissionsUpdated'));
     }
-    if (Array.isArray(carriers) && carriers.length > 0) {
+    if (Array.isArray(carriers)) {
       localStorage.setItem(SHIPPING_KEY, JSON.stringify(carriers));
       window.dispatchEvent(new Event('shippingUpdated'));
     }

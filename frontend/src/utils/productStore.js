@@ -1254,17 +1254,17 @@ export async function syncProductsFromBackend() {
       brandsApi.getAll().catch(() => null)
     ]);
 
-    if (Array.isArray(fetchedProducts) && fetchedProducts.length > 0) {
+    if (Array.isArray(fetchedProducts)) {
       localStorage.setItem(PRODUCTS_KEY, JSON.stringify(fetchedProducts));
       window.dispatchEvent(new Event('productsUpdated'));
     }
 
-    if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
+    if (Array.isArray(fetchedCategories)) {
       localStorage.setItem(CATEGORIES_KEY, JSON.stringify(fetchedCategories));
       window.dispatchEvent(new Event('categoriesUpdated'));
     }
 
-    if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
+    if (Array.isArray(fetchedBrands)) {
       const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b.name : b));
       localStorage.setItem(BRANDS_KEY, JSON.stringify(brandNames));
       window.dispatchEvent(new Event('brandsUpdated'));

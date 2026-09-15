@@ -769,22 +769,22 @@ export async function syncOrdersFromBackend() {
       notificationsApi.getAll().catch(() => null)
     ]);
 
-    if (Array.isArray(fetchedOrders) && fetchedOrders.length > 0) {
+    if (Array.isArray(fetchedOrders)) {
       localStorage.setItem(ORDERS_KEY, JSON.stringify(fetchedOrders));
       window.dispatchEvent(new Event('ordersUpdated'));
     }
 
-    if (Array.isArray(fetchedSuppliers) && fetchedSuppliers.length > 0) {
+    if (Array.isArray(fetchedSuppliers)) {
       localStorage.setItem(SUPPLIERS_KEY, JSON.stringify(fetchedSuppliers));
       window.dispatchEvent(new Event('suppliersUpdated'));
     }
 
-    if (Array.isArray(fetchedUsers) && fetchedUsers.length > 0) {
+    if (Array.isArray(fetchedUsers)) {
       localStorage.setItem(USERS_KEY, JSON.stringify(fetchedUsers));
       window.dispatchEvent(new Event('usersUpdated'));
     }
 
-    if (Array.isArray(fetchedNotifs) && fetchedNotifs.length > 0) {
+    if (Array.isArray(fetchedNotifs)) {
       localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(fetchedNotifs));
       window.dispatchEvent(new Event('notificationsUpdated'));
     }
