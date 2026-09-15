@@ -1,44 +1,44 @@
 // src/utils/productStore.js
+// 100% Live Backend Store (Pure In-Memory Live Sync - No Local Storage Caching)
 import { productsApi, categoriesApi, brandsApi } from './api';
 
-const PRODUCTS_KEY = "krishna_admin_products";
-const CATEGORIES_KEY = "krishna_categories";
-const BRANDS_KEY = "krishna_brands";
-const WISHLIST_KEY = "krishna_wishlist";
-const REVIEWS_KEY = "krishna_product_reviews";
-const DB_VERSION_KEY = "krishna_db_version";
-const CURRENT_VERSION = "2026_live_v2";
+// In-Memory Live Data States
+let liveProducts = [];
+let liveCategories = [];
+let liveBrands = [];
+let isInitialFetchDone = false;
+let isFetching = false;
 
-// Automatic Purge of Old Mock / Hardcoded Data from localStorage
-export function purgeOldMockCache() {
+// Purge all legacy data keys from localStorage so Chrome DevTools Local Storage is 100% clean
+export function purgeAllLocalData() {
   if (typeof window === 'undefined') return;
   try {
-    const currentVersion = localStorage.getItem(DB_VERSION_KEY);
-    if (currentVersion !== CURRENT_VERSION) {
-      localStorage.removeItem(PRODUCTS_KEY);
-      localStorage.removeItem(CATEGORIES_KEY);
-      localStorage.removeItem(BRANDS_KEY);
-      localStorage.removeItem('krishna_platform_orders');
-      localStorage.removeItem('krishna_platform_suppliers');
-      localStorage.removeItem('krishna_platform_users');
-      localStorage.removeItem('krishna_platform_notifications');
-      localStorage.removeItem('krishna_subcategories');
-      localStorage.removeItem('krishna_product_variants');
-      localStorage.removeItem('krishna_media_assets');
-      localStorage.removeItem('krishna_promotions');
-      localStorage.removeItem('krishna_roles');
-      localStorage.removeItem('krishna_permissions_matrix');
-      localStorage.removeItem('krishna_shipping_carriers');
-      localStorage.removeItem('krishna_system_config');
-      localStorage.setItem(DB_VERSION_KEY, CURRENT_VERSION);
-    }
+    const keysToRemove = [
+      'krishna_db_version',
+      'krishna_admin_products',
+      'krishna_categories',
+      'krishna_brands',
+      'krishna_platform_orders',
+      'krishna_platform_suppliers',
+      'krishna_platform_users',
+      'krishna_platform_notifications',
+      'krishna_subcategories',
+      'krishna_product_variants',
+      'krishna_media_assets',
+      'krishna_promotions',
+      'krishna_roles',
+      'krishna_permissions_matrix',
+      'krishna_shipping_carriers',
+      'krishna_system_config'
+    ];
+    keysToRemove.forEach(k => localStorage.removeItem(k));
   } catch (e) {
-    console.warn('Error purging old cache:', e);
+    console.warn('Error purging local storage keys:', e);
   }
 }
 
 if (typeof window !== 'undefined') {
-  purgeOldMockCache();
+  purgeAllLocalData();
 }
 
 const DEFAULT_SIZES_BY_CATEGORY = {
@@ -116,13 +116,9 @@ export const defaultCategories = [
 ];
 
 export const defaultBrands = [];
-
 export const categoryBrandMap = {};
-
 export const WATCH_TYPES = [];
 export const WATCH_TYPE_METADATA = {};
-
-// No local mock products - everything comes from live backend
 export const defaultProducts = [];
 
 export function getWatchTypes() {
@@ -130,54 +126,43 @@ export function getWatchTypes() {
 }
 
 export function getProducts() {
-  try {
-    const data = localStorage.getItem(PRODUCTS_KEY);
-    if (data) {
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map(normalizeProduct).filter(Boolean);
-      }
-    }
-  } catch (err) {
-    console.warn('[Store] Error reading products from cache:', err);
-  }
-
-  // Trigger sync in background if empty
-  if (typeof window !== 'undefined') {
+  if (!isInitialFetchDone && !isFetching && typeof window !== 'undefined') {
     syncProductsFromBackend();
   }
-  return [];
+  return liveProducts;
 }
 
 export const getStoredProducts = getProducts;
 
 export function getProductById(id) {
-  const products = getProducts();
-  return products.find(p => Number(p.id) === Number(id)) || null;
+  if (!id) return null;
+  return liveProducts.find(p => Number(p.id) === Number(id)) || null;
 }
 
 export function saveProduct(product) {
-  const products = getProducts();
-  let updated;
-  const isExisting = product.id && products.some(p => Number(p.id) === Number(product.id));
+  const isExisting = product.id && liveProducts.some(p => Number(p.id) === Number(product.id));
+  const normalized = normalizeProduct(product);
 
   if (isExisting) {
-    updated = products.map(p => Number(p.id) === Number(product.id) ? normalizeProduct({ ...p, ...product }) : p);
+    liveProducts = liveProducts.map(p => Number(p.id) === Number(product.id) ? { ...p, ...normalized } : p);
   } else {
-    const newProduct = normalizeProduct({ ...product, id: product.id || Date.now() });
-    updated = [newProduct, ...products];
+    liveProducts = [{ ...normalized, id: normalized.id || Date.now() }, ...liveProducts];
   }
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('productsUpdated'));
 
-  // Sync with Live FastAPI Backend
+  // Sync directly with Live FastAPI Backend
   if (isExisting) {
     productsApi.update(product.id, product).catch(err => console.warn('[API] Failed to update product in backend:', err));
   } else {
-    productsApi.create(product).catch(err => console.warn('[API] Failed to create product in backend:', err));
+    productsApi.create(product).then(res => {
+      if (res?.id) {
+        liveProducts = liveProducts.map(p => p.id === normalized.id ? { ...p, id: res.id } : p);
+        window.dispatchEvent(new Event('productsUpdated'));
+      }
+    }).catch(err => console.warn('[API] Failed to create product in backend:', err));
   }
 
-  return updated;
+  return liveProducts;
 }
 
 export function addStoreProduct(product) {
@@ -189,15 +174,13 @@ export function updateStoreProduct(id, updatedProduct) {
 }
 
 export function deleteProduct(id) {
-  const products = getProducts();
-  const updated = products.filter(p => Number(p.id) !== Number(id));
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(updated));
+  liveProducts = liveProducts.filter(p => Number(p.id) !== Number(id));
   window.dispatchEvent(new Event('productsUpdated'));
 
-  // Sync with Live FastAPI Backend
+  // Sync directly with Live FastAPI Backend
   productsApi.delete(id).catch(err => console.warn('[API] Failed to delete product in backend:', err));
 
-  return updated;
+  return liveProducts;
 }
 
 export const deleteStoreProduct = deleteProduct;
@@ -205,89 +188,61 @@ export const deleteStoreProduct = deleteProduct;
 // ================= CATEGORIES MANAGEMENT =================
 
 export function getCategories() {
-  try {
-    const data = localStorage.getItem(CATEGORIES_KEY);
-    if (data) {
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (err) {
-    console.warn('[Store] Error reading categories:', err);
-  }
-
-  // Trigger sync in background if empty
-  if (typeof window !== 'undefined') {
+  if (liveCategories.length === 0 && !isFetching && typeof window !== 'undefined') {
     syncProductsFromBackend();
   }
-  return defaultCategories;
+  return liveCategories.length > 0 ? liveCategories : defaultCategories;
 }
 
 export function addCategory(category) {
-  const categories = getCategories();
   const trimmed = category.trim();
-  if (trimmed && !categories.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
-    const updated = [...categories, trimmed];
-    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
+  if (trimmed && !liveCategories.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+    liveCategories = [...liveCategories, trimmed];
     window.dispatchEvent(new Event('categoriesUpdated'));
     categoriesApi.create(trimmed).catch(err => console.warn('[API] Failed to add category to backend:', err));
-    return updated;
   }
-  return categories;
+  return liveCategories;
 }
 
 export function deleteCategory(category) {
-  const categories = getCategories();
-  const updated = categories.filter(item => item !== category);
-  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
+  liveCategories = liveCategories.filter(item => item !== category);
   window.dispatchEvent(new Event('categoriesUpdated'));
   categoriesApi.delete(category).catch(err => console.warn('[API] Failed to delete category from backend:', err));
-  return updated;
+  return liveCategories;
 }
 
 // ================= BRANDS MANAGEMENT =================
 
 export function getBrands() {
-  try {
-    const data = localStorage.getItem(BRANDS_KEY);
-    if (data) {
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch (err) {
-    console.warn('[Store] Error reading brands:', err);
+  if (liveBrands.length === 0) {
+    const fromProds = Array.from(new Set(liveProducts.map(p => p.brand).filter(Boolean)));
+    if (fromProds.length > 0) return fromProds;
   }
-
-  // Fallback: extract brands from current live products
-  const products = getProducts();
-  const productBrands = Array.from(new Set(products.map(p => p.brand).filter(Boolean)));
-  return productBrands;
+  return liveBrands;
 }
 
 export function addBrand(brand, category = "Watches") {
-  const brands = getBrands();
   const trimmed = brand.trim();
-  if (trimmed && !brands.some(b => (typeof b === 'string' ? b : b.name).toLowerCase() === trimmed.toLowerCase())) {
-    const updated = [...brands, trimmed];
-    localStorage.setItem(BRANDS_KEY, JSON.stringify(updated));
+  if (trimmed && !liveBrands.some(b => (typeof b === 'string' ? b : b.name).toLowerCase() === trimmed.toLowerCase())) {
+    liveBrands = [...liveBrands, trimmed];
     window.dispatchEvent(new Event('brandsUpdated'));
     brandsApi.create(trimmed, category).catch(err => console.warn('[API] Failed to add brand to backend:', err));
-    return updated;
   }
-  return brands;
+  return liveBrands;
 }
 
 export function deleteBrand(brand) {
-  const brands = getBrands();
   const brandName = typeof brand === 'string' ? brand : brand.name;
-  const updated = brands.filter(item => (typeof item === 'string' ? item : item.name) !== brandName);
-  localStorage.setItem(BRANDS_KEY, JSON.stringify(updated));
+  liveBrands = liveBrands.filter(item => (typeof item === 'string' ? item : item.name) !== brandName);
   window.dispatchEvent(new Event('brandsUpdated'));
   brandsApi.delete(brandName).catch(err => console.warn('[API] Failed to delete brand from backend:', err));
-  return updated;
+  return liveBrands;
 }
 
 // ================= BACKEND SYNC =================
 export async function syncProductsFromBackend() {
+  if (isFetching) return liveProducts;
+  isFetching = true;
   try {
     const [fetchedProducts, fetchedCategories, fetchedBrands] = await Promise.all([
       productsApi.getAll().catch(e => { console.warn('[API] Products fetch failed:', e); return null; }),
@@ -298,29 +253,30 @@ export async function syncProductsFromBackend() {
     let updated = false;
 
     if (Array.isArray(fetchedProducts)) {
-      const normalized = fetchedProducts.map(normalizeProduct).filter(Boolean);
-      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(normalized));
+      liveProducts = fetchedProducts.map(normalizeProduct).filter(Boolean);
       window.dispatchEvent(new Event('productsUpdated'));
       updated = true;
     }
 
     if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
-      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(fetchedCategories));
+      liveCategories = fetchedCategories;
       window.dispatchEvent(new Event('categoriesUpdated'));
       updated = true;
     }
 
     if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
-      const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b.name : b));
-      localStorage.setItem(BRANDS_KEY, JSON.stringify(brandNames));
+      liveBrands = fetchedBrands.map(b => (typeof b === 'object' ? b.name : b));
       window.dispatchEvent(new Event('brandsUpdated'));
       updated = true;
     }
 
-    return updated;
+    isInitialFetchDone = true;
+    return liveProducts;
   } catch (err) {
     console.warn('[API] Failed syncing products from backend:', err);
-    return false;
+    return liveProducts;
+  } finally {
+    isFetching = false;
   }
 }
 
@@ -331,14 +287,13 @@ if (typeof window !== 'undefined') {
 
 // Dynamic brand finder for specific category
 export function getBrandsByCategory(categoryName) {
-  const products = getProducts();
   if (!categoryName || categoryName === 'All') {
-    const all = Array.from(new Set(products.map(p => p.brand).filter(Boolean)));
+    const all = Array.from(new Set(liveProducts.map(p => p.brand).filter(Boolean)));
     return all.length > 0 ? all : getBrands();
   }
 
   const brandsInCat = new Set(
-    products.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase()).map(p => p.brand).filter(Boolean)
+    liveProducts.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase()).map(p => p.brand).filter(Boolean)
   );
   if (brandsInCat.size > 0) return Array.from(brandsInCat);
 
@@ -348,16 +303,17 @@ export function getBrandsByCategory(categoryName) {
 
 // Dynamic Subcategory / Product Type finder for specific category
 export function getSubcategoriesByCategory(categoryName) {
-  const products = getProducts();
-  let filtered = products;
+  let filtered = liveProducts;
   if (categoryName && categoryName !== 'All') {
-    filtered = products.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase());
+    filtered = liveProducts.filter(p => p.category?.toLowerCase() === categoryName.toLowerCase());
   }
   const subcats = new Set(filtered.map(p => p.subcategory).filter(Boolean));
   return Array.from(subcats);
 }
 
 // ================= WISHLIST MANAGEMENT =================
+
+const WISHLIST_KEY = "krishna_wishlist";
 
 export function getWishlist() {
   try {
@@ -394,7 +350,9 @@ export function toggleWishlist(product) {
       stock: product.stock
     }, ...list];
   }
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
+  try {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
+  } catch {}
   window.dispatchEvent(new Event('wishlistUpdated'));
   return !exists;
 }
@@ -402,53 +360,44 @@ export function toggleWishlist(product) {
 export function removeFromWishlist(productId) {
   const list = getWishlist();
   const updated = list.filter(item => Number(item.id) !== Number(productId));
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
+  try {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(updated));
+  } catch {}
   window.dispatchEvent(new Event('wishlistUpdated'));
   return updated;
 }
 
 export function clearWishlist() {
-  localStorage.removeItem(WISHLIST_KEY);
+  try {
+    localStorage.removeItem(WISHLIST_KEY);
+  } catch {}
   window.dispatchEvent(new Event('wishlistUpdated'));
 }
 
 // ================= REVIEWS MANAGEMENT =================
+let liveReviews = {};
 
 export function getProductReviews(productId) {
-  try {
-    const data = localStorage.getItem(REVIEWS_KEY);
-    const allReviews = data ? JSON.parse(data) : {};
-    return allReviews[productId] || [];
-  } catch {
-    return [];
-  }
+  return liveReviews[productId] || [];
 }
 
 export function addProductReview(productId, review) {
-  try {
-    const data = localStorage.getItem(REVIEWS_KEY);
-    const allReviews = data ? JSON.parse(data) : {};
-    const current = allReviews[productId] || [];
-    const newReview = {
-      id: Date.now(),
-      productId: Number(productId),
-      user: review.user || "Verified Customer",
-      rating: Number(review.rating) || 5,
-      date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-      title: review.title || "Excellent quality",
-      text: review.text || "",
-      verified: true
-    };
-    allReviews[productId] = [newReview, ...current];
-    localStorage.setItem(REVIEWS_KEY, JSON.stringify(allReviews));
-    window.dispatchEvent(new Event('reviewsUpdated'));
+  const current = liveReviews[productId] || [];
+  const newReview = {
+    id: Date.now(),
+    productId: Number(productId),
+    user: review.user || "Verified Customer",
+    rating: Number(review.rating) || 5,
+    date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+    title: review.title || "Excellent quality",
+    text: review.text || "",
+    verified: true
+  };
+  liveReviews[productId] = [newReview, ...current];
+  window.dispatchEvent(new Event('reviewsUpdated'));
 
-    // Sync review to live backend
-    productsApi.addReview(newReview).catch(err => console.warn('[API] Failed to save review:', err));
+  // Sync review to live backend
+  productsApi.addReview(newReview).catch(err => console.warn('[API] Failed to save review:', err));
 
-    return allReviews[productId];
-  } catch (err) {
-    console.error('Error adding review:', err);
-    return [];
-  }
+  return liveReviews[productId];
 }
