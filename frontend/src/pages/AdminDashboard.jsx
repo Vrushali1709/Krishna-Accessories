@@ -39,7 +39,6 @@ import {
   Download,
   Layers,
   Store,
-  Home,
   SlidersHorizontal,
   CheckCircle2,
   RefreshCw,
@@ -1119,10 +1118,11 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-2 gap-1.5 pt-1">
                 <Link
                   to="/"
-                  className="flex items-center justify-center gap-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 py-1.5 text-[10.5px] font-semibold text-zinc-200 hover:text-white transition truncate px-1"
+                  target="_blank"
+                  className="flex items-center justify-center gap-1 rounded-lg bg-zinc-800/70 hover:bg-zinc-800 py-1.5 text-[10.5px] font-medium text-zinc-300 transition truncate px-1"
                 >
-                  <Home className="h-3 w-3 text-amber-400" />
-                  <span>Home Page</span>
+                  <span>Storefront</span>
+                  <ExternalLink className="h-2.5 w-2.5" />
                 </Link>
                 <button
                   onClick={handleAdminLogout}
@@ -1220,11 +1220,10 @@ export default function AdminDashboard() {
             {/* Python Backend Status Pill */}
             <div
               title={backendStatus.connected ? "Python FastAPI backend connected & operational on port 8000" : "Python backend offline (running in local storage cache mode)"}
-              className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${
-                backendStatus.connected
+              className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${backendStatus.connected
                   ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                   : 'bg-amber-50 text-amber-700 border-amber-200'
-              }`}
+                }`}
             >
               <span className={`h-2 w-2 rounded-full shrink-0 ${backendStatus.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
               <span className="truncate">{backendStatus.connected ? 'Python API (Port 8000)' : 'Local Mode'}</span>
@@ -1241,14 +1240,14 @@ export default function AdminDashboard() {
               <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync'}</span>
             </button>
 
-            {/* Home Page Link */}
             <Link
               to="/"
-              className="flex items-center gap-1.5 rounded-lg bg-zinc-900 hover:bg-black text-white px-3 py-1.5 text-xs font-semibold transition shadow-xs cursor-pointer hover:scale-105 active:scale-95 shrink-0"
-              title="Go to Customer Storefront / Home Page"
+              target="_blank"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 transition shadow-2xs"
             >
-              <Home className="h-3.5 w-3.5 text-amber-400" />
-              <span className="hidden xs:inline">Home Page</span>
+              <Store className="h-3.5 w-3.5" />
+              <span>Storefront</span>
+              <ExternalLink className="h-2.5 w-2.5 text-zinc-400" />
             </Link>
 
 
@@ -1321,14 +1320,6 @@ export default function AdminDashboard() {
                     <p className="font-semibold text-zinc-950">Super Admin</p>
                     <p className="text-[10px] text-zinc-400">admin@krishna.com</p>
                   </div>
-                  <Link
-                    to="/"
-                    onClick={() => setUserDropdownOpen(false)}
-                    className="w-full text-left rounded-lg px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100 transition cursor-pointer flex items-center gap-2"
-                  >
-                    <Home className="h-3.5 w-3.5 text-amber-600" />
-                    <span>Go to Home Page</span>
-                  </Link>
                   <button
                     onClick={() => { handleNavSelect('system', 'settings'); setUserDropdownOpen(false); }}
                     className="w-full text-left rounded-lg px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100 transition cursor-pointer flex items-center gap-2"

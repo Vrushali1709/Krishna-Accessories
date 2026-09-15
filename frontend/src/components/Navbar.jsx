@@ -47,7 +47,6 @@ export default function Navbar() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
-  const [adminLoggedIn, setAdminLoggedIn] = useState(() => isAdmin());
   const [allCategories, setAllCategories] = useState(() => getCategories());
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -106,7 +105,6 @@ export default function Navbar() {
     setWishlistCount(getWishlist().length);
     setNotifications(getNotifications());
     setCurrentUser(getCurrentUser());
-    setAdminLoggedIn(isAdmin());
     setAllCategories(getCategories());
   };
 
@@ -569,18 +567,6 @@ export default function Navbar() {
                 </span>
               </Link>
 
-              {/* Direct Admin Panel Button (Whenever Admin is logged in) */}
-              {adminLoggedIn && (
-                <Link
-                  to="/admin"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-zinc-950 hover:bg-black text-amber-300 hover:text-amber-200 border border-amber-500/40 hover:border-amber-400 px-3 py-1.5 text-xs font-bold shadow-xs transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer shrink-0"
-                  title="Open Admin Control Panel"
-                >
-                  <span className="text-xs">⚙️</span>
-                  <span>Admin Panel</span>
-                </Link>
-              )}
-
               {/* User Profile / Menu (Hidden on mobile < md:, fully in drawer) */}
               {currentUser ? (
                 <div className="relative hidden md:block" ref={userMenuRef}>
@@ -991,23 +977,6 @@ export default function Navbar() {
 
               {/* Primary Navigation Links */}
               <div className="space-y-1 font-semibold text-xs text-gray-800">
-                {/* Direct Admin Link at top of mobile drawer when logged in */}
-                {adminLoggedIn && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between rounded-xl bg-zinc-950 text-amber-300 border border-amber-500/40 px-3 py-2.5 text-xs font-bold shadow-xs transition hover:bg-black mb-2"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-sm">⚙️</span>
-                      <span>Admin Control Console</span>
-                    </div>
-                    <span className="text-[9px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                      Panel &rarr;
-                    </span>
-                  </Link>
-                )}
-
                 <Link
                   to="/"
                   onClick={() => setMobileMenuOpen(false)}
@@ -1147,7 +1116,7 @@ export default function Navbar() {
                   Management &amp; Portals
                 </span>
 
-                {adminLoggedIn ? (
+                {currentUser && currentUser.role === 'admin' ? (
                   <Link
                     to="/admin"
                     onClick={() => setMobileMenuOpen(false)}
