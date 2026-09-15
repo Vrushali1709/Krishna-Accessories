@@ -7,8 +7,7 @@ import { setAdminUser, setSupplierUser, setCustomerUser } from '../utils/auth';
 import { getSuppliers } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendPasswordResetSuccessEmail } from '../utils/emailService';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
-import { Eye, EyeOff, RefreshCw, KeyRound, Mail, Sparkles } from 'lucide-react';
-import { Reveal } from '../components/useScrollReveal';
+import { Eye, EyeOff, RefreshCw, KeyRound, Mail } from 'lucide-react';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
@@ -339,15 +338,11 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none">
-      {/* Ambient background glows */}
-      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
-
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none">
       <Navbar />
 
-      <main className="relative flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
-        <Reveal direction="up" delay={100} className="w-full max-w-md">
-          <div className="w-full rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
+      <main className="flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
+        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
 
           <div className="text-center">
             <img
@@ -383,11 +378,10 @@ export default function Login() {
                 setError('');
                 setSuccess('');
               }}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                authMode === 'password'
+              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${authMode === 'password'
                   ? 'bg-white text-gray-950 shadow-xs'
                   : 'text-neutral-500 hover:text-black'
-              }`}
+                }`}
             >
               <KeyRound className="w-3.5 h-3.5" />
               <span>Password Login</span>
@@ -400,11 +394,10 @@ export default function Login() {
                 setError('');
                 setSuccess('');
               }}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                authMode === 'otp'
+              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${authMode === 'otp'
                   ? 'bg-white text-gray-950 shadow-xs'
                   : 'text-neutral-500 hover:text-black'
-              }`}
+                }`}
             >
               <Mail className="w-3.5 h-3.5" />
               <span>Sign In via OTP</span>
@@ -615,33 +608,30 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => handleSelectRole('customer')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${
-                  selectedRole === 'customer'
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
                     ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
                     : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Customer Demo
               </button>
               <button
                 type="button"
                 onClick={() => handleSelectRole('supplier')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${
-                  selectedRole === 'supplier'
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
                     ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
                     : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Supplier Demo
               </button>
               <button
                 type="button"
                 onClick={() => handleSelectRole('admin')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${
-                  selectedRole === 'admin'
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
                     ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
                     : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Admin Demo
               </button>
@@ -656,8 +646,7 @@ export default function Login() {
           </div>
 
         </div>
-      </Reveal>
-    </main>
+      </main>
 
       {/* ================= FORGOT PASSWORD REAL OTP MODAL ================= */}
       {forgotModalOpen && (

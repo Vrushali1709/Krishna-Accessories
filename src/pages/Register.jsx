@@ -7,8 +7,7 @@ import { setCurrentUser } from '../utils/auth';
 import { addSupplier } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendWelcomeEmail } from '../utils/emailService';
 import { ArrowRightIcon, LockClosedIcon, ShieldCheckIcon } from '../components/Icons';
-import { RefreshCw, Mail, ArrowLeft, KeyRound, Sparkles } from 'lucide-react';
-import { Reveal } from '../components/useScrollReveal';
+import { RefreshCw, Mail, ArrowLeft, KeyRound } from 'lucide-react';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
@@ -20,7 +19,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('Customer');
   const [supplierCategory, setSupplierCategory] = useState('Watches');
-  
+
   // OTP Verification state
   const [otpCode, setOtpCode] = useState('');
   const [otpTimer, setOtpTimer] = useState(60);
@@ -153,15 +152,11 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none">
-      {/* Ambient background glows */}
-      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
-
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none">
       <Navbar />
 
-      <main className="relative flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
-        <Reveal direction="up" delay={100} className="w-full max-w-md">
-          <div className="w-full rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
+      <main className="flex-1 flex items-center justify-center px-4 py-10 sm:py-14">
+        <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm space-y-5">
 
           <div className="text-center">
             <img
@@ -392,8 +387,7 @@ export default function Register() {
           </div>
 
         </div>
-      </Reveal>
-    </main>
+      </main>
 
       <Footer />
     </div>
