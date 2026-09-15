@@ -64,9 +64,9 @@ export default function HomeDiscoveryStrip() {
             <Reveal key={id} direction="up" delay={idx * 65} duration={600}>
               <Link
                 to={to}
-                className="group relative flex min-w-0 items-center justify-between rounded-2xl sm:rounded-3xl border border-gray-200/85 bg-white p-2.5 sm:p-5 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-400 hover:shadow-[0_14px_28px_rgba(0,0,0,0.06)] active:scale-[0.99]"
+                className="group relative flex min-h-[142px] min-w-0 flex-col items-start justify-between rounded-2xl sm:min-h-0 sm:flex-row sm:items-center sm:rounded-3xl border border-gray-200/85 bg-white p-3 sm:p-5 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-400 hover:shadow-[0_14px_28px_rgba(0,0,0,0.06)] active:scale-[0.99]"
               >
-                <div className="flex min-w-0 items-center gap-2 sm:gap-4">
+                <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
                   {/* Luxury Rounded Icon Box */}
                   <div
                     className={`flex h-9 w-9 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl ${iconBg} transition-transform duration-300 group-hover:scale-108 shadow-2xs`}
@@ -75,21 +75,21 @@ export default function HomeDiscoveryStrip() {
                   </div>
 
                   {/* Content & Tag */}
-                  <div className="min-w-0 pr-1">
-                    <span className={`inline-block max-w-full truncate rounded-md px-1.5 py-0.2 text-[8px] sm:text-[9px] font-black uppercase tracking-wider border mb-1 ${tagBg}`}>
+                  <div className="min-w-0 max-w-full pr-5 sm:pr-1">
+                    <span className={`inline-block max-w-[calc(100%-8px)] truncate rounded-md px-1.5 py-0.2 text-[8px] sm:text-[9px] font-black uppercase tracking-wider border mb-1 ${tagBg}`}>
                       {tag}
                     </span>
-                    <h3 className="truncate text-[11px] sm:text-[13.5px] lg:text-[14px] font-bold text-gray-950 transition-colors group-hover:text-black leading-tight">
+                    <h3 className="truncate text-[12px] sm:text-[13.5px] lg:text-[14px] font-bold text-gray-950 transition-colors group-hover:text-black leading-tight">
                       {title}
                     </h3>
-                    <p className="mt-0.5 text-[9.5px] sm:text-[11.5px] text-gray-500 line-clamp-1 leading-snug font-normal">
+                    <p className="mt-0.5 text-[10px] sm:text-[11.5px] text-gray-500 line-clamp-2 leading-snug font-normal">
                       {subtitle}
                     </p>
                   </div>
                 </div>
 
                 {/* Hover Cue Arrow */}
-                <div className="ml-1 shrink-0 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-neutral-50 text-gray-400 transition-all duration-300 group-hover:bg-neutral-900 group-hover:text-white group-hover:translate-x-0.5">
+                <div className="absolute right-3 top-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-gray-400 transition-all duration-300 group-hover:bg-neutral-900 group-hover:text-white group-hover:translate-x-0.5 sm:static sm:ml-2 sm:h-7 sm:w-7">
                   <ArrowRightIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 </div>
               </Link>
