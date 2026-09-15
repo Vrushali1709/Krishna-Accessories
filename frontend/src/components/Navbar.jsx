@@ -284,6 +284,16 @@ export default function Navbar() {
                 Home
               </Link>
 
+              <Link
+                to="/about"
+                className={`relative py-1.5 transition-colors ${location.pathname === '/about'
+                  ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                  : 'hover:text-gray-950'
+                  }`}
+              >
+                About
+              </Link>
+
               {/* Collections Dropdown Flyout */}
               <div
                 className="relative"
@@ -367,6 +377,16 @@ export default function Navbar() {
               </div>
 
               <Link
+                to="/shop"
+                className={`relative py-1.5 transition-colors ${location.pathname === '/shop' && !location.search
+                  ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
+                  : 'hover:text-gray-950'
+                  }`}
+              >
+                Shop All
+              </Link>
+
+              <Link
                 to="/new-arrivals"
                 className={`relative py-1.5 transition-colors ${location.pathname === '/new-arrivals'
                   ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
@@ -374,16 +394,6 @@ export default function Navbar() {
                   }`}
               >
                 New Arrivals
-              </Link>
-
-              <Link
-                to="/about"
-                className={`relative py-1.5 transition-colors ${location.pathname === '/about'
-                  ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
-                  : 'hover:text-gray-950'
-                  }`}
-              >
-                About
               </Link>
 
               {/* Portal Link: Admin */}
@@ -979,6 +989,18 @@ export default function Navbar() {
                   <ArrowRightIcon className="w-3.5 h-3.5 opacity-60" />
                 </Link>
 
+                <Link
+                  to="/about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/about' ? 'bg-gray-950 text-white font-bold' : 'hover:bg-gray-100'}`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span>ℹ️</span>
+                    <span>About</span>
+                  </div>
+                  <ArrowRightIcon className="w-3.5 h-3.5 opacity-60" />
+                </Link>
+
                 {/* Collapsible Collections Accordion */}
                 <div className="rounded-xl border border-gray-100 bg-[#FAFAFB] overflow-hidden">
                   <button
@@ -1026,6 +1048,18 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
+
+                <Link
+                  to="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/shop' && !location.search ? 'bg-gray-950 text-white font-bold' : 'hover:bg-gray-100'}`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span>🛍️</span>
+                    <span>Shop All</span>
+                  </div>
+                  <ArrowRightIcon className="w-3.5 h-3.5 opacity-60" />
+                </Link>
 
                 <Link
                   to="/new-arrivals"
