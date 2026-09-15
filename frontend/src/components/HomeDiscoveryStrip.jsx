@@ -59,38 +59,38 @@ export default function HomeDiscoveryStrip() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* 4-Feature Interactive Grid with Generous Responsive Spacing */}
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 md:gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:gap-5 lg:grid-cols-4 lg:gap-6">
           {features.map(({ id, tag, title, subtitle, icon: Icon, to, iconBg, tagBg }, idx) => (
             <Reveal key={id} direction="up" delay={idx * 65} duration={600}>
               <Link
                 to={to}
-                className="group relative flex items-center justify-between rounded-[22px] sm:rounded-3xl border border-gray-200/85 bg-white p-4 sm:p-5 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-400 hover:shadow-[0_14px_28px_rgba(0,0,0,0.06)] active:scale-[0.99]"
+                className="group relative flex min-w-0 items-center justify-between rounded-2xl sm:rounded-3xl border border-gray-200/85 bg-white p-2.5 sm:p-5 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-400 hover:shadow-[0_14px_28px_rgba(0,0,0,0.06)] active:scale-[0.99]"
               >
-                <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+                <div className="flex min-w-0 items-center gap-2 sm:gap-4">
                   {/* Luxury Rounded Icon Box */}
                   <div
-                    className={`flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl ${iconBg} transition-transform duration-300 group-hover:scale-108 shadow-2xs`}
+                    className={`flex h-9 w-9 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl ${iconBg} transition-transform duration-300 group-hover:scale-108 shadow-2xs`}
                   >
-                    <Icon className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+                    <Icon className="h-4 w-4 sm:h-5.5 sm:w-5.5" />
                   </div>
 
                   {/* Content & Tag */}
                   <div className="min-w-0 pr-1">
-                    <span className={`inline-block rounded-md px-1.5 py-0.2 text-[9px] font-black uppercase tracking-wider border mb-1 ${tagBg}`}>
+                    <span className={`inline-block max-w-full truncate rounded-md px-1.5 py-0.2 text-[8px] sm:text-[9px] font-black uppercase tracking-wider border mb-1 ${tagBg}`}>
                       {tag}
                     </span>
-                    <h3 className="truncate text-xs sm:text-[13.5px] lg:text-[14px] font-bold text-gray-950 transition-colors group-hover:text-black leading-tight">
+                    <h3 className="truncate text-[11px] sm:text-[13.5px] lg:text-[14px] font-bold text-gray-950 transition-colors group-hover:text-black leading-tight">
                       {title}
                     </h3>
-                    <p className="mt-0.5 text-[11px] sm:text-[11.5px] text-gray-500 line-clamp-1 leading-snug font-normal">
+                    <p className="mt-0.5 text-[9.5px] sm:text-[11.5px] text-gray-500 line-clamp-1 leading-snug font-normal">
                       {subtitle}
                     </p>
                   </div>
                 </div>
 
                 {/* Hover Cue Arrow */}
-                <div className="ml-2 shrink-0 flex h-7 w-7 items-center justify-center rounded-full bg-neutral-50 text-gray-400 transition-all duration-300 group-hover:bg-neutral-900 group-hover:text-white group-hover:translate-x-0.5">
-                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                <div className="ml-1 shrink-0 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-neutral-50 text-gray-400 transition-all duration-300 group-hover:bg-neutral-900 group-hover:text-white group-hover:translate-x-0.5">
+                  <ArrowRightIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 </div>
               </Link>
             </Reveal>

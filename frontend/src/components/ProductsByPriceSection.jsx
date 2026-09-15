@@ -146,7 +146,7 @@ export default function ProductsByPriceSection({
         {/* ============================================================
             2. MINIMAL INTERACTIVE PRICE TIER CARDS
         ============================================================ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5 mb-8 sm:mb-10">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4 lg:gap-5 mb-8 sm:mb-10">
           {PRICE_TIERS.map((tier, idx) => {
             const isActive = activeTierId === tier.id;
             const count = tierCounts[tier.id] || 0;
@@ -156,7 +156,7 @@ export default function ProductsByPriceSection({
               <Reveal key={tier.id} direction="up" delay={idx * 60} duration={650}>
                 <div
                   onClick={() => setActiveTierId(tier.id)}
-                  className={`group relative flex flex-col justify-between rounded-2xl p-4 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${isActive
+                    className={`group relative flex min-w-0 flex-col justify-between rounded-2xl p-3 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${isActive
                       ? `bg-white shadow-[0_10px_25px_rgba(0,0,0,0.06)] ${tier.activeBorder} -translate-y-1`
                       : 'bg-neutral-50/60 border-gray-200 hover:border-gray-300 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
                     }`}
@@ -164,24 +164,24 @@ export default function ProductsByPriceSection({
                   {/* Top: Badge & Count */}
                   <div>
                     <div className="flex items-center justify-between gap-2">
-                      <span className={`rounded-md px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider border shadow-2xs ${tier.badgeColor}`}>
+                      <span className={`max-w-[58%] truncate rounded-md px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9.5px] font-bold uppercase tracking-wider border shadow-2xs ${tier.badgeColor}`}>
                         {tier.badge}
                       </span>
-                      <span className="text-[11px] font-medium text-neutral-400">
+                      <span className="shrink-0 text-[9px] sm:text-[11px] font-medium text-neutral-400">
                         {count > 0 ? `${count} items` : 'Curated'}
                       </span>
                     </div>
 
                     {/* Middle: Icon & Title */}
-                    <div className="mt-3.5 flex items-center gap-3">
-                      <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${tier.iconBg} shrink-0 transition-transform duration-300 group-hover:scale-105`}>
+                    <div className="mt-3 flex items-center gap-2 sm:gap-3">
+                      <div className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl ${tier.iconBg} shrink-0 transition-transform duration-300 group-hover:scale-105`}>
                         <TierIcon className="w-4 h-4" />
                       </div>
                       <div>
-                        <h3 className="text-base sm:text-lg font-bold tracking-tight text-neutral-950 leading-snug">
+                        <h3 className="truncate text-sm sm:text-lg font-bold tracking-tight text-neutral-950 leading-snug">
                           {tier.title}
                         </h3>
-                        <p className="text-[11px] sm:text-xs font-medium text-neutral-500">
+                        <p className="truncate text-[9px] sm:text-xs font-medium text-neutral-500">
                           {tier.subtitle}
                         </p>
                       </div>
@@ -189,10 +189,10 @@ export default function ProductsByPriceSection({
                   </div>
 
                   {/* Bottom: Selection Status & Shop All Link */}
-                  <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                  <div className="mt-3 sm:mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-1">
                     <div className="flex items-center gap-1.5">
                       <span className={`h-1.5 w-1.5 rounded-full ${isActive ? tier.accentDot : 'bg-neutral-300'}`} />
-                      <span className={`text-[11px] font-semibold transition-colors ${isActive ? 'text-neutral-950' : 'text-neutral-500 group-hover:text-neutral-800'
+                      <span className={`truncate text-[9px] sm:text-[11px] font-semibold transition-colors ${isActive ? 'text-neutral-950' : 'text-neutral-500 group-hover:text-neutral-800'
                         }`}>
                         {isActive ? 'Selected' : 'Click to view'}
                       </span>
@@ -201,7 +201,7 @@ export default function ProductsByPriceSection({
                     <Link
                       to={`/shop?maxPrice=${tier.maxPrice}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-neutral-600 hover:text-black transition-colors rounded-full bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1"
+                      className="inline-flex shrink-0 items-center gap-1 text-[9px] sm:text-[11px] font-semibold text-neutral-600 hover:text-black transition-colors rounded-full bg-neutral-100 hover:bg-neutral-200 px-2 sm:px-2.5 py-1"
                       title={`Open catalog under ₹${tier.maxPrice.toLocaleString('en-IN')}`}
                     >
                       <span>Shop All</span>
