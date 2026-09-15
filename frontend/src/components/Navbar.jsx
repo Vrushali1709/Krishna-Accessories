@@ -397,7 +397,7 @@ export default function Navbar() {
               </Link>
 
               {/* Portal Link: Admin */}
-              {!isAdmin() && (
+              {isAdmin() && (
                 <Link
                   to="/admin"
                   className="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[9.5px] font-bold text-amber-900 hover:bg-amber-100 transition shadow-2xs"
@@ -668,7 +668,7 @@ export default function Navbar() {
                             </span>
                           </div>
 
-                          {!isAdmin() && (
+                          {isAdmin() ? (
                             <Link
                               to="/admin"
                               onClick={() => setUserMenuOpen(false)}
