@@ -376,7 +376,13 @@ export default function Home() {
         image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900',
         tag: 'Curated Essentials'
       }));
-    return [...defaultCategoryBanners, ...customBanners];
+    const fullList = [...defaultCategoryBanners, ...customBanners];
+    const watchIdx = fullList.findIndex(c => c.name?.toLowerCase() === 'watches' || c.name?.toLowerCase() === 'watch');
+    if (watchIdx > 0) {
+      const [w] = fullList.splice(watchIdx, 1);
+      return [w, ...fullList];
+    }
+    return fullList;
   });
 
   // Hero auto-slider
@@ -401,7 +407,14 @@ export default function Home() {
           image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900',
           tag: 'Curated Essentials'
         }));
-      setCategoryList([...defaultCategoryBanners, ...customBanners]);
+      const fullList = [...defaultCategoryBanners, ...customBanners];
+      const watchIdx = fullList.findIndex(c => c.name?.toLowerCase() === 'watches' || c.name?.toLowerCase() === 'watch');
+      if (watchIdx > 0) {
+        const [w] = fullList.splice(watchIdx, 1);
+        setCategoryList([w, ...fullList]);
+      } else {
+        setCategoryList(fullList);
+      }
     };
 
     window.addEventListener('productsUpdated', handleUpdate);

@@ -1145,8 +1145,23 @@ export const deleteStoreProduct = deleteProduct;
 
 // ================= CATEGORIES MANAGEMENT =================
 
+// Helper to guarantee Watches is always the first category in all listings
+export function ensureWatchesFirst(categories) {
+  if (!Array.isArray(categories)) return [];
+  const list = [...categories];
+  const watchIndex = list.findIndex(c => {
+    const name = typeof c === 'object' && c ? c.name : String(c);
+    return name.trim().toLowerCase() === 'watches' || name.trim().toLowerCase() === 'watch';
+  });
+  if (watchIndex > 0) {
+    const [watchCat] = list.splice(watchIndex, 1);
+    return [watchCat, ...list];
+  }
+  return list;
+}
+
 export function getCategories() {
-  return categoriesMemory;
+  return ensureWatchesFirst(categoriesMemory);
 }
 
 export function addCategory(category) {
@@ -1156,14 +1171,14 @@ export function addCategory(category) {
     window.dispatchEvent(new Event('categoriesUpdated'));
     categoriesApi.create(trimmed).catch(err => console.warn('[API] Failed to add category to backend:', err));
   }
-  return categoriesMemory;
+  return ensureWatchesFirst(categoriesMemory);
 }
 
 export function deleteCategory(category) {
   categoriesMemory = categoriesMemory.filter(item => item !== category);
   window.dispatchEvent(new Event('categoriesUpdated'));
   categoriesApi.delete(category).catch(err => console.warn('[API] Failed to delete category from backend:', err));
-  return categoriesMemory;
+  return ensureWatchesFirst(categoriesMemory);
 }
 
 // ================= BRANDS MANAGEMENT =================
@@ -1205,12 +1220,13 @@ export async function syncProductsFromBackend() {
     }
 
     if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
-      categoriesMemory = fetchedCategories;
+      const catNames = fetchedCategories.map(c => (typeof c === 'object' && c !== null ? c.name : c)).filter(Boolean);
+      categoriesMemory = ensureWatchesFirst(catNames);
       window.dispatchEvent(new Event('categoriesUpdated'));
     }
 
     if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
-      const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b.name : b));
+      const brandNames = fetchedBrands.map(b => (typeof b === 'object' ? b : b.name)).filter(Boolean);
       brandsMemory = brandNames;
       window.dispatchEvent(new Event('brandsUpdated'));
     }
