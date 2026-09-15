@@ -547,20 +547,21 @@ export default function AdminDashboard() {
 
   // Auth Handlers
   const handleQuickAdminLogin = () => {
-    setCurrentUser({
+    setAdminUser({
       email: 'admin@krishna.com',
       role: 'admin',
       name: 'Super Administrator',
       phone: '+91 93213 22761'
     });
     refreshAll();
+    showToast('Signed in as Super Administrator');
   };
 
   const handleAdminLogout = () => {
     logoutAdmin();
     navigate('/login', {
       state: {
-        message: 'Admin session signed out successfully. Customer account remains active.',
+        message: 'Admin session signed out successfully. Storefront customer account remains separate.',
         requiredRole: 'admin'
       }
     });

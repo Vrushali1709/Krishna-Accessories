@@ -1,15 +1,15 @@
 // src/components/ProtectedRoute.jsx
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { getCurrentUser, isAdmin, isSupplier } from '../utils/auth';
+import { getCustomerUser, isAdmin, isSupplier } from '../utils/auth';
 
 export default function ProtectedRoute({ children, roleRequired }) {
   const location = useLocation();
-  const user = getCurrentUser();
+  const customerUser = getCustomerUser();
   const hasAdmin = isAdmin();
   const hasSupplier = isSupplier();
 
-  // 1. Admin route protection
+  // 1. Admin route protection (/admin)
   if (roleRequired === 'admin') {
     if (!hasAdmin) {
       return (
@@ -27,7 +27,7 @@ export default function ProtectedRoute({ children, roleRequired }) {
     return children;
   }
 
-  // 2. Supplier route protection
+  // 2. Supplier route protection (/supplier)
   if (roleRequired === 'supplier') {
     if (!hasSupplier) {
       return (
@@ -45,15 +45,16 @@ export default function ProtectedRoute({ children, roleRequired }) {
     return children;
   }
 
-  // 3. Customer route protection (checkout, wishlist, account)
-  if (!user && !hasAdmin && !hasSupplier) {
-    let message = 'Please sign in with your credentials to access this page.';
+  // 3. Customer route protection (/checkout, /account, /wishlist)
+  // Even if Admin is logged in, Storefront shopping & checkout strictly requires a Customer user account!
+  if (!customerUser) {
+    let message = 'Please sign in to your customer account to access this page.';
     if (location.pathname === '/wishlist') {
-      message = 'Please sign in to access and manage your Wishlist.';
+      message = 'Please sign in with your customer account to access and manage your Wishlist.';
     } else if (location.pathname === '/checkout') {
-      message = 'Please sign in to proceed with Checkout.';
+      message = 'Please sign in to your user account to proceed with Checkout.';
     } else if (location.pathname === '/account') {
-      message = 'Please sign in to access your Account & Orders.';
+      message = 'Please sign in to your user account to access your Account & Orders.';
     }
 
     return (
@@ -72,3 +73,4 @@ export default function ProtectedRoute({ children, roleRequired }) {
   // 4. Authorized, render component
   return children;
 }
+
