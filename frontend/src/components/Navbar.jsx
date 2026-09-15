@@ -324,14 +324,6 @@ export default function Navbar() {
                           </span>
                         </div>
 
-                        <Link
-                          to="/shop"
-                          onClick={() => setCategoriesOpen(false)}
-                          className="text-xs font-bold text-gray-900 hover:text-amber-600 transition flex items-center gap-1"
-                        >
-                          <span>Explore Catalog</span>
-                          <span>&rarr;</span>
-                        </Link>
                       </div>
 
                       {/* All Categories 2-Column Clean Grid */}
@@ -373,16 +365,6 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
-              <Link
-                to="/shop"
-                className={`relative py-1.5 transition-colors ${location.pathname === '/shop' && !location.search
-                  ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
-                  : 'hover:text-gray-950'
-                  }`}
-              >
-                Shop All
-              </Link>
 
               <Link
                 to="/new-arrivals"
@@ -1044,18 +1026,6 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
-
-                <Link
-                  to="/shop"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 transition ${location.pathname === '/shop' && !location.search ? 'bg-gray-950 text-white font-bold' : 'hover:bg-gray-100'}`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span>🛍️</span>
-                    <span>Shop All Catalog</span>
-                  </div>
-                  <ArrowRightIcon className="w-3.5 h-3.5 opacity-60" />
-                </Link>
 
                 <Link
                   to="/new-arrivals"
