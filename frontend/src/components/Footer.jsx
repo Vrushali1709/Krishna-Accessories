@@ -1,7 +1,7 @@
 // src/components/Footer.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { defaultCategories } from '../utils/productStore';
+import { getCategories } from '../utils/productStore';
 import { SHOP_INFO } from '../utils/shopInfo';
 import {
   FacebookIcon,
@@ -25,6 +25,14 @@ const POPULAR_BRANDS = [
 ];
 
 export default function Footer() {
+  const [categories, setCategories] = useState(() => getCategories());
+
+  useEffect(() => {
+    const handleUpdate = () => setCategories(getCategories());
+    window.addEventListener('categoriesUpdated', handleUpdate);
+    return () => window.removeEventListener('categoriesUpdated', handleUpdate);
+  }, []);
+
   const socialLinks = [
     {
       name: 'WhatsApp Concierge',
@@ -147,7 +155,7 @@ export default function Footer() {
               Categories
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-neutral-400">
-              {defaultCategories.slice(0, 6).map((cat) => (
+              {categories.slice(0, 6).map((cat) => (
                 <li key={cat}>
                   <Link
                     to={`/shop?category=${encodeURIComponent(cat)}`}

@@ -94,14 +94,20 @@ export default function Shop() {
   const [isFiltering, setIsFiltering] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
-  // Sync Products from localStorage
+  // Sync Products from localStorage & backend events
   useEffect(() => {
     const handleProductsUpdate = () => {
       setProducts(getProducts());
       setCategories(['All', ...getCategories()]);
     };
     window.addEventListener('productsUpdated', handleProductsUpdate);
-    return () => window.removeEventListener('productsUpdated', handleProductsUpdate);
+    window.addEventListener('categoriesUpdated', handleProductsUpdate);
+    window.addEventListener('brandsUpdated', handleProductsUpdate);
+    return () => {
+      window.removeEventListener('productsUpdated', handleProductsUpdate);
+      window.removeEventListener('categoriesUpdated', handleProductsUpdate);
+      window.removeEventListener('brandsUpdated', handleProductsUpdate);
+    };
   }, []);
 
   // Sync URL State

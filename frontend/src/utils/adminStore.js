@@ -11,32 +11,26 @@ const PERMISSIONS_KEY = 'krishna_permissions_matrix';
 const SHIPPING_KEY = 'krishna_shipping_carriers';
 const SYSTEM_CONFIG_KEY = 'krishna_system_config';
 
-
 // -------------------------------------------------------------
 // 1. SUBCATEGORIES STORE
 // -------------------------------------------------------------
-export const defaultSubcategories = [
-  { id: 1, name: "Automatic Watches", category: "Watches", code: "WAT-AUTO", itemCount: 12 },
-  { id: 2, name: "Chronograph", category: "Watches", code: "WAT-CHRONO", itemCount: 8 },
-  { id: 3, name: "Luxury Smartwatches", category: "Watches", code: "WAT-SMART", itemCount: 5 },
-  { id: 4, name: "Leather Wallets", category: "Bags & Wallets", code: "BAG-WLT", itemCount: 14 },
-  { id: 5, name: "Crossbody & Backpacks", category: "Bags & Wallets", code: "BAG-CRB", itemCount: 9 },
-  { id: 6, name: "Sneakers & Casuals", category: "Shoes", code: "SH-SNK", itemCount: 11 },
-  { id: 7, name: "Formal Oxfords", category: "Shoes", code: "SH-OXF", itemCount: 7 },
-  { id: 8, name: "Flagship Smartphones", category: "Mobiles", code: "MOB-FLG", itemCount: 6 },
-  { id: 9, name: "Designer Shirts", category: "Clothes & Fashion", code: "CLT-SHRT", itemCount: 15 },
-  { id: 10, name: "Denim & Trousers", category: "Clothes & Fashion", code: "CLT-DNM", itemCount: 10 },
-  { id: 11, name: "Gaming Laptops", category: "Laptops", code: "LAP-GAM", itemCount: 4 },
-  { id: 12, name: "Wireless Earbuds & Headphones", category: "Electronics", code: "ELE-AUD", itemCount: 8 }
-];
+export const defaultSubcategories = [];
 
 export function getSubcategories() {
   try {
     const data = localStorage.getItem(SUBCATEGORIES_KEY);
-    return data ? JSON.parse(data) : defaultSubcategories;
-  } catch {
-    return defaultSubcategories;
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Store] Error reading subcategories:', e);
   }
+
+  if (typeof window !== 'undefined') {
+    syncAdminDataFromBackend();
+  }
+  return defaultSubcategories;
 }
 
 export function saveSubcategory(subcat) {
@@ -72,25 +66,23 @@ export function deleteSubcategory(id) {
 // -------------------------------------------------------------
 // 2. PRODUCT VARIANTS STORE
 // -------------------------------------------------------------
-export const defaultVariants = [
-  { id: 1, productName: "Rolex Submariner Date 41mm", sku: "KA-WAT-41-BLK", attributeType: "Dial Color", value: "Onyx Black", priceModifier: 0, stock: 8, status: "In Stock" },
-  { id: 2, productName: "Rolex Submariner Date 41mm", sku: "KA-WAT-41-GRN", attributeType: "Dial Color", value: "Kermit Green", priceModifier: 25000, stock: 3, status: "Low Stock" },
-  { id: 3, productName: "Rolex Submariner Date 41mm", sku: "KA-WAT-41-BLU", attributeType: "Dial Color", value: "Royal Blue", priceModifier: 15000, stock: 5, status: "In Stock" },
-  { id: 4, productName: "Titan Grandmaster Automatic", sku: "KA-WAT-TIT-SLV", attributeType: "Strap Material", value: "Stainless Mesh", priceModifier: 0, stock: 12, status: "In Stock" },
-  { id: 5, productName: "Titan Grandmaster Automatic", sku: "KA-WAT-TIT-LEA", attributeType: "Strap Material", value: "Italian Alligator Leather", priceModifier: 3500, stock: 7, status: "In Stock" },
-  { id: 6, productName: "Nike Air Jordan 1 Retro High", sku: "KA-SH-AJ-09", attributeType: "Shoe Size", value: "UK 9 / US 10", priceModifier: 0, stock: 14, status: "In Stock" },
-  { id: 7, productName: "Nike Air Jordan 1 Retro High", sku: "KA-SH-AJ-10", attributeType: "Shoe Size", value: "UK 10 / US 11", priceModifier: 0, stock: 2, status: "Low Stock" },
-  { id: 8, productName: "Apple iPhone 16 Pro Max", sku: "KA-MOB-IP16-256", attributeType: "Storage", value: "256 GB - Desert Titanium", priceModifier: 0, stock: 9, status: "In Stock" },
-  { id: 9, productName: "Apple iPhone 16 Pro Max", sku: "KA-MOB-IP16-512", attributeType: "Storage", value: "512 GB - Natural Titanium", priceModifier: 20000, stock: 4, status: "In Stock" }
-];
+export const defaultVariants = [];
 
 export function getVariants() {
   try {
     const data = localStorage.getItem(VARIANTS_KEY);
-    return data ? JSON.parse(data) : defaultVariants;
-  } catch {
-    return defaultVariants;
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Store] Error reading variants:', e);
   }
+
+  if (typeof window !== 'undefined') {
+    syncAdminDataFromBackend();
+  }
+  return defaultVariants;
 }
 
 export function saveVariant(variant) {
@@ -129,22 +121,23 @@ export function deleteVariant(id) {
 // -------------------------------------------------------------
 // 3. MEDIA ASSETS STORE
 // -------------------------------------------------------------
-export const defaultMediaAssets = [
-  { id: 1, title: "Rolex Submariner Front View", category: "Watches", size: "1.8 MB", dimensions: "1200x1200", url: "https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800", date: "28 Aug 2026", usage: "Active on 4 products" },
-  { id: 2, title: "Titan Grandmaster Dial Close-up", category: "Watches", size: "2.1 MB", dimensions: "1200x1200", url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800", date: "25 Aug 2026", usage: "Active on 2 products" },
-  { id: 3, title: "Hidesign Pure Leather Tote", category: "Bags & Wallets", size: "1.4 MB", dimensions: "1080x1080", url: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800", date: "22 Aug 2026", usage: "Active on 3 products" },
-  { id: 4, title: "Nike Air Jordan High Studio", category: "Shoes", size: "2.6 MB", dimensions: "1500x1500", url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800", date: "20 Aug 2026", usage: "Active on 6 products" },
-  { id: 5, title: "Apple iPhone 16 Pro Desert View", category: "Mobiles", size: "1.9 MB", dimensions: "1400x1400", url: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800", date: "18 Aug 2026", usage: "Active on 1 product" },
-  { id: 6, title: "Sony WH-1000XM5 Noise Cancelling", category: "Electronics", size: "2.3 MB", dimensions: "1200x1200", url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800", date: "15 Aug 2026", usage: "Active on 2 products" }
-];
+export const defaultMediaAssets = [];
 
 export function getMediaAssets() {
   try {
     const data = localStorage.getItem(MEDIA_KEY);
-    return data ? JSON.parse(data) : defaultMediaAssets;
-  } catch {
-    return defaultMediaAssets;
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Store] Error reading media assets:', e);
   }
+
+  if (typeof window !== 'undefined') {
+    syncAdminDataFromBackend();
+  }
+  return defaultMediaAssets;
 }
 
 export function addMediaAsset(asset) {
@@ -178,20 +171,23 @@ export function deleteMediaAsset(id) {
 // -------------------------------------------------------------
 // 4. PROMOTIONS & MARKETING BANNERS STORE
 // -------------------------------------------------------------
-export const defaultPromotions = [
-  { id: 1, title: "Grand Festive Luxury Showcase", code: "DIWALI2026", discount: "Up to 30% Off", targetCategory: "All Departments", bannerType: "Hero Banner", status: "Active", startDate: "01 Sep 2026", endDate: "30 Sep 2026", impressions: 14850, clicks: 3290 },
-  { id: 2, title: "Swiss & Heritage Horology Fair", code: "CHRONO15", discount: "Flat 15% Off", targetCategory: "Watches", bannerType: "Category Strip", status: "Active", startDate: "15 Aug 2026", endDate: "15 Sep 2026", impressions: 8420, clicks: 1940 },
-  { id: 3, title: "VIP Private Member Early Access", code: "VIPELITE", discount: "Extra ₹2,500 Off", targetCategory: "Luxury Goods", bannerType: "Modal Popover", status: "Active", startDate: "20 Aug 2026", endDate: "10 Oct 2026", impressions: 5120, clicks: 1480 },
-  { id: 4, title: "End of Season Designer Clearance", code: "EOSR40", discount: "Flat 40% Off", targetCategory: "Clothes & Fashion", bannerType: "Flash Deal", status: "Scheduled", startDate: "01 Oct 2026", endDate: "15 Oct 2026", impressions: 0, clicks: 0 }
-];
+export const defaultPromotions = [];
 
 export function getPromotions() {
   try {
     const data = localStorage.getItem(PROMOTIONS_KEY);
-    return data ? JSON.parse(data) : defaultPromotions;
-  } catch {
-    return defaultPromotions;
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Store] Error reading promotions:', e);
   }
+
+  if (typeof window !== 'undefined') {
+    syncAdminDataFromBackend();
+  }
+  return defaultPromotions;
 }
 
 export function savePromotion(promo) {
@@ -233,13 +229,7 @@ export function deletePromotion(id) {
 // -------------------------------------------------------------
 // 5. ROLES & PERMISSIONS MATRIX STORE
 // -------------------------------------------------------------
-export const defaultRoles = [
-  { id: 1, name: "Super Administrator", slug: "super_admin", membersCount: 2, description: "Full unrestricted platform access, financial settlements, role assignments, and system config.", color: "border-amber-500 text-amber-600 bg-amber-50" },
-  { id: 2, name: "Catalog Director", slug: "catalog_manager", membersCount: 3, description: "Manage products, subcategories, brands, imagery, pricing, and supplier catalog reviews.", color: "border-blue-500 text-blue-600 bg-blue-50" },
-  { id: 3, name: "Operations & Logistics Lead", slug: "operations_lead", membersCount: 4, description: "Process orders, assign courier carriers, generate shipping manifests, and manage warehouse stock.", color: "border-emerald-500 text-emerald-600 bg-emerald-50" },
-  { id: 4, name: "Financial Controller", slug: "finance_auditor", membersCount: 2, description: "View GMV, process customer refunds, manage payments gateway ledger, and tax auditing.", color: "border-purple-500 text-purple-600 bg-purple-50" },
-  { id: 5, name: "Customer Concierge Officer", slug: "support_agent", membersCount: 5, description: "Handle customer inquiries, review return requests, inspect returns, and manage user accounts.", color: "border-rose-500 text-rose-600 bg-rose-50" }
-];
+export const defaultRoles = [];
 
 export const defaultPermissionsMatrix = {
   super_admin: { dashboard: "Full", catalog: "Full", commerce: "Full", people: "Full", operations: "Full", analytics: "Full", system: "Full" },
@@ -252,10 +242,18 @@ export const defaultPermissionsMatrix = {
 export function getRoles() {
   try {
     const data = localStorage.getItem(ROLES_KEY);
-    return data ? JSON.parse(data) : defaultRoles;
-  } catch {
-    return defaultRoles;
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Store] Error reading roles:', e);
   }
+
+  if (typeof window !== 'undefined') {
+    syncAdminDataFromBackend();
+  }
+  return defaultRoles;
 }
 
 export function saveRole(role) {
@@ -307,20 +305,23 @@ export function updateRolePermission(roleSlug, moduleName, level) {
 // -------------------------------------------------------------
 // 6. SHIPPING CARRIERS & MANIFEST STORE
 // -------------------------------------------------------------
-export const defaultShippingCarriers = [
-  { id: 1, name: "BlueDart Express Air", code: "BLUEDART", serviceType: "Priority Express", avgTransit: "24-48 Hours", trackingUrl: "https://www.bluedart.com/tracking?track=", active: true, shipmentsHandled: 142, rating: 4.9 },
-  { id: 2, name: "Delhivery Surface & Air", code: "DELHIVERY", serviceType: "Secured Parcel", avgTransit: "2-4 Days", trackingUrl: "https://www.delhivery.com/track/package/", active: true, shipmentsHandled: 98, rating: 4.7 },
-  { id: 3, name: "FedEx Luxury Secure", code: "FEDEX", serviceType: "Armored High-Value", avgTransit: "24-36 Hours", trackingUrl: "https://www.fedex.com/fedextrack/?trknbr=", active: true, shipmentsHandled: 45, rating: 5.0 },
-  { id: 4, name: "DTDC Prime Gold", code: "DTDC", serviceType: "Express Cargo", avgTransit: "3-5 Days", trackingUrl: "https://tracking.dtdc.com/ct/track.html?trk=", active: false, shipmentsHandled: 18, rating: 4.3 }
-];
+export const defaultShippingCarriers = [];
 
 export function getShippingCarriers() {
   try {
     const data = localStorage.getItem(SHIPPING_KEY);
-    return data ? JSON.parse(data) : defaultShippingCarriers;
-  } catch {
-    return defaultShippingCarriers;
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Store] Error reading shipping carriers:', e);
   }
+
+  if (typeof window !== 'undefined') {
+    syncAdminDataFromBackend();
+  }
+  return defaultShippingCarriers;
 }
 
 export function toggleCarrierStatus(id) {
@@ -432,7 +433,6 @@ export async function syncAdminDataFromBackend() {
 if (typeof window !== 'undefined') {
   syncAdminDataFromBackend();
 }
-
 
 // Database Export / Import Backup JSON
 export function exportFullDatabaseBackup() {
