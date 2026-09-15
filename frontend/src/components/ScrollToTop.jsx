@@ -3,17 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const [isVisible, setIsVisible] = useState(false);
 
-  // 1. Automatically scroll to top whenever the route/pathname changes
+  // Reset the document for both route changes and filter/query navigation.
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
-  }, [pathname]);
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname, search]);
 
   // 2. Track scroll position to show/hide the floating button
   useEffect(() => {
@@ -29,7 +27,7 @@ export default function ScrollToTop() {
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
-  // 3. Smooth scroll handler when user clicks the floating button
+  // 3. Scroll handler when user clicks the floating button
   const handleScrollToTop = () => {
     window.scrollTo({
       top: 0,
