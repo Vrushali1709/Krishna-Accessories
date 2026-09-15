@@ -67,12 +67,10 @@ export default function ProductDetails() {
     setIsSwitching(true);
     refreshData();
     const t = setTimeout(() => setIsSwitching(false), 120);
-    window.addEventListener('productsUpdated', refreshData);
     window.addEventListener('reviewsUpdated', refreshData);
     window.addEventListener('wishlistUpdated', () => setInWish(isInWishlist(id)));
     return () => {
       clearTimeout(t);
-      window.removeEventListener('productsUpdated', refreshData);
       window.removeEventListener('reviewsUpdated', refreshData);
       window.removeEventListener('wishlistUpdated', () => setInWish(isInWishlist(id)));
     };
