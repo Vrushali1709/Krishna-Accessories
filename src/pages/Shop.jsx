@@ -1009,13 +1009,24 @@ export default function Shop() {
                         {/* Image */}
                         <Link
                           to={`/product/${product.id}`}
-                          className="h-32 w-32 shrink-0 overflow-hidden rounded-xl bg-[#F4F3F0] p-1 flex items-center justify-center"
+                          className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl bg-[#F4F3F0] p-1 flex items-center justify-center"
                         >
                           <img
                             src={product.image || product.images?.[0]}
                             alt={product.name}
-                            className="h-full w-full object-contain transition group-hover:scale-105"
+                            className={`h-full w-full object-contain transition-all duration-500 ${
+                              product.images && product.images.length > 1
+                                ? 'group-hover:opacity-0 group-hover:scale-105'
+                                : 'group-hover:scale-105'
+                            }`}
                           />
+                          {product.images && product.images.length > 1 && (
+                            <img
+                              src={product.images[1]}
+                              alt={`${product.name} alternate angle`}
+                              className="absolute inset-0 h-full w-full object-contain p-1 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
+                            />
+                          )}
                         </Link>
 
                         {/* Middle Details */}

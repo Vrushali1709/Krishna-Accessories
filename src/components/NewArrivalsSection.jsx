@@ -284,14 +284,26 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                   <div className={`relative aspect-[3/3.8] w-full overflow-hidden ${cardStyle.image} bg-[#F2F3F5] mb-3`}>
                     <Link
                       to={`/product/${product.id}`}
-                      className="block h-full w-full"
+                      className="relative block h-full w-full overflow-hidden"
                     >
                       <img
                         src={product.image || product.images?.[0]}
                         alt={product.name}
                         loading="lazy"
-                        className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                        className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+                          product.images && product.images.length > 1
+                            ? 'group-hover:opacity-0 group-hover:scale-105'
+                            : 'group-hover:scale-105'
+                        }`}
                       />
+                      {product.images && product.images.length > 1 && (
+                        <img
+                          src={product.images[1]}
+                          alt={`${product.name} alternate angle`}
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
+                        />
+                      )}
                     </Link>
 
                     <div className="absolute inset-x-3 top-3 flex items-start justify-between pointer-events-none">

@@ -272,14 +272,26 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                     <div className="relative aspect-square w-full overflow-hidden rounded-[16px] sm:rounded-[20px] bg-gradient-to-b from-[#F7F7F8] to-[#EDEDF0] mb-3 sm:mb-4">
                       <Link
                         to={`/product/${product.id}`}
-                        className="flex h-full w-full items-center justify-center cursor-pointer overflow-hidden"
+                        className="relative flex h-full w-full items-center justify-center cursor-pointer overflow-hidden"
                       >
                         <img
                           src={product.image || product.images?.[0]}
                           alt={product.name}
-                          className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
+                          className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+                            product.images && product.images.length > 1
+                              ? 'group-hover:opacity-0 group-hover:scale-105'
+                              : 'group-hover:scale-108'
+                          }`}
                           loading="lazy"
                         />
+                        {product.images && product.images.length > 1 && (
+                          <img
+                            src={product.images[1]}
+                            alt={`${product.name} alternate angle`}
+                            className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
+                            loading="lazy"
+                          />
+                        )}
                       </Link>
 
                       {/* Top Badges & Actions Overlay */}

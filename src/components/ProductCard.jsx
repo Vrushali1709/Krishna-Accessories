@@ -91,14 +91,38 @@ export default function ProductCard({
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F4F3F0]">
         <Link
           to={`/product/${product.id}`}
-          className="flex h-full w-full items-center justify-center overflow-hidden"
+          className="relative flex h-full w-full items-center justify-center overflow-hidden"
         >
+          {/* Primary Product Image */}
           <img
             src={product.image || product.images?.[0]}
             alt={product.name}
-            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
+            className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+              product.images && product.images.length > 1
+                ? 'group-hover:opacity-0 group-hover:scale-105'
+                : 'group-hover:scale-108'
+            }`}
             loading="lazy"
           />
+
+          {/* Secondary Hover Image (if available) */}
+          {product.images && product.images.length > 1 && (
+            <img
+              src={product.images[1]}
+              alt={`${product.name} alternate angle`}
+              className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
+              loading="lazy"
+            />
+          )}
+
+          {/* Subtle multi-image indicator badge */}
+          {product.images && product.images.length > 1 && (
+            <div className="absolute bottom-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <span className="rounded-md bg-black/75 backdrop-blur-md px-1.5 py-0.5 text-[8.5px] font-bold tracking-wider text-amber-300 shadow-xs border border-white/10">
+                Angle 2/{product.images.length}
+              </span>
+            </div>
+          )}
         </Link>
 
         {/* Top Badges / Actions */}

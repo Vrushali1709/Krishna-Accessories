@@ -271,12 +271,45 @@ export default function ProductDetails() {
                 <span>Fullscreen</span>
               </button>
 
+              {/* Main Stage Image */}
               <img
                 src={images[selectedImage] || images[0]}
                 alt={`${product.name} - ${angleLabels[selectedImage] || 'View'}`}
                 onClick={() => { setLightboxOpen(true); setLightboxZoom(1); }}
-                className="h-full w-full object-contain mix-blend-multiply cursor-zoom-in transition-transform duration-500 ease-out group-hover:scale-105"
+                className="h-full w-full object-contain mix-blend-multiply cursor-zoom-in transition-all duration-300 ease-out group-hover:scale-105"
               />
+
+              {/* Prev/Next Quick Angle Arrows on Hover */}
+              {images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 border border-gray-200 shadow-md text-gray-700 opacity-0 group-hover:opacity-100 transition-all hover:bg-black hover:text-white hover:scale-110 cursor-pointer"
+                    title="Previous Angle"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 border border-gray-200 shadow-md text-gray-700 opacity-0 group-hover:opacity-100 transition-all hover:bg-black hover:text-white hover:scale-110 cursor-pointer"
+                    title="Next Angle"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
             </div>
 
             {/* 4-Angle Thumbnail Strip with Perspective Labels */}
@@ -284,7 +317,7 @@ export default function ProductDetails() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-[11px] text-gray-500 px-1">
                   <span className="font-semibold text-gray-700 uppercase tracking-wider text-[10px]">Multi-Angle Views ({images.length} Perspectives):</span>
-                  <span className="text-[10.5px]">Click thumbnail or color swatch to switch</span>
+                  <span className="text-[10.5px] text-amber-700 font-medium">Hover or click thumbnail to switch</span>
                 </div>
                 <div className="grid grid-cols-4 gap-2 sm:gap-3">
                   {images.map((img, idx) => {
@@ -295,19 +328,20 @@ export default function ProductDetails() {
                         key={idx}
                         type="button"
                         onClick={() => setSelectedImage(idx)}
-                        className={`group relative flex flex-col items-center justify-between overflow-hidden rounded-2xl border p-1.5 bg-white transition-all duration-200 text-left ${isSelected
-                          ? 'border-gray-950 ring-2 ring-gray-950/20 shadow-md bg-gray-50/50'
-                          : 'border-gray-200 hover:border-gray-400 hover:shadow-xs'
+                        onMouseEnter={() => setSelectedImage(idx)}
+                        className={`group/thumb relative flex flex-col items-center justify-between overflow-hidden rounded-2xl border p-1.5 bg-white transition-all duration-200 text-left cursor-pointer ${isSelected
+                          ? 'border-gray-950 ring-2 ring-gray-950/20 shadow-md bg-gray-50/50 scale-[1.02]'
+                          : 'border-gray-200 hover:border-gray-400 hover:shadow-xs hover:scale-[1.02]'
                           }`}
                       >
                         <div className="aspect-square w-full overflow-hidden rounded-xl bg-[#F8F9FA] p-1 flex items-center justify-center">
                           <img
                             src={img}
                             alt=""
-                            className="h-full w-full object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-108"
+                            className="h-full w-full object-contain mix-blend-multiply transition-transform duration-300 group-hover/thumb:scale-108"
                           />
                         </div>
-                        <span className={`mt-1.5 block w-full text-center text-[9px] sm:text-[10px] font-semibold truncate px-1 transition ${isSelected ? 'text-gray-950' : 'text-gray-500 group-hover:text-gray-800'
+                        <span className={`mt-1.5 block w-full text-center text-[9px] sm:text-[10px] font-semibold truncate px-1 transition ${isSelected ? 'text-gray-950 font-bold' : 'text-gray-500 group-hover/thumb:text-gray-900'
                           }`}>
                           {label}
                         </span>
