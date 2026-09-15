@@ -173,5 +173,5 @@ export function isAdmin() {
 }
 
 export function isSupplier() {
-  return !!getSupplierUser();
+  return !!getSupplierUser() || isAdmin();
 }

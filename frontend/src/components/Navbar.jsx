@@ -400,10 +400,19 @@ export default function Navbar() {
               {isAdmin() && (
                 <Link
                   to="/admin"
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 rounded-full border border-amber-300 bg-amber-50/90 hover:bg-amber-100 hover:border-amber-400 px-3 py-1 text-[11px] font-bold text-amber-900 transition-all shadow-xs normal-case tracking-normal"
+                  className="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-[9.5px] font-bold text-amber-900 hover:bg-amber-100 transition shadow-2xs"
                 >
-                  <span className="text-xs">⚙️</span>
-                  <span>Admin Panel</span>
+                  ⚙️ Admin Panel
+                </Link>
+              )}
+
+              {/* Portal Link: Supplier */}
+              {isSupplier() && (
+                <Link
+                  to="/supplier"
+                  className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-[9.5px] font-bold text-blue-700 hover:bg-blue-100 transition"
+                >
+                  🏢 Vendor Portal
                 </Link>
               )}
             </nav>
@@ -667,7 +676,7 @@ export default function Navbar() {
                             >
                               <div className="flex items-center gap-2.5">
                                 <span className="text-sm">⚙️</span>
-                               <span>Admin Dashboard</span>
+                                <span>Admin Dashboard</span>
                               </div>
                               <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full">Active</span>
                             </Link>
