@@ -793,7 +793,7 @@ export default function Home() {
 
             <div className="space-y-3.5 sm:space-y-4">
               {/* Track 1 (Row 1 Brands - Scrolling Left) */}
-              <div className="animate-marquee flex items-center gap-3 sm:gap-4 py-1">
+              <div className="animate-marquee flex items-center gap-3 sm:gap-4 py-2">
                 {[...brandRow1, ...brandRow1, ...brandRow1, ...brandRow1].map((b, idx) => (
                   <Link
                     key={`${b.name}-t1-${idx}`}
@@ -812,7 +812,7 @@ export default function Home() {
               </div>
 
               {/* Track 2 (Row 2 Brands - Scrolling Right / Reverse) */}
-              <div className="animate-marquee-reverse flex items-center gap-3 sm:gap-4 py-1">
+              <div className="animate-marquee-reverse flex items-center gap-3 sm:gap-4 py-2">
                 {[...brandRow2, ...brandRow2, ...brandRow2, ...brandRow2].map((b, idx) => (
                   <Link
                     key={`${b.name}-t2-${idx}`}
