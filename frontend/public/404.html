@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Krishna Accessories</title>
+    <script>
+      (function redirectToSpaEntry() {
+        const currentRoute = window.location.pathname + window.location.search + window.location.hash;
+        const isGitHubPages = window.location.hostname.endsWith('github.io');
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const appBase = isGitHubPages && pathParts.length > 0 ? `/${pathParts[0]}/` : '/';
+
+        sessionStorage.setItem('spaRedirect', currentRoute);
+        window.location.replace(appBase);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

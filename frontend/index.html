@@ -93,6 +93,16 @@
       <div class="preloader-bar"></div>
     </div>
   </div>
+  <script>
+    (function restoreSpaRoute() {
+      const savedRoute = sessionStorage.getItem('spaRedirect');
+
+      if (savedRoute) {
+        sessionStorage.removeItem('spaRedirect');
+        window.history.replaceState(null, '', savedRoute);
+      }
+    })();
+  </script>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
