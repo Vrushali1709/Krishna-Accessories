@@ -24,7 +24,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import { LoadingProvider } from './context/LoadingContext';
 import WebsiteLoader from './components/WebsiteLoader';
-import TopProgressBar from './components/TopProgressBar';
 import LiveEmailToast from './components/LiveEmailToast';
 
 export default function App() {
@@ -32,7 +31,6 @@ export default function App() {
     <Router>
       <LoadingProvider>
         <ScrollToTop />
-        <TopProgressBar />
         <WebsiteLoader />
         <LiveEmailToast />
         <Routes>
