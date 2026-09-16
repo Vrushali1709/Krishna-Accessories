@@ -481,17 +481,17 @@ export default function AdminDashboard() {
 
   // Payments Ledger Computations
   const paymentTransactions = useMemo(() => {
-    return orders.map(o => ({
-      id: `TXN-${o.id.replace('KA-', '')}`,
-      orderId: o.id,
-      customer: `${o.customer?.firstName} ${o.customer?.lastName}`,
+    return (orders || []).map(o => ({
+      id: `TXN-${String(o.id || '').replace('KA-', '')}`,
+      orderId: o.id || 'N/A',
+      customer: `${o.customer?.firstName || o.customer?.name || 'Customer'} ${o.customer?.lastName || ''}`.trim(),
       method: o.paymentMethod || 'Online Gateway (UPI)',
-      gatewayRef: `PG_PAY_${o.id.replace(/[^0-9]/g, '')}77X`,
-      amount: o.total || 0,
-      fee: Math.round((o.total || 0) * 0.02),
-      netSettlement: (o.total || 0) - Math.round((o.total || 0) * 0.02),
+      gatewayRef: `PG_PAY_${String(o.id || '').replace(/[^0-9]/g, '') || '000'}77X`,
+      amount: Number(o.total || 0),
+      fee: Math.round(Number(o.total || 0) * 0.02),
+      netSettlement: Number(o.total || 0) - Math.round(Number(o.total || 0) * 0.02),
       status: o.paymentStatus || (o.status === 'Cancelled' ? 'Void' : o.status === 'Refunded' ? 'Refunded' : 'Settled'),
-      date: o.date || '31 Aug 2026'
+      date: o.date || 'Today'
     }));
   }, [orders]);
 
@@ -2106,7 +2106,7 @@ export default function AdminDashboard() {
                               <span className="font-medium text-zinc-900">{v.attributeType}:</span> {v.value}
                             </td>
                             <td className="p-3.5 font-medium text-zinc-900 tabular-nums">
-                              {v.priceModifier > 0 ? `+ ₹${v.priceModifier.toLocaleString('en-IN')}` : 'Base Price'}
+                              {(Number(v.priceModifier) || 0) > 0 ? `+ ₹${Number(v.priceModifier).toLocaleString('en-IN')}` : 'Base Price'}
                             </td>
                             <td className="p-3.5 font-medium font-mono text-emerald-800">{v.stock} in stock</td>
                             <td className="p-3.5 text-right">
@@ -2465,9 +2465,9 @@ export default function AdminDashboard() {
                               <span className="font-medium text-zinc-900 block">{txn.customer}</span>
                               <span className="text-[10.5px] text-zinc-500">{txn.method}</span>
                             </td>
-                            <td className="p-3.5 font-medium text-zinc-900 tabular-nums">₹{txn.amount.toLocaleString('en-IN')}</td>
-                            <td className="p-3.5 text-zinc-500 tabular-nums">₹{txn.fee.toLocaleString('en-IN')}</td>
-                            <td className="p-3.5 font-semibold text-emerald-800 tabular-nums">₹{txn.netSettlement.toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-medium text-zinc-900 tabular-nums">₹{Number(txn.amount || 0).toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 text-zinc-500 tabular-nums">₹{Number(txn.fee || 0).toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-semibold text-emerald-800 tabular-nums">₹{Number(txn.netSettlement || 0).toLocaleString('en-IN')}</td>
                             <td className="p-3.5 text-right">
                               <span className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-medium">
                                 {txn.status}
@@ -2511,13 +2511,13 @@ export default function AdminDashboard() {
                             <td className="p-3.5 font-mono font-semibold text-zinc-900">{order.id}</td>
                             <td className="p-3.5">
                               <span className="font-medium text-zinc-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
-                              <span className="text-[10px] text-zinc-400">{order.customer?.city}</span>
+                              <span className="text-[10px] text-zinc-500">{order.customer?.city}, {order.customer?.state}</span>
                             </td>
                             <td className="p-3.5">
                               <p className="font-medium text-zinc-900">{order.returnRequest?.reason || 'Exchange Requested'}</p>
                               <p className="text-[10.5px] text-zinc-500">Condition: {order.returnRequest?.condition || 'Inspected'}</p>
                             </td>
-                            <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{order.total?.toLocaleString('en-IN')}</td>
+                            <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{Number(order.total || 0).toLocaleString('en-IN')}</td>
                             <td className="p-3.5">
                               <span className="rounded-full bg-purple-50 text-purple-800 border border-purple-200 px-2.5 py-0.5 text-[10px] font-medium">
                                 {order.status}
@@ -2654,7 +2654,7 @@ export default function AdminDashboard() {
                           </div>
                           <p className="text-xs font-semibold text-zinc-900">{c.discount}% Off Discount</p>
                           <p className="text-[10.5px] text-zinc-500 mt-0.5">
-                            Min spend: ₹{c.minSpend.toLocaleString('en-IN')} &bull; Used {c.usageCount} times
+                            Min spend: ₹{Number(c.minSpend || 0).toLocaleString('en-IN')} &bull; Used {c.usageCount || 0} times
                           </p>
                         </div>
                         <div className="mt-4 pt-2 border-t border-zinc-100 flex justify-end">
@@ -2706,7 +2706,7 @@ export default function AdminDashboard() {
                           <p className="text-xs font-medium text-zinc-600 mt-0.5">{p.discount} &bull; {p.targetCategory}</p>
                         </div>
                         <div className="flex items-center justify-between pt-2 border-t border-zinc-100 text-[10.5px] text-zinc-400">
-                          <span>{p.impressions.toLocaleString()} views &bull; {p.clicks.toLocaleString()} clicks</span>
+                          <span>{(Number(p.impressions) || 0).toLocaleString()} views &bull; {(Number(p.clicks) || 0).toLocaleString()} clicks</span>
                           <button onClick={() => deletePromotion(p.id)} className="text-rose-600 font-medium hover:underline cursor-pointer">
                             Delete
                           </button>
@@ -4392,7 +4392,7 @@ export default function AdminDashboard() {
                     {selectedOrder.discount > 0 && (
                       <div className="flex justify-between text-emerald-800 font-medium">
                         <span>Discount Applied</span>
-                        <span className="tabular-nums">−₹{selectedOrder.discount.toLocaleString('en-IN')}</span>
+                        <span className="tabular-nums">−₹{Number(selectedOrder.discount || 0).toLocaleString('en-IN')}</span>
                       </div>
                     )}
                     <div className="flex justify-between">

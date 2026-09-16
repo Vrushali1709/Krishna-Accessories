@@ -495,7 +495,7 @@ export default function SupplierDashboard() {
                           }`}>
                           {order.status}
                         </span>
-                        <p className="text-xs font-bold font-mono text-zinc-900">₹{order.total?.toLocaleString('en-IN')}</p>
+                        <p className="text-xs font-bold font-mono text-zinc-900">₹{Number(order.total || 0).toLocaleString('en-IN')}</p>
                       </div>
                     </div>
                   ))}
@@ -655,9 +655,9 @@ export default function SupplierDashboard() {
                         </td>
                         <td className="py-3.5 px-4 font-mono text-zinc-700 text-xs">{p.sku}</td>
                         <td className="py-3.5 px-4">
-                          <span className="font-bold text-zinc-900 font-mono text-xs">₹{p.price.toLocaleString('en-IN')}</span>
+                          <span className="font-bold text-zinc-900 font-mono text-xs">₹{Number(p.price || 0).toLocaleString('en-IN')}</span>
                           {p.oldPrice && (
-                            <span className="text-[10px] text-zinc-400 line-through block font-mono">₹{p.oldPrice.toLocaleString('en-IN')}</span>
+                            <span className="text-[10px] text-zinc-400 line-through block font-mono">₹{Number(p.oldPrice || 0).toLocaleString('en-IN')}</span>
                           )}
                         </td>
                         <td className="py-3.5 px-4">
@@ -814,7 +814,7 @@ export default function SupplierDashboard() {
                         </td>
 
                         <td className="py-3.5 px-4">
-                          <span className="font-bold text-zinc-900 font-mono text-xs">₹{order.total?.toLocaleString('en-IN')}</span>
+                          <span className="font-bold text-zinc-900 font-mono text-xs">₹{Number(order.total || 0).toLocaleString('en-IN')}</span>
                         </td>
 
                         <td className="py-3.5 px-4">
