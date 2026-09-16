@@ -100,7 +100,7 @@ import {
   syncAdminDataFromBackend
 } from '../utils/adminStore';
 import { getCurrentUser, setCurrentUser, logout, logoutAdmin, isAdmin, getAdminUser } from '../utils/auth';
-import { checkBackendHealth } from '../utils/api';
+import { analyticsApi, checkBackendHealth } from '../utils/api';
 
 export default function AdminDashboard() {
 
@@ -288,6 +288,8 @@ export default function AdminDashboard() {
   // Python Backend Connection State
   const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true });
   const [isSyncing, setIsSyncing] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -364,6 +366,28 @@ export default function AdminDashboard() {
       listeners.forEach(ev => window.removeEventListener(ev, refreshAll));
     };
   }, []);
+
+  useEffect(() => {
+    if (activeSection !== 'analytics') return undefined;
+    let cancelled = false;
+    const loadAnalytics = async () => {
+      setAnalyticsLoading(true);
+      try {
+        const data = await analyticsApi.getStats();
+        if (!cancelled) setAnalyticsData(data);
+      } catch {
+        if (!cancelled) setAnalyticsData(null);
+      } finally {
+        if (!cancelled) setAnalyticsLoading(false);
+      }
+    };
+    loadAnalytics();
+    const interval = setInterval(loadAnalytics, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [activeSection]);
 
 
   // Filter Catalog Products
@@ -2947,20 +2971,20 @@ export default function AdminDashboard() {
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
                   <span className="text-[10px] font-semibold uppercase text-zinc-400">Total GMV</span>
-                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{totalRevenue.toLocaleString('en-IN')}</p>
-                  <p className="text-[10.5px] text-emerald-700 font-medium mt-0.5">↑ +18.4% vs last period</p>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{Number(analyticsData?.totalRevenue ?? totalRevenue).toLocaleString('en-IN')}</p>
+                  <p className="text-[10.5px] text-zinc-500 font-medium mt-0.5">{analyticsLoading ? 'Refreshing...' : `${analyticsData?.totalOrders ?? orders.length} valid orders`}</p>
                 </div>
                 <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
                   <span className="text-[10px] font-semibold uppercase text-zinc-400">Average Order Value</span>
                   <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                    ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
+                    ₹{Math.round(Number(analyticsData?.totalRevenue ?? totalRevenue) / Math.max(1, analyticsData?.totalOrders ?? orders.length)).toLocaleString('en-IN')}
                   </p>
                   <p className="text-[10.5px] text-zinc-400 mt-0.5">Based on completed sales</p>
                 </div>
                 <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
                   <span className="text-[10px] font-semibold uppercase text-zinc-400">Repeat Retention Rate</span>
-                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">42.8%</p>
-                  <p className="text-[10.5px] text-zinc-400 mt-0.5">Verified customer base</p>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.uniqueCustomers ? Math.round((analyticsData.repeatCustomers / analyticsData.uniqueCustomers) * 100) : 0}%</p>
+                  <p className="text-[10.5px] text-zinc-400 mt-0.5">Repeat customers</p>
                 </div>
               </div>
 
@@ -2978,16 +3002,43 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-100 font-normal">
-                      {products.slice(0, 5).map(p => (
-                        <tr key={p.id} className="hover:bg-zinc-50/75">
-                          <td className="p-3 font-semibold text-zinc-900">{p.name}</td>
+                      {(analyticsData?.productPerformance || []).slice(0, 5).map(p => (
+                        <tr key={p.product} className="hover:bg-zinc-50/75">
+                          <td className="p-3 font-semibold text-zinc-900">{p.product}</td>
                           <td className="p-3 text-zinc-500">{p.category}</td>
-                          <td className="p-3 font-medium text-zinc-900 tabular-nums">₹{Number(p.price).toLocaleString('en-IN')}</td>
-                          <td className="p-3 text-right font-mono tabular-nums">{p.stock}</td>
+                          <td className="p-3 font-medium text-zinc-900 tabular-nums">₹{Number(p.revenue).toLocaleString('en-IN')}</td>
+                          <td className="p-3 text-right font-mono tabular-nums">{p.units}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                  <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Monthly Sales</h3>
+                  <div className="divide-y divide-zinc-100 text-xs">
+                    {(analyticsData?.monthlySales || []).map(period => (
+                      <div key={period.month} className="flex items-center justify-between py-3">
+                        <span className="font-medium text-zinc-700">{period.month}</span>
+                        <span className="text-right"><strong className="text-zinc-900">₹{Number(period.revenue).toLocaleString('en-IN')}</strong><small className="ml-2 text-zinc-400">{period.orders} orders</small></span>
+                      </div>
+                    ))}
+                    {!analyticsData?.monthlySales?.length && <p className="py-3 text-zinc-400">No sales data available.</p>}
+                  </div>
+                </div>
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                  <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Supplier GMV</h3>
+                  <div className="divide-y divide-zinc-100 text-xs">
+                    {(analyticsData?.supplierPerformance || []).map(supplier => (
+                      <div key={supplier.supplier} className="flex items-center justify-between py-3">
+                        <span className="font-medium text-zinc-700">{supplier.supplier}</span>
+                        <span className="text-right"><strong className="text-zinc-900">₹{Number(supplier.revenue).toLocaleString('en-IN')}</strong><small className="ml-2 text-zinc-400">{supplier.orders} items</small></span>
+                      </div>
+                    ))}
+                    {!analyticsData?.supplierPerformance?.length && <p className="py-3 text-zinc-400">No supplier data available.</p>}
+                  </div>
                 </div>
               </div>
 
