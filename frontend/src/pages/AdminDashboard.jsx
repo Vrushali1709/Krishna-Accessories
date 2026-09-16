@@ -74,6 +74,7 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
   addNotification,
+  deleteNotification,
   clearNotifications,
   syncOrdersFromBackend
 } from '../utils/orderStore';
@@ -178,6 +179,7 @@ export default function AdminDashboard() {
   const [filterCat, setFilterCat] = useState('All');
   const [filterBrand, setFilterBrand] = useState('All');
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
+  const [adminNotifFilter, setAdminNotifFilter] = useState('all');
 
   // Add / Edit Product Modal State
   const [productModalOpen, setProductModalOpen] = useState(false);
@@ -749,6 +751,14 @@ export default function AdminDashboard() {
     setProductModalOpen(false);
     showToast(editingProduct ? 'Product updated successfully' : 'New product published to catalog');
 
+    addNotification({
+      title: editingProduct ? 'Product Updated' : 'New Product Added',
+      message: `"${payload.name}" (${payload.brand}) is ${editingProduct ? 'updated' : 'now live in the catalog'} for ₹${payload.price.toLocaleString('en-IN')}.`,
+      type: 'admin',
+      link: `/product/${payload.id}`,
+      actionText: 'View Product'
+    });
+
     setAuditLogs(prev => [
       {
         id: Date.now(),
@@ -767,6 +777,13 @@ export default function AdminDashboard() {
     if (window.confirm(`Delete product "${target?.name || id}" permanently from store catalog?`)) {
       deleteProduct(id);
       showToast('Product removed from catalog');
+
+      addNotification({
+        title: 'Product Deleted',
+        message: `Product "${target?.name || id}" was removed from the store catalog.`,
+        type: 'admin'
+      });
+
       setAuditLogs(prev => [
         {
           id: Date.now(),
@@ -816,6 +833,12 @@ export default function AdminDashboard() {
     setPromoModalOpen(false);
     setPromoForm({ title: '', code: '', discount: '20% Off', targetCategory: 'All Departments', bannerType: 'Hero Banner', startDate: 'Today', endDate: '30 Days' });
     showToast('Campaign banner launched');
+
+    addNotification({
+      title: 'Campaign Banner Launched 🏷️',
+      message: `Promotion "${promoForm.title}" (${promoForm.code || 'Boutique Deal'}) is now active.`,
+      type: 'promo'
+    });
   };
 
   // Role Submit
@@ -832,14 +855,15 @@ export default function AdminDashboard() {
   const handleAddSupplierSubmit = (e) => {
     e.preventDefault();
     if (!supplierForm.name.trim() || !supplierForm.email.trim()) return;
-    addSupplier({
+    const newSupp = {
       name: supplierForm.name.trim(),
       email: supplierForm.email.trim().toLowerCase(),
       phone: supplierForm.phone.trim() || '+91 98765 00000',
       category: supplierForm.category || 'Fitness',
       address: supplierForm.address || 'Gujarat, India',
       status: 'Active'
-    });
+    };
+    addSupplier(newSupp);
     setSuppliers(getSuppliers());
     setSupplierModalOpen(false);
     setSupplierForm({
@@ -850,6 +874,12 @@ export default function AdminDashboard() {
       address: 'Gujarat, India'
     });
     showToast('Vendor partner onboarded');
+
+    addNotification({
+      title: 'Supplier Onboarded 🏢',
+      message: `New vendor partner "${newSupp.name}" onboarded for category ${newSupp.category}.`,
+      type: 'supplier'
+    });
   };
 
   // Category & Brand Form Submit
@@ -857,26 +887,42 @@ export default function AdminDashboard() {
     e.preventDefault();
     if (!newCatInput.trim()) return;
     addCategory(newCatInput.trim());
+    const catName = newCatInput.trim();
     setNewCatInput('');
     showToast('Department category created');
+
+    addNotification({
+      title: 'Category Created',
+      message: `Category "${catName}" added to the platform.`,
+      type: 'admin'
+    });
   };
 
   const handleAddBrandSubmit = (e) => {
     e.preventDefault();
     if (!newBrandInput.trim()) return;
     addBrand(newBrandInput.trim());
+    const brandName = newBrandInput.trim();
     setNewBrandInput('');
     showToast('Luxury brand registered');
+
+    addNotification({
+      title: 'Brand Registered',
+      message: `Brand "${brandName}" added to the platform.`,
+      type: 'admin'
+    });
   };
 
   // Coupon Submit
   const handleAddCoupon = (e) => {
     e.preventDefault();
     if (!newCouponCode.trim() || !newCouponDiscount) return;
+    const code = newCouponCode.trim().toUpperCase();
+    const discountVal = Number(newCouponDiscount);
     setCoupons(prev => [
       {
-        code: newCouponCode.trim().toUpperCase(),
-        discount: Number(newCouponDiscount),
+        code: code,
+        discount: discountVal,
         type: 'percentage',
         minSpend: Number(newCouponMin) || 1000,
         status: 'Active',
@@ -888,6 +934,12 @@ export default function AdminDashboard() {
     setNewCouponDiscount('');
     setNewCouponMin('');
     showToast('Discount voucher created');
+
+    addNotification({
+      title: 'New Voucher Created 🏷️',
+      message: `Promo code "${code}" created with ${discountVal}% instant discount.`,
+      type: 'promo'
+    });
   };
 
   // Return & Refund Review Flow
@@ -1318,43 +1370,109 @@ export default function AdminDashboard() {
               >
                 <Bell className="h-3.5 w-3.5" />
                 {unreadNotifs > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8.5px] font-bold text-white shadow-xs">
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8.5px] font-bold text-white shadow-xs animate-pulse">
                     {unreadNotifs}
                   </span>
                 )}
               </button>
 
               {notifsOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-xl z-50 animate-fade-in">
-                  <div className="flex items-center justify-between border-b border-zinc-100 pb-2 mb-2">
-                    <span className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                      Platform Alerts ({notifications.length})
-                    </span>
-                    {unreadNotifs > 0 && (
-                      <button
-                        onClick={markAllNotificationsRead}
-                        className="text-[10.5px] text-zinc-600 font-semibold hover:text-zinc-950 cursor-pointer"
-                      >
-                        Mark all read
-                      </button>
-                    )}
+                <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-2xl z-50 animate-fade-in divide-y divide-zinc-100">
+                  <div className="pb-2.5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                          🔔 Platform Alerts
+                        </span>
+                        {unreadNotifs > 0 && (
+                          <span className="rounded-full bg-rose-600 px-1.5 py-0.2 text-[8.5px] font-bold text-white">
+                            {unreadNotifs} new
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {unreadNotifs > 0 && (
+                          <button
+                            onClick={markAllNotificationsRead}
+                            className="text-[10px] text-zinc-600 font-bold hover:text-black cursor-pointer"
+                          >
+                            Mark all read
+                          </button>
+                        )}
+                        {notifications.length > 0 && (
+                          <button
+                            onClick={clearNotifications}
+                            className="text-[10px] text-zinc-400 font-medium hover:text-rose-600 cursor-pointer"
+                          >
+                            Clear all
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Filter Pills */}
+                    <div className="flex items-center gap-1 overflow-x-auto pb-0.5 text-[9.5px]">
+                      {[
+                        { key: 'all', label: 'All', count: notifications.length },
+                        { key: 'order', label: '📦 Orders', count: notifications.filter(n => n.type === 'order').length },
+                        { key: 'admin', label: '⚙️ Admin', count: notifications.filter(n => n.type === 'admin' || n.type === 'promo').length },
+                        { key: 'supplier', label: '🏢 Suppliers', count: notifications.filter(n => n.type === 'supplier').length }
+                      ].map((tab) => (
+                        <button
+                          key={tab.key}
+                          onClick={() => setAdminNotifFilter(tab.key)}
+                          className={`rounded-lg px-2 py-0.5 font-semibold transition cursor-pointer whitespace-nowrap ${
+                            adminNotifFilter === tab.key
+                              ? 'bg-zinc-900 text-white'
+                              : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                          }`}
+                        >
+                          {tab.label} {tab.count > 0 ? `(${tab.count})` : ''}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
-                    {notifications.map(n => (
-                      <div
-                        key={n.id}
-                        onClick={() => markNotificationRead(n.id)}
-                        className={`rounded-xl p-2.5 text-xs transition cursor-pointer ${n.unread ? 'bg-zinc-50 border border-zinc-200/80 font-medium' : 'hover:bg-zinc-50 text-zinc-600'
+                  <div className="pt-2 space-y-1.5 max-h-72 overflow-y-auto pr-1">
+                    {notifications
+                      .filter(n => {
+                        if (adminNotifFilter === 'all') return true;
+                        if (adminNotifFilter === 'order') return n.type === 'order';
+                        if (adminNotifFilter === 'admin') return n.type === 'admin' || n.type === 'promo';
+                        if (adminNotifFilter === 'supplier') return n.type === 'supplier';
+                        return true;
+                      })
+                      .map(n => (
+                        <div
+                          key={n.id}
+                          className={`rounded-xl p-2.5 text-xs transition border relative group ${
+                            n.unread ? 'bg-amber-50/40 border-amber-200/80 font-medium' : 'hover:bg-zinc-50 border-zinc-100 text-zinc-600'
                           }`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <span className="font-semibold text-zinc-900 text-xs">{n.title}</span>
-                          <span className="text-[9px] text-zinc-400 font-mono shrink-0">{n.date}</span>
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0" onClick={() => markNotificationRead(n.id)}>
+                              <div className="flex justify-between items-start gap-1">
+                                <span className="font-semibold text-zinc-900 text-xs truncate">{n.title}</span>
+                                <span className="text-[9px] text-zinc-400 font-mono shrink-0">{n.date}</span>
+                              </div>
+                              <p className="mt-0.5 text-[11px] text-zinc-600 leading-snug break-words">{n.message}</p>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteNotification(n.id);
+                              }}
+                              className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-rose-600 p-1 text-[10px] cursor-pointer"
+                              title="Delete notification"
+                            >
+                              🗑️
+                            </button>
+                          </div>
                         </div>
-                        <p className="mt-0.5 text-[11px] text-zinc-600 leading-snug">{n.message}</p>
-                      </div>
-                    ))}
+                      ))}
+                    {notifications.length === 0 && (
+                      <p className="text-xs text-zinc-400 text-center py-6">No platform alerts recorded.</p>
+                    )}
                   </div>
                 </div>
               )}

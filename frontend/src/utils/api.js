@@ -225,6 +225,7 @@ export const notificationsApi = {
   add: (notif) => request('/notifications', { method: 'POST', body: notif }),
   markRead: (id) => request(`/notifications/${id}/read`, { method: 'PUT' }),
   markAllRead: () => request('/notifications/read-all', { method: 'PUT' }),
+  delete: (id) => request(`/notifications/${id}`, { method: 'DELETE' }),
   clear: () => request('/notifications', { method: 'DELETE' })
 };
 

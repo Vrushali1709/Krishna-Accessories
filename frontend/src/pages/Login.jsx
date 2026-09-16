@@ -7,7 +7,7 @@ import { setAdminUser, setSupplierUser, setCustomerUser, setAuthToken } from '..
 import { usersApi, authApi } from '../utils/api';
 import { syncCartFromBackend } from '../utils/cart';
 import { syncWishlistFromBackend } from '../utils/productStore';
-import { syncAddressesFromBackend } from '../utils/orderStore';
+import { syncAddressesFromBackend, addNotification } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendPasswordResetSuccessEmail } from '../utils/emailService';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 import { Eye, EyeOff, RefreshCw, KeyRound, Mail } from 'lucide-react';
@@ -134,6 +134,15 @@ export default function Login() {
       if (user.role?.toLowerCase() === 'admin') setAdminUser(user);
       else if (user.role?.toLowerCase() === 'supplier') setSupplierUser(user);
       else setCustomerUser({ ...user, role: 'customer' });
+
+      addNotification({
+        title: 'Signed In Successfully 👋',
+        message: `Welcome back, ${user.name || user.email}!`,
+        type: 'account',
+        link: user.role?.toLowerCase() === 'admin' ? '/admin' : user.role?.toLowerCase() === 'supplier' ? '/supplier' : '/account',
+        actionText: 'View Dashboard'
+      });
+
       navigate(returnPath || (user.role?.toLowerCase() === 'admin' ? '/admin' : user.role?.toLowerCase() === 'supplier' ? '/supplier' : '/account'), { replace: true });
     } catch (loginError) {
       setError(loginError.message || 'Unable to sign in. Please check your credentials.');
@@ -191,8 +200,18 @@ export default function Login() {
     showLoading('Verifying OTP & Logging In...');
     setTimeout(async () => {
       setAuthToken(verifyResult.token);
-      setCustomerUser(verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] });
+      const userObj = verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] };
+      setCustomerUser(userObj);
       await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
+
+      addNotification({
+        title: 'Signed In Successfully 👋',
+        message: `Welcome back, ${userObj.name || cleanEmail}!`,
+        type: 'account',
+        link: '/account',
+        actionText: 'View Account'
+      });
+
       setSubmitting(false);
       hideLoading();
       navigate(returnPath || '/account', { replace: true });

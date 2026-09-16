@@ -1,5 +1,6 @@
 // src/utils/productStore.js
 import { productsApi, categoriesApi, brandsApi, wishlistApi } from './api';
+import { addNotification } from './orderStore';
 
 const PRODUCTS_KEY = "krishna_admin_products";
 const CATEGORIES_KEY = "krishna_categories";
@@ -1312,6 +1313,12 @@ export function toggleWishlist(product) {
   const exists = current.some(item => Number(item.id) === Number(product.id));
   if (exists) {
     wishlistMemory = current.filter(item => Number(item.id) !== Number(product.id));
+    addNotification({
+      title: 'Removed from Wishlist',
+      message: `"${product.name}" removed from your wishlist.`,
+      type: 'wishlist',
+      link: '/wishlist'
+    });
   } else {
     wishlistMemory = [{
       id: product.id,
@@ -1325,6 +1332,13 @@ export function toggleWishlist(product) {
       image: product.image || product.images?.[0],
       stock: product.stock
     }, ...current];
+    addNotification({
+      title: 'Saved to Wishlist ❤️',
+      message: `"${product.name}" added to your curated luxury wishlist.`,
+      type: 'wishlist',
+      link: '/wishlist',
+      actionText: 'View Wishlist'
+    });
   }
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
@@ -1340,6 +1354,7 @@ export function toggleWishlist(product) {
 
 export function removeFromWishlist(productId) {
   const current = getWishlist();
+  const itemToRemove = current.find(item => Number(item.id) === Number(productId));
   wishlistMemory = current.filter(item => Number(item.id) !== Number(productId));
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
@@ -1347,6 +1362,14 @@ export function removeFromWishlist(productId) {
     } catch (e) {
       console.warn('[Wishlist] Error saving wishlist to localStorage:', e);
     }
+  }
+  if (itemToRemove) {
+    addNotification({
+      title: 'Removed from Wishlist',
+      message: `"${itemToRemove.name}" removed from your wishlist.`,
+      type: 'wishlist',
+      link: '/wishlist'
+    });
   }
   window.dispatchEvent(new Event('wishlistUpdated'));
   wishlistApi.save(wishlistMemory).catch(err => console.warn('[API] Failed to save wishlist:', err));
@@ -1421,6 +1444,15 @@ export function addProductReview(productId, review) {
     };
     reviewsMemory[productId] = [newReview, ...current];
     window.dispatchEvent(new Event('reviewsUpdated'));
+
+    addNotification({
+      title: 'Review Published ⭐',
+      message: `Thank you ${newReview.user}! Your ${newReview.rating}-star review has been published.`,
+      type: 'info',
+      link: `/product/${productId}`,
+      actionText: 'View Review'
+    });
+
     productsApi.addReview({ productId, userName: newReview.user, rating: newReview.rating, comment: newReview.text, date: newReview.date }).catch(err => console.warn('[API] Failed to sync review:', err));
     return reviewsMemory[productId];
   } catch (err) {

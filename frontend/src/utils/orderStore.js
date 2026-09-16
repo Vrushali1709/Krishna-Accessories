@@ -414,9 +414,11 @@ export function createOrder(orderData) {
 
   // Also add a notification for the customer & admin
   addNotification({
-    title: `Order Placed: ${orderNumber}`,
-    message: `Thank you ${customerData.firstName || ''}! Your order for ₹${newOrder.total.toLocaleString('en-IN')} has been confirmed.`,
-    type: "order"
+    title: `Order Placed: ${orderNumber} 🎉`,
+    message: `Thank you ${customerData.firstName || 'valued client'}! Your order for ₹${newOrder.total.toLocaleString('en-IN')} has been confirmed.`,
+    type: "order",
+    link: `/tracking?id=${orderNumber}`,
+    actionText: "Track Order"
   });
 
   window.dispatchEvent(new Event('ordersUpdated'));
@@ -459,6 +461,14 @@ export function updateOrderStatus(orderId, nextStatus, courierInfo = {}) {
       };
     }
     return order;
+  });
+
+  addNotification({
+    title: `Order ${orderId}: ${nextStatus} 🚚`,
+    message: `Your consignment status has been updated to "${nextStatus}".${courierInfo?.trackingNumber ? ` Tracking AWB: ${courierInfo.trackingNumber}` : ''}`,
+    type: "order",
+    link: `/tracking?id=${orderId}`,
+    actionText: "Track Order"
   });
 
   window.dispatchEvent(new Event('ordersUpdated'));
@@ -678,37 +688,86 @@ export function getNotifications() {
 }
 
 export function addNotification(notif) {
+  if (!notif || !notif.title) return notificationsMemory;
+
+  const now = new Date();
+  const timeFormatted = now.toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+  const dateFormatted = now.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short'
+  });
+
   const newNotif = {
     id: notif.id || Date.now(),
     title: notif.title,
-    message: notif.message,
-    date: "Just now",
-    unread: true,
-    type: notif.type || "info"
+    message: notif.message || '',
+    date: notif.date || `${dateFormatted}, ${timeFormatted}`,
+    timestamp: notif.timestamp || Date.now(),
+    unread: notif.unread !== undefined ? notif.unread : true,
+    type: notif.type || "info", // 'order', 'cart', 'wishlist', 'promo', 'account', 'supplier', 'admin', 'info'
+    link: notif.link || '',
+    actionText: notif.actionText || ''
   };
-  notificationsMemory = [newNotif, ...notificationsMemory];
-  window.dispatchEvent(new Event('notificationsUpdated'));
+
+  // Avoid exact immediate duplicate within 1.5 seconds
+  const isDuplicate = notificationsMemory.length > 0 &&
+    notificationsMemory[0].title === newNotif.title &&
+    notificationsMemory[0].message === newNotif.message &&
+    (Date.now() - (notificationsMemory[0].timestamp || 0) < 1500);
+
+  if (!isDuplicate) {
+    notificationsMemory = [newNotif, ...notificationsMemory];
+  }
+
+  // Dispatch real-time events for Toast and Center
+  if (typeof window !== 'undefined') {
+    try {
+      window.dispatchEvent(new CustomEvent('appNotification', { detail: newNotif }));
+    } catch (e) {}
+    window.dispatchEvent(new Event('notificationsUpdated'));
+  }
+
   notificationsApi.add(newNotif).catch(err => console.warn('[API] Failed to add notification:', err));
   return notificationsMemory;
 }
 
+export function deleteNotification(id) {
+  const numId = Number(id);
+  notificationsMemory = notificationsMemory.filter(n => Number(n.id) !== numId);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('notificationsUpdated'));
+  }
+  notificationsApi.delete(id).catch(err => console.warn('[API] Failed to delete notification:', err));
+  return notificationsMemory;
+}
+
 export function markNotificationRead(id) {
-  notificationsMemory = notificationsMemory.map(n => n.id === Number(id) ? { ...n, unread: false } : n);
-  window.dispatchEvent(new Event('notificationsUpdated'));
+  notificationsMemory = notificationsMemory.map(n => Number(n.id) === Number(id) ? { ...n, unread: false } : n);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('notificationsUpdated'));
+  }
   notificationsApi.markRead(id).catch(err => console.warn('[API] Failed to mark notification read:', err));
   return notificationsMemory;
 }
 
 export function markAllNotificationsRead() {
   notificationsMemory = notificationsMemory.map(n => ({ ...n, unread: false }));
-  window.dispatchEvent(new Event('notificationsUpdated'));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('notificationsUpdated'));
+  }
   notificationsApi.markAllRead().catch(err => console.warn('[API] Failed to mark all notifications read:', err));
   return notificationsMemory;
 }
 
 export function clearNotifications() {
   notificationsMemory = [];
-  window.dispatchEvent(new Event('notificationsUpdated'));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('notificationsUpdated'));
+  }
   notificationsApi.clear().catch(err => console.warn('[API] Failed to clear notifications:', err));
   return [];
 }
@@ -738,7 +797,7 @@ export async function syncOrdersFromBackend() {
       window.dispatchEvent(new Event('usersUpdated'));
     }
 
-    if (Array.isArray(fetchedNotifs)) {
+    if (Array.isArray(fetchedNotifs) && fetchedNotifs.length > 0) {
       notificationsMemory = fetchedNotifs;
       window.dispatchEvent(new Event('notificationsUpdated'));
     }
@@ -776,6 +835,15 @@ export function saveUserAddress(address) {
       addressesMemory = [newAddr, ...addressesMemory];
     }
   }
+
+  addNotification({
+    title: address.id ? 'Address Updated 📍' : 'New Address Saved 📍',
+    message: `Delivery address for ${address.firstName || 'Client'} (${address.city || 'Home'}) has been saved.`,
+    type: "account",
+    link: "/account?tab=addresses",
+    actionText: "View Addresses"
+  });
+
   window.dispatchEvent(new Event('addressesUpdated'));
   addressesApi.save(address).catch(err => console.warn('[API] Failed to save address:', err));
   return addressesMemory;
@@ -783,6 +851,14 @@ export function saveUserAddress(address) {
 
 export function deleteUserAddress(id) {
   addressesMemory = addressesMemory.filter(a => a.id !== Number(id));
+
+  addNotification({
+    title: 'Address Removed',
+    message: 'Delivery address removed from your address book.',
+    type: "account",
+    link: "/account?tab=addresses"
+  });
+
   window.dispatchEvent(new Event('addressesUpdated'));
   addressesApi.delete(id).catch(err => console.warn('[API] Failed to delete address:', err));
   return addressesMemory;

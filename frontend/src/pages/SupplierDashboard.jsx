@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getSupplierUser, logoutSupplier } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
-import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
+import { getOrders, updateOrderStatus, getSuppliers, addNotification } from '../utils/orderStore';
 import {
   Building2,
   Package,
@@ -244,11 +244,22 @@ export default function SupplierDashboard() {
 
     saveProduct(productPayload);
     setModalOpen(false);
+
+    addNotification({
+      title: editingProduct ? 'Supplier Product Updated' : 'New Product Submitted 🏢',
+      message: `"${productPayload.name}" updated by ${activeSupplierName}.`,
+      type: 'supplier'
+    });
   };
 
   const handleDeleteProduct = (id) => {
     if (window.confirm('Are you sure you want to delete this product from your supplier catalog?')) {
       deleteProduct(id);
+      addNotification({
+        title: 'Supplier Item Removed',
+        message: 'Item removed from supplier inventory.',
+        type: 'supplier'
+      });
     }
   };
 

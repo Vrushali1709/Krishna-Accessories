@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCartCount } from '../utils/cart';
 import { getCategories, getWishlist } from '../utils/productStore';
 import { getCurrentUser, getActiveAuthUser, logout, logoutSupplier, logoutAdmin, isAdmin, isSupplier } from '../utils/auth';
-import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
+import { getNotifications, markNotificationRead, markAllNotificationsRead, deleteNotification, clearNotifications } from '../utils/orderStore';
 import { SHOP_INFO } from '../utils/shopInfo';
 import {
   BagIcon,
@@ -40,6 +40,18 @@ const CATEGORY_ICONS = {
   'Fashion Accessories': '🕶️'
 };
 
+const NOTIF_ICONS = {
+  order: '📦',
+  cart: '🛍️',
+  wishlist: '❤️',
+  promo: '🏷️',
+  account: '👤',
+  supplier: '🏢',
+  admin: '⚙️',
+  email: '✉️',
+  info: '✨'
+};
+
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,6 +66,7 @@ export default function Navbar() {
   const [mobileNotifsView, setMobileNotifsView] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifFilter, setNotifFilter] = useState('all');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -207,6 +220,28 @@ export default function Navbar() {
   };
 
   const unreadNotifsCount = notifications.filter(n => n.unread).length;
+  const filteredNotifs = notifications.filter(n => {
+    if (notifFilter === 'all') return true;
+    if (notifFilter === 'order') return n.type === 'order';
+    if (notifFilter === 'promo') return n.type === 'promo';
+    if (notifFilter === 'cart') return n.type === 'cart' || n.type === 'wishlist';
+    if (notifFilter === 'account') return n.type === 'account' || n.type === 'email' || n.type === 'supplier' || n.type === 'admin';
+    return true;
+  });
+
+  const ordersNotifCount = notifications.filter(n => n.type === 'order').length;
+  const promosNotifCount = notifications.filter(n => n.type === 'promo').length;
+  const cartWishNotifCount = notifications.filter(n => n.type === 'cart' || n.type === 'wishlist').length;
+  const accountNotifCount = notifications.filter(n => n.type === 'account' || n.type === 'email' || n.type === 'supplier' || n.type === 'admin').length;
+
+  const handleNotificationClick = (n) => {
+    markNotificationRead(n.id);
+    if (n.link) {
+      setNotificationsOpen(false);
+      setMobileMenuOpen(false);
+      navigate(n.link);
+    }
+  };
 
   return (
     <>
@@ -474,8 +509,8 @@ export default function Navbar() {
                 <SearchIcon className="w-3.5 h-3.5" />
               </button>
 
-              {/* Notifications Popover (Hidden on mobile < sm:, available in drawer & sm+) */}
-              <div className="relative hidden sm:block" ref={notifRef}>
+              {/* Notifications Center Popover */}
+              <div className="relative" ref={notifRef}>
                 <button
                   type="button"
                   onClick={() => {
@@ -489,7 +524,7 @@ export default function Navbar() {
                 >
                   <BellIcon className="w-3.5 h-3.5 text-gray-700" />
                   {unreadNotifsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8px] font-bold text-white shadow-2xs">
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8px] font-bold text-white shadow-2xs animate-pulse">
                       {unreadNotifsCount}
                     </span>
                   )}
@@ -499,59 +534,151 @@ export default function Navbar() {
                   <>
                     <div
                       onClick={() => setNotificationsOpen(false)}
-                      className="fixed inset-0 z-40 sm:hidden bg-black/20 backdrop-blur-[1px]"
+                      className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[1px]"
                     />
-                    <div className="fixed left-3 right-3 top-14 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-80 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-2xl z-50 animate-fade-in">
-                      <div className="flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-gray-950 uppercase tracking-wider">Notifications</span>
-                          {unreadNotifsCount > 0 && (
-                            <span className="rounded-full bg-rose-600 px-1.5 py-0.2 text-[8.5px] font-bold text-white">
-                              {unreadNotifsCount} new
+                    <div className="fixed left-2 right-2 top-16 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-96 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-2xl z-50 animate-fade-in divide-y divide-gray-100">
+                      
+                      {/* Popover Header */}
+                      <div className="pb-2.5 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-black text-gray-950 uppercase tracking-wider flex items-center gap-1.5">
+                              <span>🔔</span> Notifications
                             </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {unreadNotifsCount > 0 && (
+                            {unreadNotifsCount > 0 && (
+                              <span className="rounded-full bg-rose-600 px-2 py-0.5 text-[8.5px] font-extrabold text-white">
+                                {unreadNotifsCount} new
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {unreadNotifsCount > 0 && (
+                              <button
+                                type="button"
+                                onClick={markAllNotificationsRead}
+                                className="text-[10px] text-amber-700 font-bold hover:underline transition cursor-pointer"
+                              >
+                                Mark all read
+                              </button>
+                            )}
+                            {notifications.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={clearNotifications}
+                                className="text-[10px] text-gray-400 font-semibold hover:text-rose-600 transition cursor-pointer"
+                              >
+                                Clear all
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={markAllNotificationsRead}
-                              className="text-[10px] text-gray-500 font-semibold hover:text-black transition cursor-pointer"
+                              onClick={() => setNotificationsOpen(false)}
+                              className="text-gray-400 hover:text-gray-700 text-xs px-1 cursor-pointer"
+                              aria-label="Close"
                             >
-                              Mark all read
+                              ✕
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setNotificationsOpen(false)}
-                            className="sm:hidden text-gray-400 hover:text-gray-700 text-xs px-1 cursor-pointer"
-                            aria-label="Close"
-                          >
-                            ✕
-                          </button>
+                          </div>
+                        </div>
+
+                        {/* Category Filter Tabs */}
+                        <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar text-[10px]">
+                          {[
+                            { key: 'all', label: 'All', count: notifications.length },
+                            { key: 'order', label: '📦 Orders', count: ordersNotifCount },
+                            { key: 'promo', label: '🏷️ Offers', count: promosNotifCount },
+                            { key: 'cart', label: '🛍️ Bag & Saved', count: cartWishNotifCount },
+                            { key: 'account', label: '👤 Account', count: accountNotifCount }
+                          ].map((tab) => (
+                            <button
+                              key={tab.key}
+                              type="button"
+                              onClick={() => setNotifFilter(tab.key)}
+                              className={`rounded-lg px-2 py-1 font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                                notifFilter === tab.key
+                                  ? 'bg-gray-950 text-white'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                            >
+                              {tab.label} {tab.count > 0 ? `(${tab.count})` : ''}
+                            </button>
+                          ))}
                         </div>
                       </div>
 
-                      <div className="space-y-2 max-h-[60vh] sm:max-h-64 overflow-y-auto pr-1">
-                        {notifications.length === 0 ? (
-                          <p className="text-xs text-gray-400 text-center py-5">No notifications yet.</p>
+                      {/* Notification Items List */}
+                      <div className="pt-2 space-y-2 max-h-[60vh] sm:max-h-80 overflow-y-auto pr-1">
+                        {filteredNotifs.length === 0 ? (
+                          <div className="text-center py-8 px-4">
+                            <span className="text-3xl mb-2 block">✨</span>
+                            <p className="text-xs font-bold text-gray-800">You're all caught up!</p>
+                            <p className="text-[11px] text-gray-400 mt-0.5">No notifications in this category right now.</p>
+                          </div>
                         ) : (
-                          notifications.map((n) => (
-                            <div
-                              key={n.id}
-                              onClick={() => markNotificationRead(n.id)}
-                              className={`rounded-xl p-2.5 text-xs transition cursor-pointer ${n.unread ? 'bg-[#F4F4F6] border border-gray-200' : 'hover:bg-gray-50'
+                          filteredNotifs.map((n) => {
+                            const icon = NOTIF_ICONS[n.type] || '✨';
+                            return (
+                              <div
+                                key={n.id}
+                                className={`rounded-xl p-3 text-xs transition border relative group ${
+                                  n.unread
+                                    ? 'bg-amber-50/40 border-amber-200/80 shadow-2xs'
+                                    : 'bg-[#F9FAFB] border-gray-100 hover:bg-gray-100/60'
                                 }`}
-                            >
-                              <div className="flex justify-between items-start gap-1">
-                                <span className="font-semibold text-gray-900 text-[11.5px] leading-snug">{n.title}</span>
-                                <span className="text-[9px] text-gray-400 font-mono shrink-0">{n.date}</span>
+                              >
+                                <div className="flex items-start gap-2.5">
+                                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white shadow-2xs border border-gray-200/60 text-sm shrink-0">
+                                    {icon}
+                                  </span>
+
+                                  <div className="flex-1 min-w-0" onClick={() => handleNotificationClick(n)}>
+                                    <div className="flex items-center justify-between gap-1">
+                                      <div className="flex items-center gap-1.5 min-w-0">
+                                        <span className="font-bold text-gray-950 text-[11.5px] leading-tight truncate">
+                                          {n.title}
+                                        </span>
+                                        {n.unread && (
+                                          <span className="h-1.5 w-1.5 rounded-full bg-rose-600 shrink-0" />
+                                        )}
+                                      </div>
+                                      <span className="text-[9px] text-gray-400 font-mono shrink-0">
+                                        {n.date}
+                                      </span>
+                                    </div>
+
+                                    {n.message && (
+                                      <p className="mt-1 text-[11px] text-gray-600 leading-snug break-words">
+                                        {n.message}
+                                      </p>
+                                    )}
+
+                                    {n.link && (
+                                      <div className="mt-2 flex items-center gap-1 text-[10.5px] font-bold text-amber-800 hover:text-amber-900 cursor-pointer">
+                                        <span>{n.actionText || 'View Details'}</span>
+                                        <span>&rarr;</span>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Delete Single Notification */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteNotification(n.id);
+                                    }}
+                                    title="Delete notification"
+                                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-rose-600 p-1 rounded-md hover:bg-white transition cursor-pointer shrink-0 text-[10px]"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
                               </div>
-                              <p className="mt-1 text-[11px] text-gray-600 leading-snug break-words">{n.message}</p>
-                            </div>
-                          ))
+                            );
+                          })
                         )}
                       </div>
+
                     </div>
                   </>
                 )}
@@ -990,44 +1117,108 @@ export default function Navbar() {
 
               {/* Inline Notifications Sub-View if Alerts Tab is active */}
               {mobileNotifsView && (
-                <div className="rounded-2xl border border-amber-200/80 bg-amber-50/40 p-3 space-y-2 animate-fade-in">
+                <div className="rounded-2xl border border-amber-200/80 bg-amber-50/40 p-3 space-y-2.5 animate-fade-in">
                   <div className="flex items-center justify-between pb-1.5 border-b border-amber-200/60">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[11px] font-bold text-gray-950 uppercase tracking-wider">Notifications</span>
+                      <span className="text-[11px] font-black text-gray-950 uppercase tracking-wider">🔔 Notifications</span>
                       {unreadNotifsCount > 0 && (
                         <span className="rounded-full bg-rose-600 px-1.5 py-0.2 text-[8.5px] font-bold text-white">
                           {unreadNotifsCount} new
                         </span>
                       )}
                     </div>
-                    {unreadNotifsCount > 0 && (
-                      <button
-                        type="button"
-                        onClick={markAllNotificationsRead}
-                        className="text-[10px] font-bold text-amber-900 hover:underline cursor-pointer"
-                      >
-                        Mark all read
-                      </button>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {unreadNotifsCount > 0 && (
+                        <button
+                          type="button"
+                          onClick={markAllNotificationsRead}
+                          className="text-[10px] font-bold text-amber-900 hover:underline cursor-pointer"
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                      {notifications.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={clearNotifications}
+                          className="text-[10px] font-semibold text-gray-500 hover:text-rose-600 cursor-pointer"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                    {notifications.length === 0 ? (
-                      <p className="text-xs text-gray-400 text-center py-3">No notifications right now.</p>
+                  {/* Filter Pills */}
+                  <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar text-[9.5px]">
+                    {[
+                      { key: 'all', label: 'All', count: notifications.length },
+                      { key: 'order', label: '📦 Orders', count: ordersNotifCount },
+                      { key: 'promo', label: '🏷️ Offers', count: promosNotifCount },
+                      { key: 'cart', label: '🛍️ Saved', count: cartWishNotifCount }
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        onClick={() => setNotifFilter(tab.key)}
+                        className={`rounded-lg px-2 py-0.5 font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                          notifFilter === tab.key
+                            ? 'bg-gray-950 text-white'
+                            : 'bg-white/80 text-gray-700 border border-amber-200/60'
+                        }`}
+                      >
+                        {tab.label} {tab.count > 0 ? `(${tab.count})` : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5">
+                    {filteredNotifs.length === 0 ? (
+                      <p className="text-xs text-gray-500 text-center py-4">No notifications in this category.</p>
                     ) : (
-                      notifications.map(n => (
-                        <div
-                          key={n.id}
-                          onClick={() => markNotificationRead(n.id)}
-                          className={`rounded-xl p-2 text-xs transition cursor-pointer ${n.unread ? 'bg-white border border-amber-300/80 shadow-2xs' : 'bg-white/60 border border-gray-200/60'}`}
-                        >
-                          <div className="flex justify-between items-start gap-1">
-                            <span className="font-semibold text-gray-900 text-[11px] leading-snug">{n.title}</span>
-                            <span className="text-[8.5px] text-gray-400 font-mono shrink-0">{n.date}</span>
+                      filteredNotifs.map(n => {
+                        const icon = NOTIF_ICONS[n.type] || '✨';
+                        return (
+                          <div
+                            key={n.id}
+                            className={`rounded-xl p-2.5 text-xs transition border relative group ${
+                              n.unread ? 'bg-white border-amber-300 shadow-2xs' : 'bg-white/70 border-gray-200/60'
+                            }`}
+                          >
+                            <div className="flex items-start gap-2">
+                              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-gray-50 border border-gray-100 text-xs shrink-0">
+                                {icon}
+                              </span>
+
+                              <div className="flex-1 min-w-0" onClick={() => handleNotificationClick(n)}>
+                                <div className="flex justify-between items-start gap-1">
+                                  <span className="font-bold text-gray-900 text-[11px] leading-snug truncate">{n.title}</span>
+                                  <span className="text-[8.5px] text-gray-400 font-mono shrink-0">{n.date}</span>
+                                </div>
+                                <p className="mt-0.5 text-[10.5px] text-gray-600 leading-snug break-words">{n.message}</p>
+                                {n.link && (
+                                  <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-amber-800">
+                                    <span>{n.actionText || 'View'}</span>
+                                    <span>&rarr;</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteNotification(n.id);
+                                }}
+                                className="text-gray-400 hover:text-rose-600 p-0.5 text-[10px] shrink-0 cursor-pointer"
+                                title="Delete"
+                              >
+                                🗑️
+                              </button>
+                            </div>
                           </div>
-                          <p className="mt-0.5 text-[10.5px] text-gray-600 leading-snug break-words">{n.message}</p>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>
