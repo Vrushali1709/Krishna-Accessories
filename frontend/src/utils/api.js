@@ -144,6 +144,34 @@ export const usersApi = {
   login: (credentials) => request('/auth/login', { method: 'POST', body: credentials })
 };
 
+export const cartApi = {
+  get: () => request('/cart'),
+  save: (items) => request('/cart', { method: 'POST', body: { items } }),
+  clear: () => request('/cart', { method: 'DELETE' })
+};
+
+export const wishlistApi = {
+  get: () => request('/wishlist'),
+  save: (items) => request('/wishlist', { method: 'POST', body: { items } }),
+  clear: () => request('/wishlist', { method: 'DELETE' })
+};
+
+export const addressesApi = {
+  get: () => request('/addresses'),
+  save: (address) => request('/addresses', { method: 'POST', body: address }),
+  delete: (id) => request(`/addresses/${id}`, { method: 'DELETE' })
+};
+
+export const authApi = {
+  sendOtp: (email, type) => request('/auth/otp/send', { method: 'POST', body: { email, type } }),
+  verifyOtp: (email, code, type) => request('/auth/otp/verify', { method: 'POST', body: { email, code, type } }),
+  resetPassword: (email, password) => request('/auth/password/reset', { method: 'POST', body: { email, password } })
+};
+
+export const emailApi = {
+  log: (emailRecord) => request('/email/log', { method: 'POST', body: emailRecord })
+};
+
 // ==========================================
 // 7. PROMOTIONS & COUPONS API
 // ==========================================

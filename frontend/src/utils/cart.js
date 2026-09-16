@@ -1,4 +1,5 @@
 // src/utils/cart.js
+import { cartApi } from './api';
 
 const CART_KEY = 'krishna_accessories_cart';
 const COUPON_KEY = 'krishna_applied_coupon';
@@ -60,6 +61,19 @@ export function saveCart(cart) {
     console.error('Cart save error:', error);
   }
   window.dispatchEvent(new Event('cartUpdated'));
+  cartApi.save(cart).catch(err => console.warn('[API] Failed to save cart:', err));
+}
+
+export async function syncCartFromBackend() {
+  try {
+    const cart = await cartApi.get();
+    if (Array.isArray(cart)) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      window.dispatchEvent(new Event('cartUpdated'));
+    }
+  } catch (err) {
+    console.warn('[API] Failed syncing cart:', err);
+  }
 }
 
 /**
@@ -206,6 +220,7 @@ export function clearCart() {
     console.error('Clear cart error:', err);
   }
   window.dispatchEvent(new Event('cartUpdated'));
+  cartApi.clear().catch(err => console.warn('[API] Failed to clear cart:', err));
 }
 
 /**

@@ -1,5 +1,5 @@
 // src/utils/orderStore.js
-import { ordersApi, suppliersApi, usersApi, notificationsApi } from './api';
+import { ordersApi, suppliersApi, usersApi, notificationsApi, addressesApi } from './api';
 
 const ORDERS_KEY = 'krishna_platform_orders';
 const SUPPLIERS_KEY = 'krishna_platform_suppliers';
@@ -773,11 +773,25 @@ export function saveUserAddress(address) {
     }
   }
   window.dispatchEvent(new Event('addressesUpdated'));
+  addressesApi.save(address).catch(err => console.warn('[API] Failed to save address:', err));
   return addressesMemory;
 }
 
 export function deleteUserAddress(id) {
   addressesMemory = addressesMemory.filter(a => a.id !== Number(id));
   window.dispatchEvent(new Event('addressesUpdated'));
+  addressesApi.delete(id).catch(err => console.warn('[API] Failed to delete address:', err));
   return addressesMemory;
+}
+
+export async function syncAddressesFromBackend() {
+  try {
+    const addresses = await addressesApi.get();
+    if (Array.isArray(addresses)) {
+      addressesMemory = addresses;
+      window.dispatchEvent(new Event('addressesUpdated'));
+    }
+  } catch (err) {
+    console.warn('[API] Failed syncing addresses:', err);
+  }
 }

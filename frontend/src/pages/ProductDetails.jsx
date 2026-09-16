@@ -4,7 +4,7 @@ import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
-import { getProducts, getProductById, getProductReviews, addProductReview, isInWishlist, toggleWishlist } from '../utils/productStore';
+import { getProducts, getProductById, getProductReviews, addProductReview, isInWishlist, toggleWishlist, syncProductReviewsFromBackend } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { ShieldCheckIcon, TruckIcon, StarIcon, BoxIcon, HeartIcon } from '../components/Icons';
@@ -66,6 +66,7 @@ export default function ProductDetails() {
   useEffect(() => {
     setIsSwitching(true);
     refreshData();
+    syncProductReviewsFromBackend(id);
     const t = setTimeout(() => setIsSwitching(false), 120);
     window.addEventListener('reviewsUpdated', refreshData);
     window.addEventListener('wishlistUpdated', () => setInWish(isInWishlist(id)));

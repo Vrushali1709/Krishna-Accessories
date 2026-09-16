@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { setCurrentUser } from '../utils/auth';
+import { setCurrentUser, setAuthToken } from '../utils/auth';
+import { usersApi } from '../utils/api';
 import { addSupplier } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendWelcomeEmail } from '../utils/emailService';
 import { ArrowRightIcon, LockClosedIcon, ShieldCheckIcon } from '../components/Icons';
@@ -96,7 +97,7 @@ export default function Register() {
       return;
     }
 
-    const verifyResult = verifyOtp(cleanEmail, cleanCode, 'registration_otp');
+    const verifyResult = await verifyOtp(cleanEmail, cleanCode, 'registration_otp');
     if (!verifyResult.success) {
       setError(verifyResult.error);
       return;
@@ -112,7 +113,10 @@ export default function Register() {
       phone: phone.trim()
     };
 
-    setCurrentUser(newUser);
+    const createdUser = await usersApi.create({ ...newUser, password });
+    const loginResult = await usersApi.login({ email: cleanEmail, password, role: newUser.role });
+    setAuthToken(loginResult.token);
+    setCurrentUser(createdUser);
 
     // Send Welcome Email with promo coupon
     await sendWelcomeEmail(cleanEmail, name.trim(), role);

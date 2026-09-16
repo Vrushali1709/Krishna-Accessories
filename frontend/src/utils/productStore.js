@@ -1,5 +1,5 @@
 // src/utils/productStore.js
-import { productsApi, categoriesApi, brandsApi } from './api';
+import { productsApi, categoriesApi, brandsApi, wishlistApi } from './api';
 
 const PRODUCTS_KEY = "krishna_admin_products";
 const CATEGORIES_KEY = "krishna_categories";
@@ -1304,24 +1304,56 @@ export function toggleWishlist(product) {
     }, ...wishlistMemory];
   }
   window.dispatchEvent(new Event('wishlistUpdated'));
+  wishlistApi.save(wishlistMemory).catch(err => console.warn('[API] Failed to save wishlist:', err));
   return !exists;
 }
 
 export function removeFromWishlist(productId) {
   wishlistMemory = wishlistMemory.filter(item => Number(item.id) !== Number(productId));
   window.dispatchEvent(new Event('wishlistUpdated'));
+  wishlistApi.save(wishlistMemory).catch(err => console.warn('[API] Failed to save wishlist:', err));
   return wishlistMemory;
 }
 
 export function clearWishlist() {
   wishlistMemory = [];
   window.dispatchEvent(new Event('wishlistUpdated'));
+  wishlistApi.clear().catch(err => console.warn('[API] Failed to clear wishlist:', err));
+}
+
+export async function syncWishlistFromBackend() {
+  try {
+    const items = await wishlistApi.get();
+    if (Array.isArray(items)) {
+      wishlistMemory = items.map(normalizeProduct);
+      window.dispatchEvent(new Event('wishlistUpdated'));
+    }
+  } catch (err) {
+    console.warn('[API] Failed syncing wishlist:', err);
+  }
 }
 
 // ================= REVIEWS MANAGEMENT =================
 
 export function getProductReviews(productId) {
   return reviewsMemory[productId] || defaultProductReviews[productId] || [];
+}
+
+export async function syncProductReviewsFromBackend(productId) {
+  try {
+    const reviews = await productsApi.getReviews(productId);
+    if (Array.isArray(reviews)) {
+      reviewsMemory[productId] = reviews.map(review => ({
+        ...review,
+        user: review.userName || review.user,
+        text: review.comment || review.text,
+        verified: Boolean(review.verified)
+      }));
+      window.dispatchEvent(new Event('reviewsUpdated'));
+    }
+  } catch (err) {
+    console.warn('[API] Failed syncing reviews:', err);
+  }
 }
 
 export function addProductReview(productId, review) {
@@ -1338,7 +1370,7 @@ export function addProductReview(productId, review) {
     };
     reviewsMemory[productId] = [newReview, ...current];
     window.dispatchEvent(new Event('reviewsUpdated'));
-    productsApi.addReview({ ...newReview, productId }).catch(err => console.warn('[API] Failed to sync review:', err));
+    productsApi.addReview({ productId, userName: newReview.user, rating: newReview.rating, comment: newReview.text, date: newReview.date }).catch(err => console.warn('[API] Failed to sync review:', err));
     return reviewsMemory[productId];
   } catch (err) {
     console.error('Error adding review:', err);

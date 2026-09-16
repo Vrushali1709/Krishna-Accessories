@@ -12,6 +12,7 @@
  */
 
 import { addNotification } from './orderStore';
+import { authApi, emailApi } from './api';
 
 const ACTIVE_OTPS_KEY = 'krishna_active_otps';
 const SENT_EMAILS_KEY = 'krishna_sent_emails';
@@ -147,6 +148,7 @@ async function dispatchEmailPayload({ to, subject, htmlBody, textBody, type, otp
 
   // 2. Persist in local storage email logs for auditing
   saveSentEmail(emailRecord);
+  emailApi.log(emailRecord).catch(err => console.warn('[API] Failed to log email:', err));
 
   // 3. Add to In-App Notification Center
   try {
@@ -190,8 +192,13 @@ export async function sendOtpEmail(email, type = 'forgot_password', customerName
   }
 
   const cleanEmail = email.trim().toLowerCase();
-  const code = generateOtpCode();
-  storeOtp(cleanEmail, type, code);
+  let code;
+  try {
+    const backendOtp = await authApi.sendOtp(cleanEmail, type);
+    code = backendOtp.otpCode;
+  } catch (error) {
+    return { success: false, error: error.message || 'Unable to create OTP on backend.' };
+  }
 
   let typeTitle = 'Password Reset Verification';
   let typeDescription = 'We received a request to reset your password for your Krishna Accessories account.';
@@ -256,65 +263,18 @@ export async function sendOtpEmail(email, type = 'forgot_password', customerName
 /**
  * 2. VERIFY OTP CODE
  */
-export function verifyOtp(email, enteredCode, type = 'forgot_password') {
+export async function verifyOtp(email, enteredCode, type = 'forgot_password') {
   if (!email || !enteredCode) {
     return { success: false, error: 'Please enter the 6-digit OTP code.' };
   }
 
   const cleanEmail = email.trim().toLowerCase();
   const cleanCode = enteredCode.toString().trim();
-  const key = `${cleanEmail}_${type}`;
-  const otps = getActiveOtps();
-  const stored = otps[key];
-
-  if (!stored) {
-    return {
-      success: false,
-      error: 'No active OTP verification session found. Please click "Resend Code" to get a new code.'
-    };
+  try {
+    return await authApi.verifyOtp(cleanEmail, cleanCode, type);
+  } catch (error) {
+    return { success: false, error: error.message || 'Invalid or expired OTP.' };
   }
-
-  // Check Expiry (5 minutes)
-  if (Date.now() > stored.expiresAt) {
-    delete otps[key];
-    saveActiveOtps(otps);
-    return {
-      success: false,
-      expired: true,
-      error: 'The OTP code has expired. Please request a new code.'
-    };
-  }
-
-  // Check Attempt Limits (Max 5 attempts)
-  if (stored.attempts >= 5) {
-    delete otps[key];
-    saveActiveOtps(otps);
-    return {
-      success: false,
-      locked: true,
-      error: 'Too many incorrect attempts. Please request a fresh OTP code.'
-    };
-  }
-
-  // Check Matching Code
-  if (stored.code !== cleanCode) {
-    stored.attempts += 1;
-    saveActiveOtps(otps);
-    const remaining = 5 - stored.attempts;
-    return {
-      success: false,
-      error: `Invalid OTP code. ${remaining} ${remaining === 1 ? 'attempt' : 'attempts'} remaining.`
-    };
-  }
-
-  // Success: Clear used OTP
-  delete otps[key];
-  saveActiveOtps(otps);
-
-  return {
-    success: true,
-    message: 'OTP verified successfully.'
-  };
 }
 
 /**

@@ -4,7 +4,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { setAdminUser, setSupplierUser, setCustomerUser, setAuthToken } from '../utils/auth';
-import { usersApi } from '../utils/api';
+import { usersApi, authApi } from '../utils/api';
+import { syncCartFromBackend } from '../utils/cart';
+import { syncWishlistFromBackend } from '../utils/productStore';
+import { syncAddressesFromBackend } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendPasswordResetSuccessEmail } from '../utils/emailService';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 import { Eye, EyeOff, RefreshCw, KeyRound, Mail } from 'lucide-react';
@@ -126,6 +129,7 @@ export default function Login() {
     try {
       const result = await usersApi.login({ email: cleanEmail, password: cleanPassword, role: selectedRole });
       setAuthToken(result.token);
+      await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
       const user = result.user;
       if (user.role?.toLowerCase() === 'admin') setAdminUser(user);
       else if (user.role?.toLowerCase() === 'supplier') setSupplierUser(user);
@@ -165,7 +169,7 @@ export default function Login() {
   };
 
   // Login With OTP: Verify Code & Sign In
-  const handleVerifyLoginOtp = (e) => {
+  const handleVerifyLoginOtp = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -177,7 +181,7 @@ export default function Login() {
       return;
     }
 
-    const verifyResult = verifyOtp(cleanEmail, cleanCode, 'login_otp');
+    const verifyResult = await verifyOtp(cleanEmail, cleanCode, 'login_otp');
     if (!verifyResult.success) {
       setError(verifyResult.error);
       return;
@@ -185,13 +189,10 @@ export default function Login() {
 
     setSubmitting(true);
     showLoading('Verifying OTP & Logging In...');
-    setTimeout(() => {
-      setCustomerUser({
-        email: cleanEmail,
-        role: 'customer',
-        name: cleanEmail.split('@')[0],
-        phone: '+91 98765 12345'
-      });
+    setTimeout(async () => {
+      setAuthToken(verifyResult.token);
+      setCustomerUser(verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] });
+      await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
       setSubmitting(false);
       hideLoading();
       navigate(returnPath || '/account', { replace: true });
@@ -259,11 +260,13 @@ export default function Login() {
       return;
     }
 
-    const verifyResult = verifyOtp(cleanEmail, cleanCode, 'forgot_password');
+    const verifyResult = await verifyOtp(cleanEmail, cleanCode, 'forgot_password');
     if (!verifyResult.success) {
       setForgotError(verifyResult.error);
       return;
     }
+
+    await authApi.resetPassword(cleanEmail, newPassword);
 
     // Send confirmation security notification
     await sendPasswordResetSuccessEmail(cleanEmail);
