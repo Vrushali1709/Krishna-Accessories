@@ -150,8 +150,23 @@ export default function Navbar() {
         setUserMenuOpen(false);
       }
     }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setCategoriesOpen(false);
+        setNotificationsOpen(false);
+        setUserMenuOpen(false);
+      }
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const handleSearchSubmit = (e) => {
@@ -303,7 +318,11 @@ export default function Navbar() {
               >
                 <button
                   type="button"
-                  onClick={() => setCategoriesOpen(!categoriesOpen)}
+                  onClick={() => {
+                    setCategoriesOpen(!categoriesOpen);
+                    setNotificationsOpen(false);
+                    setUserMenuOpen(false);
+                  }}
                   className={`flex items-center gap-1.5 py-1.5 transition-colors uppercase cursor-pointer ${location.pathname === '/shop' && !location.search
                     ? 'text-gray-950 font-bold'
                     : 'hover:text-gray-950'
@@ -439,8 +458,13 @@ export default function Navbar() {
               <div className="relative hidden sm:block" ref={notifRef}>
                 <button
                   type="button"
-                  onClick={() => setNotificationsOpen(!notificationsOpen)}
+                  onClick={() => {
+                    setNotificationsOpen(!notificationsOpen);
+                    setUserMenuOpen(false);
+                    setCategoriesOpen(false);
+                  }}
                   aria-label="Notifications"
+                  aria-expanded={notificationsOpen}
                   className="flex h-8.5 w-8.5 items-center justify-center rounded-lg border border-gray-200 bg-[#F4F4F6] text-gray-700 hover:bg-gray-200 transition relative cursor-pointer"
                 >
                   <BellIcon className="w-3.5 h-3.5 text-gray-700" />
@@ -552,7 +576,13 @@ export default function Navbar() {
                 <div className="relative hidden md:block" ref={userMenuRef}>
                   <button
                     type="button"
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    onClick={() => {
+                      setUserMenuOpen(!userMenuOpen);
+                      setNotificationsOpen(false);
+                      setCategoriesOpen(false);
+                    }}
+                    aria-label="User profile menu"
+                    aria-expanded={userMenuOpen}
                     className="flex h-8.5 items-center gap-2 rounded-xl border border-gray-200 bg-white px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
                   >
                     <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-gray-100 text-gray-900 font-bold text-[11px]">

@@ -282,8 +282,38 @@ export default function AdminDashboard() {
   // Top header popovers & alert toasts
   const [notifsOpen, setNotifsOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const notifsRef = useRef(null);
+  const userDropdownRef = useRef(null);
   const [toastMessage, setToastMessage] = useState('');
   const [backupJsonInput, setBackupJsonInput] = useState('');
+
+  // Close header dropdowns when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifsRef.current && !notifsRef.current.contains(event.target)) {
+        setNotifsOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setNotifsOpen(false);
+        setUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // Python Backend Connection State
   const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true });
@@ -1259,10 +1289,15 @@ export default function AdminDashboard() {
 
 
             {/* Notifications Popover */}
-            <div className="relative">
+            <div className="relative" ref={notifsRef}>
               <button
-                onClick={() => setNotifsOpen(!notifsOpen)}
+                onClick={() => {
+                  setNotifsOpen(prev => !prev);
+                  setUserDropdownOpen(false);
+                }}
                 className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition cursor-pointer"
+                aria-label="Toggle notifications"
+                aria-expanded={notifsOpen}
               >
                 <Bell className="h-3.5 w-3.5" />
                 {unreadNotifs > 0 && (
@@ -1309,10 +1344,15 @@ export default function AdminDashboard() {
             </div>
 
             {/* Profile Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={userDropdownRef}>
               <button
-                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                onClick={() => {
+                  setUserDropdownOpen(prev => !prev);
+                  setNotifsOpen(false);
+                }}
                 className="flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-50 transition shadow-2xs cursor-pointer"
+                aria-label="Toggle user menu"
+                aria-expanded={userDropdownOpen}
               >
                 <div className="flex h-5 w-5 items-center justify-center rounded-md bg-zinc-900 text-white text-[9px] font-bold shrink-0">
                   SA
