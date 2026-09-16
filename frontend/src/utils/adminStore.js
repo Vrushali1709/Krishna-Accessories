@@ -31,13 +31,13 @@ export const defaultSubcategories = [
 ];
 
 export function getSubcategories() {
-  return subcategoriesMemory;
+  return Array.isArray(subcategoriesMemory) && subcategoriesMemory.length > 0 ? subcategoriesMemory : defaultSubcategories;
 }
 
 export function saveSubcategory(subcat) {
   let updated;
   if (subcat.id) {
-    updated = subcategoriesMemory.map(s => s.id === subcat.id ? { ...s, ...subcat } : s);
+    updated = (Array.isArray(subcategoriesMemory) ? subcategoriesMemory : defaultSubcategories).map(s => s.id === subcat.id ? { ...s, ...subcat } : s);
   } else {
     const newSubcat = {
       id: subcat.id || Date.now(),
@@ -46,7 +46,7 @@ export function saveSubcategory(subcat) {
       code: subcat.code || `SUB-${Date.now().toString().slice(-4)}`,
       itemCount: 0
     };
-    updated = [newSubcat, ...subcategoriesMemory];
+    updated = [newSubcat, ...(Array.isArray(subcategoriesMemory) ? subcategoriesMemory : defaultSubcategories)];
   }
   subcategoriesMemory = updated;
   window.dispatchEvent(new Event('subcategoriesUpdated'));
@@ -55,7 +55,7 @@ export function saveSubcategory(subcat) {
 }
 
 export function deleteSubcategory(id) {
-  subcategoriesMemory = subcategoriesMemory.filter(s => s.id !== Number(id));
+  subcategoriesMemory = (Array.isArray(subcategoriesMemory) ? subcategoriesMemory : defaultSubcategories).filter(s => s.id !== Number(id));
   window.dispatchEvent(new Event('subcategoriesUpdated'));
   subcategoriesApi.delete(id).catch(err => console.warn('[API] Failed to delete subcategory:', err));
   return subcategoriesMemory;
@@ -77,13 +77,13 @@ export const defaultVariants = [
 ];
 
 export function getVariants() {
-  return variantsMemory;
+  return Array.isArray(variantsMemory) && variantsMemory.length > 0 ? variantsMemory : defaultVariants;
 }
 
 export function saveVariant(variant) {
   let updated;
   if (variant.id) {
-    updated = variantsMemory.map(v => v.id === variant.id ? { ...v, ...variant } : v);
+    updated = (Array.isArray(variantsMemory) ? variantsMemory : defaultVariants).map(v => v.id === variant.id ? { ...v, ...variant } : v);
   } else {
     const newVariant = {
       id: variant.id || Date.now(),
@@ -95,7 +95,7 @@ export function saveVariant(variant) {
       stock: Number(variant.stock) || 0,
       status: Number(variant.stock) > 3 ? "In Stock" : Number(variant.stock) > 0 ? "Low Stock" : "Out of Stock"
     };
-    updated = [newVariant, ...variantsMemory];
+    updated = [newVariant, ...(Array.isArray(variantsMemory) ? variantsMemory : defaultVariants)];
   }
   variantsMemory = updated;
   window.dispatchEvent(new Event('variantsUpdated'));
@@ -104,7 +104,7 @@ export function saveVariant(variant) {
 }
 
 export function deleteVariant(id) {
-  variantsMemory = variantsMemory.filter(v => v.id !== Number(id));
+  variantsMemory = (Array.isArray(variantsMemory) ? variantsMemory : defaultVariants).filter(v => v.id !== Number(id));
   window.dispatchEvent(new Event('variantsUpdated'));
   variantsApi.delete(id).catch(err => console.warn('[API] Failed to delete variant:', err));
   return variantsMemory;
@@ -123,7 +123,7 @@ export const defaultMediaAssets = [
 ];
 
 export function getMediaAssets() {
-  return mediaMemory;
+  return Array.isArray(mediaMemory) && mediaMemory.length > 0 ? mediaMemory : defaultMediaAssets;
 }
 
 export function addMediaAsset(asset) {
@@ -137,14 +137,14 @@ export function addMediaAsset(asset) {
     date: "Just now",
     usage: "Direct Media Link"
   };
-  mediaMemory = [newAsset, ...mediaMemory];
+  mediaMemory = [newAsset, ...(Array.isArray(mediaMemory) ? mediaMemory : defaultMediaAssets)];
   window.dispatchEvent(new Event('mediaUpdated'));
   mediaApi.save(newAsset).catch(err => console.warn('[API] Failed to save media asset:', err));
   return mediaMemory;
 }
 
 export function deleteMediaAsset(id) {
-  mediaMemory = mediaMemory.filter(m => m.id !== Number(id));
+  mediaMemory = (Array.isArray(mediaMemory) ? mediaMemory : defaultMediaAssets).filter(m => m.id !== Number(id));
   window.dispatchEvent(new Event('mediaUpdated'));
   mediaApi.delete(id).catch(err => console.warn('[API] Failed to delete media asset:', err));
   return mediaMemory;
@@ -161,7 +161,7 @@ export const defaultPromotions = [
 ];
 
 export function getPromotions() {
-  return promotionsMemory;
+  return Array.isArray(promotionsMemory) && promotionsMemory.length > 0 ? promotionsMemory : defaultPromotions;
 }
 
 export function savePromotion(promo) {
@@ -208,22 +208,24 @@ export const defaultRoles = [
   { id: 5, name: "Customer Concierge Officer", slug: "support_agent", membersCount: 5, description: "Handle customer inquiries, review return requests, inspect returns, and manage user accounts.", color: "border-rose-500 text-rose-600 bg-rose-50" }
 ];
 
-export const defaultPermissionsMatrix = {
-  super_admin: { dashboard: "Full", catalog: "Full", commerce: "Full", people: "Full", operations: "Full", analytics: "Full", system: "Full" },
-  catalog_manager: { dashboard: "Read", catalog: "Full", commerce: "Read", people: "Read", operations: "Write", analytics: "Read", system: "None" },
-  operations_lead: { dashboard: "Read", catalog: "Read", commerce: "Write", people: "Read", operations: "Full", analytics: "Read", system: "None" },
-  finance_auditor: { dashboard: "Read", catalog: "Read", commerce: "Full", people: "Read", operations: "Read", analytics: "Full", system: "Read" },
-  support_agent: { dashboard: "Read", catalog: "Read", commerce: "Write", people: "Write", operations: "Read", analytics: "None", system: "None" }
-};
+export const defaultPermissionsMatrix = [
+  { id: 1, capability: "View & Export GMV Analytics", category: "Analytics", superAdmin: true, catalogManager: false, financeLead: true, supportAgent: false },
+  { id: 2, capability: "Publish & Edit Catalog Products", category: "Catalog", superAdmin: true, catalogManager: true, financeLead: false, supportAgent: false },
+  { id: 3, capability: "Process & Cancel Customer Orders", category: "Commerce", superAdmin: true, catalogManager: false, financeLead: true, supportAgent: true },
+  { id: 4, capability: "Approve Returns & Issue Refunds", category: "Commerce", superAdmin: true, catalogManager: false, financeLead: true, supportAgent: false },
+  { id: 5, capability: "Manage Platform Users & RBAC Roles", category: "People", superAdmin: true, catalogManager: false, financeLead: false, supportAgent: false },
+  { id: 6, capability: "Configure Logistics & Carriers SLAs", category: "Operations", superAdmin: true, catalogManager: false, financeLead: false, supportAgent: false },
+  { id: 7, capability: "System Gateway API Keys & Database Backups", category: "System", superAdmin: true, catalogManager: false, financeLead: false, supportAgent: false }
+];
 
 export function getRoles() {
-  return rolesMemory;
+  return Array.isArray(rolesMemory) && rolesMemory.length > 0 ? rolesMemory : defaultRoles;
 }
 
 export function saveRole(role) {
   let updated;
   if (role.id) {
-    updated = rolesMemory.map(r => r.id === role.id ? { ...r, ...role } : r);
+    updated = (Array.isArray(rolesMemory) ? rolesMemory : defaultRoles).map(r => r.id === role.id ? { ...r, ...role } : r);
   } else {
     const newRole = {
       id: role.id || Date.now(),
@@ -233,7 +235,7 @@ export function saveRole(role) {
       description: role.description || "Custom assigned role",
       color: "border-slate-500 text-slate-700 bg-slate-50"
     };
-    updated = [...rolesMemory, newRole];
+    updated = [...(Array.isArray(rolesMemory) ? rolesMemory : defaultRoles), newRole];
   }
   rolesMemory = updated;
   window.dispatchEvent(new Event('rolesUpdated'));
@@ -242,20 +244,15 @@ export function saveRole(role) {
 }
 
 export function getPermissionsMatrix() {
-  return permissionsMemory;
+  return Array.isArray(permissionsMemory) && permissionsMemory.length > 0 ? permissionsMemory : defaultPermissionsMatrix;
 }
 
-export function updateRolePermission(roleSlug, moduleName, level) {
-  const updated = {
-    ...permissionsMemory,
-    [roleSlug]: {
-      ...(permissionsMemory[roleSlug] || {}),
-      [moduleName]: level
-    }
-  };
+export function updateRolePermission(permId, roleKey, value) {
+  const current = getPermissionsMatrix();
+  const updated = current.map(p => p.id === Number(permId) ? { ...p, [roleKey]: Boolean(value) } : p);
   permissionsMemory = updated;
   window.dispatchEvent(new Event('permissionsUpdated'));
-  rolesApi.updatePermissions(updated).catch(err => console.warn('[API] Failed to update permissions:', err));
+  rolesApi.save({ id: permId, roleKey, value }).catch(err => console.warn('[API] Failed to update permissions:', err));
   return permissionsMemory;
 }
 
@@ -270,11 +267,12 @@ export const defaultShippingCarriers = [
 ];
 
 export function getShippingCarriers() {
-  return shippingMemory;
+  return Array.isArray(shippingMemory) && shippingMemory.length > 0 ? shippingMemory : defaultShippingCarriers;
 }
 
 export function toggleCarrierStatus(id) {
-  shippingMemory = shippingMemory.map(c => c.id === Number(id) ? { ...c, active: !c.active } : c);
+  const list = getShippingCarriers();
+  shippingMemory = list.map(c => c.id === Number(id) ? { ...c, active: !c.active } : c);
   window.dispatchEvent(new Event('shippingUpdated'));
   const found = shippingMemory.find(c => c.id === Number(id));
   if (found) {
@@ -306,14 +304,14 @@ export const defaultSystemConfig = {
 };
 
 // In-memory reactive state
-let subcategoriesMemory = [];
-let variantsMemory = [];
-let mediaMemory = [];
-let promotionsMemory = [];
-let rolesMemory = [];
-let permissionsMemory = {};
-let shippingMemory = [];
-let systemConfigMemory = {};
+let subcategoriesMemory = [...defaultSubcategories];
+let variantsMemory = [...defaultVariants];
+let mediaMemory = [...defaultMediaAssets];
+let promotionsMemory = [...defaultPromotions];
+let rolesMemory = [...defaultRoles];
+let permissionsMemory = [...defaultPermissionsMatrix];
+let shippingMemory = [...defaultShippingCarriers];
+let systemConfigMemory = { ...defaultSystemConfig };
 
 // Immediate cleanup of legacy database keys from localStorage
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -332,7 +330,7 @@ if (typeof window !== 'undefined' && window.localStorage) {
 }
 
 export function getSystemConfig() {
-  return systemConfigMemory;
+  return systemConfigMemory && typeof systemConfigMemory === 'object' ? systemConfigMemory : defaultSystemConfig;
 }
 
 export function saveSystemConfig(cfg) {

@@ -2926,7 +2926,7 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-100 font-normal">
-                        {permissionsMatrix.map(perm => (
+                        {(Array.isArray(permissionsMatrix) ? permissionsMatrix : []).map(perm => (
                           <tr key={perm.id} className="hover:bg-zinc-50/75">
                             <td className="p-3.5">
                               <span className="font-medium text-zinc-900 block">{perm.capability}</span>
