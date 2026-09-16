@@ -140,6 +140,31 @@ export function logoutAll() {
   window.dispatchEvent(new Event('authUpdated'));
 }
 
+// Active user for UI Navbar & Profile menus (checks active route or existing sessions)
+export function getActiveAuthUser() {
+  try {
+    if (typeof window !== 'undefined' && window.location) {
+      if (window.location.pathname.startsWith('/supplier')) {
+        return getSupplierUser() || getCustomerUser() || getAdminUser() || null;
+      }
+      if (window.location.pathname.startsWith('/admin')) {
+        return getAdminUser() || getCustomerUser() || getSupplierUser() || null;
+      }
+    }
+  } catch {}
+  return getCustomerUser() || getSupplierUser() || getAdminUser() || null;
+}
+
+export function logoutRole(role) {
+  if (role === 'admin') {
+    logoutAdmin();
+  } else if (role === 'supplier') {
+    logoutSupplier();
+  } else {
+    logout();
+  }
+}
+
 export function isAdmin() {
   return !!getAdminUser();
 }

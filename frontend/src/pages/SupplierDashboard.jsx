@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { getCurrentUser } from '../utils/auth';
+import { getSupplierUser, logoutSupplier } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
 import {
@@ -34,13 +34,14 @@ import {
   Coins,
   Info,
   ChevronDown,
+  LogOut,
   Image as ImageIcon
 } from 'lucide-react';
 import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 
 export default function SupplierDashboard() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
+  const [supplierUser, setSupplierUser] = useState(() => getSupplierUser());
   const suppliers = getSuppliers();
   const [activeSupplierName, setActiveSupplierName] = useState(suppliers[0]?.name || 'Apex Timepieces Ltd.');
   const [activeTab, setActiveTab] = useState('overview');
@@ -274,13 +275,24 @@ export default function SupplierDashboard() {
     setSelectedOrderToUpdate(null);
   };
 
+  const handleSupplierLogout = () => {
+    logoutSupplier();
+    navigate('/login', {
+      state: {
+        message: 'You have been successfully signed out from the Supplier Portal.',
+        requiredRole: 'supplier'
+      },
+      replace: true
+    });
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
       <Navbar />
 
       {/* Supplier Top Header */}
       <section className="border-b border-zinc-200/80 bg-white sticky top-0 z-30 shadow-xs">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2.5">
@@ -290,7 +302,7 @@ export default function SupplierDashboard() {
                 </span>
                 <span className="text-xs text-zinc-400 font-medium tracking-wide">Fulfillment & Inventory Console</span>
               </div>
-              <h1 className="mt-1.5 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 flex items-center gap-2.5">
+              <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
                   <Building2 className="h-4 w-4 text-white" />
                 </div>
@@ -298,23 +310,48 @@ export default function SupplierDashboard() {
               </h1>
             </div>
 
-            {/* Supplier Switcher Dropdown */}
-            <div className="flex items-center gap-3">
-              <label className="text-xs text-zinc-500 whitespace-nowrap font-medium">Switch Vendor Account:</label>
-              <div className="relative">
-                <select
-                  value={activeSupplierName}
-                  onChange={(e) => setActiveSupplierName(e.target.value)}
-                  className="appearance-none rounded-xl border border-zinc-200 bg-zinc-50/80 hover:bg-zinc-100/70 pl-3.5 pr-8 py-2 text-xs font-semibold text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-400 cursor-pointer transition shadow-2xs"
-                >
-                  {suppliers.map(s => (
-                    <option key={s.id} value={s.name}>
-                      {s.name} ({s.category})
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+            {/* Actions & Vendor Switching */}
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              {/* Supplier Switcher Dropdown */}
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-zinc-500 whitespace-nowrap font-medium hidden sm:inline">Vendor:</label>
+                <div className="relative">
+                  <select
+                    value={activeSupplierName}
+                    onChange={(e) => setActiveSupplierName(e.target.value)}
+                    className="appearance-none rounded-xl border border-zinc-200 bg-zinc-50/80 hover:bg-zinc-100/70 pl-3 pr-8 py-2 text-xs font-semibold text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-400 cursor-pointer transition shadow-2xs"
+                  >
+                    {suppliers.map(s => (
+                      <option key={s.id} value={s.name}>
+                        {s.name} ({s.category})
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+                </div>
               </div>
+
+              {/* View Storefront Link */}
+              <Link
+                to="/"
+                target="_blank"
+                className="hidden md:inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-700 hover:text-zinc-950 transition shadow-2xs"
+                title="Open customer storefront in new tab"
+              >
+                <span>Storefront</span>
+                <ExternalLink className="h-3 w-3 text-zinc-400" />
+              </Link>
+
+              {/* Supplier Sign Out Button */}
+              <button
+                type="button"
+                onClick={handleSupplierLogout}
+                className="flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/90 hover:bg-rose-100 px-3.5 py-2 text-xs font-bold text-rose-700 hover:text-rose-800 transition shadow-2xs cursor-pointer"
+                title="Sign out from Supplier account"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Sign Out</span>
+              </button>
             </div>
           </div>
         </div>

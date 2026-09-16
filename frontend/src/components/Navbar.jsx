@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCartCount } from '../utils/cart';
 import { getCategories, getWishlist } from '../utils/productStore';
-import { getCurrentUser, logout, isAdmin, isSupplier } from '../utils/auth';
+import { getCurrentUser, getActiveAuthUser, logout, logoutSupplier, logoutAdmin, isAdmin, isSupplier } from '../utils/auth';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import { SHOP_INFO } from '../utils/shopInfo';
 import {
@@ -46,7 +46,7 @@ export default function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
-  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
+  const [currentUser, setCurrentUser] = useState(() => getActiveAuthUser());
   const [allCategories, setAllCategories] = useState(() => getCategories());
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -104,7 +104,7 @@ export default function Navbar() {
     setCartCount(getCartCount());
     setWishlistCount(getWishlist().length);
     setNotifications(getNotifications());
-    setCurrentUser(getCurrentUser());
+    setCurrentUser(getActiveAuthUser());
     setAllCategories(getCategories());
   };
 
@@ -180,10 +180,30 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    logout();
+    if (currentUser?.role === 'supplier') {
+      logoutSupplier();
+      navigate('/login', {
+        state: {
+          message: 'You have been successfully signed out from the Supplier Portal.',
+          requiredRole: 'supplier'
+        },
+        replace: true
+      });
+    } else if (currentUser?.role === 'admin') {
+      logoutAdmin();
+      navigate('/login', {
+        state: {
+          message: 'You have been successfully signed out from the Administrator Account.',
+          requiredRole: 'admin'
+        },
+        replace: true
+      });
+    } else {
+      logout();
+      navigate('/');
+    }
     setMobileMenuOpen(false);
     setUserMenuOpen(false);
-    navigate('/');
   };
 
   const unreadNotifsCount = notifications.filter(n => n.unread).length;
@@ -617,68 +637,116 @@ export default function Navbar() {
                           </div>
                         </div>
 
-                        {/* Customer Navigation Links */}
+                        {/* User Specific Navigation Links */}
                         <div className="py-1.5 space-y-0.5">
-                          <Link
-                            to="/account"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
-                          >
-                            <span className="text-sm">👤</span>
-                            <span>Account & Orders</span>
-                          </Link>
+                          {currentUser.role === 'supplier' ? (
+                            <>
+                              <Link
+                                to="/supplier"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-bold text-blue-950 bg-blue-50/80 hover:bg-blue-100/80 border border-blue-200/80 transition"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-sm">🏢</span>
+                                  <span>Supplier Console</span>
+                                </div>
+                                <span className="text-[9px] font-bold uppercase tracking-wider bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full">Active</span>
+                              </Link>
+                              <Link
+                                to="/shop"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                              >
+                                <span className="text-sm">🛍️</span>
+                                <span>Browse Storefront</span>
+                              </Link>
+                            </>
+                          ) : currentUser.role === 'admin' ? (
+                            <>
+                              <Link
+                                to="/admin"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-bold text-amber-950 bg-amber-50/80 hover:bg-amber-100/80 border border-amber-200/80 transition"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-sm">⚙️</span>
+                                  <span>Admin Dashboard</span>
+                                </div>
+                                <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-200/80 text-amber-900 px-1.5 py-0.2 rounded-full">Active</span>
+                              </Link>
+                              <Link
+                                to="/shop"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                              >
+                                <span className="text-sm">🛍️</span>
+                                <span>Browse Storefront</span>
+                              </Link>
+                            </>
+                          ) : (
+                            <>
+                              <Link
+                                to="/account"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                              >
+                                <span className="text-sm">👤</span>
+                                <span>Account & Orders</span>
+                              </Link>
 
-                          <Link
-                            to="/tracking"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
-                          >
-                            <span className="text-sm">🚚</span>
-                            <span>Track Order</span>
-                          </Link>
+                              <Link
+                                to="/tracking"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                              >
+                                <span className="text-sm">🚚</span>
+                                <span>Track Order</span>
+                              </Link>
 
-                          <Link
-                            to="/wishlist"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm text-rose-500">♥</span>
-                              <span>Saved Wishlist</span>
-                            </div>
-                            {wishlistCount > 0 && (
-                              <span className="rounded-full bg-rose-100 text-rose-700 font-bold px-1.5 py-0.2 text-[9px]">
-                                {wishlistCount}
-                              </span>
-                            )}
-                          </Link>
+                              <Link
+                                to="/wishlist"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-sm text-rose-500">♥</span>
+                                  <span>Saved Wishlist</span>
+                                </div>
+                                {wishlistCount > 0 && (
+                                  <span className="rounded-full bg-rose-100 text-rose-700 font-bold px-1.5 py-0.2 text-[9px]">
+                                    {wishlistCount}
+                                  </span>
+                                )}
+                              </Link>
 
-                          <Link
-                            to="/cart"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm">🛍️</span>
-                              <span>My Shopping Bag</span>
-                            </div>
-                            {cartCount > 0 && (
-                              <span className="rounded-full bg-gray-900 text-white font-bold px-1.5 py-0.2 text-[9px]">
-                                {cartCount}
-                              </span>
-                            )}
-                          </Link>
+                              <Link
+                                to="/cart"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-950 transition"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-sm">🛍️</span>
+                                  <span>My Shopping Bag</span>
+                                </div>
+                                {cartCount > 0 && (
+                                  <span className="rounded-full bg-gray-900 text-white font-bold px-1.5 py-0.2 text-[9px]">
+                                    {cartCount}
+                                  </span>
+                                )}
+                              </Link>
+                            </>
+                          )}
                         </div>
 
-                        {/* Management Portals & Admin Login Options */}
+                        {/* Management Portals & Account Switch */}
                         <div className="py-1.5 space-y-0.5">
                           <div className="px-2 py-0.5">
                             <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">
-                              Portals & Staff Login
+                              Portals & Switch
                             </span>
                           </div>
 
-                          {isAdmin() ? (
+                          {currentUser.role !== 'admin' && isAdmin() ? (
                             <Link
                               to="/admin"
                               onClick={() => setUserMenuOpen(false)}
@@ -692,7 +760,7 @@ export default function Navbar() {
                             </Link>
                           ) : null}
 
-                          {isSupplier() ? (
+                          {currentUser.role !== 'supplier' && isSupplier() ? (
                             <Link
                               to="/supplier"
                               onClick={() => setUserMenuOpen(false)}
@@ -730,7 +798,7 @@ export default function Navbar() {
                             className="w-full flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer"
                           >
                             <span>🚪</span>
-                            <span>Sign Out</span>
+                            <span>Sign Out {currentUser.role ? `(${currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)})` : ''}</span>
                           </button>
                         </div>
                       </div>
@@ -1199,13 +1267,31 @@ export default function Navbar() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 pt-1">
-                      <Link
-                        to="/account"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="rounded-xl bg-white border border-gray-200 py-1.5 text-center text-xs font-bold text-gray-900 hover:bg-gray-100 transition"
-                      >
-                        My Account
-                      </Link>
+                      {currentUser.role === 'supplier' ? (
+                        <Link
+                          to="/supplier"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="rounded-xl bg-blue-50 border border-blue-200 py-1.5 text-center text-xs font-bold text-blue-900 hover:bg-blue-100 transition"
+                        >
+                          Supplier Console
+                        </Link>
+                      ) : currentUser.role === 'admin' ? (
+                        <Link
+                          to="/admin"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="rounded-xl bg-amber-50 border border-amber-200 py-1.5 text-center text-xs font-bold text-amber-950 hover:bg-amber-100 transition"
+                        >
+                          Admin Console
+                        </Link>
+                      ) : (
+                        <Link
+                          to="/account"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="rounded-xl bg-white border border-gray-200 py-1.5 text-center text-xs font-bold text-gray-900 hover:bg-gray-100 transition"
+                        >
+                          My Account
+                        </Link>
+                      )}
                       <button
                         type="button"
                         onClick={handleLogout}
