@@ -167,6 +167,18 @@ def seed_database():
             1 if p.get("isBestSeller") else 0
         ))
 
+    initial_reviews = [
+        (101, 1, "Anand Verma", 5, "The dial finish and sapphire crystal are spectacular.", "24 Aug 2026"),
+        (102, 1, "Meera Patel", 5, "Lightweight yet sturdy surgical steel.", "18 Aug 2026"),
+        (103, 4, "Karan Singhania", 5, "The ceramic bezel glides smoothly. Worth every rupee.", "29 Aug 2026"),
+        (104, 10, "Devansh Shah", 5, "Zoom Air foam is super responsive.", "20 Aug 2026")
+    ]
+    for review_id, product_id, user_name, rating, comment, date_str in initial_reviews:
+        cursor.execute("""
+        INSERT OR IGNORE INTO reviews (id, productId, userName, rating, comment, date, verified)
+        VALUES (?, ?, ?, ?, ?, ?, 1)
+        """, (review_id, product_id, user_name, rating, comment, date_str))
+
     # 6. Suppliers
     suppliers = all_data.get("suppliers", [])
     for s in suppliers:

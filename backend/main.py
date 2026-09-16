@@ -5,8 +5,9 @@ import json
 import base64
 import hashlib
 import hmac
+import secrets
 from typing import Optional, List, Any, Dict
-from fastapi import FastAPI, HTTPException, Query, Body, status
+from fastapi import FastAPI, HTTPException, Query, Body, Header, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -20,6 +21,22 @@ def create_session_token(user: Dict[str, Any]) -> str:
     encoded = base64.urlsafe_b64encode(payload.encode("utf-8")).decode("ascii").rstrip("=")
     signature = hmac.new(AUTH_SECRET, encoded.encode("ascii"), hashlib.sha256).hexdigest()
     return f"{encoded}.{signature}"
+
+def get_authenticated_user(authorization: Optional[str]) -> Dict[str, Any]:
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authentication required")
+    try:
+        encoded, signature = authorization[7:].split(".", 1)
+        expected = hmac.new(AUTH_SECRET, encoded.encode("ascii"), hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(expected, signature):
+            raise ValueError("Invalid signature")
+        padded = encoded + "=" * (-len(encoded) % 4)
+        user_id, email, role, expires_at = base64.urlsafe_b64decode(padded).decode("utf-8").split(":", 3)
+        if int(expires_at) < int(time.time()):
+            raise ValueError("Expired token")
+        return {"id": int(user_id), "email": email, "role": role}
+    except (ValueError, TypeError, IndexError, UnicodeDecodeError):
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
 
 # Initialize FastAPI App
 app = FastAPI(
@@ -1073,6 +1090,167 @@ def add_review(rev: Dict[str, Any] = Body(...)):
     rows = cursor.fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
+# -------------------------------------------------------------------
+# 14. CUSTOMER DATA & EMAIL AUTH FLOWS
+# -------------------------------------------------------------------
+def user_id_from_auth(authorization: Optional[str]) -> int:
+    return get_authenticated_user(authorization)["id"]
+
+@app.get("/api/cart")
+def get_cart(authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    rows = conn.execute("SELECT itemData, quantity FROM cart_items WHERE userId = ? ORDER BY id", (user_id,)).fetchall()
+    conn.close()
+    result = []
+    for row in rows:
+        item = parse_json_field(row["itemData"])
+        item["quantity"] = row["quantity"]
+        result.append(item)
+    return result
+
+@app.post("/api/cart")
+def save_cart(payload: Dict[str, Any] = Body(...), authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    items = payload.get("items", [])
+    conn = get_db_connection()
+    conn.execute("DELETE FROM cart_items WHERE userId = ?", (user_id,))
+    for item in items:
+        item_copy = {**item, "quantity": max(1, int(item.get("quantity", 1)))}
+        conn.execute("INSERT INTO cart_items (userId, productId, itemData, quantity) VALUES (?, ?, ?, ?)", (user_id, int(item_copy.get("id", 0)), dump_json_field(item_copy), item_copy["quantity"]))
+    conn.commit()
+    conn.close()
+    return items
+
+@app.delete("/api/cart")
+def clear_cart_backend(authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    conn.execute("DELETE FROM cart_items WHERE userId = ?", (user_id,))
+    conn.commit()
+    conn.close()
+    return []
+
+@app.get("/api/wishlist")
+def get_wishlist(authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    rows = conn.execute("SELECT itemData FROM wishlist_items WHERE userId = ? ORDER BY productId DESC", (user_id,)).fetchall()
+    conn.close()
+    return [parse_json_field(row["itemData"]) for row in rows]
+
+@app.post("/api/wishlist")
+def save_wishlist(payload: Dict[str, Any] = Body(...), authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    items = payload.get("items", [])
+    conn = get_db_connection()
+    conn.execute("DELETE FROM wishlist_items WHERE userId = ?", (user_id,))
+    for item in items:
+        conn.execute("INSERT OR REPLACE INTO wishlist_items (userId, productId, itemData) VALUES (?, ?, ?)", (user_id, int(item.get("id", 0)), dump_json_field(item)))
+    conn.commit()
+    conn.close()
+    return items
+
+@app.delete("/api/wishlist")
+def clear_wishlist_backend(authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    conn.execute("DELETE FROM wishlist_items WHERE userId = ?", (user_id,))
+    conn.commit()
+    conn.close()
+    return []
+
+@app.get("/api/addresses")
+def get_addresses(authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    rows = conn.execute("SELECT id, address, isDefault FROM user_addresses WHERE userId = ? ORDER BY isDefault DESC, id DESC", (user_id,)).fetchall()
+    conn.close()
+    return [{**parse_json_field(row["address"]), "id": row["id"], "isDefault": bool(row["isDefault"])} for row in rows]
+
+@app.post("/api/addresses")
+def save_address(address: Dict[str, Any] = Body(...), authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    if address.get("isDefault"):
+        conn.execute("UPDATE user_addresses SET isDefault = 0 WHERE userId = ?", (user_id,))
+    if address.get("id"):
+        conn.execute("UPDATE user_addresses SET address = ?, isDefault = ? WHERE id = ? AND userId = ?", (dump_json_field(address), int(bool(address.get("isDefault"))), int(address["id"]), user_id))
+    else:
+        conn.execute("INSERT INTO user_addresses (userId, address, isDefault) VALUES (?, ?, ?)", (user_id, dump_json_field(address), int(bool(address.get("isDefault")))))
+    conn.commit()
+    conn.close()
+    return get_addresses(authorization)
+
+@app.delete("/api/addresses/{address_id}")
+def delete_address(address_id: int, authorization: Optional[str] = Header(default=None)):
+    user_id = user_id_from_auth(authorization)
+    conn = get_db_connection()
+    conn.execute("DELETE FROM user_addresses WHERE id = ? AND userId = ?", (address_id, user_id))
+    conn.commit()
+    conn.close()
+    return get_addresses(authorization)
+
+@app.post("/api/auth/otp/send")
+def send_otp(payload: Dict[str, str] = Body(...)):
+    email = payload.get("email", "").strip().lower()
+    otp_type = payload.get("type", "forgot_password")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+    code = f"{secrets.randbelow(900000) + 100000}"
+    conn = get_db_connection()
+    conn.execute("INSERT OR REPLACE INTO otp_codes (email, type, code, expiresAt, attempts) VALUES (?, ?, ?, ?, 0)", (email, otp_type, code, int(time.time()) + 300))
+    conn.commit()
+    conn.close()
+    return {"success": True, "email": email, "type": otp_type, "otpCode": code, "expiresIn": 300}
+
+@app.post("/api/auth/otp/verify")
+def verify_otp(payload: Dict[str, str] = Body(...)):
+    email = payload.get("email", "").strip().lower()
+    otp_type = payload.get("type", "forgot_password")
+    code = payload.get("code", "")
+    conn = get_db_connection()
+    row = conn.execute("SELECT * FROM otp_codes WHERE email = ? AND type = ?", (email, otp_type)).fetchone()
+    if not row or int(row["expiresAt"]) < int(time.time()) or not hmac.compare_digest(str(row["code"]), str(code)):
+        conn.close()
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+    conn.execute("DELETE FROM otp_codes WHERE email = ? AND type = ?", (email, otp_type))
+    user = None
+    if otp_type == "login_otp":
+        user_row = conn.execute("SELECT * FROM users WHERE LOWER(email) = ? AND status = 'Active'", (email,)).fetchone()
+        if user_row:
+            user = row_to_dict(user_row)
+            user.pop("password", None)
+    conn.commit()
+    conn.close()
+    response = {"success": True, "verified": True}
+    if user:
+        response.update({"token": create_session_token(user), "user": user})
+    return response
+
+@app.post("/api/auth/password/reset")
+def reset_password(payload: Dict[str, str] = Body(...)):
+    email = payload.get("email", "").strip().lower()
+    new_password = payload.get("password", "")
+    if len(new_password) < 4:
+        raise HTTPException(status_code=400, detail="Password must be at least 4 characters")
+    conn = get_db_connection()
+    updated = conn.execute("UPDATE users SET password = ? WHERE LOWER(email) = ?", (hash_password(new_password), email)).rowcount
+    conn.commit()
+    conn.close()
+    if not updated:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"success": True}
+
+@app.post("/api/email/log")
+def log_email(payload: Dict[str, Any] = Body(...)):
+    email_id = payload.get("id") or f"EML-{int(time.time() * 1000)}"
+    conn = get_db_connection()
+    conn.execute("INSERT OR REPLACE INTO email_logs (id, recipient, subject, type, body, otpCode, status) VALUES (?, ?, ?, ?, ?, ?, ?)", (email_id, payload.get("to", ""), payload.get("subject", ""), payload.get("type", "notification"), payload.get("textBody", ""), payload.get("otpCode", ""), payload.get("status", "Delivered")))
+    conn.commit()
+    conn.close()
+    return {"success": True, "emailId": email_id}
 
 # -------------------------------------------------------------------
 # 14. ADMIN ANALYTICS & STATS

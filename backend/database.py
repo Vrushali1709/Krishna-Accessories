@@ -262,6 +262,60 @@ def init_db():
     )
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS cart_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId INTEGER NOT NULL,
+        productId INTEGER NOT NULL,
+        itemData TEXT NOT NULL,
+        quantity INTEGER NOT NULL DEFAULT 1,
+        UNIQUE(userId, productId, itemData)
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS wishlist_items (
+        userId INTEGER NOT NULL,
+        productId INTEGER NOT NULL,
+        itemData TEXT NOT NULL,
+        PRIMARY KEY(userId, productId)
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_addresses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId INTEGER NOT NULL,
+        address TEXT NOT NULL,
+        isDefault INTEGER DEFAULT 0
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS otp_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT NOT NULL,
+        type TEXT NOT NULL,
+        code TEXT NOT NULL,
+        expiresAt INTEGER NOT NULL,
+        attempts INTEGER DEFAULT 0,
+        UNIQUE(email, type)
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS email_logs (
+        id TEXT PRIMARY KEY,
+        recipient TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        type TEXT,
+        body TEXT,
+        otpCode TEXT,
+        status TEXT DEFAULT 'Delivered',
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
     conn.commit()
     conn.close()
 
