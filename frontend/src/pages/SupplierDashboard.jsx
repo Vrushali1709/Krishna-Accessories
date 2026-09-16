@@ -36,6 +36,7 @@ import {
   ChevronDown,
   Image as ImageIcon
 } from 'lucide-react';
+import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 
 export default function SupplierDashboard() {
   const navigate = useNavigate();
@@ -1063,28 +1064,14 @@ export default function SupplierDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {form.image ? (
-                          <img
-                            src={form.image}
-                            alt="Angle 1"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={form.image} alt="Angle 1" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          required
-                          value={form.image}
-                          onChange={e => setForm({ ...form, image: e.target.value })}
-                          placeholder="https://... or /images/front.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">Main cover & thumbnail</p>
-                      </div>
+                      <ProductImagePicker
+                        value={form.image}
+                        onChange={image => setForm({ ...form, image })}
+                        required
+                        alt="Angle 1"
+                      />
                     </div>
                   </div>
 
@@ -1106,27 +1093,13 @@ export default function SupplierDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {form.image2 ? (
-                          <img
-                            src={form.image2}
-                            alt="Angle 2"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={form.image2} alt="Angle 2" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          value={form.image2}
-                          onChange={e => setForm({ ...form, image2: e.target.value })}
-                          placeholder="https://... or /images/side.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">45° side perspective</p>
-                      </div>
+                      <ProductImagePicker
+                        value={form.image2}
+                        onChange={image2 => setForm({ ...form, image2 })}
+                        alt="Angle 2"
+                      />
                     </div>
                   </div>
 
@@ -1148,27 +1121,13 @@ export default function SupplierDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {form.image3 ? (
-                          <img
-                            src={form.image3}
-                            alt="Angle 3"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={form.image3} alt="Angle 3" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          value={form.image3}
-                          onChange={e => setForm({ ...form, image3: e.target.value })}
-                          placeholder="https://... or /images/back.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">Back engraving / case view</p>
-                      </div>
+                      <ProductImagePicker
+                        value={form.image3}
+                        onChange={image3 => setForm({ ...form, image3 })}
+                        alt="Angle 3"
+                      />
                     </div>
                   </div>
 
@@ -1190,27 +1149,13 @@ export default function SupplierDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {form.image4 ? (
-                          <img
-                            src={form.image4}
-                            alt="Angle 4"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={form.image4} alt="Angle 4" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          value={form.image4}
-                          onChange={e => setForm({ ...form, image4: e.target.value })}
-                          placeholder="https://... or /images/detail.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">Macro zoom or on-wrist shot</p>
-                      </div>
+                      <ProductImagePicker
+                        value={form.image4}
+                        onChange={image4 => setForm({ ...form, image4 })}
+                        alt="Angle 4"
+                      />
                     </div>
                   </div>
                 </div>

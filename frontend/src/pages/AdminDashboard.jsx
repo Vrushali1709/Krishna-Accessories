@@ -44,6 +44,7 @@ import {
   RefreshCw,
   Server
 } from 'lucide-react';
+import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 import {
   getProducts,
   saveProduct,
@@ -196,7 +197,7 @@ export default function AdminDashboard() {
     oldPrice: '',
     stock: '15',
     supplier: 'Apex Timepieces Ltd.',
-    image: 'https://images.unsplash.com/photo-1548171915-e79a380a2a4b?w=800',
+    image: '',
     image2: '',
     image3: '',
     image4: '',
@@ -3509,28 +3510,14 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {productForm.image ? (
-                          <img
-                            src={productForm.image}
-                            alt="Angle 1"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={productForm.image} alt="Angle 1" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          required
-                          value={productForm.image}
-                          onChange={e => setProductForm({ ...productForm, image: e.target.value })}
-                          placeholder="https://... or /images/front.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">Main cover & thumbnail</p>
-                      </div>
+                      <ProductImagePicker
+                        value={productForm.image}
+                        onChange={image => setProductForm({ ...productForm, image })}
+                        required
+                        alt="Angle 1"
+                      />
                     </div>
                   </div>
 
@@ -3552,27 +3539,13 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {productForm.image2 ? (
-                          <img
-                            src={productForm.image2}
-                            alt="Angle 2"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={productForm.image2} alt="Angle 2" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          value={productForm.image2}
-                          onChange={e => setProductForm({ ...productForm, image2: e.target.value })}
-                          placeholder="https://... or /images/side.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">45° side perspective</p>
-                      </div>
+                      <ProductImagePicker
+                        value={productForm.image2}
+                        onChange={image2 => setProductForm({ ...productForm, image2 })}
+                        alt="Angle 2"
+                      />
                     </div>
                   </div>
 
@@ -3594,27 +3567,13 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {productForm.image3 ? (
-                          <img
-                            src={productForm.image3}
-                            alt="Angle 3"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={productForm.image3} alt="Angle 3" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          value={productForm.image3}
-                          onChange={e => setProductForm({ ...productForm, image3: e.target.value })}
-                          placeholder="https://... or /images/back.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">Back engraving / case view</p>
-                      </div>
+                      <ProductImagePicker
+                        value={productForm.image3}
+                        onChange={image3 => setProductForm({ ...productForm, image3 })}
+                        alt="Angle 3"
+                      />
                     </div>
                   </div>
 
@@ -3636,27 +3595,13 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex gap-2">
                       <div className="h-14 w-14 rounded-md border border-zinc-200 bg-zinc-50 shrink-0 overflow-hidden flex items-center justify-center">
-                        {productForm.image4 ? (
-                          <img
-                            src={productForm.image4}
-                            alt="Angle 4"
-                            className="h-full w-full object-contain p-0.5"
-                            onError={e => { e.currentTarget.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <ImageIcon className="h-5 w-5 text-zinc-300" />
-                        )}
+                        <ProductImagePreview value={productForm.image4} alt="Angle 4" />
                       </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          value={productForm.image4}
-                          onChange={e => setProductForm({ ...productForm, image4: e.target.value })}
-                          placeholder="https://... or /images/detail.jpg"
-                          className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-[11px] outline-none focus:bg-white focus:border-zinc-400 font-mono"
-                        />
-                        <p className="text-[10px] text-zinc-400 mt-1">Macro zoom or on-wrist shot</p>
-                      </div>
+                      <ProductImagePicker
+                        value={productForm.image4}
+                        onChange={image4 => setProductForm({ ...productForm, image4 })}
+                        alt="Angle 4"
+                      />
                     </div>
                   </div>
                 </div>
