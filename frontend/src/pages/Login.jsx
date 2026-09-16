@@ -96,19 +96,8 @@ export default function Login() {
   const handleSelectRole = (role) => {
     setSelectedRole(role);
     setError('');
-    if (role === 'customer') {
-      setEmail('rahul.patel@example.com');
-      setPassword('customer123');
-    } else if (role === 'admin') {
-      setEmail('admin@krishna.com');
-      setPassword('Admin@123');
-    } else if (role === 'supplier') {
-      setEmail('supplier@krishna.com');
-      setPassword('supplier123');
-    } else {
-      setEmail('');
-      setPassword('');
-    }
+    setEmail('');
+    setPassword('');
   };
 
   // Standard Password Authentication
@@ -387,13 +376,7 @@ export default function Login() {
                   autoComplete="off"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={
-                    selectedRole === 'supplier'
-                      ? 'supplier@krishna.com'
-                      : selectedRole === 'admin'
-                        ? 'admin@krishna.com'
-                        : 'user@example.com'
-                  }
+                  placeholder="Enter your email address"
                   className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                 />
               </div>
@@ -558,10 +541,10 @@ export default function Login() {
             </div>
           )}
 
-          {/* Quick Access Account Selector */}
+          {/* Account Role Selector */}
           <div className="border-t border-gray-100 pt-4">
             <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
-              Demo Access
+              Account Role
             </p>
             <div className="grid grid-cols-3 gap-2">
               <button
@@ -572,7 +555,7 @@ export default function Login() {
                     : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
                   }`}
               >
-                Customer Demo
+                Customer
               </button>
               <button
                 type="button"
@@ -582,7 +565,7 @@ export default function Login() {
                     : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
                   }`}
               >
-                Supplier Demo
+                Supplier
               </button>
               <button
                 type="button"
@@ -592,7 +575,7 @@ export default function Login() {
                     : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
                   }`}
               >
-                Admin Demo
+                Admin
               </button>
             </div>
           </div>
