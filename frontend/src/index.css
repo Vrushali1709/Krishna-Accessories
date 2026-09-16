@@ -36,6 +36,8 @@
   html {
     scroll-behavior: smooth;
     background-color: #FAFAFB;
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   body {
@@ -43,9 +45,18 @@
     min-width: 320px;
     background-color: #FAFAFB;
     color: #111827;
-    overflow-x: clip;
+    overflow-x: hidden;
+    max-width: 100%;
     font-size: 13px;
     line-height: 1.5;
+  }
+
+  #root {
+    overflow-x: hidden;
+    max-width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
   button,

@@ -213,11 +213,11 @@ export default function Navbar() {
       <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md bg-white/98 backdrop-blur-md' : 'bg-white/95 backdrop-blur-md'}`}>
 
         {/* Top Announcement & Boutique Contact Bar */}
-        <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-6 lg:px-8 xl:px-10">
-          <div className="mx-auto flex items-center justify-between gap-3">
+        <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-6 lg:px-8 xl:px-10 overflow-hidden">
+          <div className="mx-auto flex items-center justify-between gap-2 min-w-0">
 
             {/* Boutique Location */}
-            <div className="flex items-center gap-1.5 truncate text-slate-300">
+            <div className="flex items-center gap-1.5 min-w-0 truncate text-slate-300">
               <span className="text-amber-400 font-bold shrink-0">📍 Mumbai Boutique:</span>
               <span className="truncate hidden sm:inline text-slate-200">{SHOP_INFO.address}</span>
               <span className="truncate sm:hidden text-slate-200">Heera Panna, Haji Ali</span>
@@ -289,18 +289,18 @@ export default function Navbar() {
           <div className="relative flex h-14 sm:h-16 items-center justify-between gap-2">
 
             {/* Left: Brand Identity */}
-            <div className="flex items-center shrink-0 min-w-0 z-10">
+            <div className="flex items-center min-w-0 z-10">
               <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 sm:gap-3 group min-w-0">
                 <img
                   src="/images/krishna-logo.png"
                   alt="Krishna Accessories Logo"
-                  className="h-8.5 w-8.5 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105 shrink-0"
+                  className="h-8 w-8 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105 shrink-0"
                 />
                 <div className="flex flex-col min-w-0">
-                  <span className="font-extrabold text-[13.5px] xs:text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors truncate">
+                  <span className="font-extrabold text-[13px] xs:text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors truncate">
                     Krishna <span className="text-amber-700">Accessories</span>
                   </span>
-                  <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5 truncate">
                     Curated Luxury
                   </span>
                 </div>
