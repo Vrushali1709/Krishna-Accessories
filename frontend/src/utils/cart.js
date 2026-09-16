@@ -1,8 +1,38 @@
 // src/utils/cart.js
 import { cartApi, promotionsApi } from './api';
 
-let cartMemory = [];
-let appliedCouponMemory = null;
+const CART_KEY = 'krishna_cart';
+const APPLIED_COUPON_KEY = 'krishna_applied_coupon';
+
+function loadCartFromStorage() {
+  if (typeof window === 'undefined' || !window.localStorage) return [];
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Cart] Error reading cart from localStorage:', e);
+  }
+  return [];
+}
+
+function loadCouponFromStorage() {
+  if (typeof window === 'undefined' || !window.localStorage) return null;
+  try {
+    const raw = localStorage.getItem(APPLIED_COUPON_KEY);
+    if (raw) {
+      return JSON.parse(raw);
+    }
+  } catch (e) {
+    console.warn('[Cart] Error reading coupon from localStorage:', e);
+  }
+  return null;
+}
+
+let cartMemory = loadCartFromStorage();
+let appliedCouponMemory = loadCouponFromStorage();
 
 export const FREE_SHIPPING_THRESHOLD = 2000;
 export const STANDARD_SHIPPING_FEE = 99;
@@ -10,9 +40,16 @@ export const STANDARD_SHIPPING_FEE = 99;
 export const AVAILABLE_COUPONS = {};
 
 /**
- * Retrieves the current cart array from localStorage.
+ * Retrieves the current cart array from memory/localStorage.
  */
 export function getCart() {
+  if ((!cartMemory || cartMemory.length === 0) && typeof window !== 'undefined' && window.localStorage) {
+    const stored = loadCartFromStorage();
+    if (stored.length > 0) {
+      cartMemory = stored;
+    }
+  }
+
   return cartMemory.map((item) => ({
       ...item,
       quantity: Math.max(1, parseInt(item.quantity, 10) || 1),
@@ -24,23 +61,43 @@ export function getCart() {
 }
 
 /**
- * Saves the cart to localStorage and broadcasts the cartUpdated event.
+ * Saves the cart to memory & localStorage and broadcasts the cartUpdated event.
  */
 export function saveCart(cart) {
   cartMemory = Array.isArray(cart) ? cart : [];
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cartMemory));
+    } catch (e) {
+      console.warn('[Cart] Error saving cart to localStorage:', e);
+    }
+  }
   window.dispatchEvent(new Event('cartUpdated'));
-  cartApi.save(cart).catch(err => console.warn('[API] Failed to save cart:', err));
+  cartApi.save(cartMemory).catch(err => console.warn('[API] Failed to save cart:', err));
 }
 
 export async function syncCartFromBackend() {
   try {
     const cart = await cartApi.get();
-    if (Array.isArray(cart)) {
+    if (Array.isArray(cart) && cart.length > 0) {
       cartMemory = cart;
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(CART_KEY, JSON.stringify(cartMemory));
+      }
       window.dispatchEvent(new Event('cartUpdated'));
+    } else if (cartMemory.length > 0) {
+      // Sync guest/local items to backend if backend was empty
+      cartApi.save(cartMemory).catch(() => {});
     }
   } catch (err) {
-    console.warn('[API] Failed syncing cart:', err);
+    // Fail silently to local storage cart
+  }
+}
+
+// Auto-trigger sync on load in browser if logged in
+if (typeof window !== 'undefined') {
+  if (localStorage.getItem('krishna_auth_token')) {
+    syncCartFromBackend();
   }
 }
 
@@ -183,6 +240,14 @@ export function removeFromCart(id, color = '', variant = '', size = '') {
 export function clearCart() {
   cartMemory = [];
   appliedCouponMemory = null;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.removeItem(CART_KEY);
+      localStorage.removeItem(APPLIED_COUPON_KEY);
+    } catch (e) {
+      console.warn('[Cart] Error clearing cart from localStorage:', e);
+    }
+  }
   window.dispatchEvent(new Event('cartUpdated'));
   cartApi.clear().catch(err => console.warn('[API] Failed to clear cart:', err));
 }
@@ -211,6 +276,9 @@ export function getCartSubtotal() {
  * Retrieves the currently applied coupon object or null.
  */
 export function getAppliedCoupon() {
+  if (!appliedCouponMemory && typeof window !== 'undefined' && window.localStorage) {
+    appliedCouponMemory = loadCouponFromStorage();
+  }
   return appliedCouponMemory;
 }
 
@@ -230,6 +298,13 @@ export async function applyCoupon(code, currentSubtotal = null) {
   const discount = Number(result.discount) || 0;
 
   appliedCouponMemory = coupon;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(APPLIED_COUPON_KEY, JSON.stringify(coupon));
+    } catch (e) {
+      console.warn('[Cart] Error saving coupon to localStorage:', e);
+    }
+  }
 
   window.dispatchEvent(new Event('cartUpdated'));
 
@@ -246,6 +321,13 @@ export async function applyCoupon(code, currentSubtotal = null) {
  */
 export function removeCoupon() {
   appliedCouponMemory = null;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.removeItem(APPLIED_COUPON_KEY);
+    } catch (e) {
+      console.warn('[Cart] Error removing coupon from localStorage:', e);
+    }
+  }
   window.dispatchEvent(new Event('cartUpdated'));
 }
 

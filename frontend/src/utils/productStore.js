@@ -1068,11 +1068,25 @@ const defaultProductReviews = {
   ]
 };
 
+function loadWishlistFromStorage() {
+  if (typeof window === 'undefined' || !window.localStorage) return [];
+  try {
+    const raw = localStorage.getItem(WISHLIST_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (e) {
+    console.warn('[Wishlist] Error loading wishlist from localStorage:', e);
+  }
+  return [];
+}
+
 // In-memory reactive state
 let productsMemory = [];
 let categoriesMemory = [];
 let brandsMemory = [];
-let wishlistMemory = [];
+let wishlistMemory = loadWishlistFromStorage();
 let reviewsMemory = {};
 
 // Immediate cleanup of legacy database keys from localStorage
@@ -1081,7 +1095,6 @@ if (typeof window !== 'undefined' && window.localStorage) {
     localStorage.removeItem(PRODUCTS_KEY);
     localStorage.removeItem(CATEGORIES_KEY);
     localStorage.removeItem(BRANDS_KEY);
-    localStorage.removeItem(WISHLIST_KEY);
     localStorage.removeItem(REVIEWS_KEY);
   } catch (e) {
     console.warn('[LocalStorage] Cleanup warning:', e);
@@ -1242,6 +1255,9 @@ export async function syncProductsFromBackend() {
 // Auto-trigger sync on load in browser
 if (typeof window !== 'undefined') {
   syncProductsFromBackend();
+  if (localStorage.getItem('krishna_auth_token')) {
+    syncWishlistFromBackend();
+  }
 }
 
 
@@ -1278,17 +1294,24 @@ export function getSubcategoriesByCategory(categoryName) {
 // ================= WISHLIST MANAGEMENT =================
 
 export function getWishlist() {
+  if ((!wishlistMemory || wishlistMemory.length === 0) && typeof window !== 'undefined' && window.localStorage) {
+    const stored = loadWishlistFromStorage();
+    if (stored.length > 0) {
+      wishlistMemory = stored;
+    }
+  }
   return wishlistMemory;
 }
 
 export function isInWishlist(productId) {
-  return wishlistMemory.some(item => Number(item.id) === Number(productId));
+  return getWishlist().some(item => Number(item.id) === Number(productId));
 }
 
 export function toggleWishlist(product) {
-  const exists = wishlistMemory.some(item => Number(item.id) === Number(product.id));
+  const current = getWishlist();
+  const exists = current.some(item => Number(item.id) === Number(product.id));
   if (exists) {
-    wishlistMemory = wishlistMemory.filter(item => Number(item.id) !== Number(product.id));
+    wishlistMemory = current.filter(item => Number(item.id) !== Number(product.id));
   } else {
     wishlistMemory = [{
       id: product.id,
@@ -1301,7 +1324,14 @@ export function toggleWishlist(product) {
       rating: product.rating,
       image: product.image || product.images?.[0],
       stock: product.stock
-    }, ...wishlistMemory];
+    }, ...current];
+  }
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlistMemory));
+    } catch (e) {
+      console.warn('[Wishlist] Error saving wishlist to localStorage:', e);
+    }
   }
   window.dispatchEvent(new Event('wishlistUpdated'));
   wishlistApi.save(wishlistMemory).catch(err => console.warn('[API] Failed to save wishlist:', err));
@@ -1309,7 +1339,15 @@ export function toggleWishlist(product) {
 }
 
 export function removeFromWishlist(productId) {
-  wishlistMemory = wishlistMemory.filter(item => Number(item.id) !== Number(productId));
+  const current = getWishlist();
+  wishlistMemory = current.filter(item => Number(item.id) !== Number(productId));
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlistMemory));
+    } catch (e) {
+      console.warn('[Wishlist] Error saving wishlist to localStorage:', e);
+    }
+  }
   window.dispatchEvent(new Event('wishlistUpdated'));
   wishlistApi.save(wishlistMemory).catch(err => console.warn('[API] Failed to save wishlist:', err));
   return wishlistMemory;
@@ -1317,6 +1355,13 @@ export function removeFromWishlist(productId) {
 
 export function clearWishlist() {
   wishlistMemory = [];
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.removeItem(WISHLIST_KEY);
+    } catch (e) {
+      console.warn('[Wishlist] Error clearing wishlist from localStorage:', e);
+    }
+  }
   window.dispatchEvent(new Event('wishlistUpdated'));
   wishlistApi.clear().catch(err => console.warn('[API] Failed to clear wishlist:', err));
 }
@@ -1324,12 +1369,18 @@ export function clearWishlist() {
 export async function syncWishlistFromBackend() {
   try {
     const items = await wishlistApi.get();
-    if (Array.isArray(items)) {
+    if (Array.isArray(items) && items.length > 0) {
       wishlistMemory = items.map(normalizeProduct);
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlistMemory));
+      }
       window.dispatchEvent(new Event('wishlistUpdated'));
+    } else if (wishlistMemory.length > 0) {
+      // Sync local wishlist to backend if backend was empty
+      wishlistApi.save(wishlistMemory).catch(() => {});
     }
   } catch (err) {
-    console.warn('[API] Failed syncing wishlist:', err);
+    // Silently continue using localStorage wishlist
   }
 }
 

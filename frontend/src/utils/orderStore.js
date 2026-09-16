@@ -753,6 +753,9 @@ export async function syncOrdersFromBackend() {
 // Auto-trigger sync on load in browser
 if (typeof window !== 'undefined') {
   syncOrdersFromBackend();
+  if (localStorage.getItem('krishna_auth_token')) {
+    syncAddressesFromBackend();
+  }
 }
 
 
