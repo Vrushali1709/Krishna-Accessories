@@ -443,14 +443,7 @@ export default function AdminDashboard() {
       icon: LayoutDashboard,
       badge: unreadNotifs > 0 ? `${unreadNotifs}` : null,
       subItems: [
-        { id: 'overview', label: 'Overview' },
-        { id: 'users', label: 'Total Users' },
-        { id: 'suppliers', label: 'Suppliers' },
-        { id: 'products', label: 'Products' },
-        { id: 'orders', label: 'Orders' },
-        { id: 'revenue', label: 'Revenue' },
-        { id: 'pending', label: 'Pending Actions', badge: pendingSuppliers.length + returnRequests.length > 0 ? `${pendingSuppliers.length + returnRequests.length}` : null },
-        { id: 'charts', label: 'Sales Charts' }
+        { id: 'overview', label: 'Overview' }
       ]
     },
     {
@@ -1017,6 +1010,7 @@ export default function AdminDashboard() {
               const isSectionActive = activeSection === sec.id;
               const isExpanded = expandedSections[sec.id];
               const IconComp = sec.icon;
+              const hasSubItems = sec.subItems && sec.subItems.length > 1;
 
               return (
                 <div key={sec.id} className="space-y-0.5">
@@ -1026,13 +1020,13 @@ export default function AdminDashboard() {
                     onClick={() => {
                       if (sidebarCollapsed) {
                         setSidebarCollapsed(false);
-                        toggleSectionExpand(sec.id);
+                        if (hasSubItems) toggleSectionExpand(sec.id);
                         handleNavSelect(sec.id, sec.subItems[0].id);
                       } else {
-                        toggleSectionExpand(sec.id);
-                        if (!isSectionActive) {
-                          handleNavSelect(sec.id, sec.subItems[0].id);
+                        if (hasSubItems) {
+                          toggleSectionExpand(sec.id);
                         }
+                        handleNavSelect(sec.id, sec.subItems[0].id);
                       }
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 font-medium transition-colors cursor-pointer ${isSectionActive
@@ -1054,13 +1048,15 @@ export default function AdminDashboard() {
                             {sec.badge}
                           </span>
                         )}
-                        <ChevronDown className={`h-3 w-3 text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        {hasSubItems && (
+                          <ChevronDown className={`h-3 w-3 text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        )}
                       </div>
                     )}
                   </button>
 
-                  {/* Sub-items List (Rendered when expanded) */}
-                  {!sidebarCollapsed && isExpanded && (
+                  {/* Sub-items List (Rendered when expanded and has multiple subitems) */}
+                  {!sidebarCollapsed && isExpanded && hasSubItems && (
                     <div className="ml-4 pl-3 border-l border-zinc-800/80 space-y-0.5 pt-0.5 pb-1">
                       {sec.subItems.map((sub) => {
                         const isSubActive = isSectionActive && activeSubTab === sub.id;
@@ -1189,9 +1185,15 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
               <span className="text-zinc-400 shrink-0">Admin</span>
               <span className="text-zinc-300 shrink-0">/</span>
-              <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
-              <span className="text-zinc-300 shrink-0">/</span>
-              <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
+              <span className={currentSectionObj.subItems.length > 1 ? "text-zinc-700 truncate" : "text-zinc-900 font-semibold truncate"}>
+                {currentSectionObj.title}
+              </span>
+              {currentSectionObj.subItems.length > 1 && (
+                <>
+                  <span className="text-zinc-300 shrink-0">/</span>
+                  <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -1352,32 +1354,34 @@ export default function AdminDashboard() {
 
         </header>
 
-        {/* Section Sub-Navigation Tabs Bar */}
-        <div className="bg-[#FAF9F8] border-b border-zinc-200/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mr-2 shrink-0">
-            {currentSectionObj.title}:
-          </span>
-          {currentSectionObj.subItems.map((sub) => {
-            const isSubActive = activeSubTab === sub.id;
-            return (
-              <button
-                key={sub.id}
-                onClick={() => setActiveSubTab(sub.id)}
-                className={`rounded-lg px-3 py-1 text-xs font-medium transition whitespace-nowrap shrink-0 cursor-pointer ${isSubActive
-                  ? 'bg-zinc-900 text-white shadow-xs'
-                  : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
-                  }`}
-              >
-                {sub.label}
-                {sub.badge && (
-                  <span className={`ml-1.5 rounded-full px-1.5 py-0.2 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-100 text-zinc-600'}`}>
-                    {sub.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        {/* Section Sub-Navigation Tabs Bar (Only shown for sections with multiple sub-items) */}
+        {currentSectionObj.subItems && currentSectionObj.subItems.length > 1 && (
+          <div className="bg-[#FAF9F8] border-b border-zinc-200/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto flex items-center gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mr-2 shrink-0">
+              {currentSectionObj.title}:
+            </span>
+            {currentSectionObj.subItems.map((sub) => {
+              const isSubActive = activeSubTab === sub.id;
+              return (
+                <button
+                  key={sub.id}
+                  onClick={() => setActiveSubTab(sub.id)}
+                  className={`rounded-lg px-3 py-1 text-xs font-medium transition whitespace-nowrap shrink-0 cursor-pointer ${isSubActive
+                    ? 'bg-zinc-900 text-white shadow-xs'
+                    : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                    }`}
+                >
+                  {sub.label}
+                  {sub.badge && (
+                    <span className={`ml-1.5 rounded-full px-1.5 py-0.2 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-100 text-zinc-600'}`}>
+                      {sub.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* ==========================================
             3. MAIN BODY CONTENT (ALL SUB-VIEWS)
@@ -1417,7 +1421,7 @@ export default function AdminDashboard() {
 
                 {/* 1. Revenue */}
                 <div
-                  onClick={() => setActiveSubTab('revenue')}
+                  onClick={() => handleNavSelect('analytics', 'monthly-sales')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1434,7 +1438,7 @@ export default function AdminDashboard() {
 
                 {/* 2. Total Orders */}
                 <div
-                  onClick={() => setActiveSubTab('orders')}
+                  onClick={() => handleNavSelect('commerce', 'orders')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1449,7 +1453,7 @@ export default function AdminDashboard() {
 
                 {/* 3. Products */}
                 <div
-                  onClick={() => setActiveSubTab('products')}
+                  onClick={() => handleNavSelect('catalog', 'products')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1464,7 +1468,7 @@ export default function AdminDashboard() {
 
                 {/* 4. Suppliers */}
                 <div
-                  onClick={() => setActiveSubTab('suppliers')}
+                  onClick={() => handleNavSelect('people', 'suppliers')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1481,7 +1485,7 @@ export default function AdminDashboard() {
 
                 {/* 5. Total Users */}
                 <div
-                  onClick={() => setActiveSubTab('users')}
+                  onClick={() => handleNavSelect('people', 'users')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer col-span-2 sm:col-span-1 transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1496,179 +1500,175 @@ export default function AdminDashboard() {
 
               </div>
 
-              {/* Sub-item: Pending Actions Highlight */}
-              {(activeSubTab === 'overview' || activeSubTab === 'pending') && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                      Pending Governance Actions ({pendingSuppliers.length + returnRequests.length + lowStockItems.length})
-                    </h3>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    {/* Pending Suppliers */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            <Users className="h-3.5 w-3.5 text-zinc-500" />
-                            <span>Vendor Onboarding</span>
-                          </span>
-                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
-                            {pendingSuppliers.length} Pending
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">
-                          {pendingSuppliers.length > 0
-                            ? `${pendingSuppliers.map(s => s.name).join(', ')} awaiting catalog publishing authorization.`
-                            : 'All supplier credentials and trade licenses are currently approved.'}
-                        </p>
-                      </div>
-                      {pendingSuppliers.length > 0 && (
-                        <button
-                          onClick={() => handleNavSelect('people', 'suppliers')}
-                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
-                        >
-                          Review Vendor Documents &rarr;
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Pending Returns */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            <RotateCcw className="h-3.5 w-3.5 text-zinc-500" />
-                            <span>Return & RMA Requests</span>
-                          </span>
-                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
-                            {returnRequests.length} Pending
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">
-                          {returnRequests.length > 0
-                            ? `${returnRequests.length} customer return requests awaiting warehouse RMA decision.`
-                            : 'No customer return requests currently pending inspection.'}
-                        </p>
-                      </div>
-                      {returnRequests.length > 0 && (
-                        <button
-                          onClick={() => handleNavSelect('commerce', 'returns')}
-                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
-                        >
-                          Review RMA Returns &rarr;
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Low Stock Warnings */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
-                            <span>Low Inventory Alerts</span>
-                          </span>
-                          <span className="text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
-                            {lowStockItems.length} Low
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">
-                          {lowStockItems.length > 0
-                            ? `${lowStockItems.length} items have less than 5 units left in warehouse bins.`
-                            : 'All product inventories are above reorder safety thresholds.'}
-                        </p>
-                      </div>
-                      {lowStockItems.length > 0 && (
-                        <button
-                          onClick={() => handleNavSelect('operations', 'inventory')}
-                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
-                        >
-                          Replenish Stock Ledger &rarr;
-                        </button>
-                      )}
-                    </div>
-                  </div>
+              {/* Pending Actions Highlight */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                    Pending Governance Actions ({pendingSuppliers.length + returnRequests.length + lowStockItems.length})
+                  </h3>
                 </div>
-              )}
 
-              {/* Sub-item: Sales Charts */}
-              {(activeSubTab === 'overview' || activeSubTab === 'charts' || activeSubTab === 'revenue') && (
-                <div className="grid gap-6 lg:grid-cols-3">
-
-                  {/* Revenue Trend Chart */}
-                  <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
-                      <div>
-                        <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                          Revenue Performance & Monthly Growth
-                        </h3>
-                        <p className="text-[11px] text-zinc-400 mt-0.5">Processed GMV breakdown in INR (₹)</p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {/* Pending Suppliers */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                          <Users className="h-3.5 w-3.5 text-zinc-500" />
+                          <span>Vendor Onboarding</span>
+                        </span>
+                        <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
+                          {pendingSuppliers.length} Pending
+                        </span>
                       </div>
-                      <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full self-start sm:self-auto tabular-nums">
-                        AOV: ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
-                      </span>
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {pendingSuppliers.length > 0
+                          ? `${pendingSuppliers.map(s => s.name).join(', ')} awaiting catalog publishing authorization.`
+                          : 'All supplier credentials and trade licenses are currently approved.'}
+                      </p>
                     </div>
-
-                    <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-4 px-2">
-                      {[
-                        { month: 'Apr', amount: 84000, height: '40%' },
-                        { month: 'May', amount: 112000, height: '55%' },
-                        { month: 'Jun', amount: 145000, height: '70%' },
-                        { month: 'Jul', amount: 168000, height: '80%' },
-                        { month: 'Aug', amount: 195000, height: '92%' },
-                        { month: 'Sep', amount: totalRevenue, height: '100%', active: true }
-                      ].map(bar => (
-                        <div key={bar.month} className="flex flex-col items-center gap-1.5 h-full justify-end group min-w-0">
-                          <span className="text-[9px] font-semibold font-mono text-zinc-600 opacity-0 group-hover:opacity-100 transition truncate">
-                            ₹{(bar.amount / 1000).toFixed(0)}k
-                          </span>
-                          <div
-                            style={{ height: bar.height }}
-                            className={`w-full rounded-t-lg transition-all duration-300 ${bar.active ? 'bg-zinc-900' : 'bg-zinc-200 hover:bg-zinc-300'
-                              }`}
-                          />
-                          <span className={`text-[10.5px] font-medium truncate ${bar.active ? 'text-zinc-950 font-semibold' : 'text-zinc-400'}`}>
-                            {bar.month}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Category Distribution */}
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                        Department Share
-                      </h3>
-                      <button onClick={() => handleNavSelect('catalog', 'categories')} className="text-xs font-semibold text-zinc-600 hover:text-zinc-950 cursor-pointer">
-                        Manage
+                    {pendingSuppliers.length > 0 && (
+                      <button
+                        onClick={() => handleNavSelect('people', 'suppliers')}
+                        className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                      >
+                        Review Vendor Documents &rarr;
                       </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {categories.slice(0, 5).map(cat => {
-                        const count = products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
-                        const pct = Math.round((count / Math.max(1, products.length)) * 100);
-                        return (
-                          <div key={cat} className="space-y-1">
-                            <div className="flex justify-between text-xs">
-                              <span className="font-medium text-zinc-800">{cat}</span>
-                              <span className="text-zinc-400 font-mono text-[11px]">{count} ({pct}%)</span>
-                            </div>
-                            <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-                              <div style={{ width: `${pct}%` }} className="h-full bg-zinc-800 rounded-full" />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    )}
                   </div>
 
+                  {/* Pending Returns */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                          <RotateCcw className="h-3.5 w-3.5 text-zinc-500" />
+                          <span>Return & RMA Requests</span>
+                        </span>
+                        <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
+                          {returnRequests.length} Pending
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {returnRequests.length > 0
+                          ? `${returnRequests.length} customer return requests awaiting warehouse RMA decision.`
+                          : 'No customer return requests currently pending inspection.'}
+                      </p>
+                    </div>
+                    {returnRequests.length > 0 && (
+                      <button
+                        onClick={() => handleNavSelect('commerce', 'returns')}
+                        className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                      >
+                        Review RMA Returns &rarr;
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Low Stock Warnings */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                          <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
+                          <span>Low Inventory Alerts</span>
+                        </span>
+                        <span className="text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
+                          {lowStockItems.length} Low
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {lowStockItems.length > 0
+                          ? `${lowStockItems.length} items have less than 5 units left in warehouse bins.`
+                          : 'All product inventories are above reorder safety thresholds.'}
+                      </p>
+                    </div>
+                    {lowStockItems.length > 0 && (
+                      <button
+                        onClick={() => handleNavSelect('operations', 'inventory')}
+                        className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                      >
+                        Replenish Stock Ledger &rarr;
+                      </button>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
+
+              {/* Sales Charts */}
+              <div className="grid gap-6 lg:grid-cols-3">
+
+                {/* Revenue Trend Chart */}
+                <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                        Revenue Performance & Monthly Growth
+                      </h3>
+                      <p className="text-[11px] text-zinc-400 mt-0.5">Processed GMV breakdown in INR (₹)</p>
+                    </div>
+                    <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full self-start sm:self-auto tabular-nums">
+                      AOV: ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-4 px-2">
+                    {[
+                      { month: 'Apr', amount: 84000, height: '40%' },
+                      { month: 'May', amount: 112000, height: '55%' },
+                      { month: 'Jun', amount: 145000, height: '70%' },
+                      { month: 'Jul', amount: 168000, height: '80%' },
+                      { month: 'Aug', amount: 195000, height: '92%' },
+                      { month: 'Sep', amount: totalRevenue, height: '100%', active: true }
+                    ].map(bar => (
+                      <div key={bar.month} className="flex flex-col items-center gap-1.5 h-full justify-end group min-w-0">
+                        <span className="text-[9px] font-semibold font-mono text-zinc-600 opacity-0 group-hover:opacity-100 transition truncate">
+                          ₹{(bar.amount / 1000).toFixed(0)}k
+                        </span>
+                        <div
+                          style={{ height: bar.height }}
+                          className={`w-full rounded-t-lg transition-all duration-300 ${bar.active ? 'bg-zinc-900' : 'bg-zinc-200 hover:bg-zinc-300'
+                            }`}
+                        />
+                        <span className={`text-[10.5px] font-medium truncate ${bar.active ? 'text-zinc-950 font-semibold' : 'text-zinc-400'}`}>
+                          {bar.month}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Category Distribution */}
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                  <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                      Department Share
+                    </h3>
+                    <button onClick={() => handleNavSelect('catalog', 'categories')} className="text-xs font-semibold text-zinc-600 hover:text-zinc-950 cursor-pointer">
+                      Manage
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {categories.slice(0, 5).map(cat => {
+                      const count = products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
+                      const pct = Math.round((count / Math.max(1, products.length)) * 100);
+                      return (
+                        <div key={cat} className="space-y-1">
+                          <div className="flex justify-between text-xs">
+                            <span className="font-medium text-zinc-800">{cat}</span>
+                            <span className="text-zinc-400 font-mono text-[11px]">{count} ({pct}%)</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                            <div style={{ width: `${pct}%` }} className="h-full bg-zinc-800 rounded-full" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+              </div>
 
             </div>
           )}
