@@ -439,12 +439,29 @@ export default function AdminDashboard() {
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
       const q = globalSearch.trim().toLowerCase();
+      const customerName = `${o.customer?.firstName || ''} ${o.customer?.lastName || ''} ${o.customer?.name || ''}`.toLowerCase();
       const matchesSearch = !q ||
         o.id?.toString().toLowerCase().includes(q) ||
-        o.customer?.name?.toLowerCase().includes(q) ||
+        customerName.includes(q) ||
         o.customer?.email?.toLowerCase().includes(q) ||
+        o.customer?.phone?.toLowerCase().includes(q) ||
+        o.customer?.city?.toLowerCase().includes(q) ||
+        o.customer?.state?.toLowerCase().includes(q) ||
+        o.courier?.toLowerCase().includes(q) ||
+        o.trackingNumber?.toLowerCase().includes(q) ||
         o.items?.some(it => it.name?.toLowerCase().includes(q));
-      const matchesStatus = orderStatusFilter === 'All' || o.status === orderStatusFilter;
+
+      let matchesStatus = true;
+      if (orderStatusFilter === 'All') {
+        matchesStatus = true;
+      } else if (orderStatusFilter === 'Shipped') {
+        matchesStatus = (o.status === 'Shipped' || o.status === 'Out for Delivery');
+      } else if (orderStatusFilter === 'Returns & Issues' || orderStatusFilter === 'Returns') {
+        matchesStatus = (o.status === 'Return Requested' || o.status === 'Refunded' || o.status === 'Cancelled');
+      } else {
+        matchesStatus = o.status === orderStatusFilter;
+      }
+
       return matchesSearch && matchesStatus;
     });
   }, [orders, globalSearch, orderStatusFilter]);
@@ -2119,18 +2136,141 @@ export default function AdminDashboard() {
 
               {/* Sub-item: Orders */}
               {activeSubTab === 'orders' && (
-                <div className="space-y-5">
+                <div className="space-y-6">
+                  {/* Header & Actions */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Orders & Shipments
-                      </h1>
+                      <div className="flex items-center gap-2">
+                        <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                          Orders & Shipments
+                        </h1>
+                        <span className="rounded-full bg-zinc-100 text-zinc-700 px-2.5 py-0.5 text-xs font-semibold">
+                          {orders.length} Total
+                        </span>
+                      </div>
                       <p className="text-xs text-zinc-500 mt-0.5">
-                        Fulfillment registry for {orders.length} store transactions.
+                        Live fulfillment pipeline, logistics dispatch, and lifecycle management.
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-1 overflow-x-auto pb-1 max-w-full">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={refreshAll}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-2xs transition cursor-pointer"
+                        title="Refresh orders from live backend"
+                      >
+                        <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin text-zinc-900' : 'text-zinc-500'}`} />
+                        <span>Refresh Live Data</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ========================================================
+                      LIVE ORDER STATUS & FULFILLMENT PIPELINE (TOP CARDS)
+                  ======================================================== */}
+                  <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+                    {[
+                      {
+                        id: 'All',
+                        label: 'All Orders',
+                        subLabel: 'All Consignments',
+                        count: orders.length,
+                        icon: Layers,
+                        badgeColor: 'bg-zinc-100 text-zinc-800',
+                        activeClass: 'border-zinc-900 ring-2 ring-zinc-900/10 bg-zinc-900 text-white',
+                        inactiveClass: 'border-zinc-200/80 bg-white text-zinc-900 hover:border-zinc-400 hover:bg-zinc-50/75'
+                      },
+                      {
+                        id: 'Confirmed',
+                        label: 'Confirmed',
+                        subLabel: 'Verified & Queued',
+                        count: orders.filter(o => o.status === 'Confirmed').length,
+                        icon: Clock,
+                        badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
+                        activeClass: 'border-blue-600 ring-2 ring-blue-500/20 bg-blue-50/90 text-blue-950',
+                        inactiveClass: 'border-zinc-200/80 bg-white text-zinc-900 hover:border-blue-300 hover:bg-blue-50/40'
+                      },
+                      {
+                        id: 'Processing',
+                        label: 'Processing',
+                        subLabel: 'Warehouse Packing',
+                        count: orders.filter(o => o.status === 'Processing').length,
+                        icon: Package,
+                        badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
+                        activeClass: 'border-amber-600 ring-2 ring-amber-500/20 bg-amber-50/90 text-amber-950',
+                        inactiveClass: 'border-zinc-200/80 bg-white text-zinc-900 hover:border-amber-300 hover:bg-amber-50/40'
+                      },
+                      {
+                        id: 'Shipped',
+                        label: 'Shipped',
+                        subLabel: 'In Transit / Courier',
+                        count: orders.filter(o => o.status === 'Shipped' || o.status === 'Out for Delivery').length,
+                        icon: Truck,
+                        badgeColor: 'bg-sky-50 text-sky-700 border-sky-200',
+                        activeClass: 'border-sky-600 ring-2 ring-sky-500/20 bg-sky-50/90 text-sky-950',
+                        inactiveClass: 'border-zinc-200/80 bg-white text-zinc-900 hover:border-sky-300 hover:bg-sky-50/40'
+                      },
+                      {
+                        id: 'Delivered',
+                        label: 'Delivered',
+                        subLabel: 'Doorstep Fulfilled',
+                        count: orders.filter(o => o.status === 'Delivered').length,
+                        icon: CheckCircle2,
+                        badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                        activeClass: 'border-emerald-600 ring-2 ring-emerald-500/20 bg-emerald-50/90 text-emerald-950',
+                        inactiveClass: 'border-zinc-200/80 bg-white text-zinc-900 hover:border-emerald-300 hover:bg-emerald-50/40'
+                      },
+                      {
+                        id: 'Returns & Issues',
+                        label: 'Returns & Issues',
+                        subLabel: 'RMA / Cancelled',
+                        count: orders.filter(o => o.status === 'Return Requested' || o.status === 'Cancelled' || o.status === 'Refunded').length,
+                        icon: RotateCcw,
+                        badgeColor: 'bg-rose-50 text-rose-700 border-rose-200',
+                        activeClass: 'border-rose-600 ring-2 ring-rose-500/20 bg-rose-50/90 text-rose-950',
+                        inactiveClass: 'border-zinc-200/80 bg-white text-zinc-900 hover:border-rose-300 hover:bg-rose-50/40'
+                      }
+                    ].map(st => {
+                      const isSelected = orderStatusFilter === st.id;
+                      const Icon = st.icon;
+                      return (
+                        <button
+                          key={st.id}
+                          type="button"
+                          onClick={() => setOrderStatusFilter(st.id)}
+                          className={`flex flex-col text-left p-3.5 rounded-xl border transition cursor-pointer shadow-2xs ${isSelected ? st.activeClass : st.inactiveClass
+                            }`}
+                        >
+                          <div className="flex items-center justify-between w-full mb-1.5">
+                            <span className={`text-[10px] font-semibold uppercase tracking-wider ${isSelected && st.id === 'All' ? 'text-zinc-300' : 'text-zinc-500'
+                              }`}>
+                              {st.label}
+                            </span>
+                            <Icon className={`h-4 w-4 shrink-0 ${isSelected && st.id === 'All' ? 'text-zinc-300' : 'text-zinc-400'
+                              }`} />
+                          </div>
+                          <div className="flex items-baseline gap-1">
+                            <span className={`text-2xl font-bold tracking-tight tabular-nums ${isSelected && st.id === 'All' ? 'text-white' : 'text-zinc-900'
+                              }`}>
+                              {st.count}
+                            </span>
+                            <span className={`text-[10.5px] ${isSelected && st.id === 'All' ? 'text-zinc-400' : 'text-zinc-400'
+                              }`}>
+                              orders
+                            </span>
+                          </div>
+                          <span className={`text-[10px] mt-0.5 truncate ${isSelected && st.id === 'All' ? 'text-zinc-400' : 'text-zinc-500'
+                            }`}>
+                            {st.subLabel}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Status Filter Pills & Quick Toggles */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
                       {['All', 'Confirmed', 'Processing', 'Shipped', 'Delivered', 'Return Requested', 'Refunded', 'Cancelled'].map(st => (
                         <button
                           key={st}
@@ -2144,8 +2284,12 @@ export default function AdminDashboard() {
                         </button>
                       ))}
                     </div>
+                    <div className="text-xs text-zinc-500 font-medium shrink-0">
+                      Showing <strong className="text-zinc-900">{filteredOrders.length}</strong> of {orders.length} orders
+                    </div>
                   </div>
 
+                  {/* Orders Table */}
                   <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
                     <table className="w-full text-left text-xs min-w-[800px]">
                       <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
@@ -2159,89 +2303,107 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-100 font-normal">
-                        {filteredOrders.map(order => (
-                          <tr key={order.id} className="hover:bg-zinc-50/75 transition">
-                            <td className="p-3.5">
-                              <span className="font-mono font-semibold text-zinc-900 block">{order.id}</span>
-                              <span className="text-[10px] text-zinc-400">{order.date}</span>
-                            </td>
-
-                            <td className="p-3.5">
-                              <span className="font-medium text-zinc-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
-                              <span className="text-[10px] text-zinc-500">{order.customer?.city}, {order.customer?.state}</span>
-                            </td>
-
-                            <td className="p-3.5">
-                              <span className="text-zinc-800 font-medium">{order.paymentMethod || 'Online Gateway'}</span>
-                              <span className={`text-[10px] font-semibold block ${order.paymentStatus === 'Refunded' ? 'text-purple-700' : 'text-emerald-700'
-                                }`}>
-                                {order.paymentStatus || 'Paid'}
-                              </span>
-                            </td>
-
-                            <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">
-                              ₹{Number(order.total || 0).toLocaleString('en-IN')}
-                            </td>
-
-                            <td className="p-3.5">
-                              <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${order.status === 'Delivered'
-                                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                                : order.status === 'Shipped'
-                                  ? 'bg-sky-50 text-sky-800 border-sky-200'
-                                  : order.status === 'Cancelled'
-                                    ? 'bg-rose-50 text-rose-800 border-rose-200'
-                                    : order.status === 'Refunded'
-                                      ? 'bg-purple-50 text-purple-800 border-purple-200'
-                                      : order.status === 'Return Requested'
-                                        ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
-                                        : 'bg-zinc-100 text-zinc-700 border-zinc-200'
-                                }`}>
-                                <span className={`h-1.5 w-1.5 rounded-full ${order.status === 'Delivered' ? 'bg-emerald-500' :
-                                  order.status === 'Shipped' ? 'bg-sky-500' :
-                                    order.status === 'Cancelled' ? 'bg-rose-500' :
-                                      order.status === 'Refunded' ? 'bg-purple-500' :
-                                        order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
-                                  }`} />
-                                <span>{order.status}</span>
-                              </span>
-                            </td>
-
-                            <td className="p-3.5 text-right">
-                              <div className="flex items-center justify-end gap-2">
-                                <button
-                                  onClick={() => handleOpenOrderModal(order)}
-                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 px-2.5 py-1 text-[11px] font-medium shadow-2xs transition shrink-0 cursor-pointer"
-                                >
-                                  Details
-                                </button>
-
-                                {order.status === 'Return Requested' && (
-                                  <button
-                                    onClick={() => handleOpenAdminReturnModal(order)}
-                                    className="rounded-md bg-zinc-900 hover:bg-black text-white px-2.5 py-1 text-[11px] font-medium shadow-2xs transition shrink-0 cursor-pointer"
-                                  >
-                                    Review
-                                  </button>
-                                )}
-
-                                <select
-                                  value={order.status}
-                                  onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                                  className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-900 outline-none cursor-pointer"
-                                >
-                                  <option value="Confirmed">Confirmed</option>
-                                  <option value="Processing">Processing</option>
-                                  <option value="Shipped">Shipped</option>
-                                  <option value="Out for Delivery">Out for Delivery</option>
-                                  <option value="Delivered">Delivered</option>
-                                  <option value="Return Requested">Return Requested</option>
-                                  <option value="Refunded">Refunded</option>
-                                  <option value="Cancelled">Cancelled</option>
-                                </select>
-                              </div>
+                        {filteredOrders.length === 0 ? (
+                          <tr>
+                            <td colSpan="6" className="p-10 text-center text-zinc-500">
+                              <Package className="h-8 w-8 mx-auto text-zinc-300 mb-2" />
+                              <p className="font-semibold text-zinc-700 text-sm">No orders found</p>
+                              <p className="text-xs text-zinc-400 mt-1">
+                                {orderStatusFilter !== 'All'
+                                  ? `No orders currently match status "${orderStatusFilter}". Click another filter or "All Orders" to view.`
+                                  : 'No orders recorded in the system yet.'}
+                              </p>
                             </td>
                           </tr>
-                        ))}
+                        ) : (
+                          filteredOrders.map(order => (
+                            <tr key={order.id} className="hover:bg-zinc-50/75 transition">
+                              <td className="p-3.5">
+                                <span className="font-mono font-semibold text-zinc-900 block">{order.id}</span>
+                                <span className="text-[10px] text-zinc-400">{order.date}</span>
+                              </td>
+
+                              <td className="p-3.5">
+                                <span className="font-medium text-zinc-900 block">
+                                  {order.customer?.firstName || order.customer?.name || 'Customer'} {order.customer?.lastName || ''}
+                                </span>
+                                <span className="text-[10px] text-zinc-500">
+                                  {order.customer?.city ? `${order.customer.city}, ${order.customer.state || 'India'}` : (order.customer?.email || 'Store Client')}
+                                </span>
+                              </td>
+
+                              <td className="p-3.5">
+                                <span className="text-zinc-800 font-medium">{order.paymentMethod || 'Online Gateway'}</span>
+                                <span className={`text-[10px] font-semibold block ${order.paymentStatus === 'Refunded' ? 'text-purple-700' : 'text-emerald-700'
+                                  }`}>
+                                  {order.paymentStatus || 'Paid'}
+                                </span>
+                              </td>
+
+                              <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">
+                                ₹{Number(order.total || 0).toLocaleString('en-IN')}
+                              </td>
+
+                              <td className="p-3.5">
+                                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${order.status === 'Delivered'
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                  : order.status === 'Shipped' || order.status === 'Out for Delivery'
+                                    ? 'bg-sky-50 text-sky-800 border-sky-200'
+                                    : order.status === 'Cancelled'
+                                      ? 'bg-rose-50 text-rose-800 border-rose-200'
+                                      : order.status === 'Refunded'
+                                        ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                        : order.status === 'Return Requested'
+                                          ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
+                                          : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                                  }`}>
+                                  <span className={`h-1.5 w-1.5 rounded-full ${order.status === 'Delivered' ? 'bg-emerald-500' :
+                                    order.status === 'Shipped' || order.status === 'Out for Delivery' ? 'bg-sky-500' :
+                                      order.status === 'Cancelled' ? 'bg-rose-500' :
+                                        order.status === 'Refunded' ? 'bg-purple-500' :
+                                          order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
+                                    }`} />
+                                  <span>{order.status}</span>
+                                </span>
+                              </td>
+
+                              <td className="p-3.5 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <button
+                                    onClick={() => handleOpenOrderModal(order)}
+                                    className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 px-2.5 py-1 text-[11px] font-medium shadow-2xs transition shrink-0 cursor-pointer"
+                                  >
+                                    Details
+                                  </button>
+
+                                  {order.status === 'Return Requested' && (
+                                    <button
+                                      onClick={() => handleOpenAdminReturnModal(order)}
+                                      className="rounded-md bg-zinc-900 hover:bg-black text-white px-2.5 py-1 text-[11px] font-medium shadow-2xs transition shrink-0 cursor-pointer"
+                                    >
+                                      Review
+                                    </button>
+                                  )}
+
+                                  <select
+                                    value={order.status}
+                                    onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                                    className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-900 outline-none cursor-pointer"
+                                  >
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Out for Delivery">Out for Delivery</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Return Requested">Return Requested</option>
+                                    <option value="Refunded">Refunded</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                  </select>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -2924,24 +3086,40 @@ export default function AdminDashboard() {
               {/* Sub-item: Order Status Distribution */}
               {activeSubTab === 'order-status' && (
                 <div className="space-y-5">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Order Fulfillment Pipeline
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Live distribution across delivery stages.</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                        Order Fulfillment Pipeline
+                      </h1>
+                      <p className="text-xs text-zinc-500 mt-0.5">Live distribution across delivery stages.</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavSelect('commerce', 'orders')}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 hover:bg-black text-white px-3 py-1.5 text-xs font-semibold shadow-2xs transition cursor-pointer self-start sm:self-auto"
+                    >
+                      <span>Open Commerce Orders</span>
+                      <ChevronRight className="h-3.5 w-3.5" />
+                    </button>
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-4">
                     {[
                       { stage: 'Confirmed', count: orders.filter(o => o.status === 'Confirmed').length, color: 'border-zinc-300' },
                       { stage: 'Processing', count: orders.filter(o => o.status === 'Processing').length, color: 'border-zinc-300' },
-                      { stage: 'Shipped', count: orders.filter(o => o.status === 'Shipped').length, color: 'border-sky-300' },
+                      { stage: 'Shipped', count: orders.filter(o => o.status === 'Shipped' || o.status === 'Out for Delivery').length, color: 'border-sky-300' },
                       { stage: 'Delivered', count: orders.filter(o => o.status === 'Delivered').length, color: 'border-emerald-300' }
                     ].map(st => (
-                      <div key={st.stage} className={`rounded-xl border ${st.color} bg-white p-4 shadow-2xs`}>
+                      <div
+                        key={st.stage}
+                        onClick={() => {
+                          setOrderStatusFilter(st.stage);
+                          handleNavSelect('commerce', 'orders');
+                        }}
+                        className={`rounded-xl border ${st.color} bg-white p-4 shadow-2xs cursor-pointer hover:border-zinc-400 hover:shadow-xs transition`}
+                      >
                         <span className="text-[10px] font-semibold uppercase text-zinc-400">{st.stage}</span>
                         <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{st.count}</p>
-                        <p className="text-[10.5px] text-zinc-400 mt-0.5">Active Consignments</p>
+                        <p className="text-[10.5px] text-zinc-400 mt-0.5">Active Consignments (Click to view)</p>
                       </div>
                     ))}
                   </div>
