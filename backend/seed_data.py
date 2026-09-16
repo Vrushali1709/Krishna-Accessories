@@ -1,7 +1,8 @@
 # backend/seed_data.py
 import json
 import os
-from database import get_db_connection, dump_json_field
+import time
+from database import get_db_connection, dump_json_field, hash_password
 
 DEFAULT_CATEGORIES = [
     "Watches", "Bags & Wallets", "Shoes", "Mobiles", "Clothes & Fashion",
@@ -178,9 +179,19 @@ def seed_database():
     users = all_data.get("users", [])
     for u in users:
         cursor.execute("""
-        INSERT OR REPLACE INTO users (id, name, email, phone, role, status, ordersCount, totalSpent, joinedDate)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (u["id"], u["name"], u["email"], u["phone"], u["role"], u["status"], u.get("ordersCount", 0), u.get("totalSpent", 0), u.get("joinedDate", "")))
+        INSERT OR REPLACE INTO users (id, name, email, phone, role, status, ordersCount, totalSpent, joinedDate, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (u["id"], u["name"], u["email"], u["phone"], u["role"], u["status"], u.get("ordersCount", 0), u.get("totalSpent", 0), u.get("joinedDate", ""), hash_password("customer123")))
+
+    demo_accounts = [
+        (999, "Krishna Super Admin", "admin@krishna.com", "+91 98765 00001", "admin", "Admin@123"),
+        (1000, "Apex Timepieces Ltd.", "supplier@krishna.com", "+91 98765 43210", "supplier", "supplier123")
+    ]
+    for user_id, name, email, phone, role, password in demo_accounts:
+        cursor.execute("""
+        INSERT OR REPLACE INTO users (id, name, email, phone, role, status, joinedDate, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (user_id, name, email, phone, role, "Active", time.strftime("%d %b %Y"), hash_password(password)))
 
     # 8. Orders
     orders = all_data.get("orders", [])

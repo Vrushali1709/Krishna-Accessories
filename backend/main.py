@@ -2,13 +2,24 @@
 import os
 import time
 import json
+import base64
+import hashlib
+import hmac
 from typing import Optional, List, Any, Dict
 from fastapi import FastAPI, HTTPException, Query, Body, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from database import init_db, get_db_connection, row_to_dict, dump_json_field, parse_json_field
+from database import init_db, get_db_connection, row_to_dict, dump_json_field, parse_json_field, hash_password, verify_password
 from seed_data import seed_database
+
+AUTH_SECRET = os.getenv("AUTH_SECRET", "krishna-accessories-dev-secret").encode("utf-8")
+
+def create_session_token(user: Dict[str, Any]) -> str:
+    payload = f"{user['id']}:{user['email']}:{user['role']}:{int(time.time()) + 86400}"
+    encoded = base64.urlsafe_b64encode(payload.encode("utf-8")).decode("ascii").rstrip("=")
+    signature = hmac.new(AUTH_SECRET, encoded.encode("ascii"), hashlib.sha256).hexdigest()
+    return f"{encoded}.{signature}"
 
 # Initialize FastAPI App
 app = FastAPI(
@@ -657,11 +668,12 @@ def create_user(user_data: Dict[str, Any] = Body(...)):
     status_str = user_data.get("status", "Active")
     joinedDate = user_data.get("joinedDate", time.strftime("%d %b %Y"))
     addresses = dump_json_field(user_data.get("addresses", []))
+    password = user_data.get("password", "")
 
     cursor.execute("""
-    INSERT OR REPLACE INTO users (id, name, email, phone, role, status, joinedDate, addresses)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (user_id, name, email, phone, role, status_str, joinedDate, addresses))
+    INSERT OR REPLACE INTO users (id, name, email, phone, role, status, joinedDate, addresses, password)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (user_id, name, email, phone, role, status_str, joinedDate, addresses, hash_password(password) if password else None))
     conn.commit()
 
     cursor.execute("SELECT id, name, email, phone, role, status, ordersCount, totalSpent, joinedDate, addresses FROM users WHERE id = ?", (user_id,))
@@ -702,39 +714,23 @@ def login(credentials: Dict[str, str] = Body(...)):
     password = credentials.get("password", "")
     role = credentials.get("role", "customer").lower()
 
-    # Hardcoded or DB admin credentials
-    if email == "admin@krishna.com" or role == "admin":
-        if password == "Admin@123" or password == "admin":
-            return {
-                "success": True,
-                "user": {
-                    "id": 999,
-                    "name": "Krishna Super Admin",
-                    "email": email or "admin@krishna.com",
-                    "role": "admin"
-                }
-            }
-
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users WHERE LOWER(email) = ?", (email,))
     row = cursor.fetchone()
     conn.close()
 
-    if row:
-        user = row_to_dict(row)
-        return {"success": True, "user": user}
+    if not row:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
-    # If new user login via mock/OTP
-    return {
-        "success": True,
-        "user": {
-            "id": int(time.time() * 1000),
-            "name": email.split("@")[0].title(),
-            "email": email,
-            "role": role
-        }
-    }
+    user = row_to_dict(row)
+    if user.get("status") != "Active":
+        raise HTTPException(status_code=403, detail="This account is not active")
+    if not user.get("password") or not verify_password(password, user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    user.pop("password", None)
+    return {"success": True, "token": create_session_token(user), "user": user}
 
 # -------------------------------------------------------------------
 # 7. PROMOTIONS & COUPONS

@@ -2,9 +2,25 @@
 import sqlite3
 import json
 import os
+import hashlib
+import secrets
+import hmac
 from typing import Any, List, Dict, Optional
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "krishna.db")
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 120000)
+    return f"{salt}${digest.hex()}"
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    try:
+        salt, digest = stored_hash.split("$", 1)
+        expected = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 120000).hex()
+        return hmac.compare_digest(expected, digest)
+    except (ValueError, AttributeError):
+        return False
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
