@@ -999,13 +999,7 @@ def get_notifications():
     cursor.execute("SELECT * FROM notifications ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    result = []
-    for r in rows:
-        d = dict(r)
-        d["unread"] = not bool(d.get("read", 0))
-        d["date"] = d.get("time") or "Just now"
-        result.append(d)
-    return result
+    return [dict(r) for r in rows]
 
 @app.post("/api/notifications")
 def add_notification(notif: Dict[str, Any] = Body(...)):
@@ -1014,28 +1008,20 @@ def add_notification(notif: Dict[str, Any] = Body(...)):
     n_id = notif.get("id") or int(time.time() * 1000)
     title = notif.get("title", "Notification")
     message = notif.get("message", "")
-    time_str = notif.get("time") or notif.get("date") or "Just now"
+    time_str = notif.get("time", "Just now")
     ntype = notif.get("type", "info")
-    read = 1 if (notif.get("read") or not notif.get("unread", True)) else 0
-    link = notif.get("link", "")
-    action_text = notif.get("actionText", "")
+    read = 1 if notif.get("read") else 0
 
     cursor.execute("""
-    INSERT OR REPLACE INTO notifications (id, title, message, time, type, read, link, actionText)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (n_id, title, message, time_str, ntype, read, link, action_text))
+    INSERT INTO notifications (id, title, message, time, type, read)
+    VALUES (?, ?, ?, ?, ?, ?)
+    """, (n_id, title, message, time_str, ntype, read))
     conn.commit()
 
     cursor.execute("SELECT * FROM notifications ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    result = []
-    for r in rows:
-        d = dict(r)
-        d["unread"] = not bool(d.get("read", 0))
-        d["date"] = d.get("time") or "Just now"
-        result.append(d)
-    return result
+    return [dict(r) for r in rows]
 
 @app.put("/api/notifications/{notif_id}/read")
 def mark_notification_read(notif_id: int):
@@ -1046,13 +1032,7 @@ def mark_notification_read(notif_id: int):
     cursor.execute("SELECT * FROM notifications ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    result = []
-    for r in rows:
-        d = dict(r)
-        d["unread"] = not bool(d.get("read", 0))
-        d["date"] = d.get("time") or "Just now"
-        result.append(d)
-    return result
+    return [dict(r) for r in rows]
 
 @app.put("/api/notifications/read-all")
 def mark_all_notifications_read():
@@ -1063,30 +1043,7 @@ def mark_all_notifications_read():
     cursor.execute("SELECT * FROM notifications ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    result = []
-    for r in rows:
-        d = dict(r)
-        d["unread"] = not bool(d.get("read", 0))
-        d["date"] = d.get("time") or "Just now"
-        result.append(d)
-    return result
-
-@app.delete("/api/notifications/{notif_id}")
-def delete_notification(notif_id: int):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM notifications WHERE id = ?", (notif_id,))
-    conn.commit()
-    cursor.execute("SELECT * FROM notifications ORDER BY id DESC")
-    rows = cursor.fetchall()
-    conn.close()
-    result = []
-    for r in rows:
-        d = dict(r)
-        d["unread"] = not bool(d.get("read", 0))
-        d["date"] = d.get("time") or "Just now"
-        result.append(d)
-    return result
+    return [dict(r) for r in rows]
 
 @app.delete("/api/notifications")
 def clear_notifications():

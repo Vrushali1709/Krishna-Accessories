@@ -245,19 +245,9 @@ def init_db():
         message TEXT,
         time TEXT,
         type TEXT DEFAULT 'info',
-        read INTEGER DEFAULT 0,
-        link TEXT DEFAULT '',
-        actionText TEXT DEFAULT ''
+        read INTEGER DEFAULT 0
     )
     """)
-    try:
-        cursor.execute("ALTER TABLE notifications ADD COLUMN link TEXT DEFAULT ''")
-    except Exception:
-        pass
-    try:
-        cursor.execute("ALTER TABLE notifications ADD COLUMN actionText TEXT DEFAULT ''")
-    except Exception:
-        pass
 
     # 16. Reviews
     cursor.execute("""
