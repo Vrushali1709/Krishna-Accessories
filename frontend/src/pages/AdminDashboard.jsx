@@ -84,9 +84,6 @@ import {
   getVariants,
   saveVariant,
   deleteVariant,
-  getMediaAssets,
-  addMediaAsset,
-  deleteMediaAsset,
   getPromotions,
   savePromotion,
   deletePromotion,
@@ -169,7 +166,6 @@ export default function AdminDashboard() {
   // Extended Advanced Stores State
   const [subcategories, setSubcategories] = useState(() => getSubcategories());
   const [variants, setVariants] = useState(() => getVariants());
-  const [mediaAssets, setMediaAssets] = useState(() => getMediaAssets());
   const [promotions, setPromotions] = useState(() => getPromotions());
   const [roles, setRoles] = useState(() => getRoles());
   const [permissionsMatrix, setPermissionsMatrix] = useState(() => getPermissionsMatrix());
@@ -226,9 +222,6 @@ export default function AdminDashboard() {
 
   const [variantModalOpen, setVariantModalOpen] = useState(false);
   const [variantForm, setVariantForm] = useState({ productName: 'Rolex Submariner Date 41mm', attributeType: 'Dial Color', value: '', priceModifier: '', stock: '10', sku: '' });
-
-  const [mediaModalOpen, setMediaModalOpen] = useState(false);
-  const [mediaForm, setMediaForm] = useState({ title: '', category: 'Watches', url: '', size: '1.8 MB' });
 
   const [promoModalOpen, setPromoModalOpen] = useState(false);
   const [promoForm, setPromoForm] = useState({ title: '', code: '', discount: '20% Off', targetCategory: 'All Departments', bannerType: 'Hero Banner', startDate: 'Today', endDate: '30 Days' });
@@ -340,7 +333,6 @@ export default function AdminDashboard() {
     setNotifications(getNotifications());
     setSubcategories(getSubcategories());
     setVariants(getVariants());
-    setMediaAssets(getMediaAssets());
     setPromotions(getPromotions());
     setRoles(getRoles());
     setPermissionsMatrix(getPermissionsMatrix());
@@ -363,7 +355,7 @@ export default function AdminDashboard() {
     const listeners = [
       'productsUpdated', 'categoriesUpdated', 'brandsUpdated', 'suppliersUpdated',
       'ordersUpdated', 'usersUpdated', 'notificationsUpdated', 'authUpdated',
-      'subcategoriesUpdated', 'variantsUpdated', 'mediaUpdated', 'promotionsUpdated',
+      'subcategoriesUpdated', 'variantsUpdated', 'promotionsUpdated',
       'rolesUpdated', 'permissionsUpdated', 'shippingUpdated', 'systemConfigUpdated'
     ];
     listeners.forEach(ev => window.addEventListener(ev, refreshAll));
@@ -464,8 +456,7 @@ export default function AdminDashboard() {
         { id: 'categories', label: 'Categories' },
         { id: 'subcategories', label: 'Subcategories' },
         { id: 'brands', label: 'Brands' },
-        { id: 'variants', label: 'Variants' },
-        { id: 'images', label: 'Images & Media' }
+        { id: 'variants', label: 'Variants' }
       ]
     },
     {
@@ -744,16 +735,6 @@ export default function AdminDashboard() {
     setVariantModalOpen(false);
     setVariantForm({ productName: products[0]?.name || 'Rolex Submariner Date 41mm', attributeType: 'Dial Color', value: '', priceModifier: '', stock: '10', sku: '' });
     showToast('Variant configuration saved');
-  };
-
-  // Media Asset Submit
-  const handleAddMedia = (e) => {
-    e.preventDefault();
-    if (!mediaForm.url.trim()) return;
-    addMediaAsset(mediaForm);
-    setMediaModalOpen(false);
-    setMediaForm({ title: '', category: 'Watches', url: '', size: '1.8 MB' });
-    showToast('Media asset indexed');
   };
 
   // Promotion Submit
@@ -2059,59 +2040,6 @@ export default function AdminDashboard() {
                         ))}
                       </tbody>
                     </table>
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Images & Media Asset Manager */}
-              {activeSubTab === 'images' && (
-                <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Media & Image Asset Gallery ({mediaAssets.length})
-                      </h1>
-                      <p className="text-xs text-zinc-500 mt-0.5">High-resolution catalog media assets, previews, and URLs.</p>
-                    </div>
-                    <button
-                      onClick={() => setMediaModalOpen(true)}
-                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      <span>Index Media Asset</span>
-                    </button>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                    {mediaAssets.map(m => (
-                      <div key={m.id} className="rounded-xl border border-zinc-200/80 bg-white p-3 shadow-2xs space-y-2.5">
-                        <div className="h-44 w-full bg-zinc-50 rounded-lg overflow-hidden relative group border border-zinc-100">
-                          <img src={m.url} alt={m.title} className="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
-                          <button
-                            onClick={() => {
-                              navigator.clipboard?.writeText(m.url);
-                              showToast('Image URL copied to clipboard');
-                            }}
-                            className="absolute bottom-2 right-2 rounded-md bg-zinc-900/80 hover:bg-zinc-900 text-white px-2 py-1 text-[10.5px] font-medium backdrop-blur-xs transition flex items-center gap-1 cursor-pointer"
-                          >
-                            <Copy className="h-3 w-3" />
-                            <span>Copy URL</span>
-                          </button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-semibold text-zinc-900 text-xs truncate max-w-[180px]">{m.title}</h4>
-                            <p className="text-[10px] text-zinc-400">{m.dimensions} &bull; {m.size}</p>
-                          </div>
-                          <button
-                            onClick={() => deleteMediaAsset(m.id)}
-                            className="text-zinc-400 hover:text-rose-600 p-1 cursor-pointer"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </div>
               )}
@@ -3757,62 +3685,6 @@ export default function AdminDashboard() {
                 </button>
                 <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
                   Save Variant
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 4. Media Asset Modal */}
-      {mediaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-              <h3 className="text-sm font-semibold text-zinc-900">Index Media Asset</h3>
-              <button onClick={() => setMediaModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <form onSubmit={handleAddMedia} className="space-y-3">
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Asset Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Rolex Submariner Macro Studio"
-                  value={mediaForm.title}
-                  onChange={e => setMediaForm({ ...mediaForm, title: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
-                />
-              </div>
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Image URL *</label>
-                <input
-                  type="url"
-                  required
-                  placeholder="https://images.unsplash.com/..."
-                  value={mediaForm.url}
-                  onChange={e => setMediaForm({ ...mediaForm, url: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
-                />
-              </div>
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Category</label>
-                <select
-                  value={mediaForm.category}
-                  onChange={e => setMediaForm({ ...mediaForm, category: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
-                >
-                  {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setMediaModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
-                  Cancel
-                </button>
-                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
-                  Add Asset
                 </button>
               </div>
             </form>
