@@ -1353,30 +1353,36 @@ export default function AdminDashboard() {
         </header>
 
         {/* Section Sub-Navigation Tabs Bar */}
-        <div className="bg-[#FAF9F8] border-b border-zinc-200/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mr-2 shrink-0">
-            {currentSectionObj.title}:
-          </span>
-          {currentSectionObj.subItems.map((sub) => {
-            const isSubActive = activeSubTab === sub.id;
-            return (
-              <button
-                key={sub.id}
-                onClick={() => setActiveSubTab(sub.id)}
-                className={`rounded-lg px-3 py-1 text-xs font-medium transition whitespace-nowrap shrink-0 cursor-pointer ${isSubActive
-                  ? 'bg-zinc-900 text-white shadow-xs'
-                  : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
-                  }`}
-              >
-                {sub.label}
-                {sub.badge && (
-                  <span className={`ml-1.5 rounded-full px-1.5 py-0.2 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-100 text-zinc-600'}`}>
-                    {sub.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        <div className="border-b border-zinc-200/80 bg-[#FAF9F8] px-4 sm:px-6 lg:px-8 py-2.5">
+          <div className="overflow-x-auto">
+            <div className="inline-flex min-w-max items-center gap-1.5 rounded-xl border border-zinc-200 bg-white p-1 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+              <span className="mr-1 shrink-0 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                {currentSectionObj.title}:
+              </span>
+              {currentSectionObj.subItems.map((sub) => {
+                const isSubActive = activeSubTab === sub.id;
+                return (
+                  <button
+                    key={sub.id}
+                    onClick={() => setActiveSubTab(sub.id)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150 whitespace-nowrap shrink-0 cursor-pointer border ${isSubActive
+                      ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm'
+                      : 'border-transparent bg-zinc-50 text-zinc-600 hover:border-zinc-200 hover:bg-white hover:text-zinc-900'
+                      }`}
+                  >
+                    <span className="inline-flex items-center gap-1.5">
+                      {sub.label}
+                      {sub.badge && (
+                        <span className={`inline-flex min-w-[1.05rem] items-center justify-center rounded-full px-1 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-200 text-zinc-700'}`}>
+                          {sub.badge}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* ==========================================
