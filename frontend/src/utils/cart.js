@@ -1,6 +1,5 @@
 // src/utils/cart.js
 import { cartApi, promotionsApi } from './api';
-import { addNotification } from './orderStore';
 
 const CART_KEY = 'krishna_cart';
 const APPLIED_COUPON_KEY = 'krishna_applied_coupon';
@@ -158,15 +157,6 @@ export function addToCart(product, quantity = 1, color = '', variant = '', size 
   }
 
   saveCart(cart);
-
-  addNotification({
-    title: 'Added to Bag 🛍️',
-    message: `"${product.name || 'Accessory'}"${qtyToAdd > 1 ? ` (Qty: ${qtyToAdd})` : ''} added to your shopping bag.`,
-    type: 'cart',
-    link: '/cart',
-    actionText: 'View Bag'
-  });
-
   return cart;
 }
 
@@ -228,18 +218,6 @@ export function removeFromCart(id, color = '', variant = '', size = '') {
   const targetVariant = typeof variant === 'string' ? variant.trim() : '';
   const targetSize = typeof size === 'string' ? size.trim() : '';
 
-  const removedItem = cart.find((item) => {
-    const itemColor = (item.color || item.selectedColor || '').trim();
-    const itemVariant = (item.variant || item.selectedVariant || '').trim();
-    const itemSize = (item.size || item.selectedSize || '').trim();
-    return (
-      String(item.id) === String(id) &&
-      itemColor === targetColor &&
-      itemVariant === targetVariant &&
-      itemSize === targetSize
-    );
-  });
-
   const updatedCart = cart.filter((item) => {
     const itemColor = (item.color || item.selectedColor || '').trim();
     const itemVariant = (item.variant || item.selectedVariant || '').trim();
@@ -253,14 +231,6 @@ export function removeFromCart(id, color = '', variant = '', size = '') {
   });
 
   saveCart(updatedCart);
-
-  addNotification({
-    title: 'Item Removed from Bag',
-    message: removedItem ? `"${removedItem.name}" was removed from your shopping bag.` : 'Item removed from bag.',
-    type: 'cart',
-    link: '/cart'
-  });
-
   return updatedCart;
 }
 
@@ -338,14 +308,6 @@ export async function applyCoupon(code, currentSubtotal = null) {
 
   window.dispatchEvent(new Event('cartUpdated'));
 
-  addNotification({
-    title: 'Coupon Applied! 🏷️',
-    message: `Promo voucher "${normalized}" applied successfully! You saved ₹${discount.toLocaleString('en-IN')}.`,
-    type: 'promo',
-    link: '/cart',
-    actionText: 'View Bag'
-  });
-
   return {
     success: true,
     coupon,
@@ -366,14 +328,6 @@ export function removeCoupon() {
       console.warn('[Cart] Error removing coupon from localStorage:', e);
     }
   }
-
-  addNotification({
-    title: 'Coupon Removed',
-    message: 'The applied promo code was removed from your bag.',
-    type: 'promo',
-    link: '/cart'
-  });
-
   window.dispatchEvent(new Event('cartUpdated'));
 }
 

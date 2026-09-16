@@ -4,22 +4,9 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getCurrentUser, logout } from '../utils/auth';
-import { 
-  getOrders, 
-  getUserAddresses, 
-  saveUserAddress, 
-  deleteUserAddress, 
-  cancelOrder, 
-  requestReturn, 
-  getOrderById,
-  getNotifications,
-  markNotificationRead,
-  markAllNotificationsRead,
-  deleteNotification,
-  clearNotifications
-} from '../utils/orderStore';
+import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn, getOrderById } from '../utils/orderStore';
 import { getWishlist } from '../utils/productStore';
-import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon, SearchIcon, CheckCircleIcon, BellIcon } from '../components/Icons';
+import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon, SearchIcon, CheckCircleIcon } from '../components/Icons';
 
 export default function Account() {
   const navigate = useNavigate();
@@ -31,8 +18,6 @@ export default function Account() {
   const [orders, setOrders] = useState(() => getOrders());
   const [addresses, setAddresses] = useState(() => getUserAddresses());
   const [wishlist, setWishlist] = useState(() => getWishlist());
-  const [notifications, setNotifications] = useState(() => getNotifications());
-  const [notifFilter, setNotifFilter] = useState('all');
   const [activeTab, setActiveTab] = useState(initialTab);
 
   // Tracking state inside profile
@@ -76,7 +61,6 @@ export default function Account() {
     setOrders(getOrders());
     setAddresses(getUserAddresses());
     setWishlist(getWishlist());
-    setNotifications(getNotifications());
   };
 
   useEffect(() => {
@@ -85,13 +69,11 @@ export default function Account() {
     window.addEventListener('addressesUpdated', refreshData);
     window.addEventListener('wishlistUpdated', refreshData);
     window.addEventListener('authUpdated', refreshData);
-    window.addEventListener('notificationsUpdated', refreshData);
     return () => {
       window.removeEventListener('ordersUpdated', refreshData);
       window.removeEventListener('addressesUpdated', refreshData);
       window.removeEventListener('wishlistUpdated', refreshData);
       window.removeEventListener('authUpdated', refreshData);
-      window.removeEventListener('notificationsUpdated', refreshData);
     };
   }, []);
 
@@ -276,7 +258,7 @@ export default function Account() {
   useEffect(() => {
     const tabParam = searchParams.get('tab');
     const idParam = searchParams.get('id');
-    if (tabParam && ['orders', 'tracking', 'notifications', 'addresses', 'wishlist', 'profile'].includes(tabParam)) {
+    if (tabParam && ['orders', 'tracking', 'addresses', 'wishlist', 'profile'].includes(tabParam)) {
       setActiveTab(tabParam);
     }
     if (idParam) {
@@ -310,22 +292,6 @@ export default function Account() {
     setSearchParams({ tab: 'tracking', id: orderId });
     lookupOrder(orderId);
   };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  const tabItems = [
-    { id: 'orders', label: `Consignments (${userOrders.length})` },
-    { id: 'tracking', label: `Track Order` },
-    { 
-      id: 'notifications', 
-      label: `Notifications`, 
-      count: unreadCount > 0 ? `${unreadCount} New` : notifications.length,
-      hasUnread: unreadCount > 0 
-    },
-    { id: 'addresses', label: `Address Book (${addresses.length})` },
-    { id: 'wishlist', label: `Saved Wishlist (${wishlist.length})` },
-    { id: 'profile', label: `Profile Preferences` }
-  ];
 
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-[#1A1A1A] overflow-x-clip">
@@ -386,7 +352,13 @@ export default function Account() {
 
         {/* Tab Strip */}
         <div className="flex border-b border-stone-200 gap-6 mb-8 overflow-x-auto">
-          {tabItems.map(tab => (
+          {[
+            { id: 'orders', label: `Consignments (${userOrders.length})` },
+            { id: 'tracking', label: `Track Order` },
+            { id: 'addresses', label: `Address Book (${addresses.length})` },
+            { id: 'wishlist', label: `Saved Wishlist (${wishlist.length})` },
+            { id: 'profile', label: `Profile Preferences` }
+          ].map(tab => (
             <button
               key={tab.id}
               onClick={() => {
@@ -398,22 +370,18 @@ export default function Account() {
                   setSearchParams({ tab: tab.id });
                 }
               }}
-              className={`pb-3 text-xs font-bold uppercase tracking-[0.16em] transition border-b-2 whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${activeTab === tab.id
+              className={`pb-3 text-xs font-bold uppercase tracking-[0.16em] transition border-b-2 whitespace-nowrap cursor-pointer ${activeTab === tab.id
                 ? 'border-[#121316] text-[#121316]'
                 : 'border-transparent text-stone-400 hover:text-stone-900'
                 }`}
             >
-              {tab.id === 'tracking' && <TruckIcon className="w-3.5 h-3.5" />}
-              {tab.id === 'notifications' && <BellIcon className="w-3.5 h-3.5" />}
-              <span>{tab.label}</span>
-              {tab.id === 'notifications' && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold ${
-                  tab.hasUnread 
-                    ? 'bg-[#121316] text-[#CBB080] border border-[#CBB080]/40' 
-                    : 'bg-stone-100 text-stone-600'
-                }`}>
-                  {tab.count}
+              {tab.id === 'tracking' ? (
+                <span className="flex items-center gap-1.5">
+                  <TruckIcon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
                 </span>
+              ) : (
+                tab.label
               )}
             </button>
           ))}
@@ -925,237 +893,6 @@ export default function Account() {
 
               </div>
             ) : null}
-          </div>
-        )}
-
-        {/* ================= TAB: NOTIFICATIONS & ACTIVITY STREAM ================= */}
-        {activeTab === 'notifications' && (
-          <div className="space-y-6 animate-fade-in">
-            {/* Header & Quick Action Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-editorial-serif text-2xl font-normal text-stone-950">
-                    Notifications &amp; Activity Stream
-                  </h3>
-                  {unreadCount > 0 && (
-                    <span className="rounded-full bg-[#121316] text-[#CBB080] border border-[#CBB080]/30 text-[10px] font-bold px-2.5 py-0.5 font-sans">
-                      {unreadCount} Unread
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-stone-500 mt-0.5">
-                  Real-time activity logs, courier dispatch updates, concierge alerts, and luxury offer drops.
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {unreadCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => markAllNotificationsRead()}
-                    className="rounded-xs border border-stone-300 bg-white hover:bg-stone-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-stone-800 transition shadow-2xs cursor-pointer"
-                  >
-                    ✓ Mark All as Read
-                  </button>
-                )}
-                {notifications.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (window.confirm('Are you sure you want to clear all notifications history?')) {
-                        clearNotifications();
-                      }
-                    }}
-                    className="rounded-xs border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 transition cursor-pointer"
-                  >
-                    Clear All
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Category Filter Chips */}
-            <div className="flex flex-wrap items-center gap-2">
-              {[
-                { id: 'all', label: 'All Alerts', count: notifications.length },
-                { 
-                  id: 'order', 
-                  label: 'Consignments 📦', 
-                  count: notifications.filter(n => n.category === 'order' || (!n.category && n.title?.toLowerCase().includes('order'))).length 
-                },
-                { 
-                  id: 'promo', 
-                  label: 'Offers & VIP 🏷️', 
-                  count: notifications.filter(n => n.category === 'promo' || n.category === 'coupon').length 
-                },
-                { 
-                  id: 'bag', 
-                  label: 'Bag & Saved ❤️', 
-                  count: notifications.filter(n => n.category === 'bag' || n.category === 'wishlist').length 
-                },
-                { 
-                  id: 'account', 
-                  label: 'Account 👤', 
-                  count: notifications.filter(n => n.category === 'account' || n.category === 'auth').length 
-                }
-              ].map(chip => (
-                <button
-                  key={chip.id}
-                  onClick={() => setNotifFilter(chip.id)}
-                  className={`rounded-full px-3.5 py-1 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                    notifFilter === chip.id
-                      ? 'bg-[#121316] text-[#FAF9F5] shadow-xs'
-                      : 'bg-white border border-stone-200 text-stone-600 hover:bg-stone-100'
-                  }`}
-                >
-                  <span>{chip.label}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                    notifFilter === chip.id ? 'bg-[#CBB080] text-stone-950 font-black' : 'bg-stone-100 text-stone-500'
-                  }`}>
-                    {chip.count}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {/* Notification Cards */}
-            {(() => {
-              const filteredList = notifications.filter(n => {
-                if (notifFilter === 'all') return true;
-                if (notifFilter === 'order') return n.category === 'order' || (!n.category && n.title?.toLowerCase().includes('order'));
-                if (notifFilter === 'promo') return n.category === 'promo' || n.category === 'coupon';
-                if (notifFilter === 'bag') return n.category === 'bag' || n.category === 'wishlist';
-                if (notifFilter === 'account') return n.category === 'account' || n.category === 'auth';
-                return true;
-              });
-
-              if (filteredList.length === 0) {
-                return (
-                  <div className="rounded-xs border border-stone-200 bg-white p-12 text-center shadow-2xs space-y-3">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-stone-100 text-stone-400">
-                      <BellIcon className="w-6 h-6" />
-                    </div>
-                    <h4 className="font-editorial-serif text-lg font-normal text-stone-900">
-                      {notifFilter === 'all' ? 'No Notifications Yet' : 'No alerts in this category'}
-                    </h4>
-                    <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                      {notifFilter === 'all'
-                        ? 'Whenever you place orders, apply vouchers, save pieces, or receive courier dispatches, your real-time alerts will appear here.'
-                        : 'Switch back to "All Alerts" to view your full activity stream.'}
-                    </p>
-                    <Link
-                      to="/shop"
-                      className="mt-2 inline-block rounded-xs bg-[#121316] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B]"
-                    >
-                      Explore Catalog
-                    </Link>
-                  </div>
-                );
-              }
-
-              return (
-                <div className="space-y-3">
-                  {filteredList.map(n => {
-                    const getCategoryStyle = (cat) => {
-                      switch (cat) {
-                        case 'order':
-                          return { bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-200', icon: '📦' };
-                        case 'promo':
-                        case 'coupon':
-                          return { bg: 'bg-emerald-50', text: 'text-emerald-900', border: 'border-emerald-200', icon: '🏷️' };
-                        case 'bag':
-                        case 'wishlist':
-                          return { bg: 'bg-rose-50', text: 'text-rose-900', border: 'border-rose-200', icon: '❤️' };
-                        case 'account':
-                        case 'auth':
-                          return { bg: 'bg-indigo-50', text: 'text-indigo-900', border: 'border-indigo-200', icon: '👤' };
-                        default:
-                          return { bg: 'bg-stone-50', text: 'text-stone-900', border: 'border-stone-200', icon: '✨' };
-                      }
-                    };
-                    const catStyle = getCategoryStyle(n.category);
-
-                    return (
-                      <div
-                        key={n.id}
-                        className={`relative rounded-xs border transition p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4 shadow-2xs ${
-                          !n.read
-                            ? 'border-[#CBB080]/60 bg-amber-50/25 border-l-4 border-l-[#CBB080]'
-                            : 'border-stone-200/80 bg-white hover:border-stone-300'
-                        }`}
-                      >
-                        <div className="flex items-start gap-3.5 flex-1">
-                          {/* Category Badge Icon */}
-                          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xs border text-lg ${catStyle.bg} ${catStyle.border}`}>
-                            {catStyle.icon}
-                          </div>
-
-                          {/* Text Info */}
-                          <div className="space-y-1 flex-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h4 className="font-bold text-sm text-stone-950">
-                                {n.title}
-                              </h4>
-                              {!n.read && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-[#121316] px-2 py-0.5 text-[9.5px] font-extrabold text-[#CBB080] border border-[#CBB080]/40">
-                                  <span className="h-1.5 w-1.5 rounded-full bg-[#CBB080] animate-pulse"></span>
-                                  New
-                                </span>
-                              )}
-                              <span className="text-[11px] text-stone-400 ml-auto sm:ml-0 font-mono">
-                                &bull; {n.timestamp || n.time || 'Recently'}
-                              </span>
-                            </div>
-
-                            <p className="text-xs text-stone-600 leading-relaxed max-w-3xl">
-                              {n.message}
-                            </p>
-
-                            {/* Action CTA Button */}
-                            {n.link && (
-                              <div className="pt-2">
-                                <Link
-                                  to={n.link}
-                                  onClick={() => markNotificationRead(n.id)}
-                                  className="inline-flex items-center gap-1.5 rounded-xs bg-[#121316] hover:bg-[#25262B] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#FAF9F5] transition shadow-2xs"
-                                >
-                                  <span>{n.actionText || 'View Details'}</span>
-                                  <span>&rarr;</span>
-                                </Link>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Controls */}
-                        <div className="flex items-center sm:flex-col sm:items-end justify-between sm:justify-start gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100">
-                          {!n.read && (
-                            <button
-                              type="button"
-                              onClick={() => markNotificationRead(n.id)}
-                              className="text-[10px] font-bold uppercase tracking-wider text-stone-500 hover:text-black hover:underline cursor-pointer"
-                              title="Mark as Read"
-                            >
-                              Mark Read
-                            </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => deleteNotification(n.id)}
-                            className="rounded-xs border border-transparent hover:border-stone-200 p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer flex items-center gap-1 text-[11px]"
-                            title="Delete notification"
-                          >
-                            <span>🗑️</span>
-                            <span className="sm:hidden text-xs font-semibold">Delete</span>
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })()}
           </div>
         )}
 

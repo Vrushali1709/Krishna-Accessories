@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { setCurrentUser, setAuthToken } from '../utils/auth';
 import { usersApi } from '../utils/api';
-import { addSupplier, addNotification } from '../utils/orderStore';
+import { addSupplier } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendWelcomeEmail } from '../utils/emailService';
 import { ArrowRightIcon, LockClosedIcon, ShieldCheckIcon } from '../components/Icons';
 import { RefreshCw, Mail, ArrowLeft, KeyRound } from 'lucide-react';
@@ -120,14 +120,6 @@ export default function Register() {
 
     // Send Welcome Email with promo coupon
     await sendWelcomeEmail(cleanEmail, name.trim(), role);
-
-    addNotification({
-      title: 'Account Created 🎉',
-      message: `Welcome to Krishna Accessories, ${name.trim()}! Use code KRISHNA10 for 10% off your first order.`,
-      type: 'account',
-      link: '/shop',
-      actionText: 'Explore Catalog'
-    });
 
     if (role === 'Supplier') {
       addSupplier({
