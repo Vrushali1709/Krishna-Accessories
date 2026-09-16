@@ -6,6 +6,8 @@ import base64
 import hashlib
 import hmac
 import secrets
+from collections import defaultdict
+from datetime import datetime
 from typing import Optional, List, Any, Dict
 from fastapi import FastAPI, HTTPException, Query, Body, Header, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -1267,9 +1269,48 @@ def get_admin_analytics():
     cursor.execute("SELECT COUNT(*) FROM products WHERE stock < 5")
     low_stock = cursor.fetchone()[0]
 
-    # Order metrics
-    cursor.execute("SELECT COUNT(*), COALESCE(SUM(total), 0) FROM orders")
-    total_orders, total_revenue = cursor.fetchone()
+    # Order metrics and report dimensions are calculated from persisted order lines.
+    cursor.execute("SELECT * FROM orders ORDER BY createdAt DESC")
+    order_rows = [row_to_dict(row) for row in cursor.fetchall()]
+    valid_orders = [o for o in order_rows if o.get("orderStatus") not in ("Cancelled", "Refunded")]
+    total_orders = len(valid_orders)
+    total_revenue = sum(float(o.get("total") or 0) for o in valid_orders)
+
+    daily_sales = defaultdict(lambda: {"orders": 0, "revenue": 0})
+    monthly_sales = defaultdict(lambda: {"orders": 0, "revenue": 0})
+    product_sales = defaultdict(lambda: {"product": "", "category": "", "units": 0, "revenue": 0})
+    supplier_sales = defaultdict(lambda: {"supplier": "", "orders": 0, "revenue": 0})
+    customer_orders = defaultdict(int)
+
+    for order in valid_orders:
+        order_date = order.get("date") or order.get("createdAt") or "Unknown"
+        try:
+            parsed_date = datetime.strptime(str(order_date)[:11], "%d %b %Y")
+            day_key = parsed_date.strftime("%d %b")
+            month_key = parsed_date.strftime("%b %Y")
+        except ValueError:
+            day_key = str(order_date)[:10]
+            month_key = str(order_date)[-4:] if str(order_date)[-4:].isdigit() else "Unknown"
+        daily_sales[day_key]["orders"] += 1
+        daily_sales[day_key]["revenue"] += float(order.get("total") or 0)
+        monthly_sales[month_key]["orders"] += 1
+        monthly_sales[month_key]["revenue"] += float(order.get("total") or 0)
+
+        customer = parse_json_field(order.get("customer")) or {}
+        customer_name = customer.get("name") or " ".join(filter(None, [customer.get("firstName"), customer.get("lastName")])) or "Guest"
+        customer_orders[customer_name] += 1
+        for item in parse_json_field(order.get("items")) or []:
+            product_name = item.get("name") or "Unknown product"
+            product = product_sales[product_name]
+            product["product"] = product_name
+            product["category"] = item.get("category") or "Uncategorised"
+            product["units"] += int(item.get("quantity") or 1)
+            product["revenue"] += float(item.get("price") or 0) * int(item.get("quantity") or 1)
+            supplier_name = item.get("supplier") or "Unassigned"
+            supplier = supplier_sales[supplier_name]
+            supplier["supplier"] = supplier_name
+            supplier["orders"] += 1
+            supplier["revenue"] += float(item.get("price") or 0) * int(item.get("quantity") or 1)
 
     cursor.execute("SELECT COUNT(*) FROM orders WHERE orderStatus = 'Processing'")
     pending_orders = cursor.fetchone()[0]
@@ -1285,9 +1326,7 @@ def get_admin_analytics():
     cursor.execute("SELECT COUNT(*) FROM suppliers")
     total_suppliers = cursor.fetchone()[0]
 
-    # Recent orders
-    cursor.execute("SELECT * FROM orders ORDER BY createdAt DESC LIMIT 5")
-    recent_orders = [row_to_dict(r) for r in cursor.fetchall()]
+    recent_orders = order_rows[:5]
 
     conn.close()
 
@@ -1300,7 +1339,13 @@ def get_admin_analytics():
         "pendingOrders": pending_orders,
         "deliveredOrders": delivered_orders,
         "lowStockCount": low_stock,
-        "recentOrders": recent_orders
+        "recentOrders": recent_orders,
+        "dailySales": [{"date": key, **value} for key, value in sorted(daily_sales.items())],
+        "monthlySales": [{"month": key, **value} for key, value in sorted(monthly_sales.items())],
+        "productPerformance": sorted(product_sales.values(), key=lambda item: item["revenue"], reverse=True),
+        "supplierPerformance": sorted(supplier_sales.values(), key=lambda item: item["revenue"], reverse=True),
+        "repeatCustomers": sum(1 for count in customer_orders.values() if count > 1),
+        "uniqueCustomers": len(customer_orders)
     }
 
 # -------------------------------------------------------------------
