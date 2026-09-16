@@ -1,34 +1,8 @@
 @import "tailwindcss";
 
-/* =============================================================
-   KRISHNA ACCESSORIES — DESIGN TOKENS
-   One family (Archivo), a neutral paper palette, and a single
-   red used only for price drops. Nothing decorative.
-   ============================================================= */
-
 @theme {
-  /* Type */
-  --font-sans: 'Archivo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-
-  /* Surfaces */
-  --color-paper: #FFFFFF;
-  --color-shade: #F4F4F1;
-  --color-shade-2: #ECECE8;
-
-  /* Text */
-  --color-ink: #000000;
-  --color-ash: #5F5F5C;
-  --color-mute: #93938E;
-
-  /* Structure */
-  --color-line: #E3E3DE;
-  --color-line-strong: #C9C9C2;
-
-  /* The only accent: retail price-drop red */
-  --color-sale: #A3231B;
-
-  /* Legacy tokens kept so older pages keep compiling */
+  --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --color-gold-50: #fdfbf7;
   --color-gold-100: #f7f3e8;
   --color-gold-200: #eee3cb;
@@ -39,6 +13,7 @@
   --color-gold-700: #8c6734;
   --color-gold-800: #71522e;
   --color-gold-900: #5f4428;
+
   --color-navy-950: #0B132B;
   --color-navy-900: #0F172A;
   --color-navy-800: #1E293B;
@@ -47,18 +22,20 @@
 
 @layer base {
   :root {
-    font-family: var(--font-sans);
-    color: #000000;
-    background: #FFFFFF;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #111827;
+    background: #FAFAFB;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    letter-spacing: -0.011em;
   }
 
   html {
     scroll-behavior: smooth;
-    background-color: #FFFFFF;
+    background-color: #FAFAFB;
     overflow-x: hidden;
     max-width: 100%;
   }
@@ -66,12 +43,12 @@
   body {
     margin: 0;
     min-width: 320px;
-    background-color: #FFFFFF;
-    color: #000000;
+    background-color: #FAFAFB;
+    color: #111827;
     overflow-x: hidden;
     max-width: 100%;
-    font-size: 14px;
-    line-height: 1.55;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   #root {
@@ -82,197 +59,216 @@
     flex-direction: column;
   }
 
-  /* Prices, counts and ratings always line up */
-  .num,
-  table {
-    font-variant-numeric: tabular-nums;
-  }
-
-  h1, h2, h3, h4 {
-    letter-spacing: -0.02em;
-    text-wrap: balance;
-  }
-
-  button, input, textarea, select {
+  button,
+  input,
+  textarea,
+  select {
     font: inherit;
     letter-spacing: inherit;
   }
 
-  button { cursor: pointer; }
-  a { text-decoration: none; color: inherit; }
+  button {
+    cursor: pointer;
+  }
 
-  /* One visible focus style for the whole site */
-  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid #000000;
-    outline-offset: 2px;
-    border-radius: 2px;
+  a {
+    text-decoration: none;
   }
 
   ::selection {
-    background: #000000;
+    background: #111827;
     color: #FFFFFF;
   }
 }
 
-/* =============================================================
-   SHARED PIECES
-   ============================================================= */
-
-/* Page gutter — identical on every section */
-.wrap {
-  width: 100%;
-  max-width: 1280px;
-  margin-inline: auto;
-  padding-inline: 20px;
+/* Minimalist luxury scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
 }
 
-@media (min-width: 640px) { .wrap { padding-inline: 28px; } }
-@media (min-width: 1024px) { .wrap { padding-inline: 40px; } }
-
-/* Buttons: two weights only */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  padding-inline: 22px;
-  border-radius: 3px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+::-webkit-scrollbar-track {
+  background: #F4F5F7;
 }
 
-.btn-solid {
-  background: #000000;
-  color: #FFFFFF;
-  border: 1px solid #000000;
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 9999px;
 }
 
-.btn-solid:hover { background: #262624; border-color: #262624; }
-
-.btn-line {
-  background: transparent;
-  color: #000000;
-  border: 1px solid var(--color-line-strong);
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
 }
 
-.btn-line:hover { border-color: #000000; }
-
-.btn-sm { height: 36px; padding-inline: 14px; font-size: 12px; }
-
-/* Product image plate */
-.plate {
-  background: var(--color-shade);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-/* A quiet underline used for text links in headers */
-.link-ul {
-  border-bottom: 1px solid var(--color-line-strong);
-  padding-bottom: 2px;
-  transition: border-color 0.18s ease;
-}
-
-.link-ul:hover { border-color: #000000; }
-
-/* Single orchestrated page-load entrance (hero only) */
-@keyframes riseIn {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
-  to { opacity: 1; transform: none; }
-}
-
-.rise {
-  animation: riseIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rise,
-  .animate-marquee,
-  .animate-marquee-reverse {
-    animation: none !important;
+/* Natural micro-animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
-  html { scroll-behavior: auto; }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F4F4F1; }
-::-webkit-scrollbar-thumb { background: #C9C9C2; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: #93938E; }
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-.line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-/* =============================================================
-   MARQUEE — used by the offer bar and the brand row
-   ============================================================= */
 @keyframes marquee {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 @keyframes marquee-reverse {
-  0% { transform: translate3d(-50%, 0, 0); }
-  100% { transform: translate3d(0, 0, 0); }
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 46s linear infinite;
+  animation: marquee 32s linear infinite;
   will-change: transform;
 }
 
 .animate-marquee-reverse {
   display: flex;
   width: max-content;
-  animation: marquee-reverse 46s linear infinite;
+  animation: marquee-reverse 32s linear infinite;
   will-change: transform;
 }
 
 .animate-marquee:hover,
-.animate-marquee-reverse:hover { animation-play-state: paused; }
-
-/* =============================================================
-   LEGACY ANIMATIONS — other pages still import these.
-   Left untouched so nothing outside the home page breaks.
-   ============================================================= */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.animate-slide-up { animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
 @keyframes slideInRight {
-  from { transform: translate3d(100%, 0, 0); }
-  to { transform: translate3d(0, 0, 0); }
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-.animate-drawer-in { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-drawer-in {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
-@keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-@keyframes spinReverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
-@keyframes pulseGlow { 0%, 100% { opacity: 0.45; transform: scale(0.98); } 50% { opacity: 0.95; transform: scale(1.04); } }
-@keyframes goldShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-@keyframes laserProgress { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-@keyframes skeletonPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+/* Luxury Loader Keyframes */
+@keyframes spinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
 
-.animate-spin-slow { animation: spinSlow 9s linear infinite; will-change: transform; }
-.animate-spin-reverse { animation: spinReverse 13s linear infinite; will-change: transform; }
-.animate-pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinReverse {
+  0% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes laserProgress {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes skeletonPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 9s linear infinite;
+  will-change: transform;
+}
+
+.animate-spin-reverse {
+  animation: spinReverse 13s linear infinite;
+  will-change: transform;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
 
 .animate-gold-shimmer {
   background: linear-gradient(90deg, #dfcba3 0%, #ffffff 25%, #f59e0b 50%, #ffffff 75%, #dfcba3 100%);
@@ -290,23 +286,65 @@
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, rgba(244,244,241,1) 0%, rgba(228,228,222,0.9) 35%, rgba(244,244,241,1) 70%);
+  background: linear-gradient(90deg,
+      rgba(243, 244, 246, 1) 0%,
+      rgba(229, 231, 235, 0.9) 35%,
+      rgba(243, 244, 246, 1) 70%);
   background-size: 200% 100%;
   animation: goldShimmer 1.8s ease-in-out infinite;
 }
 
 .skeleton-shimmer-dark {
-  background: linear-gradient(90deg, rgba(30,41,59,0.7) 0%, rgba(51,65,85,0.9) 35%, rgba(30,41,59,0.7) 70%);
+  background: linear-gradient(90deg,
+      rgba(30, 41, 59, 0.7) 0%,
+      rgba(51, 65, 85, 0.9) 35%,
+      rgba(30, 41, 59, 0.7) 70%);
   background-size: 200% 100%;
   animation: goldShimmer 1.8s ease-in-out infinite;
 }
 
+/* Refined luxury cards */
 .luxury-card {
   background: #FFFFFF;
-  border: 1px solid var(--color-line);
-  transition: border-color 0.2s ease;
+  border: 1px solid rgba(229, 231, 235, 0.85);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.luxury-card:hover { border-color: var(--color-line-strong); }
+.luxury-card:hover {
+  border-color: rgba(209, 213, 219, 0.9);
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
 
-.gold-accent-text { color: #8C6734; }
+.gold-accent-text {
+  color: #B89758;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
