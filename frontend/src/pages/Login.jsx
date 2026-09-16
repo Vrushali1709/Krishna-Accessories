@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { setAdminUser, setSupplierUser, setCustomerUser } from '../utils/auth';
-import { getSuppliers } from '../utils/orderStore';
+import { setAdminUser, setSupplierUser, setCustomerUser, setAuthToken } from '../utils/auth';
+import { usersApi } from '../utils/api';
 import { sendOtpEmail, verifyOtp, resendOtp, sendPasswordResetSuccessEmail } from '../utils/emailService';
 import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 import { Eye, EyeOff, RefreshCw, KeyRound, Mail } from 'lucide-react';
@@ -98,7 +98,7 @@ export default function Login() {
       setPassword('customer123');
     } else if (role === 'admin') {
       setEmail('admin@krishna.com');
-      setPassword('admin123');
+      setPassword('Admin@123');
     } else if (role === 'supplier') {
       setEmail('supplier@krishna.com');
       setPassword('supplier123');
@@ -109,7 +109,7 @@ export default function Login() {
   };
 
   // Standard Password Authentication
-  const handlePasswordLogin = (e) => {
+  const handlePasswordLogin = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -121,76 +121,21 @@ export default function Login() {
       return;
     }
 
-    // 1. Admin Authentication Check
-    if (cleanEmail === 'admin@krishna.com' || cleanEmail === 'admin') {
-      if (cleanPassword === 'admin123') {
-        setSubmitting(true);
-        showLoading('Authenticating Administrator Privileges...');
-        setTimeout(() => {
-          setAdminUser({
-            email: 'admin@krishna.com',
-            role: 'admin',
-            name: 'Super Administrator',
-            phone: '+91 98765 00001'
-          });
-          setSubmitting(false);
-          hideLoading();
-          navigate(returnPath || '/admin', { replace: true });
-        }, 400);
-        return;
-      } else {
-        setError('Invalid password for Administrator.');
-        return;
-      }
-    }
-
-    // 2. Supplier Authentication Check
-    const suppliers = getSuppliers();
-    const matchedSupplier = suppliers.find(s => s.email?.toLowerCase() === cleanEmail);
-
-    if (cleanEmail === 'supplier@krishna.com' || cleanEmail === 'supplier' || matchedSupplier) {
-      if (cleanPassword === 'supplier123' || cleanPassword === matchedSupplier?.password) {
-        setSubmitting(true);
-        showLoading('Connecting to Supplier Portal...');
-        setTimeout(() => {
-          setSupplierUser({
-            email: matchedSupplier?.email || 'supplier@krishna.com',
-            role: 'supplier',
-            name: matchedSupplier?.name || 'Apex Timepieces Ltd.',
-            phone: matchedSupplier?.phone || '+91 98765 43210'
-          });
-          setSubmitting(false);
-          hideLoading();
-          navigate(returnPath || '/supplier', { replace: true });
-        }, 400);
-        return;
-      } else {
-        setError('Invalid password for Supplier.');
-        return;
-      }
-    }
-
-    // 3. Customer Authentication
-    if (cleanEmail && cleanPassword) {
-      if (cleanPassword.length < 3) {
-        setError('Password is too short.');
-        return;
-      }
-      setSubmitting(true);
-      showLoading('Signing into your Krishna Account...');
-      setTimeout(() => {
-        setCustomerUser({
-          email: cleanEmail,
-          role: 'customer',
-          name: cleanEmail.includes('rahul') ? 'Rahul Patel' : cleanEmail.split('@')[0],
-          phone: '+91 98765 12345'
-        });
-        setSubmitting(false);
-        hideLoading();
-        navigate(returnPath || '/account', { replace: true });
-      }, 400);
-    } else {
-      setError('Please enter a valid email and password.');
+    setSubmitting(true);
+    showLoading('Authenticating with Krishna Backend...');
+    try {
+      const result = await usersApi.login({ email: cleanEmail, password: cleanPassword, role: selectedRole });
+      setAuthToken(result.token);
+      const user = result.user;
+      if (user.role?.toLowerCase() === 'admin') setAdminUser(user);
+      else if (user.role?.toLowerCase() === 'supplier') setSupplierUser(user);
+      else setCustomerUser({ ...user, role: 'customer' });
+      navigate(returnPath || (user.role?.toLowerCase() === 'admin' ? '/admin' : user.role?.toLowerCase() === 'supplier' ? '/supplier' : '/account'), { replace: true });
+    } catch (loginError) {
+      setError(loginError.message || 'Unable to sign in. Please check your credentials.');
+    } finally {
+      setSubmitting(false);
+      hideLoading();
     }
   };
 

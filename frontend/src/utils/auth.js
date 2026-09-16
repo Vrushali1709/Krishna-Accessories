@@ -4,6 +4,16 @@ const CUSTOMER_AUTH_KEY = 'krishna_customer_user';
 const ADMIN_AUTH_KEY = 'krishna_admin_user';
 const SUPPLIER_AUTH_KEY = 'krishna_supplier_user';
 const LEGACY_AUTH_KEY = 'krishna_current_user';
+const AUTH_TOKEN_KEY = 'krishna_auth_token';
+
+export function setAuthToken(token) {
+  if (token) localStorage.setItem(AUTH_TOKEN_KEY, token);
+  else localStorage.removeItem(AUTH_TOKEN_KEY);
+}
+
+export function getAuthToken() {
+  return localStorage.getItem(AUTH_TOKEN_KEY);
+}
 
 export function getCustomerUser() {
   try {
@@ -102,18 +112,21 @@ export function setCurrentUser(user) {
 export function logout() {
   localStorage.removeItem(CUSTOMER_AUTH_KEY);
   localStorage.removeItem(LEGACY_AUTH_KEY);
+  setAuthToken(null);
   window.dispatchEvent(new Event('authUpdated'));
 }
 
 // Log out only admin session
 export function logoutAdmin() {
   localStorage.removeItem(ADMIN_AUTH_KEY);
+  setAuthToken(null);
   window.dispatchEvent(new Event('authUpdated'));
 }
 
 // Log out only supplier session
 export function logoutSupplier() {
   localStorage.removeItem(SUPPLIER_AUTH_KEY);
+  setAuthToken(null);
   window.dispatchEvent(new Event('authUpdated'));
 }
 
@@ -123,6 +136,7 @@ export function logoutAll() {
   localStorage.removeItem(ADMIN_AUTH_KEY);
   localStorage.removeItem(SUPPLIER_AUTH_KEY);
   localStorage.removeItem(LEGACY_AUTH_KEY);
+  setAuthToken(null);
   window.dispatchEvent(new Event('authUpdated'));
 }
 

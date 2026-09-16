@@ -24,6 +24,9 @@ async function request(endpoint, options = {}) {
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...(typeof localStorage !== 'undefined' && localStorage.getItem('krishna_auth_token')
+        ? { Authorization: `Bearer ${localStorage.getItem('krishna_auth_token')}` }
+        : {}),
       ...(options.headers || {})
     },
     ...options
@@ -39,7 +42,9 @@ async function request(endpoint, options = {}) {
       let errorData = {};
       try {
         errorData = await response.json();
-      } catch {}
+      } catch {
+        errorData = {};
+      }
       throw new Error(errorData.detail || `Request failed with status ${response.status}`);
     }
     return await response.json();
