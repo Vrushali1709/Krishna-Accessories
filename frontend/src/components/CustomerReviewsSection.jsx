@@ -1,108 +1,426 @@
+// // src/components/CustomerReviewsSection.jsx
+// import React, { useState, useRef, useEffect, useCallback } from 'react';
+// import { Reveal } from './useScrollReveal';
+// import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
+
+// const DEFAULT_REVIEWS = [
+//   {
+//     id: 1,
+//     name: 'Aarav Mehta',
+//     location: 'Mumbai, Maharashtra',
+//     rating: 5,
+//     category: 'Luxury Watches',
+//     product: 'Titan Edge Ceramic Chronograph',
+//     text: 'Ordered the Titan Edge Ceramic watch. The packaging was immaculate with the brand warranty card. Premium showroom experience delivered directly to my doorstep in South Mumbai!',
+//     date: 'Verified Buyer • 2 days ago'
+//   },
+//   {
+//     id: 2,
+//     name: 'Priya Sharma',
+//     location: 'Mumbai, Maharashtra',
+//     rating: 5,
+//     category: 'Leather Handbags',
+//     product: 'Hidesign Genuine Leather Tote',
+//     text: 'The quality of the leather bag is absolutely top-notch. Fast same-day pickup from their Heera Panna, Haji Ali store. Top quality product and the concierge team was super helpful.',
+//     date: 'Verified Buyer • 4 days ago'
+//   },
+//   {
+//     id: 3,
+//     name: 'Rohan Patel',
+//     location: 'Surat, Gujarat',
+//     rating: 5,
+//     category: 'Audio & Gadgets',
+//     product: 'Sony WH-1000XM5 Noise Cancelling',
+//     text: 'Got the Sony flagship headphones at a fantastic price using code KRISHNA10. Exceptional quality product with verified product details and serial barcode.',
+//     date: 'Verified Buyer • 1 week ago'
+//   },
+//   {
+//     id: 4,
+//     name: 'Ananya Iyer',
+//     location: 'Bengaluru, Karnataka',
+//     rating: 5,
+//     category: 'Designer Eyewear',
+//     product: 'Ray-Ban Aviator Classic Polarized',
+//     text: 'Best luxury shopping experience in India! The sunglasses arrived in pristine condition with leather case, microfiber cloth, and warranty seal. Truly impressed!',
+//     date: 'Verified Buyer • 1 week ago'
+//   },
+//   {
+//     id: 5,
+//     name: 'Vikram Desai',
+//     location: 'Mumbai, Maharashtra',
+//     rating: 5,
+//     category: 'Automatic Watches',
+//     product: 'Fossil Heritage Automatic Masterpiece',
+//     text: 'Visited their Heera Panna store in Haji Ali first, then ordered online for an anniversary gift. Seamless checkout, express insured delivery, and genuinely high-end curation.',
+//     date: 'Verified Buyer • 2 weeks ago'
+//   },
+//   {
+//     id: 6,
+//     name: 'Neha Verma',
+//     location: 'Delhi NCR',
+//     rating: 5,
+//     category: 'Luxury Fragrance',
+//     product: 'Dior Sauvage Eau De Parfum',
+//     text: 'Finding trusted premium designer perfumes online can be tough, but Krishna Accessories delivers verified quality bottles with batch code verification. Top marks!',
+//     date: 'Verified Buyer • 2 weeks ago'
+//   },
+//   {
+//     id: 7,
+//     name: 'Harsh Joshi',
+//     location: 'Vadodara, Gujarat',
+//     rating: 5,
+//     category: 'Chronograph Watches',
+//     product: 'Casio Edifice Sapphire Chronograph',
+//     text: 'Super fast dispatch by BlueDart. The watch is gorgeous and came with brand tags, luxury presentation box, and tax invoice. 7-day peace-of-mind guarantee gives complete confidence.',
+//     date: 'Verified Buyer • 3 weeks ago'
+//   }
+// ];
+
+// export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
+//   const carouselRef = useRef(null);
+//   const [canScrollLeft, setCanScrollLeft] = useState(false);
+//   const [canScrollRight, setCanScrollRight] = useState(true);
+//   const [activeIndex, setActiveIndex] = useState(0);
+//   const [isDragging, setIsDragging] = useState(false);
+//   const [startX, setStartX] = useState(0);
+//   const [scrollLeft, setScrollLeft] = useState(0);
+//   const [hasMoved, setHasMoved] = useState(false);
+//   const [isPaused, setIsPaused] = useState(false);
+
+//   // Check scroll boundary
+//   const checkScroll = useCallback(() => {
+//     if (!carouselRef.current) return;
+//     const { scrollLeft: sLeft, scrollWidth, clientWidth } = carouselRef.current;
+//     setCanScrollLeft(sLeft > 10);
+//     setCanScrollRight(sLeft < scrollWidth - clientWidth - 10);
+
+//     const cardWidth = carouselRef.current.firstElementChild?.clientWidth || 320;
+//     const gap = 16;
+//     const index = Math.round(sLeft / (cardWidth + gap));
+//     setActiveIndex(Math.min(Math.max(index, 0), reviews.length - 1));
+//   }, [reviews.length]);
+
+//   useEffect(() => {
+//     const el = carouselRef.current;
+//     if (!el) return;
+//     checkScroll();
+//     el.addEventListener('scroll', checkScroll, { passive: true });
+//     window.addEventListener('resize', checkScroll);
+//     return () => {
+//       el.removeEventListener('scroll', checkScroll);
+//       window.removeEventListener('resize', checkScroll);
+//     };
+//   }, [checkScroll]);
+
+//   // Smooth scroll handler
+//   const scrollCarousel = (direction) => {
+//     if (!carouselRef.current) return;
+//     const container = carouselRef.current;
+//     const cardWidth = container.firstElementChild?.clientWidth || 320;
+//     const scrollAmount = cardWidth + 16;
+//     container.scrollBy({
+//       left: direction === 'left' ? -scrollAmount : scrollAmount,
+//       behavior: 'smooth'
+//     });
+//   };
+
+//   // Scroll directly to a specific slide index
+//   const scrollToIndex = (index) => {
+//     if (!carouselRef.current) return;
+//     const container = carouselRef.current;
+//     const cardWidth = container.firstElementChild?.clientWidth || 320;
+//     const gap = 16;
+//     container.scrollTo({
+//       left: index * (cardWidth + gap),
+//       behavior: 'smooth'
+//     });
+//   };
+
+//   // Autoplay functionality with pause on hover
+//   useEffect(() => {
+//     if (isPaused || isDragging) return;
+//     const timer = setInterval(() => {
+//       if (!carouselRef.current) return;
+//       const { scrollLeft: sLeft, scrollWidth, clientWidth } = carouselRef.current;
+//       if (sLeft >= scrollWidth - clientWidth - 20) {
+//         carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+//       } else {
+//         scrollCarousel('right');
+//       }
+//     }, 5000);
+
+//     return () => clearInterval(timer);
+//   }, [isPaused, isDragging]);
+
+//   // Drag to scroll handlers
+//   const handleMouseDown = (e) => {
+//     if (!carouselRef.current) return;
+//     setIsDragging(true);
+//     setHasMoved(false);
+//     setStartX(e.pageX - carouselRef.current.offsetLeft);
+//     setScrollLeft(carouselRef.current.scrollLeft);
+//   };
+
+//   const handleMouseMove = (e) => {
+//     if (!isDragging || !carouselRef.current) return;
+//     e.preventDefault();
+//     const x = e.pageX - carouselRef.current.offsetLeft;
+//     const walk = (x - startX) * 1.5;
+//     if (Math.abs(walk) > 4) setHasMoved(true);
+//     carouselRef.current.scrollLeft = scrollLeft - walk;
+//   };
+
+//   const handleMouseUp = () => {
+//     setIsDragging(false);
+//   };
+
+//   return (
+//     <section
+//       className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8 select-none"
+//       onMouseEnter={() => setIsPaused(true)}
+//       onMouseLeave={() => {
+//         setIsPaused(false);
+//         setIsDragging(false);
+//       }}
+//     >
+//       {/* Section Header */}
+//       <Reveal direction="up" delay={50}>
+//         <div className="mb-6 sm:mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+//           <div>
+//             <div className="flex items-center gap-2">
+//               <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+//               <span className="text-[10.5px] font-bold uppercase tracking-[0.24em] text-neutral-400">
+//                 VERIFIED CLIENT FEEDBACK
+//               </span>
+//             </div>
+//             <h2 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
+//               Customer Reviews &amp; Testimonials
+//             </h2>
+//             <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-xl">
+//               Real experiences from clients who trust Krishna Accessories for premium products and a reliable shopping experience.
+//             </p>
+//           </div>
+
+//           {/* Rating Score & Navigation Controls */}
+//           <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+//             <div className="flex items-center gap-2 rounded-full border border-gray-200/90 bg-white px-4 py-1.5 shadow-2xs">
+//               <span className="flex items-center gap-0.5 text-xs text-amber-500">
+//                 {'★'.repeat(5)}
+//               </span>
+//               <span className="text-xs font-bold text-gray-800">
+//                 4.9 / 5 <span className="text-gray-400 font-normal hidden sm:inline">(2,840+ verified reviews)</span>
+//               </span>
+//             </div>
+
+//             {/* Left / Right Navigation Buttons */}
+//             <div className="flex items-center gap-1.5">
+//               <button
+//                 type="button"
+//                 onClick={() => scrollCarousel('left')}
+//                 disabled={!canScrollLeft}
+//                 className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
+//                 aria-label="Previous review"
+//               >
+//                 <ChevronLeftIcon className="w-4 h-4" />
+//               </button>
+//               <button
+//                 type="button"
+//                 onClick={() => scrollCarousel('right')}
+//                 disabled={!canScrollRight}
+//                 className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
+//                 aria-label="Next review"
+//               >
+//                 <ChevronRightIcon className="w-4 h-4" />
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </Reveal>
+
+//       {/* Carousel Track */}
+//       <Reveal direction="up" delay={120}>
+//         <div
+//           ref={carouselRef}
+//           onMouseDown={handleMouseDown}
+//           onMouseMove={handleMouseMove}
+//           onMouseUp={handleMouseUp}
+//           onMouseLeave={handleMouseUp}
+//           className={`flex gap-4 sm:gap-5 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
+//             isDragging ? 'cursor-grabbing' : 'cursor-grab'
+//           }`}
+//           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+//         >
+//           {reviews.map((review, idx) => (
+//             <div
+//               key={review.id || review.name || idx}
+//               className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[390px] snap-start flex flex-col justify-between rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.08)] hover:-translate-y-1 relative"
+//             >
+//               <div>
+//                 {/* Top Row: Stars + Category/Product Badge */}
+//                 <div className="flex items-center justify-between gap-2">
+//                   <div className="flex items-center gap-1 text-sm text-amber-500">
+//                     {'★'.repeat(review.rating || 5)}
+//                   </div>
+//                   {review.product && (
+//                     <span className="truncate max-w-[190px] text-[10px] font-semibold text-neutral-800 bg-neutral-100 border border-neutral-200/80 rounded-full px-2.5 py-0.5">
+//                       {review.product}
+//                     </span>
+//                   )}
+//                 </div>
+
+//                 {/* Review Quote Text */}
+//                 <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-700 font-normal">
+//                   “{review.text}”
+//                 </p>
+//               </div>
+
+//               {/* Author Footer */}
+//               <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+//                 <div>
+//                   <div className="flex items-center gap-1.5">
+//                     <h3 className="text-xs sm:text-[13.5px] font-bold text-gray-950">
+//                       {review.name}
+//                     </h3>
+//                     <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+//                       <span>✓</span> Verified
+//                     </span>
+//                   </div>
+//                   <p className="mt-0.5 text-[10px] sm:text-[11px] text-gray-400">
+//                     {review.location}
+//                   </p>
+//                 </div>
+
+//                 {/* Avatar Initial with Stylish Gradient */}
+//                 <span className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-[#111827] text-xs font-bold text-amber-300 border border-neutral-700 shadow-2xs shrink-0">
+//                   {review.name.charAt(0)}
+//                 </span>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </Reveal>
+
+//       {/* Slide Progress Indicator Dots */}
+//       <div className="mt-4 flex items-center justify-center gap-1.5">
+//         {reviews.map((_, i) => (
+//           <button
+//             key={i}
+//             type="button"
+//             onClick={() => scrollToIndex(i)}
+//             aria-label={`Go to review ${i + 1}`}
+//             className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+//               i === activeIndex
+//                 ? 'w-7 bg-gray-950'
+//                 : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+//             }`}
+//           />
+//         ))}
+//       </div>
+//     </section>
+//   );
+// }
+
+
+
+
+
+
+
+
 // src/components/CustomerReviewsSection.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Reveal } from './useScrollReveal';
-import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
+import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from './Icons';
 
 const DEFAULT_REVIEWS = [
   {
     id: 1,
     name: 'Aarav Mehta',
-    location: 'Mumbai, Maharashtra',
+    location: 'Mumbai',
     rating: 5,
-    category: 'Luxury Watches',
     product: 'Titan Edge Ceramic Chronograph',
-    text: 'Ordered the Titan Edge Ceramic watch. The packaging was immaculate with the brand warranty card. Premium showroom experience delivered directly to my doorstep in South Mumbai!',
-    date: 'Verified Buyer • 2 days ago'
+    text: 'Packaging was spotless and the warranty card was in the box. It arrived in South Mumbai the next morning.',
+    date: '2 days ago'
   },
   {
     id: 2,
     name: 'Priya Sharma',
-    location: 'Mumbai, Maharashtra',
+    location: 'Mumbai',
     rating: 5,
-    category: 'Leather Handbags',
-    product: 'Hidesign Genuine Leather Tote',
-    text: 'The quality of the leather bag is absolutely top-notch. Fast same-day pickup from their Heera Panna, Haji Ali store. Top quality product and the concierge team was super helpful.',
-    date: 'Verified Buyer • 4 days ago'
+    product: 'Hidesign Leather Tote',
+    text: 'I picked it up from the Haji Ali shop the same afternoon I ordered. The leather is the real thing, not coated.',
+    date: '4 days ago'
   },
   {
     id: 3,
     name: 'Rohan Patel',
-    location: 'Surat, Gujarat',
+    location: 'Surat',
     rating: 5,
-    category: 'Audio & Gadgets',
-    product: 'Sony WH-1000XM5 Noise Cancelling',
-    text: 'Got the Sony flagship headphones at a fantastic price using code KRISHNA10. Exceptional quality product with verified product details and serial barcode.',
-    date: 'Verified Buyer • 1 week ago'
+    product: 'Sony WH-1000XM5',
+    text: 'Used KRISHNA10 and got a better price than the big sites. Serial number matched Sony India when I checked.',
+    date: '1 week ago'
   },
   {
     id: 4,
     name: 'Ananya Iyer',
-    location: 'Bengaluru, Karnataka',
+    location: 'Bengaluru',
     rating: 5,
-    category: 'Designer Eyewear',
-    product: 'Ray-Ban Aviator Classic Polarized',
-    text: 'Best luxury shopping experience in India! The sunglasses arrived in pristine condition with leather case, microfiber cloth, and warranty seal. Truly impressed!',
-    date: 'Verified Buyer • 1 week ago'
+    product: 'Ray-Ban Aviator Polarized',
+    text: 'Case, cloth and the seal all intact. I have bought sunglasses online twice before and this was the first time nothing felt off.',
+    date: '1 week ago'
   },
   {
     id: 5,
     name: 'Vikram Desai',
-    location: 'Mumbai, Maharashtra',
+    location: 'Mumbai',
     rating: 5,
-    category: 'Automatic Watches',
-    product: 'Fossil Heritage Automatic Masterpiece',
-    text: 'Visited their Heera Panna store in Haji Ali first, then ordered online for an anniversary gift. Seamless checkout, express insured delivery, and genuinely high-end curation.',
-    date: 'Verified Buyer • 2 weeks ago'
+    product: 'Fossil Heritage Automatic',
+    text: 'Saw it at the store, ordered it online later for our anniversary. Checkout took a minute and it shipped insured.',
+    date: '2 weeks ago'
   },
   {
     id: 6,
     name: 'Neha Verma',
     location: 'Delhi NCR',
     rating: 5,
-    category: 'Luxury Fragrance',
-    product: 'Dior Sauvage Eau De Parfum',
-    text: 'Finding trusted premium designer perfumes online can be tough, but Krishna Accessories delivers verified quality bottles with batch code verification. Top marks!',
-    date: 'Verified Buyer • 2 weeks ago'
+    product: 'Dior Sauvage EDP',
+    text: 'Batch code checked out. Buying perfume online usually makes me nervous, this did not.',
+    date: '2 weeks ago'
   },
   {
     id: 7,
     name: 'Harsh Joshi',
-    location: 'Vadodara, Gujarat',
+    location: 'Vadodara',
     rating: 5,
-    category: 'Chronograph Watches',
-    product: 'Casio Edifice Sapphire Chronograph',
-    text: 'Super fast dispatch by BlueDart. The watch is gorgeous and came with brand tags, luxury presentation box, and tax invoice. 7-day peace-of-mind guarantee gives complete confidence.',
-    date: 'Verified Buyer • 3 weeks ago'
+    product: 'Casio Edifice Sapphire',
+    text: 'Dispatched within hours. Tags, box and a proper tax invoice, which matters if you ever need the warranty.',
+    date: '3 weeks ago'
   }
 ];
 
 export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
-  const carouselRef = useRef(null);
+  const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [hasMoved, setHasMoved] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
 
-  // Check scroll boundary
   const checkScroll = useCallback(() => {
-    if (!carouselRef.current) return;
-    const { scrollLeft: sLeft, scrollWidth, clientWidth } = carouselRef.current;
-    setCanScrollLeft(sLeft > 10);
-    setCanScrollRight(sLeft < scrollWidth - clientWidth - 10);
+    const el = trackRef.current;
+    if (!el) return;
 
-    const cardWidth = carouselRef.current.firstElementChild?.clientWidth || 320;
-    const gap = 16;
-    const index = Math.round(sLeft / (cardWidth + gap));
-    setActiveIndex(Math.min(Math.max(index, 0), reviews.length - 1));
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 8);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 8);
+
+    const step = (el.firstElementChild?.clientWidth || 320) + 20;
+    setActiveIndex(
+      Math.min(Math.max(Math.round(scrollLeft / step), 0), reviews.length - 1)
+    );
   }, [reviews.length]);
 
   useEffect(() => {
-    const el = carouselRef.current;
+    const el = trackRef.current;
     if (!el) return;
+
     checkScroll();
     el.addEventListener('scroll', checkScroll, { passive: true });
     window.addEventListener('resize', checkScroll);
@@ -112,209 +430,88 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
     };
   }, [checkScroll]);
 
-  // Smooth scroll handler
-  const scrollCarousel = (direction) => {
-    if (!carouselRef.current) return;
-    const container = carouselRef.current;
-    const cardWidth = container.firstElementChild?.clientWidth || 320;
-    const scrollAmount = cardWidth + 16;
-    container.scrollBy({
-      left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth'
-    });
-  };
-
-  // Scroll directly to a specific slide index
-  const scrollToIndex = (index) => {
-    if (!carouselRef.current) return;
-    const container = carouselRef.current;
-    const cardWidth = container.firstElementChild?.clientWidth || 320;
-    const gap = 16;
-    container.scrollTo({
-      left: index * (cardWidth + gap),
-      behavior: 'smooth'
-    });
-  };
-
-  // Autoplay functionality with pause on hover
-  useEffect(() => {
-    if (isPaused || isDragging) return;
-    const timer = setInterval(() => {
-      if (!carouselRef.current) return;
-      const { scrollLeft: sLeft, scrollWidth, clientWidth } = carouselRef.current;
-      if (sLeft >= scrollWidth - clientWidth - 20) {
-        carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        scrollCarousel('right');
-      }
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [isPaused, isDragging]);
-
-  // Drag to scroll handlers
-  const handleMouseDown = (e) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setHasMoved(false);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging || !carouselRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    if (Math.abs(walk) > 4) setHasMoved(true);
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
+  const scrollByCard = (direction) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const step = (el.firstElementChild?.clientWidth || 320) + 20;
+    el.scrollBy({ left: direction === 'left' ? -step : step, behavior: 'smooth' });
   };
 
   return (
-    <section
-      className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8 select-none"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => {
-        setIsPaused(false);
-        setIsDragging(false);
-      }}
-    >
-      {/* Section Header */}
-      <Reveal direction="up" delay={50}>
-        <div className="mb-6 sm:mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+    <section className="border-t border-line bg-shade py-14 sm:py-18">
+      <div className="wrap">
+
+        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-line pb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
-              <span className="text-[10.5px] font-bold uppercase tracking-[0.24em] text-neutral-400">
-                VERIFIED CLIENT FEEDBACK
-              </span>
-            </div>
-            <h2 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
-              Customer Reviews &amp; Testimonials
+            <h2 className="text-[22px] font-semibold leading-tight sm:text-[27px] lg:text-[30px]">
+              What buyers say
             </h2>
-            <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-xl">
-              Real experiences from clients who trust Krishna Accessories for premium products and a reliable shopping experience.
+            <p className="num mt-1 text-[13px] text-ash">
+              4.9 out of 5, from 2,840 verified orders
             </p>
           </div>
 
-          {/* Rating Score & Navigation Controls */}
-          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-            <div className="flex items-center gap-2 rounded-full border border-gray-200/90 bg-white px-4 py-1.5 shadow-2xs">
-              <span className="flex items-center gap-0.5 text-xs text-amber-500">
-                {'★'.repeat(5)}
-              </span>
-              <span className="text-xs font-bold text-gray-800">
-                4.9 / 5 <span className="text-gray-400 font-normal hidden sm:inline">(2,840+ verified reviews)</span>
-              </span>
-            </div>
-
-            {/* Left / Right Navigation Buttons */}
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-4">
+            <span className="num text-[12px] text-ash">
+              {activeIndex + 1} / {reviews.length}
+            </span>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => scrollCarousel('left')}
+                onClick={() => scrollByCard('left')}
                 disabled={!canScrollLeft}
-                className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
                 aria-label="Previous review"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-line-strong text-ink transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-30"
               >
-                <ChevronLeftIcon className="w-4 h-4" />
+                <ChevronLeftIcon className="h-4 w-4" />
               </button>
               <button
                 type="button"
-                onClick={() => scrollCarousel('right')}
+                onClick={() => scrollByCard('right')}
                 disabled={!canScrollRight}
-                className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
                 aria-label="Next review"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-line-strong text-ink transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-30"
               >
-                <ChevronRightIcon className="w-4 h-4" />
+                <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
           </div>
         </div>
-      </Reveal>
 
-      {/* Carousel Track */}
-      <Reveal direction="up" delay={120}>
         <div
-          ref={carouselRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          className={`flex gap-4 sm:gap-5 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
-            isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          ref={trackRef}
+          className="-mx-5 mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 no-scrollbar sm:mx-0 sm:px-0"
         >
           {reviews.map((review, idx) => (
-            <div
-              key={review.id || review.name || idx}
-              className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[390px] snap-start flex flex-col justify-between rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.08)] hover:-translate-y-1 relative"
+            <figure
+              key={review.id || idx}
+              className="flex w-[280px] shrink-0 snap-start flex-col justify-between border border-line bg-paper p-6 sm:w-[340px]"
             >
               <div>
-                {/* Top Row: Stars + Category/Product Badge */}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1 text-sm text-amber-500">
-                    {'★'.repeat(review.rating || 5)}
-                  </div>
-                  {review.product && (
-                    <span className="truncate max-w-[190px] text-[10px] font-semibold text-neutral-800 bg-neutral-100 border border-neutral-200/80 rounded-full px-2.5 py-0.5">
-                      {review.product}
-                    </span>
-                  )}
+                <div className="flex items-center gap-0.5 text-ink" aria-label={`${review.rating || 5} out of 5`}>
+                  {Array.from({ length: review.rating || 5 }).map((_, i) => (
+                    <StarIcon key={i} className="h-3.5 w-3.5" filled={true} />
+                  ))}
                 </div>
 
-                {/* Review Quote Text */}
-                <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-700 font-normal">
-                  “{review.text}”
+                <blockquote className="mt-4 text-[14px] leading-relaxed text-ink">
+                  {review.text}
+                </blockquote>
+              </div>
+
+              <figcaption className="mt-6 border-t border-line pt-4">
+                <p className="text-[13px] font-semibold">{review.name}</p>
+                <p className="mt-0.5 text-[11.5px] text-ash">
+                  {review.location} · verified order · {review.date}
                 </p>
-              </div>
-
-              {/* Author Footer */}
-              <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="text-xs sm:text-[13.5px] font-bold text-gray-950">
-                      {review.name}
-                    </h3>
-                    <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
-                      <span>✓</span> Verified
-                    </span>
-                  </div>
-                  <p className="mt-0.5 text-[10px] sm:text-[11px] text-gray-400">
-                    {review.location}
-                  </p>
-                </div>
-
-                {/* Avatar Initial with Stylish Gradient */}
-                <span className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-[#111827] text-xs font-bold text-amber-300 border border-neutral-700 shadow-2xs shrink-0">
-                  {review.name.charAt(0)}
-                </span>
-              </div>
-            </div>
+                {review.product && (
+                  <p className="mt-2 text-[11.5px] text-mute">{review.product}</p>
+                )}
+              </figcaption>
+            </figure>
           ))}
         </div>
-      </Reveal>
 
-      {/* Slide Progress Indicator Dots */}
-      <div className="mt-4 flex items-center justify-center gap-1.5">
-        {reviews.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => scrollToIndex(i)}
-            aria-label={`Go to review ${i + 1}`}
-            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
-              i === activeIndex
-                ? 'w-7 bg-gray-950'
-                : 'w-1.5 bg-gray-300 hover:bg-gray-400'
-            }`}
-          />
-        ))}
       </div>
     </section>
   );
