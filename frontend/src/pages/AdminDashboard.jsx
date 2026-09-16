@@ -1353,24 +1353,25 @@ export default function AdminDashboard() {
         </header>
 
         {/* Section Sub-Navigation Tabs Bar */}
-        <div className="bg-[#FAF9F8] border-b border-zinc-200/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 mr-2 shrink-0">
-            {currentSectionObj.title}:
+        <div className="bg-[#FAF9F8] border-b border-zinc-200/80 px-4 sm:px-6 lg:px-8 py-2.5 overflow-x-auto flex items-center gap-2 no-scrollbar">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mr-1.5 shrink-0 select-none">
+            {currentSectionObj.title.toUpperCase()}:
           </span>
           {currentSectionObj.subItems.map((sub) => {
             const isSubActive = activeSubTab === sub.id;
             return (
               <button
                 key={sub.id}
+                type="button"
                 onClick={() => setActiveSubTab(sub.id)}
-                className={`rounded-lg px-3 py-1 text-xs font-medium transition whitespace-nowrap shrink-0 cursor-pointer ${isSubActive
-                  ? 'bg-zinc-900 text-white shadow-xs'
-                  : 'bg-white border border-zinc-200/80 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap shrink-0 flex items-center cursor-pointer ${isSubActive
+                  ? 'bg-[#18181b] text-white shadow-xs font-semibold'
+                  : 'bg-white border border-zinc-200/90 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-950 shadow-2xs'
                   }`}
               >
-                {sub.label}
+                <span>{sub.label}</span>
                 {sub.badge && (
-                  <span className={`ml-1.5 rounded-full px-1.5 py-0.2 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-100 text-zinc-600'}`}>
+                  <span className={`ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums ${isSubActive ? 'bg-zinc-800 text-zinc-200' : 'bg-zinc-100 text-zinc-600'}`}>
                     {sub.badge}
                   </span>
                 )}
@@ -1418,80 +1419,80 @@ export default function AdminDashboard() {
                 {/* 1. Revenue */}
                 <div
                   onClick={() => setActiveSubTab('revenue')}
-                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
+                  className={`rounded-xl border p-4 shadow-2xs cursor-pointer transition ${activeSubTab === 'revenue' ? 'bg-zinc-900 text-white border-zinc-900 shadow-md' : 'bg-white border-zinc-200/80 hover:border-zinc-400'}`}
                 >
-                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
-                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Revenue (GMV)</span>
-                    <span className="text-emerald-700 font-semibold text-[10px] flex items-center gap-0.5">
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className={`font-semibold uppercase tracking-wider text-[9.5px] ${activeSubTab === 'revenue' ? 'text-zinc-300' : 'text-zinc-400'}`}>Revenue (GMV)</span>
+                    <span className={`font-semibold text-[10px] flex items-center gap-0.5 ${activeSubTab === 'revenue' ? 'text-emerald-400' : 'text-emerald-700'}`}>
                       <TrendingUp className="h-3 w-3" /> +18.4%
                     </span>
                   </div>
-                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
+                  <p className={`text-lg sm:text-xl font-semibold tracking-tight truncate tabular-nums ${activeSubTab === 'revenue' ? 'text-white' : 'text-zinc-900'}`}>
                     ₹{totalRevenue.toLocaleString('en-IN')}
                   </p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">Gross processed volume</p>
+                  <p className={`text-[10px] mt-0.5 ${activeSubTab === 'revenue' ? 'text-zinc-400' : 'text-zinc-400'}`}>Gross processed volume</p>
                 </div>
 
                 {/* 2. Total Orders */}
                 <div
                   onClick={() => setActiveSubTab('orders')}
-                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
+                  className={`rounded-xl border p-4 shadow-2xs cursor-pointer transition ${activeSubTab === 'orders' ? 'bg-zinc-900 text-white border-zinc-900 shadow-md' : 'bg-white border-zinc-200/80 hover:border-zinc-400'}`}
                 >
-                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
-                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Total Orders</span>
-                    <span className="text-zinc-600 font-medium text-[10px]">{activeOrdersCount} in transit</span>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className={`font-semibold uppercase tracking-wider text-[9.5px] ${activeSubTab === 'orders' ? 'text-zinc-300' : 'text-zinc-400'}`}>Total Orders</span>
+                    <span className={`font-medium text-[10px] ${activeSubTab === 'orders' ? 'text-zinc-300' : 'text-zinc-600'}`}>{activeOrdersCount} in transit</span>
                   </div>
-                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
+                  <p className={`text-lg sm:text-xl font-semibold tracking-tight truncate tabular-nums ${activeSubTab === 'orders' ? 'text-white' : 'text-zinc-900'}`}>
                     {orders.length}
                   </p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">Completed & active</p>
+                  <p className={`text-[10px] mt-0.5 ${activeSubTab === 'orders' ? 'text-zinc-400' : 'text-zinc-400'}`}>Completed & active</p>
                 </div>
 
                 {/* 3. Products */}
                 <div
                   onClick={() => setActiveSubTab('products')}
-                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
+                  className={`rounded-xl border p-4 shadow-2xs cursor-pointer transition ${activeSubTab === 'products' ? 'bg-zinc-900 text-white border-zinc-900 shadow-md' : 'bg-white border-zinc-200/80 hover:border-zinc-400'}`}
                 >
-                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
-                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Catalog</span>
-                    <span className="text-zinc-500 font-medium text-[10px]">{categories.length} Depts</span>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className={`font-semibold uppercase tracking-wider text-[9.5px] ${activeSubTab === 'products' ? 'text-zinc-300' : 'text-zinc-400'}`}>Catalog</span>
+                    <span className={`font-medium text-[10px] ${activeSubTab === 'products' ? 'text-zinc-300' : 'text-zinc-500'}`}>{categories.length} Depts</span>
                   </div>
-                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
+                  <p className={`text-lg sm:text-xl font-semibold tracking-tight truncate tabular-nums ${activeSubTab === 'products' ? 'text-white' : 'text-zinc-900'}`}>
                     {products.length} Items
                   </p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">{brands.length} luxury brands</p>
+                  <p className={`text-[10px] mt-0.5 ${activeSubTab === 'products' ? 'text-zinc-400' : 'text-zinc-400'}`}>{brands.length} luxury brands</p>
                 </div>
 
                 {/* 4. Suppliers */}
                 <div
                   onClick={() => setActiveSubTab('suppliers')}
-                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
+                  className={`rounded-xl border p-4 shadow-2xs cursor-pointer transition ${activeSubTab === 'suppliers' ? 'bg-zinc-900 text-white border-zinc-900 shadow-md' : 'bg-white border-zinc-200/80 hover:border-zinc-400'}`}
                 >
-                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
-                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Suppliers</span>
-                    <span className={pendingSuppliers.length > 0 ? "text-amber-700 font-medium text-[10px]" : "text-emerald-700 font-medium text-[10px]"}>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className={`font-semibold uppercase tracking-wider text-[9.5px] ${activeSubTab === 'suppliers' ? 'text-zinc-300' : 'text-zinc-400'}`}>Suppliers</span>
+                    <span className={pendingSuppliers.length > 0 ? (activeSubTab === 'suppliers' ? "text-amber-300 font-medium text-[10px]" : "text-amber-700 font-medium text-[10px]") : (activeSubTab === 'suppliers' ? "text-emerald-400 font-medium text-[10px]" : "text-emerald-700 font-medium text-[10px]")}>
                       {pendingSuppliers.length > 0 ? `${pendingSuppliers.length} pending` : '✓ All Active'}
                     </span>
                   </div>
-                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
+                  <p className={`text-lg sm:text-xl font-semibold tracking-tight truncate tabular-nums ${activeSubTab === 'suppliers' ? 'text-white' : 'text-zinc-900'}`}>
                     {suppliers.length}
                   </p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">Approved partners</p>
+                  <p className={`text-[10px] mt-0.5 ${activeSubTab === 'suppliers' ? 'text-zinc-400' : 'text-zinc-400'}`}>Approved partners</p>
                 </div>
 
                 {/* 5. Total Users */}
                 <div
                   onClick={() => setActiveSubTab('users')}
-                  className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer col-span-2 sm:col-span-1 transition"
+                  className={`rounded-xl border p-4 shadow-2xs cursor-pointer col-span-2 sm:col-span-1 transition ${activeSubTab === 'users' ? 'bg-zinc-900 text-white border-zinc-900 shadow-md' : 'bg-white border-zinc-200/80 hover:border-zinc-400'}`}
                 >
-                  <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
-                    <span className="font-semibold uppercase tracking-wider text-[9.5px]">Users</span>
-                    <span className="text-zinc-500 font-medium text-[10px]">100% Verified</span>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className={`font-semibold uppercase tracking-wider text-[9.5px] ${activeSubTab === 'users' ? 'text-zinc-300' : 'text-zinc-400'}`}>Users</span>
+                    <span className={`font-medium text-[10px] ${activeSubTab === 'users' ? 'text-zinc-300' : 'text-zinc-500'}`}>100% Verified</span>
                   </div>
-                  <p className="text-lg sm:text-xl font-semibold text-zinc-900 tracking-tight truncate tabular-nums">
+                  <p className={`text-lg sm:text-xl font-semibold tracking-tight truncate tabular-nums ${activeSubTab === 'users' ? 'text-white' : 'text-zinc-900'}`}>
                     {users.length}
                   </p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">Customer profiles</p>
+                  <p className={`text-[10px] mt-0.5 ${activeSubTab === 'users' ? 'text-zinc-400' : 'text-zinc-400'}`}>Customer profiles</p>
                 </div>
 
               </div>
@@ -1667,6 +1668,308 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
+                </div>
+              )}
+
+              {/* Sub-item: Users in Dashboard */}
+              {activeSubTab === 'users' && (
+                <div className="space-y-4 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-zinc-900">Registered Customer Accounts ({users.length})</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5">Live customer profile records and access status.</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavSelect('people', 'users')}
+                      className="text-xs font-semibold text-zinc-900 hover:underline cursor-pointer self-start sm:self-auto"
+                    >
+                      Open in People &rarr;
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs min-w-[600px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="p-3">Customer Name</th>
+                          <th className="p-3">Email</th>
+                          <th className="p-3">Role</th>
+                          <th className="p-3">Orders</th>
+                          <th className="p-3">Status</th>
+                          <th className="p-3 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {users.map(u => (
+                          <tr key={u.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3 font-semibold text-zinc-900">{u.name}</td>
+                            <td className="p-3 text-zinc-600 font-mono text-[11.5px]">{u.email}</td>
+                            <td className="p-3"><span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-700">{u.role}</span></td>
+                            <td className="p-3 font-mono text-zinc-700">{u.ordersCount || 0}</td>
+                            <td className="p-3">
+                              <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${u.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'}`}>
+                                {u.status || 'Active'}
+                              </span>
+                            </td>
+                            <td className="p-3 text-right">
+                              <button
+                                onClick={() => {
+                                  toggleUserStatus(u.id);
+                                  showToast(`User ${u.name} status updated`);
+                                  refreshAll();
+                                }}
+                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                              >
+                                {u.status === 'Disabled' ? 'Activate' : 'Disable'}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-item: Suppliers in Dashboard */}
+              {activeSubTab === 'suppliers' && (
+                <div className="space-y-4 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-zinc-900">Vendor Partners & Suppliers ({suppliers.length})</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5">Approved and pending supplier accounts.</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavSelect('people', 'suppliers')}
+                      className="text-xs font-semibold text-zinc-900 hover:underline cursor-pointer self-start sm:self-auto"
+                    >
+                      Open in People &rarr;
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs min-w-[650px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="p-3">Vendor Name</th>
+                          <th className="p-3">Department</th>
+                          <th className="p-3">Email</th>
+                          <th className="p-3">Status</th>
+                          <th className="p-3 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {suppliers.map(s => (
+                          <tr key={s.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3 font-semibold text-zinc-900">{s.name}</td>
+                            <td className="p-3 text-zinc-600">{s.category}</td>
+                            <td className="p-3 font-mono text-zinc-700">{s.email}</td>
+                            <td className="p-3">
+                              <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${s.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'}`}>
+                                {s.status}
+                              </span>
+                            </td>
+                            <td className="p-3 text-right">
+                              {s.status === 'Pending Approval' ? (
+                                <button
+                                  onClick={() => {
+                                    approveSupplier(s.id);
+                                    showToast(`Vendor ${s.name} approved`);
+                                    refreshAll();
+                                  }}
+                                  className="rounded-md bg-emerald-700 hover:bg-emerald-800 text-white px-2.5 py-1 text-xs font-medium transition cursor-pointer"
+                                >
+                                  Approve
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    toggleSupplierStatus(s.id);
+                                    showToast(`Supplier status updated`);
+                                    refreshAll();
+                                  }}
+                                  className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                                >
+                                  {s.status === 'Active' ? 'Deactivate' : 'Activate'}
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-item: Products in Dashboard */}
+              {activeSubTab === 'products' && (
+                <div className="space-y-4 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-zinc-900">Products Catalog ({products.length} Items)</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5">Quick stock status and price controls.</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavSelect('catalog', 'products')}
+                      className="text-xs font-semibold text-zinc-900 hover:underline cursor-pointer self-start sm:self-auto"
+                    >
+                      Open Full Catalog &rarr;
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs min-w-[700px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="p-3">Product</th>
+                          <th className="p-3">Category</th>
+                          <th className="p-3">Price</th>
+                          <th className="p-3">Stock</th>
+                          <th className="p-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {products.slice(0, 8).map(p => (
+                          <tr key={p.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3">
+                              <div className="flex items-center gap-2.5">
+                                <img src={p.image || p.images?.[0]} alt="" className="h-9 w-9 rounded-md object-contain bg-zinc-50 border border-zinc-200 p-0.5 shrink-0" />
+                                <span className="font-semibold text-zinc-900 truncate max-w-xs">{p.name}</span>
+                              </div>
+                            </td>
+                            <td className="p-3 text-zinc-600">{p.category}</td>
+                            <td className="p-3 font-semibold text-zinc-900 tabular-nums">₹{Number(p.price).toLocaleString('en-IN')}</td>
+                            <td className="p-3">
+                              <span className={`font-mono font-semibold ${p.stock < 5 ? 'text-rose-700' : 'text-zinc-800'}`}>
+                                {p.stock} units
+                              </span>
+                            </td>
+                            <td className="p-3 text-right space-x-1.5 whitespace-nowrap">
+                              <button
+                                onClick={() => handleOpenEditProduct(p)}
+                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                              >
+                                Edit
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-item: Orders in Dashboard */}
+              {activeSubTab === 'orders' && (
+                <div className="space-y-4 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-zinc-900">Recent Store Orders ({orders.length})</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5">Order fulfillment and shipment pipeline.</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavSelect('commerce', 'orders')}
+                      className="text-xs font-semibold text-zinc-900 hover:underline cursor-pointer self-start sm:self-auto"
+                    >
+                      Open Full Orders &rarr;
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs min-w-[700px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="p-3">Order ID</th>
+                          <th className="p-3">Customer</th>
+                          <th className="p-3">Amount</th>
+                          <th className="p-3">Status</th>
+                          <th className="p-3 text-right">Details</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {orders.slice(0, 8).map(order => (
+                          <tr key={order.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3 font-mono font-semibold text-zinc-900">{order.id}</td>
+                            <td className="p-3 font-medium text-zinc-900">{order.customer?.firstName} {order.customer?.lastName}</td>
+                            <td className="p-3 font-semibold text-zinc-900 tabular-nums">₹{Number(order.total || 0).toLocaleString('en-IN')}</td>
+                            <td className="p-3">
+                              <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-zinc-100 text-zinc-700 border-zinc-200'}`}>
+                                {order.status}
+                              </span>
+                            </td>
+                            <td className="p-3 text-right">
+                              <button
+                                onClick={() => handleOpenOrderModal(order)}
+                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 px-2.5 py-1 text-[11px] font-medium transition cursor-pointer"
+                              >
+                                View
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-item: Recent Orders Feed in Overview */}
+              {activeSubTab === 'overview' && (
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                  <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                        Recent Store Transactions
+                      </h3>
+                      <p className="text-[11px] text-zinc-400 mt-0.5">Live orders awaiting processing or in transit.</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavSelect('commerce', 'orders')}
+                      className="text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                    >
+                      View All Orders &rarr;
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs min-w-[650px]">
+                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                        <tr>
+                          <th className="p-3">Order ID</th>
+                          <th className="p-3">Customer</th>
+                          <th className="p-3">Items</th>
+                          <th className="p-3">Amount</th>
+                          <th className="p-3">Status</th>
+                          <th className="p-3 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-100 font-normal">
+                        {orders.slice(0, 5).map(o => (
+                          <tr key={o.id} className="hover:bg-zinc-50/75">
+                            <td className="p-3 font-mono font-semibold text-zinc-900">{o.id}</td>
+                            <td className="p-3 text-zinc-900 font-medium">{o.customer?.firstName} {o.customer?.lastName}</td>
+                            <td className="p-3 text-zinc-500">{o.items?.length || 1} items</td>
+                            <td className="p-3 font-semibold text-zinc-900 tabular-nums">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
+                            <td className="p-3">
+                              <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${o.status === 'Delivered' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-zinc-100 text-zinc-700 border-zinc-200'}`}>
+                                {o.status}
+                              </span>
+                            </td>
+                            <td className="p-3 text-right">
+                              <button
+                                onClick={() => handleOpenOrderModal(o)}
+                                className="rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-700 transition cursor-pointer"
+                              >
+                                Inspect
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
 
