@@ -443,14 +443,7 @@ export default function AdminDashboard() {
       icon: LayoutDashboard,
       badge: unreadNotifs > 0 ? `${unreadNotifs}` : null,
       subItems: [
-        { id: 'overview', label: 'Overview' },
-        { id: 'users', label: 'Total Users' },
-        { id: 'suppliers', label: 'Suppliers' },
-        { id: 'products', label: 'Products' },
-        { id: 'orders', label: 'Orders' },
-        { id: 'revenue', label: 'Revenue' },
-        { id: 'pending', label: 'Pending Actions', badge: pendingSuppliers.length + returnRequests.length > 0 ? `${pendingSuppliers.length + returnRequests.length}` : null },
-        { id: 'charts', label: 'Sales Charts' }
+        { id: 'overview', label: 'Overview' }
       ]
     },
     {
@@ -1423,7 +1416,7 @@ export default function AdminDashboard() {
 
                 {/* 1. Revenue */}
                 <div
-                  onClick={() => setActiveSubTab('revenue')}
+                  onClick={() => setActiveSubTab('overview')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1440,7 +1433,7 @@ export default function AdminDashboard() {
 
                 {/* 2. Total Orders */}
                 <div
-                  onClick={() => setActiveSubTab('orders')}
+                  onClick={() => setActiveSubTab('overview')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1455,7 +1448,7 @@ export default function AdminDashboard() {
 
                 {/* 3. Products */}
                 <div
-                  onClick={() => setActiveSubTab('products')}
+                  onClick={() => setActiveSubTab('overview')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1470,7 +1463,7 @@ export default function AdminDashboard() {
 
                 {/* 4. Suppliers */}
                 <div
-                  onClick={() => setActiveSubTab('suppliers')}
+                  onClick={() => setActiveSubTab('overview')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1487,7 +1480,7 @@ export default function AdminDashboard() {
 
                 {/* 5. Total Users */}
                 <div
-                  onClick={() => setActiveSubTab('users')}
+                  onClick={() => setActiveSubTab('overview')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer col-span-2 sm:col-span-1 transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
