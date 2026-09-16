@@ -84,15 +84,6 @@ import {
   getVariants,
   saveVariant,
   deleteVariant,
-  getPromotions,
-  savePromotion,
-  deletePromotion,
-  getRoles,
-  saveRole,
-  getPermissionsMatrix,
-  updateRolePermission,
-  getShippingCarriers,
-  toggleCarrierStatus,
   getSystemConfig,
   saveSystemConfig,
   exportFullDatabaseBackup,
@@ -163,13 +154,9 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState(() => getUsers());
   const [notifications, setNotifications] = useState(() => getNotifications());
 
-  // Extended Advanced Stores State
+  // Extended Stores State
   const [subcategories, setSubcategories] = useState(() => getSubcategories());
   const [variants, setVariants] = useState(() => getVariants());
-  const [promotions, setPromotions] = useState(() => getPromotions());
-  const [roles, setRoles] = useState(() => getRoles());
-  const [permissionsMatrix, setPermissionsMatrix] = useState(() => getPermissionsMatrix());
-  const [shippingCarriers, setShippingCarriers] = useState(() => getShippingCarriers());
   const [systemConfig, setSystemConfigState] = useState(() => getSystemConfig());
 
   // Global & Local Search Filters
@@ -223,12 +210,6 @@ export default function AdminDashboard() {
   const [variantModalOpen, setVariantModalOpen] = useState(false);
   const [variantForm, setVariantForm] = useState({ productName: 'Rolex Submariner Date 41mm', attributeType: 'Dial Color', value: '', priceModifier: '', stock: '10', sku: '' });
 
-  const [promoModalOpen, setPromoModalOpen] = useState(false);
-  const [promoForm, setPromoForm] = useState({ title: '', code: '', discount: '20% Off', targetCategory: 'All Departments', bannerType: 'Hero Banner', startDate: 'Today', endDate: '30 Days' });
-
-  const [roleModalOpen, setRoleModalOpen] = useState(false);
-  const [roleForm, setRoleForm] = useState({ name: '', description: '', membersCount: '1' });
-
   // Add Vendor / Supplier Modal State
   const [supplierModalOpen, setSupplierModalOpen] = useState(false);
   const [supplierForm, setSupplierForm] = useState({
@@ -238,9 +219,6 @@ export default function AdminDashboard() {
     category: 'Fitness',
     address: 'Gujarat, India'
   });
-
-  const [newNotificationText, setNewNotificationText] = useState('');
-  const [newNotificationTitle, setNewNotificationTitle] = useState('');
 
   const [newCatInput, setNewCatInput] = useState('');
   const [newBrandInput, setNewBrandInput] = useState('');
@@ -333,10 +311,6 @@ export default function AdminDashboard() {
     setNotifications(getNotifications());
     setSubcategories(getSubcategories());
     setVariants(getVariants());
-    setPromotions(getPromotions());
-    setRoles(getRoles());
-    setPermissionsMatrix(getPermissionsMatrix());
-    setShippingCarriers(getShippingCarriers());
     setSystemConfigState(getSystemConfig());
     setCurrentUserState(getCurrentUser());
   };
@@ -355,8 +329,7 @@ export default function AdminDashboard() {
     const listeners = [
       'productsUpdated', 'categoriesUpdated', 'brandsUpdated', 'suppliersUpdated',
       'ordersUpdated', 'usersUpdated', 'notificationsUpdated', 'authUpdated',
-      'subcategoriesUpdated', 'variantsUpdated', 'promotionsUpdated',
-      'rolesUpdated', 'permissionsUpdated', 'shippingUpdated', 'systemConfigUpdated'
+      'subcategoriesUpdated', 'variantsUpdated', 'systemConfigUpdated'
     ];
     listeners.forEach(ev => window.addEventListener(ev, refreshAll));
     return () => {
@@ -436,14 +409,7 @@ export default function AdminDashboard() {
       icon: LayoutDashboard,
       badge: unreadNotifs > 0 ? `${unreadNotifs}` : null,
       subItems: [
-        { id: 'overview', label: 'Overview' },
-        { id: 'users', label: 'Total Users' },
-        { id: 'suppliers', label: 'Suppliers' },
-        { id: 'products', label: 'Products' },
-        { id: 'orders', label: 'Orders' },
-        { id: 'revenue', label: 'Revenue' },
-        { id: 'pending', label: 'Pending Actions', badge: pendingSuppliers.length + returnRequests.length > 0 ? `${pendingSuppliers.length + returnRequests.length}` : null },
-        { id: 'charts', label: 'Sales Charts' }
+        { id: 'overview', label: 'Overview' }
       ]
     },
     {
@@ -467,10 +433,8 @@ export default function AdminDashboard() {
       subItems: [
         { id: 'orders', label: 'Orders' },
         { id: 'payments', label: 'Payments' },
-        { id: 'returns', label: 'Returns', badge: returnRequests.length > 0 ? `${returnRequests.length}` : null },
-        { id: 'refunds', label: 'Refunds' },
-        { id: 'coupons', label: 'Coupons' },
-        { id: 'promotions', label: 'Promotions' }
+        { id: 'returns', label: 'Returns & Refunds', badge: returnRequests.length > 0 ? `${returnRequests.length}` : null },
+        { id: 'coupons', label: 'Coupons' }
       ]
     },
     {
@@ -480,9 +444,7 @@ export default function AdminDashboard() {
       badge: users.length,
       subItems: [
         { id: 'users', label: 'Customers' },
-        { id: 'suppliers', label: 'Suppliers' },
-        { id: 'roles', label: 'Roles' },
-        { id: 'permissions', label: 'Permissions' }
+        { id: 'suppliers', label: 'Suppliers' }
       ]
     },
     {
@@ -491,10 +453,7 @@ export default function AdminDashboard() {
       icon: Zap,
       badge: lowStockItems.length > 0 ? `${lowStockItems.length}` : null,
       subItems: [
-        { id: 'inventory', label: 'Inventory' },
-        { id: 'shipping', label: 'Shipping Carriers' },
-        { id: 'order-status', label: 'Order Status' },
-        { id: 'notifications', label: 'Broadcasts' }
+        { id: 'inventory', label: 'Inventory' }
       ]
     },
     {
@@ -502,23 +461,17 @@ export default function AdminDashboard() {
       title: 'Analytics',
       icon: BarChart3,
       subItems: [
-        { id: 'daily-sales', label: 'Daily Sales' },
-        { id: 'monthly-sales', label: 'Monthly Sales' },
-        { id: 'product-perf', label: 'Product Performance' },
-        { id: 'supplier-perf', label: 'Supplier GMV' },
-        { id: 'customer-reports', label: 'Customer Retention' }
+        { id: 'reports', label: 'Reports & Trends' }
       ]
     },
     {
       id: 'system',
-      title: 'System',
+      title: 'Settings',
       icon: Settings,
       subItems: [
-        { id: 'settings', label: 'Store Settings' },
-        { id: 'audit-logs', label: 'Audit Trail' },
-        { id: 'security', label: 'Security' },
-        { id: 'backups', label: 'Backups' },
-        { id: 'configuration', label: 'Gateways' }
+        { id: 'settings', label: 'Store Profile' },
+        { id: 'configuration', label: 'Gateways & APIs' },
+        { id: 'backups', label: 'Backups' }
       ]
     }
   ];
@@ -878,19 +831,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // Global Notification Broadcast
-  const handleBroadcastNotification = (e) => {
-    e.preventDefault();
-    if (!newNotificationTitle.trim() || !newNotificationText.trim()) return;
-    addNotification({
-      title: newNotificationTitle.trim(),
-      message: newNotificationText.trim(),
-      type: "announcement"
-    });
-    setNewNotificationTitle('');
-    setNewNotificationText('');
-    showToast('System announcement broadcasted');
-  };
+
 
   // Dedicated Admin Login Check
   if (!authenticatedAsAdmin) {
@@ -999,6 +940,7 @@ export default function AdminDashboard() {
               const isSectionActive = activeSection === sec.id;
               const isExpanded = expandedSections[sec.id];
               const IconComp = sec.icon;
+              const hasSubItems = sec.subItems.length > 1;
 
               return (
                 <div key={sec.id} className="space-y-0.5">
@@ -1006,7 +948,9 @@ export default function AdminDashboard() {
                   {/* Parent Section Header */}
                   <button
                     onClick={() => {
-                      if (sidebarCollapsed) {
+                      if (!hasSubItems) {
+                        handleNavSelect(sec.id, sec.subItems[0].id);
+                      } else if (sidebarCollapsed) {
                         setSidebarCollapsed(false);
                         toggleSectionExpand(sec.id);
                         handleNavSelect(sec.id, sec.subItems[0].id);
@@ -1036,13 +980,15 @@ export default function AdminDashboard() {
                             {sec.badge}
                           </span>
                         )}
-                        <ChevronDown className={`h-3 w-3 text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        {hasSubItems && (
+                          <ChevronDown className={`h-3 w-3 text-zinc-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        )}
                       </div>
                     )}
                   </button>
 
-                  {/* Sub-items List (Rendered when expanded) */}
-                  {!sidebarCollapsed && isExpanded && (
+                  {/* Sub-items List (Rendered when expanded & has multiple sub items) */}
+                  {!sidebarCollapsed && isExpanded && hasSubItems && (
                     <div className="ml-4 pl-3 border-l border-zinc-800/80 space-y-0.5 pt-0.5 pb-1">
                       {sec.subItems.map((sub) => {
                         const isSubActive = isSectionActive && activeSubTab === sub.id;
@@ -1172,8 +1118,12 @@ export default function AdminDashboard() {
               <span className="text-zinc-400 shrink-0">Admin</span>
               <span className="text-zinc-300 shrink-0">/</span>
               <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
-              <span className="text-zinc-300 shrink-0">/</span>
-              <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
+              {currentSectionObj.subItems.length > 1 && (
+                <>
+                  <span className="text-zinc-300 shrink-0">/</span>
+                  <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -1311,11 +1261,11 @@ export default function AdminDashboard() {
                     <span>Store Settings</span>
                   </button>
                   <button
-                    onClick={() => { handleNavSelect('system', 'audit-logs'); setUserDropdownOpen(false); }}
+                    onClick={() => { handleNavSelect('system', 'configuration'); setUserDropdownOpen(false); }}
                     className="w-full text-left rounded-lg px-2.5 py-1.5 text-zinc-700 hover:bg-zinc-100 transition cursor-pointer flex items-center gap-2"
                   >
-                    <FileText className="h-3.5 w-3.5 text-zinc-400" />
-                    <span>Audit Trail</span>
+                    <SlidersHorizontal className="h-3.5 w-3.5 text-zinc-400" />
+                    <span>APIs & Gateways</span>
                   </button>
                   <div className="border-t border-zinc-100 pt-1 mt-1">
                     <button
@@ -1334,38 +1284,40 @@ export default function AdminDashboard() {
 
         </header>
 
-        {/* Section Sub-Navigation Tabs Bar */}
-        <div className="border-b border-zinc-200/80 bg-[#FAF9F8] px-4 sm:px-6 lg:px-8 py-2.5">
-          <div className="overflow-x-auto">
-            <div className="inline-flex min-w-max items-center gap-1.5 rounded-xl border border-zinc-200 bg-white p-1 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-              <span className="mr-1 shrink-0 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
-                {currentSectionObj.title}:
-              </span>
-              {currentSectionObj.subItems.map((sub) => {
-                const isSubActive = activeSubTab === sub.id;
-                return (
-                  <button
-                    key={sub.id}
-                    onClick={() => setActiveSubTab(sub.id)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150 whitespace-nowrap shrink-0 cursor-pointer border ${isSubActive
-                      ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm'
-                      : 'border-transparent bg-zinc-50 text-zinc-600 hover:border-zinc-200 hover:bg-white hover:text-zinc-900'
-                      }`}
-                  >
-                    <span className="inline-flex items-center gap-1.5">
-                      {sub.label}
-                      {sub.badge && (
-                        <span className={`inline-flex min-w-[1.05rem] items-center justify-center rounded-full px-1 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-200 text-zinc-700'}`}>
-                          {sub.badge}
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
+        {/* Section Sub-Navigation Tabs Bar (Only shown for multi-tab sections) */}
+        {currentSectionObj.subItems.length > 1 && (
+          <div className="border-b border-zinc-200/80 bg-[#FAF9F8] px-4 sm:px-6 lg:px-8 py-2.5">
+            <div className="overflow-x-auto">
+              <div className="inline-flex min-w-max items-center gap-1.5 rounded-xl border border-zinc-200 bg-white p-1 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                <span className="mr-1 shrink-0 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                  {currentSectionObj.title}:
+                </span>
+                {currentSectionObj.subItems.map((sub) => {
+                  const isSubActive = activeSubTab === sub.id;
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => setActiveSubTab(sub.id)}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150 whitespace-nowrap shrink-0 cursor-pointer border ${isSubActive
+                        ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm'
+                        : 'border-transparent bg-zinc-50 text-zinc-600 hover:border-zinc-200 hover:bg-white hover:text-zinc-900'
+                        }`}
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        {sub.label}
+                        {sub.badge && (
+                          <span className={`inline-flex min-w-[1.05rem] items-center justify-center rounded-full px-1 text-[9px] font-semibold ${isSubActive ? 'bg-zinc-700 text-zinc-100' : 'bg-zinc-200 text-zinc-700'}`}>
+                            {sub.badge}
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* ==========================================
             3. MAIN BODY CONTENT (ALL SUB-VIEWS)
@@ -1405,7 +1357,7 @@ export default function AdminDashboard() {
 
                 {/* 1. Revenue */}
                 <div
-                  onClick={() => setActiveSubTab('revenue')}
+                  onClick={() => handleNavSelect('commerce', 'payments')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1422,7 +1374,7 @@ export default function AdminDashboard() {
 
                 {/* 2. Total Orders */}
                 <div
-                  onClick={() => setActiveSubTab('orders')}
+                  onClick={() => handleNavSelect('commerce', 'orders')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1437,7 +1389,7 @@ export default function AdminDashboard() {
 
                 {/* 3. Products */}
                 <div
-                  onClick={() => setActiveSubTab('products')}
+                  onClick={() => handleNavSelect('catalog', 'products')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1452,7 +1404,7 @@ export default function AdminDashboard() {
 
                 {/* 4. Suppliers */}
                 <div
-                  onClick={() => setActiveSubTab('suppliers')}
+                  onClick={() => handleNavSelect('people', 'suppliers')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1469,7 +1421,7 @@ export default function AdminDashboard() {
 
                 {/* 5. Total Users */}
                 <div
-                  onClick={() => setActiveSubTab('users')}
+                  onClick={() => handleNavSelect('people', 'users')}
                   className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs hover:border-zinc-400 cursor-pointer col-span-2 sm:col-span-1 transition"
                 >
                   <div className="flex items-center justify-between text-zinc-400 text-xs mb-1">
@@ -1484,179 +1436,175 @@ export default function AdminDashboard() {
 
               </div>
 
-              {/* Sub-item: Pending Actions Highlight */}
-              {(activeSubTab === 'overview' || activeSubTab === 'pending') && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                      Pending Governance Actions ({pendingSuppliers.length + returnRequests.length + lowStockItems.length})
-                    </h3>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    {/* Pending Suppliers */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            <Users className="h-3.5 w-3.5 text-zinc-500" />
-                            <span>Vendor Onboarding</span>
-                          </span>
-                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
-                            {pendingSuppliers.length} Pending
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">
-                          {pendingSuppliers.length > 0
-                            ? `${pendingSuppliers.map(s => s.name).join(', ')} awaiting catalog publishing authorization.`
-                            : 'All supplier credentials and trade licenses are currently approved.'}
-                        </p>
-                      </div>
-                      {pendingSuppliers.length > 0 && (
-                        <button
-                          onClick={() => handleNavSelect('people', 'suppliers')}
-                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
-                        >
-                          Review Vendor Documents &rarr;
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Pending Returns */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            <RotateCcw className="h-3.5 w-3.5 text-zinc-500" />
-                            <span>Return & RMA Requests</span>
-                          </span>
-                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
-                            {returnRequests.length} Pending
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">
-                          {returnRequests.length > 0
-                            ? `${returnRequests.length} customer return requests awaiting warehouse RMA decision.`
-                            : 'No customer return requests currently pending inspection.'}
-                        </p>
-                      </div>
-                      {returnRequests.length > 0 && (
-                        <button
-                          onClick={() => handleNavSelect('commerce', 'returns')}
-                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
-                        >
-                          Review RMA Returns &rarr;
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Low Stock Warnings */}
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
-                            <span>Low Inventory Alerts</span>
-                          </span>
-                          <span className="text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
-                            {lowStockItems.length} Low
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">
-                          {lowStockItems.length > 0
-                            ? `${lowStockItems.length} items have less than 5 units left in warehouse bins.`
-                            : 'All product inventories are above reorder safety thresholds.'}
-                        </p>
-                      </div>
-                      {lowStockItems.length > 0 && (
-                        <button
-                          onClick={() => handleNavSelect('operations', 'inventory')}
-                          className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
-                        >
-                          Replenish Stock Ledger &rarr;
-                        </button>
-                      )}
-                    </div>
-                  </div>
+              {/* Pending Actions Highlight */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                    Pending Governance Actions ({pendingSuppliers.length + returnRequests.length + lowStockItems.length})
+                  </h3>
                 </div>
-              )}
 
-              {/* Sub-item: Sales Charts */}
-              {(activeSubTab === 'overview' || activeSubTab === 'charts' || activeSubTab === 'revenue') && (
-                <div className="grid gap-6 lg:grid-cols-3">
-
-                  {/* Revenue Trend Chart */}
-                  <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
-                      <div>
-                        <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                          Revenue Performance & Monthly Growth
-                        </h3>
-                        <p className="text-[11px] text-zinc-400 mt-0.5">Processed GMV breakdown in INR (₹)</p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {/* Pending Suppliers */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                          <Users className="h-3.5 w-3.5 text-zinc-500" />
+                          <span>Vendor Onboarding</span>
+                        </span>
+                        <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
+                          {pendingSuppliers.length} Pending
+                        </span>
                       </div>
-                      <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full self-start sm:self-auto tabular-nums">
-                        AOV: ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
-                      </span>
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {pendingSuppliers.length > 0
+                          ? `${pendingSuppliers.map(s => s.name).join(', ')} awaiting catalog publishing authorization.`
+                          : 'All supplier credentials and trade licenses are currently approved.'}
+                      </p>
                     </div>
-
-                    <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-4 px-2">
-                      {[
-                        { month: 'Apr', amount: 84000, height: '40%' },
-                        { month: 'May', amount: 112000, height: '55%' },
-                        { month: 'Jun', amount: 145000, height: '70%' },
-                        { month: 'Jul', amount: 168000, height: '80%' },
-                        { month: 'Aug', amount: 195000, height: '92%' },
-                        { month: 'Sep', amount: totalRevenue, height: '100%', active: true }
-                      ].map(bar => (
-                        <div key={bar.month} className="flex flex-col items-center gap-1.5 h-full justify-end group min-w-0">
-                          <span className="text-[9px] font-semibold font-mono text-zinc-600 opacity-0 group-hover:opacity-100 transition truncate">
-                            ₹{(bar.amount / 1000).toFixed(0)}k
-                          </span>
-                          <div
-                            style={{ height: bar.height }}
-                            className={`w-full rounded-t-lg transition-all duration-300 ${bar.active ? 'bg-zinc-900' : 'bg-zinc-200 hover:bg-zinc-300'
-                              }`}
-                          />
-                          <span className={`text-[10.5px] font-medium truncate ${bar.active ? 'text-zinc-950 font-semibold' : 'text-zinc-400'}`}>
-                            {bar.month}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Category Distribution */}
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
-                        Department Share
-                      </h3>
-                      <button onClick={() => handleNavSelect('catalog', 'categories')} className="text-xs font-semibold text-zinc-600 hover:text-zinc-950 cursor-pointer">
-                        Manage
+                    {pendingSuppliers.length > 0 && (
+                      <button
+                        onClick={() => handleNavSelect('people', 'suppliers')}
+                        className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                      >
+                        Review Vendor Documents &rarr;
                       </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {categories.slice(0, 5).map(cat => {
-                        const count = products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
-                        const pct = Math.round((count / Math.max(1, products.length)) * 100);
-                        return (
-                          <div key={cat} className="space-y-1">
-                            <div className="flex justify-between text-xs">
-                              <span className="font-medium text-zinc-800">{cat}</span>
-                              <span className="text-zinc-400 font-mono text-[11px]">{count} ({pct}%)</span>
-                            </div>
-                            <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-                              <div style={{ width: `${pct}%` }} className="h-full bg-zinc-800 rounded-full" />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    )}
                   </div>
 
+                  {/* Pending Returns */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                          <RotateCcw className="h-3.5 w-3.5 text-zinc-500" />
+                          <span>Return & RMA Requests</span>
+                        </span>
+                        <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
+                          {returnRequests.length} Pending
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {returnRequests.length > 0
+                          ? `${returnRequests.length} customer return requests awaiting warehouse RMA decision.`
+                          : 'No customer return requests currently pending inspection.'}
+                      </p>
+                    </div>
+                    {returnRequests.length > 0 && (
+                      <button
+                        onClick={() => handleNavSelect('commerce', 'returns')}
+                        className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                      >
+                        Review RMA Returns &rarr;
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Low Stock Warnings */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
+                          <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
+                          <span>Low Inventory Alerts</span>
+                        </span>
+                        <span className="text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
+                          {lowStockItems.length} Low
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        {lowStockItems.length > 0
+                          ? `${lowStockItems.length} items have less than 5 units left in warehouse bins.`
+                          : 'All product inventories are above reorder safety thresholds.'}
+                      </p>
+                    </div>
+                    {lowStockItems.length > 0 && (
+                      <button
+                        onClick={() => handleNavSelect('operations', 'inventory')}
+                        className="mt-3 text-left text-xs font-semibold text-zinc-900 hover:underline cursor-pointer"
+                      >
+                        Replenish Stock Ledger &rarr;
+                      </button>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
+
+              {/* Sales & Category Distribution Charts */}
+              <div className="grid gap-6 lg:grid-cols-3">
+
+                {/* Revenue Trend Chart */}
+                <div className="lg:col-span-2 rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+                    <div>
+                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                        Revenue Performance & Monthly Growth
+                      </h3>
+                      <p className="text-[11px] text-zinc-400 mt-0.5">Processed GMV breakdown in INR (₹)</p>
+                    </div>
+                    <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 rounded-full self-start sm:self-auto tabular-nums">
+                      AOV: ₹{Math.round(totalRevenue / Math.max(1, orders.length)).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-4 px-2">
+                    {[
+                      { month: 'Apr', amount: 84000, height: '40%' },
+                      { month: 'May', amount: 112000, height: '55%' },
+                      { month: 'Jun', amount: 145000, height: '70%' },
+                      { month: 'Jul', amount: 168000, height: '80%' },
+                      { month: 'Aug', amount: 195000, height: '92%' },
+                      { month: 'Sep', amount: totalRevenue, height: '100%', active: true }
+                    ].map(bar => (
+                      <div key={bar.month} className="flex flex-col items-center gap-1.5 h-full justify-end group min-w-0">
+                        <span className="text-[9px] font-semibold font-mono text-zinc-600 opacity-0 group-hover:opacity-100 transition truncate">
+                          ₹{(bar.amount / 1000).toFixed(0)}k
+                        </span>
+                        <div
+                          style={{ height: bar.height }}
+                          className={`w-full rounded-t-lg transition-all duration-300 ${bar.active ? 'bg-zinc-900' : 'bg-zinc-200 hover:bg-zinc-300'
+                            }`}
+                        />
+                        <span className={`text-[10.5px] font-medium truncate ${bar.active ? 'text-zinc-950 font-semibold' : 'text-zinc-400'}`}>
+                          {bar.month}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Category Distribution */}
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
+                  <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">
+                      Department Share
+                    </h3>
+                    <button onClick={() => handleNavSelect('catalog', 'categories')} className="text-xs font-semibold text-zinc-600 hover:text-zinc-950 cursor-pointer">
+                      Manage
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {categories.slice(0, 5).map(cat => {
+                      const count = products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length;
+                      const pct = Math.round((count / Math.max(1, products.length)) * 100);
+                      return (
+                        <div key={cat} className="space-y-1">
+                          <div className="flex justify-between text-xs">
+                            <span className="font-medium text-zinc-800">{cat}</span>
+                            <span className="text-zinc-400 font-mono text-[11px]">{count} ({pct}%)</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                            <div style={{ width: `${pct}%` }} className="h-full bg-zinc-800 rounded-full" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+              </div>
 
             </div>
           )}
@@ -2255,108 +2203,123 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Sub-item: Returns */}
+              {/* Sub-item: Returns & Refunds */}
               {activeSubTab === 'returns' && (
-                <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Customer Returns & RMA
-                      </h1>
-                      <p className="text-xs text-zinc-500 mt-0.5">Review inspection notes, return conditions, and authorize reverse logistics.</p>
+                <div className="space-y-8">
+                  {/* Section 1: Active Return Requests */}
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                          Customer Returns & RMA Requests
+                        </h1>
+                        <p className="text-xs text-zinc-500 mt-0.5">Review return conditions, inspection notes, and authorize refunds.</p>
+                      </div>
+                    </div>
+
+                    <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
+                      <table className="w-full text-left text-xs min-w-[750px]">
+                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                          <tr>
+                            <th className="p-3.5">Order Ref</th>
+                            <th className="p-3.5">Customer Details</th>
+                            <th className="p-3.5">Return Reason & Notes</th>
+                            <th className="p-3.5">Amount</th>
+                            <th className="p-3.5">Status</th>
+                            <th className="p-3.5 text-right">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-100 font-normal">
+                          {orders.filter(o => o.status === 'Return Requested' || o.returnRequest).length === 0 ? (
+                            <tr>
+                              <td colSpan={6} className="p-8 text-center text-xs text-zinc-400">
+                                No active return requests.
+                              </td>
+                            </tr>
+                          ) : (
+                            orders.filter(o => o.status === 'Return Requested' || o.returnRequest).map(order => (
+                              <tr key={order.id} className="hover:bg-zinc-50/75">
+                                <td className="p-3.5 font-mono font-semibold text-zinc-900">{order.id}</td>
+                                <td className="p-3.5">
+                                  <span className="font-medium text-zinc-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
+                                  <span className="text-[10px] text-zinc-400">{order.customer?.city}</span>
+                                </td>
+                                <td className="p-3.5">
+                                  <p className="font-medium text-zinc-900">{order.returnRequest?.reason || 'Exchange Requested'}</p>
+                                  <p className="text-[10.5px] text-zinc-500">Condition: {order.returnRequest?.condition || 'Inspected'}</p>
+                                </td>
+                                <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{order.total?.toLocaleString('en-IN')}</td>
+                                <td className="p-3.5">
+                                  <span className="rounded-full bg-purple-50 text-purple-800 border border-purple-200 px-2.5 py-0.5 text-[10px] font-medium">
+                                    {order.status}
+                                  </span>
+                                </td>
+                                <td className="p-3.5 text-right">
+                                  <button
+                                    onClick={() => handleOpenAdminReturnModal(order)}
+                                    className="rounded-md bg-zinc-900 hover:bg-black text-white px-3 py-1 text-xs font-medium transition shadow-xs cursor-pointer"
+                                  >
+                                    Review & Refund
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
-                    <table className="w-full text-left text-xs min-w-[750px]">
-                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                        <tr>
-                          <th className="p-3.5">Order Ref</th>
-                          <th className="p-3.5">Customer Details</th>
-                          <th className="p-3.5">Return Reason & Notes</th>
-                          <th className="p-3.5">Amount</th>
-                          <th className="p-3.5">Status</th>
-                          <th className="p-3.5 text-right">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-100 font-normal">
-                        {orders.filter(o => o.status === 'Return Requested' || o.returnRequest).map(order => (
-                          <tr key={order.id} className="hover:bg-zinc-50/75">
-                            <td className="p-3.5 font-mono font-semibold text-zinc-900">{order.id}</td>
-                            <td className="p-3.5">
-                              <span className="font-medium text-zinc-900 block">{order.customer?.firstName} {order.customer?.lastName}</span>
-                              <span className="text-[10px] text-zinc-400">{order.customer?.city}</span>
-                            </td>
-                            <td className="p-3.5">
-                              <p className="font-medium text-zinc-900">{order.returnRequest?.reason || 'Exchange Requested'}</p>
-                              <p className="text-[10.5px] text-zinc-500">Condition: {order.returnRequest?.condition || 'Inspected'}</p>
-                            </td>
-                            <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{order.total?.toLocaleString('en-IN')}</td>
-                            <td className="p-3.5">
-                              <span className="rounded-full bg-purple-50 text-purple-800 border border-purple-200 px-2.5 py-0.5 text-[10px] font-medium">
-                                {order.status}
-                              </span>
-                            </td>
-                            <td className="p-3.5 text-right">
-                              <button
-                                onClick={() => handleOpenAdminReturnModal(order)}
-                                className="rounded-md bg-zinc-900 hover:bg-black text-white px-3 py-1 text-xs font-medium transition shadow-xs cursor-pointer"
-                              >
-                                Review & Refund
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Refunds */}
-              {activeSubTab === 'refunds' && (
-                <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  {/* Section 2: Settled Refunds Ledger */}
+                  <div className="space-y-4 pt-2 border-t border-zinc-200">
                     <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Refunds Disbursement Ledger
-                      </h1>
-                      <p className="text-xs text-zinc-500 mt-0.5">Track refunded invoices and banking transaction IDs.</p>
+                      <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+                        Refunds Disbursement Ledger ({refundsList.length})
+                      </h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">Historical record of completed refunds and transaction references.</p>
                     </div>
-                  </div>
 
-                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
-                    <table className="w-full text-left text-xs min-w-[700px]">
-                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                        <tr>
-                          <th className="p-3.5">Refund Ref</th>
-                          <th className="p-3.5">Order ID</th>
-                          <th className="p-3.5">Customer & Mode</th>
-                          <th className="p-3.5">Refund Amount</th>
-                          <th className="p-3.5 text-right">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-100 font-normal">
-                        {refundsList.map(o => (
-                          <tr key={o.id} className="hover:bg-zinc-50/75">
-                            <td className="p-3.5 font-mono font-semibold text-zinc-900">
-                              {o.refundDetails?.transactionId || `REF-${o.id.replace(/[^0-9]/g, '')}`}
-                            </td>
-                            <td className="p-3.5 font-mono text-zinc-700">{o.id}</td>
-                            <td className="p-3.5">
-                              <span className="font-medium text-zinc-900 block">{o.customer?.firstName} {o.customer?.lastName}</span>
-                              <span className="text-[10.5px] text-zinc-500">{o.paymentMethod}</span>
-                            </td>
-                            <td className="p-3.5 font-semibold text-emerald-800 tabular-nums">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
-                            <td className="p-3.5 text-right">
-                              <span className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-medium">
-                                Settled
-                              </span>
-                            </td>
+                    <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
+                      <table className="w-full text-left text-xs min-w-[700px]">
+                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                          <tr>
+                            <th className="p-3.5">Refund Ref</th>
+                            <th className="p-3.5">Order ID</th>
+                            <th className="p-3.5">Customer & Mode</th>
+                            <th className="p-3.5">Refund Amount</th>
+                            <th className="p-3.5 text-right">Status</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-100 font-normal">
+                          {refundsList.length === 0 ? (
+                            <tr>
+                              <td colSpan={5} className="p-8 text-center text-xs text-zinc-400">
+                                No settled refunds recorded yet.
+                              </td>
+                            </tr>
+                          ) : (
+                            refundsList.map(o => (
+                              <tr key={o.id} className="hover:bg-zinc-50/75">
+                                <td className="p-3.5 font-mono font-semibold text-zinc-900">
+                                  {o.refundDetails?.transactionId || `REF-${o.id.replace(/[^0-9]/g, '')}`}
+                                </td>
+                                <td className="p-3.5 font-mono text-zinc-700">{o.id}</td>
+                                <td className="p-3.5">
+                                  <span className="font-medium text-zinc-900 block">{o.customer?.firstName} {o.customer?.lastName}</span>
+                                  <span className="text-[10.5px] text-zinc-500">{o.paymentMethod}</span>
+                                </td>
+                                <td className="p-3.5 font-semibold text-emerald-800 tabular-nums">₹{Number(o.total || 0).toLocaleString('en-IN')}</td>
+                                <td className="p-3.5 text-right">
+                                  <span className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-medium">
+                                    Settled
+                                  </span>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               )}
@@ -2436,52 +2399,6 @@ export default function AdminDashboard() {
                             onClick={() => setCoupons(prev => prev.filter(cp => cp.code !== c.code))}
                             className="text-xs font-medium text-rose-600 hover:underline cursor-pointer"
                           >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Promotions */}
-              {activeSubTab === 'promotions' && (
-                <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Promotions & Campaign Banners
-                      </h1>
-                      <p className="text-xs text-zinc-500 mt-0.5">Seasonal sales, flash discounts, and hero storefront banners.</p>
-                    </div>
-                    <button
-                      onClick={() => setPromoModalOpen(true)}
-                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      <span>Create Promotion</span>
-                    </button>
-                  </div>
-
-                  <div className="grid gap-3.5 sm:grid-cols-2">
-                    {promotions.map(p => (
-                      <div key={p.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono font-semibold text-xs bg-zinc-100 text-zinc-900 border border-zinc-200 px-2 py-0.5 rounded-md">
-                            {p.code}
-                          </span>
-                          <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                            {p.status}
-                          </span>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-zinc-900 text-sm">{p.title}</h4>
-                          <p className="text-xs font-medium text-zinc-600 mt-0.5">{p.discount} &bull; {p.targetCategory}</p>
-                        </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-zinc-100 text-[10.5px] text-zinc-400">
-                          <span>{p.impressions.toLocaleString()} views &bull; {p.clicks.toLocaleString()} clicks</span>
-                          <button onClick={() => deletePromotion(p.id)} className="text-rose-600 font-medium hover:underline cursor-pointer">
                             Delete
                           </button>
                         </div>
@@ -2643,109 +2560,6 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Sub-item: Roles */}
-              {activeSubTab === 'roles' && (
-                <div className="space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                        Governance Roles ({roles.length})
-                      </h1>
-                      <p className="text-xs text-zinc-500 mt-0.5">Platform access levels and functional permissions.</p>
-                    </div>
-                    <button
-                      onClick={() => setRoleModalOpen(true)}
-                      className="rounded-lg bg-zinc-900 hover:bg-black px-3.5 py-1.5 text-xs font-medium text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      <span>Add Role</span>
-                    </button>
-                  </div>
-
-                  <div className="grid gap-3.5 sm:grid-cols-2">
-                    {roles.map(r => (
-                      <div key={r.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs space-y-2.5">
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-zinc-900 text-sm">{r.name}</span>
-                          <span className="text-[10px] font-medium bg-zinc-100 text-zinc-700 px-2 py-0.5 rounded-md">
-                            {r.membersCount} Assigned
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed">{r.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Permissions Matrix */}
-              {activeSubTab === 'permissions' && (
-                <div className="space-y-5">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Permissions Matrix
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Granular feature capabilities mapped to platform roles.</p>
-                  </div>
-
-                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
-                    <table className="w-full text-left text-xs min-w-[650px]">
-                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                        <tr>
-                          <th className="p-3.5">Capability / Permission</th>
-                          <th className="p-3.5 text-center">Super Admin</th>
-                          <th className="p-3.5 text-center">Catalog Ops</th>
-                          <th className="p-3.5 text-center">Finance Lead</th>
-                          <th className="p-3.5 text-center">Support</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-100 font-normal">
-                        {permissionsMatrix.map(perm => (
-                          <tr key={perm.id} className="hover:bg-zinc-50/75">
-                            <td className="p-3.5">
-                              <span className="font-medium text-zinc-900 block">{perm.capability}</span>
-                              <span className="text-[10.5px] text-zinc-400">{perm.category}</span>
-                            </td>
-                            <td className="p-3.5 text-center">
-                              <input
-                                type="checkbox"
-                                checked={perm.superAdmin}
-                                onChange={e => updateRolePermission(perm.id, 'superAdmin', e.target.checked)}
-                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
-                              />
-                            </td>
-                            <td className="p-3.5 text-center">
-                              <input
-                                type="checkbox"
-                                checked={perm.catalogManager}
-                                onChange={e => updateRolePermission(perm.id, 'catalogManager', e.target.checked)}
-                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
-                              />
-                            </td>
-                            <td className="p-3.5 text-center">
-                              <input
-                                type="checkbox"
-                                checked={perm.financeLead}
-                                onChange={e => updateRolePermission(perm.id, 'financeLead', e.target.checked)}
-                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
-                              />
-                            </td>
-                            <td className="p-3.5 text-center">
-                              <input
-                                type="checkbox"
-                                checked={perm.supportAgent}
-                                onChange={e => updateRolePermission(perm.id, 'supportAgent', e.target.checked)}
-                                className="h-4 w-4 rounded border-zinc-300 text-zinc-900 cursor-pointer"
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
             </div>
           )}
 
@@ -2814,117 +2628,6 @@ export default function AdminDashboard() {
                       </tbody>
                     </table>
                   </div>
-                </div>
-              )}
-
-              {/* Sub-item: Shipping */}
-              {activeSubTab === 'shipping' && (
-                <div className="space-y-5">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Logistics Carriers & SLAs
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Configure integrated express delivery carriers.</p>
-                  </div>
-
-                  <div className="grid gap-3.5 sm:grid-cols-2">
-                    {shippingCarriers.map(c => (
-                      <div key={c.id} className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Truck className="h-4 w-4 text-zinc-600" />
-                            <h4 className="font-semibold text-zinc-900 text-sm">{c.name}</h4>
-                          </div>
-                          <button
-                            onClick={() => {
-                              toggleCarrierStatus(c.id);
-                              refreshAll();
-                              showToast('Carrier status updated');
-                            }}
-                            className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border cursor-pointer ${c.status === 'Active' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-zinc-100 text-zinc-600 border-zinc-200'
-                              }`}
-                          >
-                            {c.status}
-                          </button>
-                        </div>
-                        <div className="text-xs text-zinc-500 space-y-1">
-                          <p><strong>Tracking Format:</strong> <span className="font-mono">{c.trackingFormat}</span></p>
-                          <p><strong>Delivery SLA:</strong> {c.sla}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Order Status Distribution */}
-              {activeSubTab === 'order-status' && (
-                <div className="space-y-5">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Order Fulfillment Pipeline
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Live distribution across delivery stages.</p>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-4">
-                    {[
-                      { stage: 'Confirmed', count: orders.filter(o => o.status === 'Confirmed').length, color: 'border-zinc-300' },
-                      { stage: 'Processing', count: orders.filter(o => o.status === 'Processing').length, color: 'border-zinc-300' },
-                      { stage: 'Shipped', count: orders.filter(o => o.status === 'Shipped').length, color: 'border-sky-300' },
-                      { stage: 'Delivered', count: orders.filter(o => o.status === 'Delivered').length, color: 'border-emerald-300' }
-                    ].map(st => (
-                      <div key={st.stage} className={`rounded-xl border ${st.color} bg-white p-4 shadow-2xs`}>
-                        <span className="text-[10px] font-semibold uppercase text-zinc-400">{st.stage}</span>
-                        <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{st.count}</p>
-                        <p className="text-[10.5px] text-zinc-400 mt-0.5">Active Consignments</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Notifications */}
-              {activeSubTab === 'notifications' && (
-                <div className="space-y-5">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Platform Broadcasts & Alerts
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Publish global announcements to all store administrators and customers.</p>
-                  </div>
-
-                  <form onSubmit={handleBroadcastNotification} className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3.5 max-w-xl">
-                    <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">+ Send Broadcast</h3>
-                    <div>
-                      <label className="text-xs font-medium text-zinc-700 block mb-1">Title *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Scheduled Maintenance Window"
-                        value={newNotificationTitle}
-                        onChange={e => setNewNotificationTitle(e.target.value)}
-                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium outline-none focus:bg-white focus:border-zinc-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-medium text-zinc-700 block mb-1">Message *</label>
-                      <textarea
-                        rows={2}
-                        required
-                        placeholder="Announcement message content..."
-                        value={newNotificationText}
-                        onChange={e => setNewNotificationText(e.target.value)}
-                        className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs outline-none focus:bg-white focus:border-zinc-400 resize-none"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="rounded-lg bg-zinc-900 hover:bg-black px-4 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
-                    >
-                      Broadcast Message
-                    </button>
-                  </form>
                 </div>
               )}
 
@@ -3056,85 +2759,6 @@ export default function AdminDashboard() {
                       Save Configuration
                     </button>
                   </form>
-                </div>
-              )}
-
-              {/* Sub-item: Audit Logs */}
-              {activeSubTab === 'audit-logs' && (
-                <div className="space-y-5">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Security & Governance Audit Trail
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Immutable record of administrator actions and modifications.</p>
-                  </div>
-
-                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80 bg-white shadow-2xs">
-                    <table className="w-full text-left text-xs min-w-[650px]">
-                      <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                        <tr>
-                          <th className="p-3.5">Action</th>
-                          <th className="p-3.5">Event Detail</th>
-                          <th className="p-3.5">Administrator</th>
-                          <th className="p-3.5">Timestamp</th>
-                          <th className="p-3.5 text-right">IP Address</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-100 font-normal">
-                        {auditLogs.map(log => (
-                          <tr key={log.id} className="hover:bg-zinc-50/75">
-                            <td className="p-3.5 font-semibold text-zinc-900">{log.action}</td>
-                            <td className="p-3.5 text-zinc-600">{log.detail}</td>
-                            <td className="p-3.5 font-medium text-zinc-800">{log.admin}</td>
-                            <td className="p-3.5 text-zinc-400">{log.time}</td>
-                            <td className="p-3.5 text-right font-mono text-[11px] text-zinc-500">{log.ip}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* Sub-item: Security */}
-              {activeSubTab === 'security' && (
-                <div className="space-y-5 max-w-xl">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      Platform Security Overview
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Authentication policies and encryption certificates.</p>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3.5 text-xs">
-                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
-                      <div>
-                        <span className="font-semibold text-zinc-900 block">Two-Factor Authentication (2FA)</span>
-                        <p className="text-zinc-500 text-[11px]">Enforced for all administrative sessions</p>
-                      </div>
-                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
-                        ✓ Enabled
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
-                      <div>
-                        <span className="font-semibold text-zinc-900 block">TLS / SSL Encryption</span>
-                        <p className="text-zinc-500 text-[11px]">High-grade SHA-256 with RSA Certificate</p>
-                      </div>
-                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
-                        ✓ Active (A+ Grade)
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-semibold text-zinc-900 block">Session Inactivity Timeout</span>
-                        <p className="text-zinc-500 text-[11px]">Auto-locks idle consoles after 30 minutes</p>
-                      </div>
-                      <span className="font-mono text-zinc-700 font-medium">30 Mins</span>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -3692,120 +3316,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* 5. Promotion Modal */}
-      {promoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-              <h3 className="text-sm font-semibold text-zinc-900">Create Promotional Campaign</h3>
-              <button onClick={() => setPromoModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <form onSubmit={handleAddPromotion} className="space-y-3">
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Campaign Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Royal Autumn Horology Showcase"
-                  value={promoForm.title}
-                  onChange={e => setPromoForm({ ...promoForm, title: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-medium text-zinc-700 block mb-1">Promo Code</label>
-                  <input
-                    type="text"
-                    placeholder="AUTUMN20"
-                    value={promoForm.code}
-                    onChange={e => setPromoForm({ ...promoForm, code: e.target.value })}
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono uppercase font-semibold outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="font-medium text-zinc-700 block mb-1">Discount Text</label>
-                  <input
-                    type="text"
-                    placeholder="Flat 20% Off"
-                    value={promoForm.discount}
-                    onChange={e => setPromoForm({ ...promoForm, discount: e.target.value })}
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Target Department</label>
-                <select
-                  value={promoForm.targetCategory}
-                  onChange={e => setPromoForm({ ...promoForm, targetCategory: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none font-medium cursor-pointer"
-                >
-                  <option value="All Departments">All Departments</option>
-                  {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setPromoModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
-                  Cancel
-                </button>
-                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
-                  Launch Campaign
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 6. Role Modal */}
-      {roleModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-              <h3 className="text-sm font-semibold text-zinc-900">Add Governance Role</h3>
-              <button onClick={() => setRoleModalOpen(false)} className="text-zinc-400 font-bold cursor-pointer">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <form onSubmit={handleAddRole} className="space-y-3">
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Role Title *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. VIP Concierge Manager"
-                  value={roleForm.name}
-                  onChange={e => setRoleForm({ ...roleForm, name: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white focus:border-zinc-400"
-                />
-              </div>
-              <div>
-                <label className="font-medium text-zinc-700 block mb-1">Role Description</label>
-                <textarea
-                  rows={2}
-                  placeholder="Responsibilities and access scope..."
-                  value={roleForm.description}
-                  onChange={e => setRoleForm({ ...roleForm, description: e.target.value })}
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 outline-none focus:bg-white resize-none"
-                />
-              </div>
-              <div className="pt-2 flex justify-end gap-2">
-                <button type="button" onClick={() => setRoleModalOpen(false)} className="rounded-lg px-3.5 py-1.5 border border-zinc-200 bg-white font-medium cursor-pointer">
-                  Cancel
-                </button>
-                <button type="submit" className="rounded-lg px-4 py-1.5 bg-zinc-900 text-white font-semibold cursor-pointer">
-                  Create Role
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 7. Admin Return & Refund Review Modal */}
+      {/* 5. Admin Return & Refund Review Modal */}
       {adminReturnModalOpen && selectedReturnOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-fade-in">
           <div className="w-full max-w-lg rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl space-y-4 text-xs max-h-[90vh] overflow-y-auto">
