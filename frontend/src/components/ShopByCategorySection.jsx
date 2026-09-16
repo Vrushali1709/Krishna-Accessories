@@ -92,35 +92,7 @@ export default function ShopByCategorySection({
 
           {/* Action Buttons (Desktop: Arrows + View All Link) */}
           <div className="hidden sm:flex items-center gap-3 shrink-0">
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => scroll('left')}
-                disabled={!canScrollLeft}
-                aria-label="Scroll categories left"
-                className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all shadow-2xs ${
-                  canScrollLeft
-                    ? 'text-gray-800 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
-                    : 'text-gray-300 opacity-40 cursor-not-allowed'
-                }`}
-              >
-                <ChevronLeftIcon className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => scroll('right')}
-                disabled={!canScrollRight}
-                aria-label="Scroll categories right"
-                className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all shadow-2xs ${
-                  canScrollRight
-                    ? 'text-gray-800 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
-                    : 'text-gray-300 opacity-40 cursor-not-allowed'
-                }`}
-              >
-                <ChevronRightIcon className="w-4 h-4" />
-              </button>
-            </div>
+           
 
             <Link
               to="/shop"
