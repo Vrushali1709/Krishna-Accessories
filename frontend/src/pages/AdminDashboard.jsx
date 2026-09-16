@@ -258,13 +258,13 @@ export default function AdminDashboard() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedOrderCourier, setSelectedOrderCourier] = useState('BlueDart Express Air');
   const [selectedOrderTracking, setSelectedOrderTracking] = useState('');
-  const [selectedOrderStatus, setSelectedOrderStatus] = useState('Confirmed');
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState('Processing');
 
   const handleOpenOrderModal = (order) => {
     setSelectedOrder(order);
     setSelectedOrderCourier(order.courier || 'BlueDart Express Air');
     setSelectedOrderTracking(order.trackingNumber || `BD${Math.floor(10000000 + Math.random() * 90000000)}IN`);
-    setSelectedOrderStatus(order.status || 'Confirmed');
+    setSelectedOrderStatus(order.status || 'Processing');
     setOrderModalOpen(true);
   };
 
@@ -2349,21 +2349,27 @@ export default function AdminDashboard() {
                                   ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                                   : order.status === 'Shipped' || order.status === 'Out for Delivery'
                                     ? 'bg-sky-50 text-sky-800 border-sky-200'
-                                    : order.status === 'Cancelled'
-                                      ? 'bg-rose-50 text-rose-800 border-rose-200'
-                                      : order.status === 'Refunded'
-                                        ? 'bg-purple-50 text-purple-800 border-purple-200'
-                                        : order.status === 'Return Requested'
-                                          ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
-                                          : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                                    : order.status === 'Processing'
+                                      ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
+                                      : order.status === 'Confirmed'
+                                        ? 'bg-blue-50 text-blue-800 border-blue-200'
+                                        : order.status === 'Cancelled'
+                                          ? 'bg-rose-50 text-rose-800 border-rose-200'
+                                          : order.status === 'Refunded'
+                                            ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                            : order.status === 'Return Requested'
+                                              ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
+                                              : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                                   }`}>
                                   <span className={`h-1.5 w-1.5 rounded-full ${order.status === 'Delivered' ? 'bg-emerald-500' :
                                     order.status === 'Shipped' || order.status === 'Out for Delivery' ? 'bg-sky-500' :
-                                      order.status === 'Cancelled' ? 'bg-rose-500' :
-                                        order.status === 'Refunded' ? 'bg-purple-500' :
-                                          order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
+                                      order.status === 'Processing' ? 'bg-amber-500' :
+                                        order.status === 'Confirmed' ? 'bg-blue-500' :
+                                          order.status === 'Cancelled' ? 'bg-rose-500' :
+                                            order.status === 'Refunded' ? 'bg-purple-500' :
+                                              order.status === 'Return Requested' ? 'bg-amber-500' : 'bg-zinc-400'
                                     }`} />
-                                  <span>{order.status}</span>
+                                  <span>{order.status || 'Processing'}</span>
                                 </span>
                               </td>
 
@@ -2386,7 +2392,7 @@ export default function AdminDashboard() {
                                   )}
 
                                   <select
-                                    value={order.status}
+                                    value={order.status || 'Processing'}
                                     onChange={(e) => updateOrderStatus(order.id, e.target.value)}
                                     className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-900 outline-none cursor-pointer"
                                   >
@@ -4287,13 +4293,19 @@ export default function AdminDashboard() {
                     </h3>
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${selectedOrder.status === 'Delivered'
                       ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                      : selectedOrder.status === 'Shipped'
+                      : selectedOrder.status === 'Shipped' || selectedOrder.status === 'Out for Delivery'
                         ? 'bg-sky-50 text-sky-800 border-sky-200'
-                        : selectedOrder.status === 'Cancelled'
-                          ? 'bg-rose-50 text-rose-800 border-rose-200'
-                          : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                        : selectedOrder.status === 'Processing'
+                          ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold'
+                          : selectedOrder.status === 'Confirmed'
+                            ? 'bg-blue-50 text-blue-800 border-blue-200'
+                            : selectedOrder.status === 'Cancelled'
+                              ? 'bg-rose-50 text-rose-800 border-rose-200'
+                              : selectedOrder.status === 'Refunded'
+                                ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                : 'bg-zinc-100 text-zinc-700 border-zinc-200'
                       }`}>
-                      {selectedOrder.status}
+                      {selectedOrder.status || 'Processing'}
                     </span>
                   </div>
                   <p className="text-[11px] text-zinc-400 mt-0.5">
@@ -4419,7 +4431,7 @@ export default function AdminDashboard() {
                   <div>
                     <label className="text-[11px] font-medium text-zinc-700 block mb-1">Fulfillment Status</label>
                     <select
-                      value={selectedOrderStatus}
+                      value={selectedOrderStatus || 'Processing'}
                       onChange={e => setSelectedOrderStatus(e.target.value)}
                       className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-900 outline-none cursor-pointer"
                     >
