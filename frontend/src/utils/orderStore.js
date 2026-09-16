@@ -299,11 +299,11 @@ const defaultNotifications = [
 const defaultAddresses = [];
 
 // In-memory reactive state
-let ordersMemory = [...defaultOrders];
-let suppliersMemory = [...defaultSuppliers];
-let usersMemory = [...defaultUsers];
-let notificationsMemory = [...defaultNotifications];
-let addressesMemory = [...defaultAddresses];
+let ordersMemory = [];
+let suppliersMemory = [];
+let usersMemory = [];
+let notificationsMemory = [];
+let addressesMemory = [];
 
 // Immediate cleanup of legacy database keys from localStorage
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -722,22 +722,22 @@ export async function syncOrdersFromBackend() {
       notificationsApi.getAll().catch(() => null)
     ]);
 
-    if (Array.isArray(fetchedOrders) && fetchedOrders.length > 0) {
+    if (Array.isArray(fetchedOrders)) {
       ordersMemory = fetchedOrders;
       window.dispatchEvent(new Event('ordersUpdated'));
     }
 
-    if (Array.isArray(fetchedSuppliers) && fetchedSuppliers.length > 0) {
+    if (Array.isArray(fetchedSuppliers)) {
       suppliersMemory = fetchedSuppliers;
       window.dispatchEvent(new Event('suppliersUpdated'));
     }
 
-    if (Array.isArray(fetchedUsers) && fetchedUsers.length > 0) {
+    if (Array.isArray(fetchedUsers)) {
       usersMemory = fetchedUsers;
       window.dispatchEvent(new Event('usersUpdated'));
     }
 
-    if (Array.isArray(fetchedNotifs) && fetchedNotifs.length > 0) {
+    if (Array.isArray(fetchedNotifs)) {
       notificationsMemory = fetchedNotifs;
       window.dispatchEvent(new Event('notificationsUpdated'));
     }

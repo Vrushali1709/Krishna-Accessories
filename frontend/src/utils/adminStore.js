@@ -306,14 +306,14 @@ export const defaultSystemConfig = {
 };
 
 // In-memory reactive state
-let subcategoriesMemory = [...defaultSubcategories];
-let variantsMemory = [...defaultVariants];
-let mediaMemory = [...defaultMediaAssets];
-let promotionsMemory = [...defaultPromotions];
-let rolesMemory = [...defaultRoles];
-let permissionsMemory = { ...defaultPermissionsMatrix };
-let shippingMemory = [...defaultShippingCarriers];
-let systemConfigMemory = { ...defaultSystemConfig };
+let subcategoriesMemory = [];
+let variantsMemory = [];
+let mediaMemory = [];
+let promotionsMemory = [];
+let rolesMemory = [];
+let permissionsMemory = {};
+let shippingMemory = [];
+let systemConfigMemory = {};
 
 // Immediate cleanup of legacy database keys from localStorage
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -356,35 +356,35 @@ export async function syncAdminDataFromBackend() {
       systemConfigApi.get().catch(() => null)
     ]);
 
-    if (Array.isArray(subcats) && subcats.length > 0) {
+    if (Array.isArray(subcats)) {
       subcategoriesMemory = subcats;
       window.dispatchEvent(new Event('subcategoriesUpdated'));
     }
-    if (Array.isArray(variants) && variants.length > 0) {
+    if (Array.isArray(variants)) {
       variantsMemory = variants;
       window.dispatchEvent(new Event('variantsUpdated'));
     }
-    if (Array.isArray(media) && media.length > 0) {
+    if (Array.isArray(media)) {
       mediaMemory = media;
       window.dispatchEvent(new Event('mediaUpdated'));
     }
-    if (Array.isArray(promos) && promos.length > 0) {
+    if (Array.isArray(promos)) {
       promotionsMemory = promos;
       window.dispatchEvent(new Event('promotionsUpdated'));
     }
-    if (Array.isArray(roles) && roles.length > 0) {
+    if (Array.isArray(roles)) {
       rolesMemory = roles;
       window.dispatchEvent(new Event('rolesUpdated'));
     }
-    if (perms && typeof perms === 'object' && Object.keys(perms).length > 0) {
+    if (perms && typeof perms === 'object') {
       permissionsMemory = perms;
       window.dispatchEvent(new Event('permissionsUpdated'));
     }
-    if (Array.isArray(carriers) && carriers.length > 0) {
+    if (Array.isArray(carriers)) {
       shippingMemory = carriers;
       window.dispatchEvent(new Event('shippingUpdated'));
     }
-    if (config && typeof config === 'object' && Object.keys(config).length > 0) {
+    if (config && typeof config === 'object') {
       systemConfigMemory = config;
       window.dispatchEvent(new Event('systemConfigUpdated'));
     }

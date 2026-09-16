@@ -67,7 +67,7 @@ export default function Cart() {
     }
   };
 
-  const handleApplyCoupon = (e, explicitCode = null) => {
+  const handleApplyCoupon = async (e, explicitCode = null) => {
     if (e) e.preventDefault();
     setCouponMsg(null);
     const codeToApply = (explicitCode || couponCodeInput || '').trim();
@@ -76,7 +76,7 @@ export default function Cart() {
       return;
     }
 
-    const res = applyCoupon(codeToApply, subtotal);
+    const res = await applyCoupon(codeToApply, subtotal);
     if (res.success) {
       const discountVal = res.discount ? `₹${res.discount.toLocaleString('en-IN')} saved` : '';
       setCouponMsg({

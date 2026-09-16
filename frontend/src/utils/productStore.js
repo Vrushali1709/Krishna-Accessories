@@ -1069,11 +1069,11 @@ const defaultProductReviews = {
 };
 
 // In-memory reactive state
-let productsMemory = defaultProducts.map(normalizeProduct);
-let categoriesMemory = [...defaultCategories];
-let brandsMemory = [...defaultBrands];
+let productsMemory = [];
+let categoriesMemory = [];
+let brandsMemory = [];
 let wishlistMemory = [];
-let reviewsMemory = { ...defaultProductReviews };
+let reviewsMemory = {};
 
 // Immediate cleanup of legacy database keys from localStorage
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -1215,18 +1215,18 @@ export async function syncProductsFromBackend() {
       brandsApi.getAll().catch(() => null)
     ]);
 
-    if (Array.isArray(fetchedProducts) && fetchedProducts.length > 0) {
+    if (Array.isArray(fetchedProducts)) {
       productsMemory = fetchedProducts.map(normalizeProduct);
       window.dispatchEvent(new Event('productsUpdated'));
     }
 
-    if (Array.isArray(fetchedCategories) && fetchedCategories.length > 0) {
+    if (Array.isArray(fetchedCategories)) {
       const catNames = fetchedCategories.map(c => (typeof c === 'object' && c !== null ? c.name : c)).filter(Boolean);
       categoriesMemory = ensureWatchesFirst(catNames);
       window.dispatchEvent(new Event('categoriesUpdated'));
     }
 
-    if (Array.isArray(fetchedBrands) && fetchedBrands.length > 0) {
+    if (Array.isArray(fetchedBrands)) {
       const brandNames = fetchedBrands.map(b => (typeof b === 'object' && b !== null ? b.name : b)).filter(Boolean);
       brandsMemory = brandNames;
       window.dispatchEvent(new Event('brandsUpdated'));
@@ -1336,7 +1336,7 @@ export async function syncWishlistFromBackend() {
 // ================= REVIEWS MANAGEMENT =================
 
 export function getProductReviews(productId) {
-  return reviewsMemory[productId] || defaultProductReviews[productId] || [];
+  return reviewsMemory[productId] || [];
 }
 
 export async function syncProductReviewsFromBackend(productId) {
@@ -1358,7 +1358,7 @@ export async function syncProductReviewsFromBackend(productId) {
 
 export function addProductReview(productId, review) {
   try {
-    const current = reviewsMemory[productId] || defaultProductReviews[productId] || [];
+    const current = reviewsMemory[productId] || [];
     const newReview = {
       id: Date.now(),
       user: review.user || "Verified Customer",

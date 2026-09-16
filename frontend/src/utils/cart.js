@@ -1,43 +1,19 @@
 // src/utils/cart.js
-import { cartApi } from './api';
+import { cartApi, promotionsApi } from './api';
 
-const CART_KEY = 'krishna_accessories_cart';
-const COUPON_KEY = 'krishna_applied_coupon';
+let cartMemory = [];
+let appliedCouponMemory = null;
 
 export const FREE_SHIPPING_THRESHOLD = 2000;
 export const STANDARD_SHIPPING_FEE = 99;
 
-export const AVAILABLE_COUPONS = {
-  'KRISHNA10': {
-    code: 'KRISHNA10',
-    discountPercent: 10,
-    minSpend: 1000,
-    description: '10% OFF on orders above ₹1,000'
-  },
-  'LUXURY500': {
-    code: 'LUXURY500',
-    discountAmount: 500,
-    minSpend: 4000,
-    description: '₹500 Flat OFF on orders above ₹4,000'
-  },
-  'FESTIVE15': {
-    code: 'FESTIVE15',
-    discountPercent: 15,
-    minSpend: 2500,
-    description: '15% Festive OFF on orders above ₹2,500'
-  }
-};
+export const AVAILABLE_COUPONS = {};
 
 /**
  * Retrieves the current cart array from localStorage.
  */
 export function getCart() {
-  try {
-    const raw = localStorage.getItem(CART_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map((item) => ({
+  return cartMemory.map((item) => ({
       ...item,
       quantity: Math.max(1, parseInt(item.quantity, 10) || 1),
       price: Number(item.price) || 0,
@@ -45,21 +21,13 @@ export function getCart() {
       variant: item.variant || item.selectedVariant || '',
       size: item.size || item.selectedSize || ''
     }));
-  } catch (error) {
-    console.error('Cart read error:', error);
-    return [];
-  }
 }
 
 /**
  * Saves the cart to localStorage and broadcasts the cartUpdated event.
  */
 export function saveCart(cart) {
-  try {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  } catch (error) {
-    console.error('Cart save error:', error);
-  }
+  cartMemory = Array.isArray(cart) ? cart : [];
   window.dispatchEvent(new Event('cartUpdated'));
   cartApi.save(cart).catch(err => console.warn('[API] Failed to save cart:', err));
 }
@@ -68,7 +36,7 @@ export async function syncCartFromBackend() {
   try {
     const cart = await cartApi.get();
     if (Array.isArray(cart)) {
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      cartMemory = cart;
       window.dispatchEvent(new Event('cartUpdated'));
     }
   } catch (err) {
@@ -213,12 +181,8 @@ export function removeFromCart(id, color = '', variant = '', size = '') {
  * Completely empties the cart and resets applied coupons.
  */
 export function clearCart() {
-  try {
-    localStorage.removeItem(CART_KEY);
-    localStorage.removeItem(COUPON_KEY);
-  } catch (err) {
-    console.error('Clear cart error:', err);
-  }
+  cartMemory = [];
+  appliedCouponMemory = null;
   window.dispatchEvent(new Event('cartUpdated'));
   cartApi.clear().catch(err => console.warn('[API] Failed to clear cart:', err));
 }
@@ -247,55 +211,25 @@ export function getCartSubtotal() {
  * Retrieves the currently applied coupon object or null.
  */
 export function getAppliedCoupon() {
-  try {
-    const data = localStorage.getItem(COUPON_KEY);
-    if (!data) return null;
-    const parsed = JSON.parse(data);
-    return parsed && typeof parsed === 'object' && parsed.code ? parsed : null;
-  } catch {
-    return null;
-  }
+  return appliedCouponMemory;
 }
 
 /**
  * Applies a coupon code if valid and eligible.
  */
-export function applyCoupon(code, currentSubtotal = null) {
+export async function applyCoupon(code, currentSubtotal = null) {
   if (!code || typeof code !== 'string') {
     return { success: false, message: 'Please provide a coupon code.' };
   }
 
   const normalized = code.trim().toUpperCase();
-  const coupon = AVAILABLE_COUPONS[normalized];
-
-  if (!coupon) {
-    return {
-      success: false,
-      message: `Invalid voucher code "${normalized}". Available codes: KRISHNA10, FESTIVE15, LUXURY500.`
-    };
-  }
-
   const subtotal = typeof currentSubtotal === 'number' ? currentSubtotal : getCartSubtotal();
+  const result = await promotionsApi.validateCoupon(normalized, subtotal);
+  if (!result.valid) return { success: false, message: result.message };
+  const coupon = result.coupon;
+  const discount = Number(result.discount) || 0;
 
-  if (subtotal < coupon.minSpend) {
-    return {
-      success: false,
-      message: `Minimum order amount of ₹${coupon.minSpend.toLocaleString('en-IN')} required for voucher ${coupon.code}.`
-    };
-  }
-
-  let discount = 0;
-  if (coupon.discountPercent) {
-    discount = Math.round((subtotal * coupon.discountPercent) / 100);
-  } else if (coupon.discountAmount) {
-    discount = Math.min(subtotal, coupon.discountAmount);
-  }
-
-  try {
-    localStorage.setItem(COUPON_KEY, JSON.stringify(coupon));
-  } catch (err) {
-    console.error('Save coupon error:', err);
-  }
+  appliedCouponMemory = coupon;
 
   window.dispatchEvent(new Event('cartUpdated'));
 
@@ -303,7 +237,7 @@ export function applyCoupon(code, currentSubtotal = null) {
     success: true,
     coupon,
     discount,
-    message: `Voucher ${coupon.code} applied successfully!`
+    message: result.message
   };
 }
 
@@ -311,11 +245,7 @@ export function applyCoupon(code, currentSubtotal = null) {
  * Removes the currently applied coupon.
  */
 export function removeCoupon() {
-  try {
-    localStorage.removeItem(COUPON_KEY);
-  } catch (err) {
-    console.error('Remove coupon error:', err);
-  }
+  appliedCouponMemory = null;
   window.dispatchEvent(new Event('cartUpdated'));
 }
 

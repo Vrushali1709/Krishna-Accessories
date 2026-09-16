@@ -14,9 +14,9 @@
 import { addNotification } from './orderStore';
 import { authApi, emailApi } from './api';
 
-const ACTIVE_OTPS_KEY = 'krishna_active_otps';
-const SENT_EMAILS_KEY = 'krishna_sent_emails';
-const LAST_RESEND_KEY = 'krishna_otp_last_resend';
+let activeOtpsMemory = {};
+let sentEmailsMemory = [];
+let lastResendMemory = {};
 
 export const OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 Minutes Validity
 export const RESEND_COOLDOWN_SEC = 60; // 60 Seconds Cooldown
@@ -25,36 +25,22 @@ export const RESEND_COOLDOWN_SEC = 60; // 60 Seconds Cooldown
 // HELPER: LOCAL STORAGE RETRIEVAL & PERSISTENCE
 // =========================================================================
 export function getActiveOtps() {
-  try {
-    const raw = localStorage.getItem(ACTIVE_OTPS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
+  return activeOtpsMemory;
 }
 
 export function saveActiveOtps(otps) {
-  try {
-    localStorage.setItem(ACTIVE_OTPS_KEY, JSON.stringify(otps));
-  } catch (err) {
-    console.error('Error saving active OTPs:', err);
-  }
+  activeOtpsMemory = otps;
 }
 
 export function getSentEmails() {
-  try {
-    const raw = localStorage.getItem(SENT_EMAILS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return sentEmailsMemory;
 }
 
 export function saveSentEmail(emailRecord) {
   try {
     const list = getSentEmails();
     const updated = [emailRecord, ...list].slice(0, 100); // keep last 100
-    localStorage.setItem(SENT_EMAILS_KEY, JSON.stringify(updated));
+    sentEmailsMemory = updated;
     window.dispatchEvent(new CustomEvent('emailSent', { detail: emailRecord }));
   } catch (err) {
     console.error('Error saving sent email:', err);
@@ -285,8 +271,7 @@ export async function resendOtp(email, type, customerName = '') {
   const resendKey = `${cleanEmail}_${type}`;
 
   try {
-    const rawResends = localStorage.getItem(LAST_RESEND_KEY);
-    const resends = rawResends ? JSON.parse(rawResends) : {};
+    const resends = lastResendMemory;
     const lastTime = resends[resendKey] || 0;
     const elapsed = Math.floor((Date.now() - lastTime) / 1000);
 
@@ -301,7 +286,7 @@ export async function resendOtp(email, type, customerName = '') {
     }
 
     resends[resendKey] = Date.now();
-    localStorage.setItem(LAST_RESEND_KEY, JSON.stringify(resends));
+    lastResendMemory = resends;
   } catch {
     // ignore
   }
