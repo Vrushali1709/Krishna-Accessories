@@ -191,11 +191,16 @@ export default function Login() {
     showLoading('Verifying OTP & Logging In...');
     setTimeout(async () => {
       setAuthToken(verifyResult.token);
-      setCustomerUser(verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] });
+      const user = verifyResult.user || { email: cleanEmail, role: selectedRole || 'customer', name: cleanEmail.split('@')[0] };
+      const userRole = (user.role || 'customer').toLowerCase();
+      if (userRole === 'admin') setAdminUser(user);
+      else if (userRole === 'supplier') setSupplierUser(user);
+      else setCustomerUser({ ...user, role: 'customer' });
+
       await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
       setSubmitting(false);
       hideLoading();
-      navigate(returnPath || '/account', { replace: true });
+      navigate(returnPath || (userRole === 'admin' ? '/admin' : userRole === 'supplier' ? '/supplier' : '/account'), { replace: true });
     }, 400);
   };
 
