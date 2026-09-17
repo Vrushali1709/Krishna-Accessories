@@ -66,10 +66,21 @@ def on_startup():
 # -------------------------------------------------------------------
 @app.get("/api/health")
 def health_check():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT count(*) FROM products")
+        product_count = cur.fetchone()[0]
+        conn.close()
+        db_status = f"Connected to PostgreSQL (krishna_db, {product_count} products)"
+    except Exception as e:
+        db_status = f"PostgreSQL Error: {str(e)}"
+
     return {
         "status": "healthy",
         "service": "Krishna Accessories Python API",
-        "database": "SQLite (krishna.db)",
+        "database": "PostgreSQL (krishna_db)",
+        "databaseStatus": db_status,
         "timestamp": int(time.time())
     }
 

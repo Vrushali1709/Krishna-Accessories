@@ -1,8 +1,12 @@
 # backend/seed_data.py
 import json
 import os
+import sys
 import time
-from database import get_db_connection, dump_json_field, hash_password
+from database import get_db_connection, dump_json_field, hash_password, sync_sequences
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 DEFAULT_CATEGORIES = [
     "Watches", "Bags & Wallets", "Shoes", "Mobiles", "Clothes & Fashion",
@@ -187,12 +191,13 @@ def seed_database():
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (s["id"], s["name"], s["email"], s["phone"], s["category"], s["status"], s["joinedDate"], s.get("rating", 5.0), s.get("productsCount", 0), s.get("totalEarnings", 0), s.get("address", "")))
 
-    # 7. Users
+    # 7. Users (Only insert if not existing to preserve modified passwords)
     users = all_data.get("users", [])
     for u in users:
         cursor.execute("""
-        INSERT OR REPLACE INTO users (id, name, email, phone, role, status, ordersCount, totalSpent, joinedDate, password)
+        INSERT INTO users (id, name, email, phone, role, status, ordersCount, totalSpent, joinedDate, password)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (email) DO NOTHING
         """, (u["id"], u["name"], u["email"], u["phone"], u["role"], u["status"], u.get("ordersCount", 0), u.get("totalSpent", 0), u.get("joinedDate", ""), hash_password("customer123")))
 
     demo_accounts = [
@@ -201,8 +206,9 @@ def seed_database():
     ]
     for user_id, name, email, phone, role, password in demo_accounts:
         cursor.execute("""
-        INSERT OR REPLACE INTO users (id, name, email, phone, role, status, joinedDate, password)
+        INSERT INTO users (id, name, email, phone, role, status, joinedDate, password)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (email) DO NOTHING
         """, (user_id, name, email, phone, role, "Active", time.strftime("%d %b %Y"), hash_password(password)))
 
     # 8. Orders
@@ -261,7 +267,9 @@ def seed_database():
 
     conn.commit()
     conn.close()
-    print("Database seeded with full fixtures successfully!")
+
+    sync_sequences()
+    print("[PostgreSQL] Database seeded with full fixtures and sequences synced successfully!")
 
 if __name__ == "__main__":
     from database import init_db
