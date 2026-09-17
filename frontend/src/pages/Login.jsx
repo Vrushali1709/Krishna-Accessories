@@ -101,7 +101,7 @@ export default function Login() {
       setPassword('customer123');
     } else if (role === 'admin') {
       setEmail('admin@krishna.com');
-      setPassword('Admin@123');
+      setPassword('krishna123');
     } else if (role === 'supplier') {
       setEmail('supplier@krishna.com');
       setPassword('supplier123');
