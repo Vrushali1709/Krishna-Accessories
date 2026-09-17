@@ -127,16 +127,22 @@ export default function Login() {
     setSubmitting(true);
     showLoading('Authenticating with Krishna Backend...');
     try {
-      const result = await usersApi.login({ email: cleanEmail, password: cleanPassword, role: selectedRole });
+      const result = await usersApi.login({ email: cleanEmail, password: cleanPassword });
       setAuthToken(result.token);
       await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
       const user = result.user;
-      if (user.role?.toLowerCase() === 'admin') setAdminUser(user);
-      else if (user.role?.toLowerCase() === 'supplier') setSupplierUser(user);
+      const userRole = (user.role || 'customer').toLowerCase();
+      if (userRole === 'admin') setAdminUser(user);
+      else if (userRole === 'supplier') setSupplierUser(user);
       else setCustomerUser({ ...user, role: 'customer' });
-      navigate(returnPath || (user.role?.toLowerCase() === 'admin' ? '/admin' : user.role?.toLowerCase() === 'supplier' ? '/supplier' : '/account'), { replace: true });
+
+      navigate(returnPath || (userRole === 'admin' ? '/admin' : userRole === 'supplier' ? '/supplier' : '/account'), { replace: true });
     } catch (loginError) {
-      setError(loginError.message || 'Unable to sign in. Please check your credentials.');
+      if (loginError.message?.toLowerCase().includes('invalid email or password')) {
+        setError('Invalid email or password. If you are a new customer, please click "Create Account" below.');
+      } else {
+        setError(loginError.message || 'Unable to sign in. Please check your credentials.');
+      }
     } finally {
       setSubmitting(false);
       hideLoading();
@@ -191,11 +197,16 @@ export default function Login() {
     showLoading('Verifying OTP & Logging In...');
     setTimeout(async () => {
       setAuthToken(verifyResult.token);
-      setCustomerUser(verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] });
+      const user = verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] };
+      const userRole = (user.role || 'customer').toLowerCase();
+      if (userRole === 'admin') setAdminUser(user);
+      else if (userRole === 'supplier') setSupplierUser(user);
+      else setCustomerUser({ ...user, role: 'customer' });
+
       await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
       setSubmitting(false);
       hideLoading();
-      navigate(returnPath || '/account', { replace: true });
+      navigate(returnPath || (userRole === 'admin' ? '/admin' : userRole === 'supplier' ? '/supplier' : '/account'), { replace: true });
     }, 400);
   };
 
@@ -387,13 +398,7 @@ export default function Login() {
                   autoComplete="off"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={
-                    selectedRole === 'supplier'
-                      ? 'supplier@krishna.com'
-                      : selectedRole === 'admin'
-                        ? 'admin@krishna.com'
-                        : 'user@example.com'
-                  }
+                  placeholder="name@example.com"
                   className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                 />
               </div>
@@ -561,14 +566,14 @@ export default function Login() {
           {/* Quick Access Account Selector */}
           <div className="border-t border-gray-100 pt-4">
             <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
-              Demo Access
+              ⚡ Quick Testing Accounts (Demo)
             </p>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handleSelectRole('customer')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${email === 'rahul.patel@example.com'
+                  ? 'border border-blue-300 bg-blue-50 font-bold text-blue-800'
                   : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
                   }`}
               >
@@ -577,8 +582,8 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => handleSelectRole('supplier')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${email === 'supplier@krishna.com'
+                  ? 'border border-blue-300 bg-blue-50 font-bold text-blue-800'
                   : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
                   }`}
               >
@@ -587,8 +592,8 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => handleSelectRole('admin')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${email === 'admin@krishna.com'
+                  ? 'border border-blue-300 bg-blue-50 font-bold text-blue-800'
                   : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
                   }`}
               >

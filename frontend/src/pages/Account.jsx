@@ -86,13 +86,13 @@ export default function Account() {
     setEditingAddr(null);
     setAddrForm({
       label: 'Home',
-      firstName: currentUser?.name?.split(' ')[0] || 'Rahul',
-      lastName: currentUser?.name?.split(' ')[1] || 'Patel',
-      phone: currentUser?.phone || '9876512345',
+      firstName: currentUser?.name ? currentUser.name.split(' ')[0] : '',
+      lastName: currentUser?.name && currentUser.name.split(' ').length > 1 ? currentUser.name.split(' ').slice(1).join(' ') : '',
+      phone: currentUser?.phone || '',
       address: '',
-      city: 'Ahmedabad',
-      state: 'Gujarat',
-      pincode: '380054',
+      city: '',
+      state: '',
+      pincode: '',
       isDefault: addresses.length === 0
     });
     setAddrModalOpen(true);
