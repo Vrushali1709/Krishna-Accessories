@@ -9,7 +9,7 @@ import { syncCartFromBackend } from '../utils/cart';
 import { syncWishlistFromBackend } from '../utils/productStore';
 import { syncAddressesFromBackend } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendPasswordResetSuccessEmail } from '../utils/emailService';
-import { ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
+import { LockClosedIcon, UserIcon, ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
 import { Eye, EyeOff, RefreshCw, KeyRound, Mail } from 'lucide-react';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
@@ -96,8 +96,19 @@ export default function Login() {
   const handleSelectRole = (role) => {
     setSelectedRole(role);
     setError('');
-    setEmail('');
-    setPassword('');
+    if (role === 'customer') {
+      setEmail('rahul.patel@example.com');
+      setPassword('customer123');
+    } else if (role === 'admin') {
+      setEmail('admin@krishna.com');
+      setPassword('krishna123');
+    } else if (role === 'supplier') {
+      setEmail('supplier@krishna.com');
+      setPassword('supplier123');
+    } else {
+      setEmail('');
+      setPassword('');
+    }
   };
 
   // Standard Password Authentication
@@ -373,10 +384,16 @@ export default function Login() {
                 <input
                   type="email"
                   required
-                  autoComplete="email"
+                  autoComplete="off"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
+                  placeholder={
+                    selectedRole === 'supplier'
+                      ? 'supplier@krishna.com'
+                      : selectedRole === 'admin'
+                        ? 'admin@krishna.com'
+                        : 'user@example.com'
+                  }
                   className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                 />
               </div>
@@ -401,10 +418,10 @@ export default function Login() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="••••••••"
                     className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 pr-11 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                   />
                   <button
@@ -453,7 +470,7 @@ export default function Login() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="name@example.com"
+                      placeholder="user@example.com"
                       className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
                     />
                   </div>
@@ -541,7 +558,46 @@ export default function Login() {
             </div>
           )}
 
-          <div className="border-t border-gray-100 pt-4 text-center text-xs text-gray-500">
+          {/* Quick Access Account Selector */}
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
+              Demo Access
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleSelectRole('customer')}
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
+                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                  }`}
+              >
+                Customer Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSelectRole('supplier')}
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
+                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                  }`}
+              >
+                Supplier Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSelectRole('admin')}
+                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
+                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                  : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
+                  }`}
+              >
+                Admin Demo
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center text-xs text-gray-500">
             Don&apos;t have an account?{' '}
             <Link to="/register" state={location.state} className="font-bold text-gray-950 hover:underline">
               Create Account
