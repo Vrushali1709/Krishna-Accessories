@@ -1,4 +1,3 @@
-// src/pages/NewArrivals.jsx
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -8,8 +7,6 @@ import { ArrowRightIcon } from '../components/Icons';
 import { getProducts } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
-import { Reveal } from '../components/useScrollReveal';
-import { Sparkles, ArrowRight, Flame } from 'lucide-react';
 
 const categoryTabs = ['All', 'Watches', 'Bags & Wallets', 'Shoes', 'Mobiles', 'Electronics'];
 
@@ -50,132 +47,68 @@ export default function NewArrivals() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white overflow-x-clip">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
       <Navbar />
 
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-5 py-3.5 text-xs font-semibold text-neutral-900 shadow-2xl animate-slide-up">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">✓</span>
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-xs font-semibold shadow-xl">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">✓</span>
           <span>{toastMessage}</span>
-          <Link to="/cart" className="ml-2 rounded-lg bg-neutral-950 px-3 py-1 text-[11px] font-semibold text-white hover:bg-[#8C6734] transition-colors">
-            View Bag
-          </Link>
+          <Link to="/cart" className="rounded-full bg-gray-950 px-3 py-1 text-[10px] text-white">View Bag</Link>
         </div>
       )}
 
       <main>
-        {/* Luxury Hero Banner */}
-        <section className="relative bg-white border-b border-neutral-200/80 overflow-hidden py-14 sm:py-20">
-          <div
-            className="absolute inset-0 opacity-[0.025] pointer-events-none"
-            style={{
-              backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
-              backgroundSize: '24px 24px'
-            }}
-            aria-hidden="true"
-          />
-
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Reveal delay={0} direction="up">
-              <div className="max-w-2xl space-y-3">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 shadow-2xs">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
-                  <span className="text-[10.5px] font-semibold tracking-[0.18em] uppercase text-[#8C6734]">
-                    Season 2026 Collection / Just In
-                  </span>
-                </div>
-                <h1 className="font-serif text-3xl sm:text-5xl font-medium tracking-tight text-neutral-950">
-                  New <span className="italic font-normal text-[#8C6734]">Arrivals</span>
-                </h1>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
-                  Explore the latest additions to the Krishna Accessories boutique catalog, meticulously curated for craftsmanship, elegance, and everyday luxury.
-                </p>
-                <div className="pt-2">
-                  <Link
-                    to="/shop"
-                    className="inline-flex items-center gap-2 rounded-lg bg-neutral-950 px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#8C6734] transition-colors shadow-sm"
-                  >
-                    <span>Explore Full Catalog</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </Reveal>
+        <section className="border-b border-gray-200 bg-[#111827] text-white">
+          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+            <div className="max-w-2xl">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-amber-300">Season 2026 / Just In</p>
+              <h1 className="mt-3 text-4xl font-light tracking-tight sm:text-6xl">New Arrivals</h1>
+              <p className="mt-4 max-w-xl text-sm leading-6 text-gray-300 sm:text-base">
+                Meet the latest additions to the Krishna Accessories collection, carefully selected for everyday distinction.
+              </p>
+              <Link to="/shop" className="mt-7 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:text-amber-300">
+                Explore full catalog <ArrowRightIcon className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* Catalog Grid Section */}
-        <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12 lg:px-8">
-          <Reveal delay={50} direction="up">
-            <div className="flex flex-col gap-4 border-b border-neutral-200/80 pb-5 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <span className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#8C6734]">
-                  Curated Edit
-                </span>
-                <h2 className="font-serif text-2xl font-medium tracking-tight text-neutral-950 mt-0.5">
-                  Fresh from the Collection
-                </h2>
-                <p className="text-xs text-neutral-500">{arrivals.length} pieces available now</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-neutral-500 font-medium">Sort by:</span>
-                <select
-                  value={sort}
-                  onChange={(event) => setSort(event.target.value)}
-                  className="rounded-lg border border-neutral-200/90 bg-white px-3 py-2 text-xs font-medium text-neutral-900 outline-none transition-colors focus:border-[#C5A880] cursor-pointer"
-                >
-                  <option value="newest">Latest first</option>
-                  <option value="price-low">Price: low to high</option>
-                  <option value="price-high">Price: high to low</option>
-                  <option value="discount">Best offers</option>
-                </select>
-              </div>
+        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+          <div className="flex flex-col gap-5 border-b border-gray-200 pb-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-700">Curated edit</p>
+              <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-950">Fresh from the collection</h2>
+              <p className="mt-1 text-xs text-gray-500">{arrivals.length} pieces available now</p>
             </div>
-          </Reveal>
+            <label className="flex items-center gap-2 text-xs font-semibold text-gray-600">
+              Sort by
+              <select value={sort} onChange={(event) => setSort(event.target.value)} className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 outline-none focus:border-gray-900">
+                <option value="newest">Latest first</option>
+                <option value="price-low">Price: low to high</option>
+                <option value="price-high">Price: high to low</option>
+                <option value="discount">Best offers</option>
+              </select>
+            </label>
+          </div>
 
-          {/* Category Pills */}
-          <Reveal delay={100} direction="up">
-            <div className="mt-6 flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-              {categoryTabs.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setCategory(tab)}
-                  className={`whitespace-nowrap rounded-lg px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer ${
-                    category === tab
-                      ? 'bg-neutral-950 text-white shadow-xs'
-                      : 'bg-white text-neutral-600 border border-neutral-200/90 hover:border-[#C5A880] hover:text-neutral-900'
-                  }`}
-                >
-                  {tab === 'All' ? 'All Arrivals' : tab}
-                </button>
-              ))}
+          <div className="mt-6 flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {categoryTabs.map((tab) => (
+              <button key={tab} type="button" onClick={() => setCategory(tab)} className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${category === tab ? 'bg-gray-950 text-white' : 'bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-100'}`}>
+                {tab === 'All' ? 'All arrivals' : tab}
+              </button>
+            ))}
+          </div>
+
+          {arrivals.length > 0 ? (
+            <div className="mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+              {arrivals.map((product) => <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />)}
             </div>
-          </Reveal>
-
-          {/* Products Grid */}
-          <Reveal delay={150} direction="up">
-            {arrivals.length > 0 ? (
-              <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-6">
-                {arrivals.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="mt-8 rounded-2xl border border-neutral-200/90 bg-white py-16 text-center text-sm text-neutral-500 font-normal">
-                No new arrivals found in this category yet.
-              </div>
-            )}
-          </Reveal>
+          ) : (
+            <div className="mt-6 rounded-2xl border border-gray-200 bg-white py-16 text-center text-sm text-gray-500">No new arrivals in this category yet.</div>
+          )}
         </section>
       </main>
-
       <Footer />
     </div>
   );
