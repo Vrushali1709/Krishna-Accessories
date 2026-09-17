@@ -191,16 +191,11 @@ export default function Login() {
     showLoading('Verifying OTP & Logging In...');
     setTimeout(async () => {
       setAuthToken(verifyResult.token);
-      const user = verifyResult.user || { email: cleanEmail, role: selectedRole || 'customer', name: cleanEmail.split('@')[0] };
-      const userRole = (user.role || 'customer').toLowerCase();
-      if (userRole === 'admin') setAdminUser(user);
-      else if (userRole === 'supplier') setSupplierUser(user);
-      else setCustomerUser({ ...user, role: 'customer' });
-
+      setCustomerUser(verifyResult.user || { email: cleanEmail, role: 'customer', name: cleanEmail.split('@')[0] });
       await Promise.all([syncCartFromBackend(), syncWishlistFromBackend(), syncAddressesFromBackend()]);
       setSubmitting(false);
       hideLoading();
-      navigate(returnPath || (userRole === 'admin' ? '/admin' : userRole === 'supplier' ? '/supplier' : '/account'), { replace: true });
+      navigate(returnPath || '/account', { replace: true });
     }, 400);
   };
 
@@ -343,8 +338,8 @@ export default function Login() {
                 setSuccess('');
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${authMode === 'password'
-                  ? 'bg-white text-gray-950 shadow-xs'
-                  : 'text-neutral-500 hover:text-black'
+                ? 'bg-white text-gray-950 shadow-xs'
+                : 'text-neutral-500 hover:text-black'
                 }`}
             >
               <KeyRound className="w-3.5 h-3.5" />
@@ -359,8 +354,8 @@ export default function Login() {
                 setSuccess('');
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${authMode === 'otp'
-                  ? 'bg-white text-gray-950 shadow-xs'
-                  : 'text-neutral-500 hover:text-black'
+                ? 'bg-white text-gray-950 shadow-xs'
+                : 'text-neutral-500 hover:text-black'
                 }`}
             >
               <Mail className="w-3.5 h-3.5" />
@@ -573,8 +568,8 @@ export default function Login() {
                 type="button"
                 onClick={() => handleSelectRole('customer')}
                 className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
-                    ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                    : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
                   }`}
               >
                 Customer Demo
@@ -583,8 +578,8 @@ export default function Login() {
                 type="button"
                 onClick={() => handleSelectRole('supplier')}
                 className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
-                    ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                    : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
                   }`}
               >
                 Supplier Demo
@@ -593,8 +588,8 @@ export default function Login() {
                 type="button"
                 onClick={() => handleSelectRole('admin')}
                 className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
-                    ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                    : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
+                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
+                  : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
                   }`}
               >
                 Admin Demo
