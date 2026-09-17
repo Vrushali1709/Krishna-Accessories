@@ -196,7 +196,7 @@ def seed_database():
         """, (u["id"], u["name"], u["email"], u["phone"], u["role"], u["status"], u.get("ordersCount", 0), u.get("totalSpent", 0), u.get("joinedDate", ""), hash_password("customer123")))
 
     demo_accounts = [
-        (999, "Krishna Super Admin", "admin@krishna.com", "+91 98765 00001", "admin", "Admin@123"),
+        (999, "Krishna Super Admin", "admin@krishna.com", "+91 98765 00001", "admin", "krishna123"),
         (1000, "Apex Timepieces Ltd.", "supplier@krishna.com", "+91 98765 43210", "supplier", "supplier123")
     ]
     for user_id, name, email, phone, role, password in demo_accounts:
