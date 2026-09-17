@@ -1,7 +1,6 @@
 // src/components/Footer.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { defaultCategories } from '../utils/productStore';
 import { SHOP_INFO } from '../utils/shopInfo';
 import {
   FacebookIcon,
@@ -13,303 +12,216 @@ import {
   ArrowRightIcon
 } from './Icons';
 
-const POPULAR_BRANDS = [
-  'Titan',
-  'Fossil',
-  'Ray-Ban',
-  'Sony',
-  'Hidesign',
-  'Casio',
-  'Apple',
-  'Nike'
-];
-
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   const socialLinks = [
     {
-      name: 'WhatsApp Concierge',
+      name: 'WhatsApp',
       url: SHOP_INFO.whatsappUrl,
-      icon: <WhatsAppIcon className="w-4 h-4 text-emerald-400" />,
-      colorHover: 'hover:bg-emerald-600 hover:border-emerald-500 hover:text-white',
-      label: '+91 93213 22761'
+      icon: <WhatsAppIcon className="w-4 h-4" />,
+      hoverBg: 'hover:bg-emerald-600 hover:text-white hover:border-emerald-500'
     },
     {
       name: 'Instagram',
       url: SHOP_INFO.socials.instagram,
-      icon: <InstagramIcon className="w-4 h-4 text-pink-400" />,
-      colorHover: 'hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:border-pink-500 hover:text-white',
-      label: '@krishnaaccessories'
+      icon: <InstagramIcon className="w-4 h-4" />,
+      hoverBg: 'hover:bg-pink-600 hover:text-white hover:border-pink-500'
     },
     {
       name: 'Facebook',
       url: SHOP_INFO.socials.facebook,
-      icon: <FacebookIcon className="w-4 h-4 text-blue-400" />,
-      colorHover: 'hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white',
-      label: 'Krishna Accessories'
+      icon: <FacebookIcon className="w-4 h-4" />,
+      hoverBg: 'hover:bg-blue-600 hover:text-white hover:border-blue-500'
     }
   ];
 
   return (
-    <footer className="border-t border-neutral-800/80 bg-[#0E1015] text-white relative select-none">
-      {/* Main Footer Content Grid */}
-      <div className="relative mx-auto max-w-7xl px-4 pt-12 pb-10 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12">
-
-          {/* Column 1: Brand Info & Mumbai Boutique Contact (Span 4) */}
-          <div className="lg:col-span-4 space-y-4">
+    <footer className="border-t border-neutral-800/80 bg-[#0E1015] text-white select-none">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Main Grid: Compact 4 Columns */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-12">
+          
+          {/* Col 1: Brand Info & Quick Contact (Span 5 on lg) */}
+          <div className="lg:col-span-5 space-y-3.5">
             <Link to="/" className="inline-flex items-center gap-3 group">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                className="h-10 w-10 sm:h-11 sm:w-11 object-contain rounded-2xl bg-white p-1 shadow-xs group-hover:scale-105 transition-transform duration-200"
+                className="h-9 w-9 object-contain rounded-xl bg-white p-1 group-hover:scale-105 transition-transform duration-200"
               />
               <div>
-                <span className="text-lg font-bold tracking-tight text-white block leading-tight">
-                  Krishna <span className="font-bold text-[#C5A880]">Accessories</span>
+                <span className="text-base font-bold tracking-tight text-white block leading-tight">
+                  Krishna <span className="text-[#C5A880]">Accessories</span>
                 </span>
-                <span className="text-[9.5px] uppercase tracking-[0.2em] text-neutral-400 font-semibold">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-neutral-400 font-semibold">
                   Mumbai • Luxury & Lifestyle
                 </span>
               </div>
             </Link>
 
-            <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-neutral-400">
-              Mumbai's premier destination for premium luxury timepieces, handcrafted leather essentials, designer sunglasses, and quality lifestyle goods.
+            <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
+              Mumbai's destination for premium luxury timepieces, handcrafted leather goods, designer sunglasses, and lifestyle essentials.
             </p>
 
-            {/* Mumbai Flagship Address & Contact Box */}
-            <div className="rounded-2xl border border-neutral-800/90 bg-neutral-900/60 p-4 space-y-3 text-xs text-neutral-300 backdrop-blur-xs max-w-md shadow-2xs">
-              {/* Mumbai Flagship Address */}
-              <div className="flex items-start gap-2.5">
-                <MapPinIcon className="w-4 h-4 text-[#C5A880] shrink-0 mt-0.5" />
-                <div className="min-w-0">
-                  <span className="text-[#C5A880] font-bold block text-[10.5px] uppercase tracking-wider">
-                    Mumbai Flagship Boutique:
-                  </span>
-                  <span className="text-neutral-200 font-medium leading-snug block mt-0.5">
-                    {SHOP_INFO.address}
-                  </span>
-                  <a
-                    href="https://maps.google.com/?q=Heera+Panna+Shopping+Center+Haji+Ali+Mumbai+400026"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#C5A880] hover:text-[#E5D7C5] underline font-medium"
-                  >
-                    <span>Get Directions on Google Maps</span>
-                    <ArrowRightIcon className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
+            {/* Compact Contact Badges */}
+            <div className="flex flex-col gap-1.5 text-xs text-neutral-300 pt-1">
+              <a
+                href={`tel:+91${SHOP_INFO.rawPhone}`}
+                className="inline-flex items-center gap-2 hover:text-[#C5A880] transition-colors duration-150 w-fit"
+              >
+                <PhoneIcon className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                <span>{SHOP_INFO.phone}</span>
+              </a>
 
-              {/* Direct Concierge Phone */}
-              <div className="flex items-start gap-2.5 pt-2.5 border-t border-neutral-800/80">
-                <PhoneIcon className="w-4 h-4 text-[#C5A880] shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-[#C5A880] font-bold block text-[10.5px] uppercase tracking-wider">
-                    Direct Concierge / Telephone:
-                  </span>
-                  <a
-                    href={`tel:+91${SHOP_INFO.rawPhone}`}
-                    className="text-neutral-200 font-medium hover:text-white transition inline-block mt-0.5"
-                  >
-                    {SHOP_INFO.phone}
-                  </a>
-                </div>
-              </div>
+              <a
+                href={`mailto:${SHOP_INFO.email}`}
+                className="inline-flex items-center gap-2 hover:text-[#C5A880] transition-colors duration-150 w-fit"
+              >
+                <MailIcon className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                <span>{SHOP_INFO.email}</span>
+              </a>
 
-              {/* Customer Support Email */}
-              <div className="flex items-start gap-2.5 pt-2.5 border-t border-neutral-800/80">
-                <MailIcon className="w-4 h-4 text-[#C5A880] shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-[#C5A880] font-bold block text-[10.5px] uppercase tracking-wider">
-                    Customer Support Email:
-                  </span>
-                  <a
-                    href={`mailto:${SHOP_INFO.email}`}
-                    className="text-neutral-200 font-medium hover:text-white transition break-all inline-block mt-0.5"
-                  >
-                    {SHOP_INFO.email}
-                  </a>
-                </div>
-              </div>
+              <a
+                href="https://maps.google.com/?q=Heera+Panna+Shopping+Center+Haji+Ali+Mumbai+400026"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 hover:text-[#C5A880] transition-colors duration-150 w-fit"
+                title="View on Google Maps"
+              >
+                <MapPinIcon className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                <span className="truncate">Shop 64, Heera Panna, Haji Ali, Mumbai</span>
+              </a>
+            </div>
 
-              {/* Store Hours */}
-              <div className="pt-2.5 border-t border-neutral-800/80 text-[11px] text-neutral-400">
-                <span className="text-neutral-300 font-semibold">Store Hours: </span>
-                {SHOP_INFO.workingHours}
-              </div>
+            {/* Social Links */}
+            <div className="flex items-center gap-2 pt-2">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  title={`Connect on ${social.name}`}
+                  className={`w-8 h-8 rounded-lg border border-neutral-800 bg-neutral-900/90 text-neutral-400 flex items-center justify-center transition-all duration-200 ${social.hoverBg} hover:border-transparent active:scale-95`}
+                >
+                  {social.icon}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Column 2: Categories (Span 2) */}
+          {/* Col 2: Categories / Shop (Span 2 on lg) */}
           <div className="lg:col-span-2">
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-[#C5A880]">
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#C5A880]">
               Categories
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-neutral-400">
-              {defaultCategories.slice(0, 6).map((cat) => (
-                <li key={cat}>
-                  <Link
-                    to={`/shop?category=${encodeURIComponent(cat)}`}
-                    className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block"
-                  >
-                    {cat}
-                  </Link>
-                </li>
-              ))}
-              <li className="pt-1">
-                <Link
-                  to="/shop"
-                  className="text-[#C5A880] font-semibold transition-all duration-200 hover:text-[#E5D7C5] hover:translate-x-1 inline-flex items-center gap-1"
-                >
-                  <span>View All Categories</span>
-                  <span>&rarr;</span>
+            <ul className="space-y-2 text-xs text-neutral-400">
+              <li>
+                <Link to="/shop?category=Watches" className="hover:text-white transition-colors duration-150 inline-block">
+                  Watches
+                </Link>
+              </li>
+              <li>
+                <Link to="/shop?category=Bags%20%26%20Wallets" className="hover:text-white transition-colors duration-150 inline-block">
+                  Bags &amp; Wallets
+                </Link>
+              </li>
+              <li>
+                <Link to="/shop?category=Shoes" className="hover:text-white transition-colors duration-150 inline-block">
+                  Shoes
+                </Link>
+              </li>
+              <li>
+                <Link to="/shop?category=Clothes%20%26%20Fashion" className="hover:text-white transition-colors duration-150 inline-block">
+                  Fashion &amp; Apparel
+                </Link>
+              </li>
+              <li>
+                <Link to="/shop" className="text-[#C5A880] hover:text-[#E5D7C5] font-semibold inline-flex items-center gap-1 mt-1 transition-colors duration-150">
+                  <span>View All Shop</span>
+                  <ArrowRightIcon className="w-3 h-3" />
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Major Brands (Span 2) */}
+          {/* Col 3: Customer Care (Span 2 on lg) */}
           <div className="lg:col-span-2">
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-[#C5A880]">
-              Major Brands
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#C5A880]">
+              Customer Care
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-neutral-400">
-              {POPULAR_BRANDS.map((brandName) => (
-                <li key={brandName}>
-                  <Link
-                    to={`/shop?brand=${encodeURIComponent(brandName)}`}
-                    className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block"
-                  >
-                    {brandName}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 4: Client Support (Span 2) */}
-          <div className="lg:col-span-2">
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-[#C5A880]">
-              Client Support
-            </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-neutral-400">
+            <ul className="space-y-2 text-xs text-neutral-400">
               <li>
-                <Link to="/tracking" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Track Consignment
+                <Link to="/tracking" className="hover:text-white transition-colors duration-150 inline-block">
+                  Track Order
                 </Link>
               </li>
               <li>
-                <Link to="/account" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  My Orders & Account
+                <Link to="/account" className="hover:text-white transition-colors duration-150 inline-block">
+                  My Account &amp; Orders
                 </Link>
               </li>
               <li>
-                <Link to="/wishlist" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Saved Wishlist
+                <Link to="/wishlist" className="hover:text-white transition-colors duration-150 inline-block">
+                  Wishlist
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  FAQ & Product Quality
+                <Link to="/faq" className="hover:text-white transition-colors duration-150 inline-block">
+                  FAQs &amp; Help
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Contact Concierge
-                </Link>
-              </li>
-              <li>
-                <Link to="/shop" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  New Arrivals
+                <Link to="/contact" className="hover:text-white transition-colors duration-150 inline-block">
+                  Contact Support
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 5: Legal & Information (Span 2) */}
-          <div className="lg:col-span-2">
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-[#C5A880]">
-              Legal & Info
+          {/* Col 4: Boutique & Legal (Span 3 on lg) */}
+          <div className="lg:col-span-3">
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#C5A880]">
+              About &amp; Policies
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-neutral-400">
+            <ul className="space-y-2 text-xs text-neutral-400">
               <li>
-                <Link to="/about" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Our Heritage & Story
+                <Link to="/about" className="hover:text-white transition-colors duration-150 inline-block">
+                  Our Story &amp; Heritage
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
+                <Link to="/privacy" className="hover:text-white transition-colors duration-150 inline-block">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Terms & Conditions
+                <Link to="/terms" className="hover:text-white transition-colors duration-150 inline-block">
+                  Terms &amp; Conditions
                 </Link>
               </li>
-              <li>
-                <Link to="/faq" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Shipping & Returns
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="transition-all duration-200 hover:text-white hover:translate-x-1 inline-block">
-                  Store Locator
-                </Link>
+              <li className="pt-2 text-[11px] text-neutral-500 leading-normal">
+                <span className="text-neutral-400 font-semibold block">Store Hours:</span>
+                Mon – Sat: 10:30 AM – 8:30 PM (IST)
               </li>
             </ul>
           </div>
 
         </div>
 
-        {/* Social Media and Security / Payment Strip */}
-        <div className="mt-12 pt-8 border-t border-neutral-800/80 flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Social Media Links */}
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-            <span className="text-xs text-neutral-400 font-semibold mr-1">Connect with Concierge:</span>
-            {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.name}
-                title={`Connect with Krishna Accessories on ${social.name}`}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border border-neutral-800 bg-neutral-900/80 text-xs font-semibold text-neutral-300 shadow-2xs transition-all duration-200 ${social.colorHover} active:scale-95`}
-              >
-                {social.icon}
-                <span>{social.name}</span>
-              </a>
-            ))}
-          </div>
-
-          {/* Payment & Security Trust Badges */}
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 text-[10.5px] text-neutral-400">
-            <span className="font-semibold text-neutral-300 mr-1">Accepted Payments:</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">UPI</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">GPay</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">PhonePe</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">Visa</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">Mastercard</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">RuPay</span>
-            <span className="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 font-bold text-neutral-300">NetBanking</span>
-          </div>
-        </div>
-
-        {/* Bottom Copyright Strip */}
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-neutral-800/60 pt-6 text-xs text-neutral-500 sm:flex-row">
-          <p className="text-center sm:text-left">
-            &copy; {new Date().getFullYear()} Krishna Accessories Ltd. All rights reserved. Quality &amp; Premium Lifestyle Products.
+        {/* Bottom Bar: Clean & Compact */}
+        <div className="mt-8 pt-5 border-t border-neutral-800/70 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-400">
+          <p className="text-neutral-500 text-center sm:text-left text-[11px]">
+            &copy; {currentYear} Krishna Accessories. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-[11px] text-neutral-400">
-            <Link to="/privacy" className="hover:text-neutral-200 transition">Privacy</Link>
-            <span>•</span>
-            <Link to="/terms" className="hover:text-neutral-200 transition">Terms</Link>
-            <span>•</span>
-            <Link to="/faq" className="hover:text-neutral-200 transition">Product FAQs</Link>
-            <span>•</span>
-            <Link to="/contact" className="hover:text-neutral-200 transition">Mumbai Boutique</Link>
+
+          <div className="flex flex-wrap items-center justify-center gap-1.5 text-[10px] text-neutral-400">
+            <span className="mr-1 text-neutral-500">Accepted Payments:</span>
+            <span className="rounded border border-neutral-800 bg-neutral-900/90 px-2 py-0.5 text-neutral-300 font-medium">UPI</span>
+            <span className="rounded border border-neutral-800 bg-neutral-900/90 px-2 py-0.5 text-neutral-300 font-medium">Cards</span>
+            <span className="rounded border border-neutral-800 bg-neutral-900/90 px-2 py-0.5 text-neutral-300 font-medium">NetBanking</span>
           </div>
         </div>
       </div>
