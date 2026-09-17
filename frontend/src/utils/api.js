@@ -163,13 +163,17 @@ export const addressesApi = {
 };
 
 export const authApi = {
-  sendOtp: (email, type) => request('/auth/otp/send', { method: 'POST', body: { email, type } }),
+  sendOtp: (email, type, customerName = '') => request('/auth/otp/send', { method: 'POST', body: { email, type, customerName } }),
   verifyOtp: (email, code, type) => request('/auth/otp/verify', { method: 'POST', body: { email, code, type } }),
   resetPassword: (email, password) => request('/auth/password/reset', { method: 'POST', body: { email, password } })
 };
 
 export const emailApi = {
-  log: (emailRecord) => request('/email/log', { method: 'POST', body: emailRecord })
+  log: (emailRecord) => request('/email/log', { method: 'POST', body: emailRecord }),
+  getConfig: () => request('/email/config'),
+  saveConfig: (config) => request('/email/config', { method: 'POST', body: config }),
+  sendTest: (to) => request('/email/test', { method: 'POST', body: { to } }),
+  getLogs: (limit = 50) => request(`/email/logs?limit=${limit}`)
 };
 
 // ==========================================

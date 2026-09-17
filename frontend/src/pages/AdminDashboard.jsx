@@ -42,7 +42,10 @@ import {
   SlidersHorizontal,
   CheckCircle2,
   RefreshCw,
-  Server
+  Server,
+  Mail,
+  Send,
+  Key
 } from 'lucide-react';
 import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 import {
@@ -100,7 +103,7 @@ import {
   syncAdminDataFromBackend
 } from '../utils/adminStore';
 import { getCurrentUser, setCurrentUser, logout, logoutAdmin, isAdmin, getAdminUser } from '../utils/auth';
-import { analyticsApi, checkBackendHealth } from '../utils/api';
+import { analyticsApi, checkBackendHealth, emailApi } from '../utils/api';
 
 export default function AdminDashboard() {
 
@@ -169,8 +172,23 @@ export default function AdminDashboard() {
   const [promotions, setPromotions] = useState(() => getPromotions());
   const [roles, setRoles] = useState(() => getRoles());
   const [permissionsMatrix, setPermissionsMatrix] = useState(() => getPermissionsMatrix());
-  const [shippingCarriers, setShippingCarriers] = useState(() => getShippingCarriers());
   const [systemConfig, setSystemConfigState] = useState(() => getSystemConfig());
+
+  // SMTP Email Configuration State
+  const [smtpConfig, setSmtpConfig] = useState({
+    host: 'smtp.gmail.com',
+    port: 587,
+    user: '',
+    password: '',
+    from_email: '',
+    from_name: 'Krishna Accessories Mumbai',
+    secure: 'tls'
+  });
+  const [smtpLoading, setSmtpLoading] = useState(false);
+  const [testEmailRecipient, setTestEmailRecipient] = useState('');
+  const [testEmailLoading, setTestEmailLoading] = useState(false);
+  const [testEmailResult, setTestEmailResult] = useState(null);
+  const [emailLogs, setEmailLogs] = useState([]);
 
   // Global & Local Search Filters
   const [globalSearch, setGlobalSearch] = useState('');
@@ -418,6 +436,71 @@ export default function AdminDashboard() {
       clearInterval(interval);
     };
   }, [activeSection]);
+
+  const loadSmtpData = async () => {
+    try {
+      setSmtpLoading(true);
+      const [cfg, logs] = await Promise.all([
+        emailApi.getConfig().catch(() => null),
+        emailApi.getLogs(20).catch(() => [])
+      ]);
+      if (cfg) {
+        setSmtpConfig(prev => ({ ...prev, ...cfg }));
+      }
+      if (logs && Array.isArray(logs)) {
+        setEmailLogs(logs);
+      }
+    } catch (e) {
+      console.warn('Error loading SMTP data:', e);
+    } finally {
+      setSmtpLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeSection === 'system') {
+      loadSmtpData();
+    }
+  }, [activeSection]);
+
+  const handleSaveSmtpConfig = async (e) => {
+    if (e) e.preventDefault();
+    try {
+      setSmtpLoading(true);
+      await emailApi.saveConfig(smtpConfig);
+      showToast('✓ SMTP configuration saved successfully');
+      await loadSmtpData();
+    } catch (err) {
+      showToast(err.message || 'Failed to save SMTP settings', 'error');
+    } finally {
+      setSmtpLoading(false);
+    }
+  };
+
+  const handleSendTestEmail = async (e) => {
+    if (e) e.preventDefault();
+    if (!testEmailRecipient || !testEmailRecipient.includes('@')) {
+      showToast('Please enter a valid recipient email address', 'error');
+      return;
+    }
+    setTestEmailLoading(true);
+    setTestEmailResult(null);
+    try {
+      const res = await emailApi.sendTest(testEmailRecipient);
+      setTestEmailResult(res);
+      if (res.success) {
+        showToast(`✓ Test email delivered to ${testEmailRecipient}`);
+      } else {
+        showToast(res.message || 'Test email failed', 'error');
+      }
+      await loadSmtpData();
+    } catch (err) {
+      setTestEmailResult({ success: false, message: err.message });
+      showToast(err.message || 'Test email failed', 'error');
+    } finally {
+      setTestEmailLoading(false);
+    }
+  };
 
 
   // Filter Catalog Products
@@ -3466,14 +3549,254 @@ export default function AdminDashboard() {
 
               {/* Sub-item: Configuration */}
               {activeSubTab === 'configuration' && (
-                <div className="space-y-5 max-w-2xl">
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                      System Infrastructure & Gateways
-                    </h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">API keys, SMTP mailer status, and maintenance mode toggles.</p>
+                <div className="space-y-6 max-w-4xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <h1 className="text-xl font-semibold tracking-tight text-zinc-900 flex items-center gap-2">
+                        <Server className="w-5 h-5 text-amber-700" />
+                        <span>System Infrastructure & Email Gateways</span>
+                      </h1>
+                      <p className="text-xs text-zinc-500 mt-0.5">Configure live SMTP for real OTP delivery, test email dispatch, and server settings.</p>
+                    </div>
+                    <button
+                      onClick={loadSmtpData}
+                      disabled={smtpLoading}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-semibold text-zinc-700 shadow-2xs cursor-pointer"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${smtpLoading ? 'animate-spin' : ''}`} />
+                      <span>Refresh Status</span>
+                    </button>
                   </div>
 
+                  {/* 1. Transactional Email & SMTP Configuration Card */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-5 text-xs">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/60">
+                          <Mail className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="font-semibold text-zinc-900 text-sm block">Transactional SMTP Mailer</span>
+                          <p className="text-zinc-500 text-[11px]">Real-time OTP delivery for login, registration & password reset</p>
+                        </div>
+                      </div>
+                      <span className={`font-semibold px-2.5 py-0.5 rounded-full text-[10px] border ${
+                        smtpConfig.user ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+                      }`}>
+                        {smtpConfig.user ? '✓ SMTP Configured' : '⚠️ Pending Setup'}
+                      </span>
+                    </div>
+
+                    {/* Google App Password Guide Notice */}
+                    <div className="rounded-lg bg-amber-50/70 border border-amber-200/80 p-3.5 text-amber-950 space-y-1.5">
+                      <div className="flex items-center gap-1.5 font-bold text-amber-900 text-xs">
+                        <Key className="w-3.5 h-3.5" />
+                        <span>Google Gmail SMTP સેટઅપ માર્ગદર્શન (Setup Guide):</span>
+                      </div>
+                      <ol className="list-decimal list-inside space-y-1 text-[11px] text-amber-900/90 leading-relaxed">
+                        <li>તમારા Google Account માં <strong>2-Step Verification</strong> ચાલુ કરો.</li>
+                        <li>Google <strong>App Passwords</strong> પેજ પર જાઓ અને "Krishna Accessories" નામથી 16-અક્ષરનો પાસવર્ડ બનાવો.</li>
+                        <li>નીચે <strong>SMTP User Email</strong> અને <strong>App Password</strong> નાખીને "Save SMTP Settings" દબાવો.</li>
+                      </ol>
+                    </div>
+
+                    <form onSubmit={handleSaveSmtpConfig} className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="font-semibold text-zinc-700 block mb-1">SMTP Server Host</label>
+                          <input
+                            type="text"
+                            required
+                            value={smtpConfig.host || ''}
+                            onChange={e => setSmtpConfig({ ...smtpConfig, host: e.target.value })}
+                            placeholder="smtp.gmail.com"
+                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                          />
+                        </div>
+                        <div>
+                          <label className="font-semibold text-zinc-700 block mb-1">SMTP Port</label>
+                          <input
+                            type="number"
+                            required
+                            value={smtpConfig.port || 587}
+                            onChange={e => setSmtpConfig({ ...smtpConfig, port: Number(e.target.value) })}
+                            placeholder="587"
+                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="font-semibold text-zinc-700 block mb-1">SMTP User / Gmail Address</label>
+                          <input
+                            type="email"
+                            required
+                            value={smtpConfig.user || ''}
+                            onChange={e => setSmtpConfig({ ...smtpConfig, user: e.target.value })}
+                            placeholder="your_email@gmail.com"
+                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                          />
+                        </div>
+                        <div>
+                          <label className="font-semibold text-zinc-700 block mb-1">Google App Password (16-char)</label>
+                          <input
+                            type="password"
+                            value={smtpConfig.password || ''}
+                            onChange={e => setSmtpConfig({ ...smtpConfig, password: e.target.value })}
+                            placeholder="••••••••••••••••"
+                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400 font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="font-semibold text-zinc-700 block mb-1">Sender Display Name</label>
+                          <input
+                            type="text"
+                            value={smtpConfig.from_name || ''}
+                            onChange={e => setSmtpConfig({ ...smtpConfig, from_name: e.target.value })}
+                            placeholder="Krishna Accessories Mumbai"
+                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400"
+                          />
+                        </div>
+                        <div>
+                          <label className="font-semibold text-zinc-700 block mb-1">Security Protocol</label>
+                          <select
+                            value={smtpConfig.secure || 'tls'}
+                            onChange={e => setSmtpConfig({ ...smtpConfig, secure: e.target.value })}
+                            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400"
+                          >
+                            <option value="tls">STARTTLS (Port 587 - Recommended)</option>
+                            <option value="ssl">SSL / TLS (Port 465)</option>
+                            <option value="none">None (Port 25)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end pt-2">
+                        <button
+                          type="submit"
+                          disabled={smtpLoading}
+                          className="rounded-lg bg-zinc-900 hover:bg-black px-4 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer disabled:opacity-50"
+                        >
+                          {smtpLoading ? 'Saving...' : 'Save SMTP Configuration'}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* 2. Live Test Email Dispatcher */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4 text-xs">
+                    <div className="flex items-center gap-2.5 pb-3 border-b border-zinc-100">
+                      <div className="p-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+                        <Send className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-zinc-900 text-sm block">Live Test Email Dispatcher</span>
+                        <p className="text-zinc-500 text-[11px]">Send an instant test email to verify your SMTP connection</p>
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleSendTestEmail} className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="email"
+                        required
+                        value={testEmailRecipient}
+                        onChange={e => setTestEmailRecipient(e.target.value)}
+                        placeholder="Enter email to receive test message (e.g. your_email@gmail.com)"
+                        className="flex-1 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 outline-none focus:bg-white focus:border-zinc-400"
+                      />
+                      <button
+                        type="submit"
+                        disabled={testEmailLoading}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 px-4 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer disabled:opacity-50"
+                      >
+                        {testEmailLoading ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Send Test Email</span>
+                          </>
+                        )}
+                      </button>
+                    </form>
+
+                    {testEmailResult && (
+                      <div className={`p-3 rounded-lg border text-xs ${
+                        testEmailResult.success 
+                          ? 'bg-emerald-50/80 text-emerald-900 border-emerald-200' 
+                          : 'bg-rose-50/80 text-rose-900 border-rose-200'
+                      }`}>
+                        <div className="font-bold flex items-center gap-1.5">
+                          {testEmailResult.success ? '✓ Delivery Successful:' : '✕ Delivery Warning:'}
+                          <span>{testEmailResult.message}</span>
+                        </div>
+                        {testEmailResult.error && (
+                          <div className="mt-1 font-mono text-[11px] text-rose-700">{testEmailResult.error}</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 3. Recent Email Delivery Logs */}
+                  <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4 text-xs">
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+                      <div>
+                        <span className="font-semibold text-zinc-900 text-sm block">Recent Email Logs & Dispatches</span>
+                        <p className="text-zinc-500 text-[11px]">Audit trail of OTP codes and customer transactional emails</p>
+                      </div>
+                      <span className="text-zinc-400 text-[11px]">{emailLogs.length} Records</span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-[11px]">
+                        <thead>
+                          <tr className="border-b border-zinc-200/80 text-zinc-500 font-semibold uppercase tracking-wider">
+                            <th className="py-2 px-2.5">Recipient</th>
+                            <th className="py-2 px-2.5">Type / Purpose</th>
+                            <th className="py-2 px-2.5">OTP Code</th>
+                            <th className="py-2 px-2.5">Status</th>
+                            <th className="py-2 px-2.5">Timestamp</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-100">
+                          {emailLogs.length === 0 ? (
+                            <tr>
+                              <td colSpan={5} className="py-4 text-center text-zinc-400">
+                                No email logs recorded yet. Send an OTP to generate activity.
+                              </td>
+                            </tr>
+                          ) : (
+                            emailLogs.map((log, idx) => (
+                              <tr key={log.id || idx} className="hover:bg-zinc-50/50">
+                                <td className="py-2 px-2.5 font-medium text-zinc-900">{log.recipient}</td>
+                                <td className="py-2 px-2.5 text-zinc-600 capitalize">{(log.type || 'notification').replace('_', ' ')}</td>
+                                <td className="py-2 px-2.5 font-mono font-bold text-amber-900">{log.otpCode || '—'}</td>
+                                <td className="py-2 px-2.5">
+                                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                                    log.status === 'Delivered' 
+                                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
+                                      : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+                                  }`}>
+                                    {log.status}
+                                  </span>
+                                </td>
+                                <td className="py-2 px-2.5 text-zinc-400">{log.createdAt || log.date || 'Just now'}</td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* 4. Other System Gateways */}
                   <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4 text-xs">
                     <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
                       <div>
@@ -3485,17 +3808,7 @@ export default function AdminDashboard() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
-                      <div>
-                        <span className="font-semibold text-zinc-900 block">Transactional Email SMTP</span>
-                        <p className="text-zinc-500 text-[11px]">{systemConfig.smtpMailerStatus}</p>
-                      </div>
-                      <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
-                        ✓ Connected
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+                    <div className="flex items-center justify-between">
                       <div>
                         <span className="font-semibold text-zinc-900 block">Storefront Maintenance Mode</span>
                         <p className="text-zinc-500 text-[11px]">Temporary downtime overlay for customers</p>

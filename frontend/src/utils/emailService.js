@@ -178,72 +178,63 @@ export async function sendOtpEmail(email, type = 'forgot_password', customerName
   }
 
   const cleanEmail = email.trim().toLowerCase();
-  let code;
+  let backendRes;
   try {
-    const backendOtp = await authApi.sendOtp(cleanEmail, type);
-    code = backendOtp.otpCode;
+    backendRes = await authApi.sendOtp(cleanEmail, type, customerName);
   } catch (error) {
     return { success: false, error: error.message || 'Unable to create OTP on backend.' };
   }
 
-  let typeTitle = 'Password Reset Verification';
-  let typeDescription = 'We received a request to reset your password for your Krishna Accessories account.';
+  const code = backendRes?.otpCode || '';
+  const delivery = backendRes?.delivery || {};
 
+  let typeTitle = 'Password Reset Verification';
   if (type === 'registration_otp' || type === 'email_verification') {
     typeTitle = 'Account Registration Verification';
-    typeDescription = 'Thank you for choosing Krishna Accessories. Please use this verification code to complete your registration.';
   } else if (type === 'login_otp') {
     typeTitle = 'Instant Login Verification';
-    typeDescription = 'Use this one-time security code to sign in to your Krishna Accessories account without a password.';
   }
 
-  const subject = `${code} is your Krishna Accessories ${typeTitle} Code`;
+  const subject = `${code ? code + ' is ' : ''}Your Krishna Accessories ${typeTitle} Code`;
 
-  const htmlBody = `
-    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; color: #111827;">
-      <!-- Header -->
-      <div style="background: #080B11; padding: 24px; text-align: center; border-bottom: 2px solid #C5A880;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.1em;">KRISHNA <span style="color: #C5A880;">ACCESSORIES</span></h1>
-        <p style="color: #9ca3af; margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;">Mumbai Boutique • Quality & Premium Products</p>
-      </div>
-
-      <!-- Content -->
-      <div style="padding: 32px 24px;">
-        <p style="font-size: 14px; margin: 0 0 16px 0;">Hello ${customerName || 'Valued Client'},</p>
-        <p style="font-size: 13px; color: #4b5563; line-height: 1.6; margin: 0 0 24px 0;">
-          ${typeDescription}
-        </p>
-
-        <!-- OTP Highlight Box -->
-        <div style="background: #fafafb; border: 2px dashed #C5A880; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
-          <p style="font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 8px 0;">Your 6-Digit One-Time Security Code</p>
-          <div style="font-size: 36px; font-weight: 900; font-family: monospace; letter-spacing: 0.25em; color: #080B11; margin: 0;">${code}</div>
-          <p style="font-size: 11px; color: #ef4444; margin: 8px 0 0 0; font-weight: 600;">⏱️ Valid for 5 minutes. Do not share this code with anyone.</p>
-        </div>
-
-        <p style="font-size: 12px; color: #6b7280; line-height: 1.5; margin: 0 0 16px 0;">
-          If you did not initiate this request, you can safely ignore this message. Your account remains completely secure.
-        </p>
-      </div>
-
-      <!-- Footer -->
-      <div style="background: #f9fafb; padding: 20px 24px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; text-align: center;">
-        <p style="margin: 0 0 4px 0;">📍 Shop No. 51, Heera Panna Shopping Center, Haji Ali, Mumbai - 400026</p>
-        <p style="margin: 0;">📞 Concierge: +91 98334 23781 • WhatsApp: +91 98334 23781</p>
-      </div>
-    </div>
-  `;
-
-  const textBody = `Your Krishna Accessories verification code is ${code}. Valid for 5 minutes. Do not share this code.`;
-
-  return await dispatchEmailPayload({
+  const emailRecord = {
+    id: `EML-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
     to: cleanEmail,
     subject,
-    htmlBody,
-    textBody,
     type,
-    otpCode: code
-  });
+    otpCode: code,
+    date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    status: delivery.status === 'delivered' ? 'Delivered' : (delivery.status || 'Sent'),
+    timestamp: new Date().toISOString()
+  };
+
+  saveSentEmail(emailRecord);
+
+  try {
+    addNotification({
+      title: `${typeTitle} Sent`,
+      message: code 
+        ? `Security OTP ${code} dispatched to ${cleanEmail}` 
+        : `Security OTP code dispatched to ${cleanEmail}`,
+      type: 'email'
+    });
+  } catch {
+    // ignore
+  }
+
+  window.dispatchEvent(
+    new CustomEvent('liveEmailDelivered', {
+      detail: emailRecord
+    })
+  );
+
+  return {
+    success: true,
+    to: cleanEmail,
+    otpCode: code,
+    delivery,
+    message: delivery.message || `Security OTP sent to ${cleanEmail}`
+  };
 }
 
 /**
