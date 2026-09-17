@@ -15,14 +15,6 @@ from pydantic import BaseModel, Field
 
 from database import init_db, get_db_connection, row_to_dict, dump_json_field, parse_json_field, hash_password, verify_password
 from seed_data import seed_database
-from mailer import (
-    send_otp_email,
-    send_email,
-    get_smtp_config,
-    save_smtp_config,
-    is_smtp_configured,
-    test_smtp_connection
-)
 
 AUTH_SECRET = os.getenv("AUTH_SECRET", "krishna-accessories-dev-secret").encode("utf-8")
 
@@ -1203,10 +1195,9 @@ def delete_address(address_id: int, authorization: Optional[str] = Header(defaul
     return get_addresses(authorization)
 
 @app.post("/api/auth/otp/send")
-def send_otp(payload: Dict[str, Any] = Body(...)):
+def send_otp(payload: Dict[str, str] = Body(...)):
     email = payload.get("email", "").strip().lower()
     otp_type = payload.get("type", "forgot_password")
-    customer_name = payload.get("name") or payload.get("customerName", "")
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
     code = f"{secrets.randbelow(900000) + 100000}"
@@ -1214,24 +1205,13 @@ def send_otp(payload: Dict[str, Any] = Body(...)):
     conn.execute("INSERT OR REPLACE INTO otp_codes (email, type, code, expiresAt, attempts) VALUES (?, ?, ?, ?, 0)", (email, otp_type, code, int(time.time()) + 300))
     conn.commit()
     conn.close()
-
-    # Dispatch real email via SMTP
-    delivery = send_otp_email(to_email=email, otp_code=code, otp_type=otp_type, customer_name=customer_name)
-
-    return {
-        "success": True,
-        "email": email,
-        "type": otp_type,
-        "otpCode": code if not delivery.get("smtpConfigured") else None,
-        "expiresIn": 300,
-        "delivery": delivery
-    }
+    return {"success": True, "email": email, "type": otp_type, "otpCode": code, "expiresIn": 300}
 
 @app.post("/api/auth/otp/verify")
 def verify_otp(payload: Dict[str, str] = Body(...)):
     email = payload.get("email", "").strip().lower()
     otp_type = payload.get("type", "forgot_password")
-    code = payload.get("code", "").strip()
+    code = payload.get("code", "")
     conn = get_db_connection()
     row = conn.execute("SELECT * FROM otp_codes WHERE email = ? AND type = ?", (email, otp_type)).fetchone()
     if not row or int(row["expiresAt"]) < int(time.time()) or not hmac.compare_digest(str(row["code"]), str(code)):
@@ -1273,49 +1253,6 @@ def log_email(payload: Dict[str, Any] = Body(...)):
     conn.commit()
     conn.close()
     return {"success": True, "emailId": email_id}
-
-@app.get("/api/email/config")
-def get_email_config(authorization: Optional[str] = Header(default=None)):
-    user = get_authenticated_user(authorization)
-    if user.get("role", "").lower() != "admin":
-        raise HTTPException(status_code=403, detail="Admin access required")
-    cfg = get_smtp_config()
-    masked_cfg = dict(cfg)
-    if masked_cfg.get("password"):
-        masked_cfg["password"] = "••••••••••••"
-    masked_cfg["isConfigured"] = is_smtp_configured()
-    return masked_cfg
-
-@app.post("/api/email/config")
-def update_email_config(config_data: Dict[str, Any] = Body(...), authorization: Optional[str] = Header(default=None)):
-    user = get_authenticated_user(authorization)
-    if user.get("role", "").lower() != "admin":
-        raise HTTPException(status_code=403, detail="Admin access required")
-    saved = save_smtp_config(config_data)
-    if not saved:
-        raise HTTPException(status_code=500, detail="Failed to save SMTP configuration")
-    return {"success": True, "message": "SMTP configuration updated successfully."}
-
-@app.post("/api/email/test")
-def test_email_dispatch(payload: Dict[str, Any] = Body(...), authorization: Optional[str] = Header(default=None)):
-    user = get_authenticated_user(authorization)
-    if user.get("role", "").lower() != "admin":
-        raise HTTPException(status_code=403, detail="Admin access required")
-    recipient = payload.get("to") or user.get("email")
-    res = test_smtp_connection(recipient)
-    return res
-
-@app.get("/api/email/logs")
-def get_email_logs(limit: int = 50, authorization: Optional[str] = Header(default=None)):
-    user = get_authenticated_user(authorization)
-    if user.get("role", "").lower() != "admin":
-        raise HTTPException(status_code=403, detail="Admin access required")
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM email_logs ORDER BY createdAt DESC LIMIT ?", (limit,))
-    rows = cursor.fetchall()
-    conn.close()
-    return [dict(r) for r in rows]
 
 # -------------------------------------------------------------------
 # 14. ADMIN ANALYTICS & STATS
