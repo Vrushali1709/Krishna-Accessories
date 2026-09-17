@@ -691,20 +691,35 @@ def create_user(user_data: Dict[str, Any] = Body(...)):
     conn = get_db_connection()
     cursor = conn.cursor()
     user_id = user_data.get("id") or int(time.time() * 1000)
-    name = user_data.get("name", "")
-    email = user_data.get("email", "")
-    phone = user_data.get("phone", "")
+    name = user_data.get("name", "").strip()
+    email = user_data.get("email", "").strip().lower()
+    phone = user_data.get("phone", "").strip()
     role = user_data.get("role", "Customer")
     status_str = user_data.get("status", "Active")
     joinedDate = user_data.get("joinedDate", time.strftime("%d %b %Y"))
     addresses = dump_json_field(user_data.get("addresses", []))
     password = user_data.get("password", "")
 
-    cursor.execute("""
-    INSERT OR REPLACE INTO users (id, name, email, phone, role, status, joinedDate, addresses, password)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (user_id, name, email, phone, role, status_str, joinedDate, addresses, hash_password(password) if password else None))
-    conn.commit()
+    # Check if a user with this email already exists
+    cursor.execute("SELECT id FROM users WHERE LOWER(email) = ?", (email,))
+    existing_row = cursor.fetchone()
+
+    if existing_row:
+        existing_id = existing_row["id"] if isinstance(existing_row, dict) else existing_row[0]
+        cursor.execute("""
+        UPDATE users SET
+            name = ?, phone = ?, role = ?, status = ?, addresses = ?,
+            password = COALESCE(?, password)
+        WHERE id = ?
+        """, (name, phone, role, status_str, addresses, hash_password(password) if password else None, existing_id))
+        conn.commit()
+        user_id = existing_id
+    else:
+        cursor.execute("""
+        INSERT INTO users (id, name, email, phone, role, status, joinedDate, addresses, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (user_id, name, email, phone, role, status_str, joinedDate, addresses, hash_password(password) if password else None))
+        conn.commit()
 
     cursor.execute("SELECT id, name, email, phone, role, status, ordersCount, totalSpent, joinedDate, addresses FROM users WHERE id = ?", (user_id,))
     row = cursor.fetchone()
