@@ -10,6 +10,8 @@ import { sendOrderConfirmationEmail } from '../utils/emailService';
 import { ShieldCheckIcon, LockClosedIcon, BagIcon, ArrowRightIcon } from '../components/Icons';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
+import { Reveal } from '../components/useScrollReveal';
+import { Lock, Shield, CheckCircle2, Truck, CreditCard, Banknote, Landmark } from 'lucide-react';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -129,22 +131,23 @@ export default function Checkout() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+      <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
         <Navbar />
         <main className="mx-auto flex min-h-[60vh] max-w-7xl items-center justify-center px-4">
-          <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-xs">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-800">
-              <BagIcon className="w-6 h-6" />
+          <div className="w-full max-w-md rounded-2xl border border-neutral-200/90 bg-white p-8 sm:p-12 text-center shadow-sm">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FAF8F5] border border-[#C5A880]/50 text-[#8C6734] mb-3">
+              <BagIcon className="w-8 h-8" />
             </div>
-            <h1 className="mt-3 text-lg font-bold text-gray-950">Your Bag is Empty</h1>
-            <p className="mt-1 text-xs text-gray-500">
+            <h1 className="font-serif text-2xl font-medium text-neutral-950">Your Bag is Empty</h1>
+            <p className="mt-2 text-xs sm:text-sm text-neutral-500">
               Please add selected timepieces or accessories before checking out.
             </p>
             <Link
               to="/shop"
-              className="mt-4 inline-block rounded-full bg-[#111827] px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white hover:bg-black"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-neutral-950 px-6 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:bg-[#8C6734] transition-colors"
             >
-              Browse Catalog
+              <span>Explore Catalog</span>
+              <ArrowRightIcon className="w-3.5 h-3.5" />
             </Link>
           </div>
         </main>
@@ -154,335 +157,363 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+    <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white overflow-x-clip">
       <Navbar />
 
       {/* Checkout Header */}
-      <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
-              Encrypted 256-Bit Transaction
-            </span>
-            <h1 className="mt-0.5 text-xl sm:text-2xl font-bold tracking-tight text-gray-950">
-              Express Checkout
-            </h1>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Enter your client contact details & shipping address below to confirm your order.
-            </p>
-          </div>
+      <section className="border-b border-neutral-200/80 bg-white py-8 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal delay={0} direction="up">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 shadow-2xs mb-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
+                  <span className="text-[10.5px] font-semibold tracking-[0.18em] uppercase text-[#8C6734]">
+                    256-Bit Encrypted Checkout
+                  </span>
+                </div>
+                <h1 className="font-serif text-2xl sm:text-4xl font-medium tracking-tight text-neutral-950">
+                  Express <span className="italic font-normal text-[#8C6734]">Checkout</span>
+                </h1>
+                <p className="text-xs text-neutral-500 font-normal">
+                  Provide your client delivery coordinates and preferred payment mode to confirm your purchase.
+                </p>
+              </div>
 
-          <div className="flex items-center gap-2">
-            {user && (
-              <button
-                type="button"
-                onClick={handleAutofillProfile}
-                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 px-3.5 py-1.5 text-xs font-semibold text-gray-800 transition shadow-2xs"
-              >
-                <span>⚡ Autofill from Profile</span>
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={handleClearForm}
-              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white hover:bg-gray-50 px-3.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-rose-600 transition shadow-2xs"
-            >
-              <span>Clear Form</span>
-            </button>
-          </div>
+              <div className="flex items-center gap-2.5 self-start sm:self-auto">
+                {user && (
+                  <button
+                    type="button"
+                    onClick={handleAutofillProfile}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#C5A880]/50 bg-[#FAF8F5] hover:bg-[#F5F2EB] px-3.5 py-2 text-xs font-semibold text-[#8C6734] transition-colors cursor-pointer"
+                  >
+                    <span>⚡ Autofill from Profile</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleClearForm}
+                  className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 px-3.5 py-2 text-xs font-medium text-neutral-600 hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  <span>Clear Form</span>
+                </button>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
 
-        <form onSubmit={handlePlaceOrder} className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <form onSubmit={handlePlaceOrder} className="grid gap-8 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_390px]">
 
           {/* Left Column: Form Steps */}
-          <div className="space-y-4">
+          <div className="space-y-6">
 
             {/* Step 1: Contact Information */}
-            <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-2.5 mb-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#111827] text-[9.5px] font-bold text-white">
-                    1
-                  </span>
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-gray-950">
-                    Client Contact Information
-                  </h2>
+            <Reveal delay={50} direction="up">
+              <div className="rounded-2xl border border-neutral-200/90 bg-white p-5 sm:p-7 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
+                      1
+                    </span>
+                    <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-950">
+                      Client Contact Information
+                    </h2>
+                  </div>
+                  <span className="text-[11px] text-neutral-400 font-medium">Personal Details</span>
                 </div>
-                <span className="text-[10.5px] text-gray-400 font-medium">Manual Input</span>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="text-xs font-medium text-neutral-700 mb-1.5 block">First Name *</label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      required
+                      placeholder="e.g. Rahul"
+                      value={form.firstName}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-neutral-700 mb-1.5 block">Last Name</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      placeholder="e.g. Patel"
+                      value={form.lastName}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-neutral-700 mb-1.5 block">Email Address (For Invoice & Updates) *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="e.g. rahul.patel@example.com"
+                      value={form.email}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-neutral-700 mb-1.5 block">Mobile Number (For Courier Tracking) *</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      placeholder="e.g. +91 98765 12345"
+                      value={form.phone}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                    />
+                  </div>
+                </div>
               </div>
-
-              <div className="grid gap-3.5 sm:grid-cols-2">
-                <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">First Name *</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    required
-                    placeholder="e.g. Rahul"
-                    value={form.firstName}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Last Name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="e.g. Patel"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Email Address (For Invoice & Updates) *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="e.g. rahul.patel@example.com"
-                    value={form.email}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Mobile Number (For Courier Delivery) *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    placeholder="e.g. 98765 12345"
-                    value={form.phone}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                  />
-                </div>
-              </div>
-            </div>
+            </Reveal>
 
             {/* Step 2: Delivery Address */}
-            <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-2.5 mb-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#111827] text-[9.5px] font-bold text-white">
-                    2
+            <Reveal delay={120} direction="up">
+              <div className="rounded-2xl border border-neutral-200/90 bg-white p-5 sm:p-7 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
+                      2
+                    </span>
+                    <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-950">
+                      Delivery Destination Address
+                    </h2>
+                  </div>
+
+                  {savedAddresses.length > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] text-neutral-400 font-medium">Saved:</span>
+                      {savedAddresses.map(sa => (
+                        <button
+                          key={sa.id}
+                          type="button"
+                          onClick={() => handleSelectSavedAddress(sa)}
+                          className="rounded-md bg-[#FAF8F5] border border-[#C5A880]/40 px-2.5 py-1 text-[10.5px] font-semibold text-[#8C6734] hover:bg-[#F5F2EB] transition-colors cursor-pointer"
+                        >
+                          {sa.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-medium text-neutral-700 mb-1.5 block">Street Address / House No. / Building / Landmark *</label>
+                    <input
+                      type="text"
+                      name="address"
+                      required
+                      placeholder="e.g. Flat B-402, Shivalik Heights, Judges Bungalow Road"
+                      value={form.address}
+                      onChange={handleChange}
+                      className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                    />
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <div>
+                      <label className="text-xs font-medium text-neutral-700 mb-1.5 block">City *</label>
+                      <input
+                        type="text"
+                        name="city"
+                        required
+                        placeholder="e.g. Ahmedabad"
+                        value={form.city}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-medium text-neutral-700 mb-1.5 block">State *</label>
+                      <input
+                        type="text"
+                        name="state"
+                        required
+                        placeholder="e.g. Gujarat"
+                        value={form.state}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-medium text-neutral-700 mb-1.5 block">PIN Code *</label>
+                      <input
+                        type="text"
+                        name="pincode"
+                        required
+                        placeholder="e.g. 380054"
+                        value={form.pincode}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-neutral-200/90 bg-[#FAFAFB] px-4 py-2.5 text-xs font-mono text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors duration-200 focus:border-[#C5A880] focus:bg-white focus:ring-1 focus:ring-[#C5A880]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Step 3: Payment Method */}
+            <Reveal delay={180} direction="up">
+              <div className="rounded-2xl border border-neutral-200/90 bg-white p-5 sm:p-7 shadow-sm space-y-4">
+                <div className="flex items-center gap-2.5 border-b border-neutral-100 pb-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-950 text-xs font-semibold text-white">
+                    3
                   </span>
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-gray-950">
-                    Delivery Destination Address
+                  <h2 className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-950">
+                    Payment Mode Selection
                   </h2>
                 </div>
 
-                {savedAddresses.length > 0 && (
-                  <div className="flex items-center gap-1">
-                    <span className="text-[9.5px] text-gray-400 font-medium">Saved:</span>
-                    {savedAddresses.map(sa => (
-                      <button
-                        key={sa.id}
-                        type="button"
-                        onClick={() => handleSelectSavedAddress(sa)}
-                        className="rounded-full bg-gray-100 px-2 py-0.2 text-[9.5px] font-semibold text-gray-800 hover:bg-gray-200 transition"
+                <div className="space-y-3">
+                  {[
+                    { id: 'online', label: 'Online Gateway (UPI / Credit & Debit Cards / NetBanking)', desc: 'Instant 256-bit encrypted checkout via Razorpay / Stripe', icon: CreditCard },
+                    { id: 'cod', label: 'Cash on Delivery (COD)', desc: 'Inspect parcel upon delivery before payment', icon: Banknote },
+                    { id: 'emi', label: 'No-Cost Luxury EMI (Bank Cards)', desc: 'Available on major bank credit cards', icon: Landmark }
+                  ].map((method) => {
+                    const isSelected = paymentMethod === method.label;
+                    const IconComponent = method.icon;
+                    return (
+                      <label
+                        key={method.id}
+                        className={`flex cursor-pointer items-start gap-3.5 rounded-xl border p-4 transition-all duration-200 ${
+                          isSelected
+                            ? 'border-[#8C6734] bg-[#FAF8F5] shadow-2xs'
+                            : 'border-neutral-200/90 bg-white hover:border-neutral-300'
+                        }`}
                       >
-                        {sa.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-3.5">
-                <div>
-                  <label className="text-[11px] font-medium text-gray-700 mb-1 block">Street Address / House No. / Building / Landmark *</label>
-                  <input
-                    type="text"
-                    name="address"
-                    required
-                    placeholder="e.g. Flat B-402, Shivalik Heights, Judges Bungalow Road"
-                    value={form.address}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                  />
-                </div>
-
-                <div className="grid gap-3.5 sm:grid-cols-3">
-                  <div>
-                    <label className="text-[11px] font-medium text-gray-700 mb-1 block">City *</label>
-                    <input
-                      type="text"
-                      name="city"
-                      required
-                      placeholder="e.g. Ahmedabad"
-                      value={form.city}
-                      onChange={handleChange}
-                      className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-medium text-gray-700 mb-1 block">State *</label>
-                    <input
-                      type="text"
-                      name="state"
-                      required
-                      placeholder="e.g. Gujarat"
-                      value={form.state}
-                      onChange={handleChange}
-                      className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-medium text-gray-700 mb-1 block">PIN Code *</label>
-                    <input
-                      type="text"
-                      name="pincode"
-                      required
-                      placeholder="e.g. 380054"
-                      value={form.pincode}
-                      onChange={handleChange}
-                      className="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-mono text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-black focus:ring-1 focus:ring-black shadow-2xs"
-                    />
-                  </div>
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value={method.label}
+                          checked={isSelected}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          className="mt-0.5 accent-[#8C6734] h-4 w-4"
+                        />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <IconComponent className={`w-4 h-4 ${isSelected ? 'text-[#8C6734]' : 'text-neutral-400'}`} />
+                            <span className="text-xs font-semibold text-neutral-950">{method.label}</span>
+                          </div>
+                          <span className="text-[11px] text-neutral-500 mt-1 block leading-relaxed">{method.desc}</span>
+                        </div>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
-            </div>
-
-            {/* Step 3: Payment Method */}
-            <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs">
-              <div className="flex items-center gap-2 border-b border-gray-100 pb-2.5 mb-3.5">
-                <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#111827] text-[9.5px] font-bold text-white">
-                  3
-                </span>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-gray-950">
-                  Payment Mode Selection
-                </h2>
-              </div>
-
-              <div className="space-y-2">
-                {[
-                  { id: 'online', label: 'Online Gateway (UPI / Credit & Debit Cards / NetBanking)', desc: 'Instant 256-bit encrypted checkout via Razorpay / Stripe' },
-                  { id: 'cod', label: 'Cash on Delivery (COD)', desc: 'Inspect parcel upon delivery before payment' },
-                  { id: 'emi', label: 'No-Cost Luxury EMI (Bank Cards)', desc: 'Available on major bank cards' }
-                ].map((method) => (
-                  <label
-                    key={method.id}
-                    className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 transition ${paymentMethod === method.label
-                      ? 'border-gray-950 bg-gray-50'
-                      : 'border-gray-200 bg-[#FAFAFB] hover:border-gray-300'
-                      }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value={method.label}
-                      checked={paymentMethod === method.label}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="mt-0.5 accent-[#111827]"
-                    />
-                    <div>
-                      <span className="text-xs font-semibold text-gray-950 block">{method.label}</span>
-                      <span className="text-[10.5px] text-gray-500 mt-0.2 block">{method.desc}</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
+            </Reveal>
 
           </div>
 
           {/* Right Column: Order Review Sidebar */}
-          <div className="space-y-4">
-            <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-3">
+          <div className="space-y-5">
+            <Reveal delay={100} direction="up">
+              <div className="rounded-2xl border border-neutral-200/90 bg-white p-5 sm:p-6 shadow-sm space-y-4">
 
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-950 border-b border-gray-100 pb-2.5">
-                Order Review ({cart.length})
-              </h3>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-950 border-b border-neutral-100 pb-3 flex items-center justify-between">
+                  <span>Order Review</span>
+                  <span className="text-[11px] font-normal text-neutral-400 normal-case">
+                    {cart.length} {cart.length === 1 ? 'item' : 'items'}
+                  </span>
+                </h3>
 
-              {/* Items List Preview */}
-              <div className="divide-y divide-gray-100 max-h-48 overflow-y-auto pr-1">
-                {cart.map((item, idx) => (
-                  <div key={idx} className="py-2 flex items-center justify-between gap-2.5 text-xs">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <img src={item.image} alt="" className="h-8 w-8 rounded-lg object-contain bg-[#F4F4F6] border border-gray-200 shrink-0 p-0.5" />
-                      <div className="min-w-0">
-                        <p className="font-semibold text-gray-950 truncate text-[11px]">{item.name}</p>
-                        <span className="text-[9.5px] text-gray-400">Qty: {item.quantity}</span>
+                {/* Items List Preview */}
+                <div className="divide-y divide-neutral-100 max-h-52 overflow-y-auto pr-1">
+                  {cart.map((item, idx) => (
+                    <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <img src={item.image} alt="" className="h-9 w-9 rounded-lg object-contain bg-[#FAF8F5] border border-neutral-200/80 shrink-0 p-0.5" />
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-950 truncate text-[11px]">{item.name}</p>
+                          <span className="text-[10px] text-neutral-400">Qty: {item.quantity} {item.color && `• ${item.color}`}</span>
+                        </div>
                       </div>
+                      <span className="font-semibold text-neutral-950 shrink-0 text-xs tabular-nums">
+                        ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                      </span>
                     </div>
-                    <span className="font-semibold text-gray-950 shrink-0 text-xs">
-                      ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                  ))}
+                </div>
+
+                {/* Financial Calculation */}
+                <div className="border-t border-neutral-100 pt-3 space-y-2 text-xs">
+                  <div className="flex justify-between text-neutral-600">
+                    <span>Subtotal</span>
+                    <span className="font-semibold text-neutral-950 tabular-nums">₹{subtotal.toLocaleString('en-IN')}</span>
+                  </div>
+
+                  {discount > 0 && (
+                    <div className="flex justify-between text-emerald-700 font-semibold">
+                      <span>Discount ({typeof coupon === 'object' && coupon?.code ? coupon.code : (coupon || 'Voucher')})</span>
+                      <span className="tabular-nums">−₹{discount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between text-neutral-600">
+                    <span>Express Air Shipping</span>
+                    <span className="font-semibold text-neutral-950 tabular-nums">
+                      {shipping === 0 ? <span className="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Free</span> : `₹${shipping}`}
                     </span>
                   </div>
-                ))}
-              </div>
 
-              {/* Financial Calculation */}
-              <div className="border-t border-gray-100 pt-2.5 space-y-1.5 text-xs">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <span className="font-semibold text-gray-900">₹{subtotal.toLocaleString('en-IN')}</span>
-                </div>
-
-                {discount > 0 && (
-                  <div className="flex justify-between text-emerald-700 font-semibold">
-                    <span>Discount ({typeof coupon === 'object' && coupon?.code ? coupon.code : (coupon || 'Voucher')})</span>
-                    <span>−₹{discount.toLocaleString('en-IN')}</span>
+                  <div className="border-t border-neutral-200/90 pt-3 flex justify-between items-baseline">
+                    <div>
+                      <span className="text-sm font-semibold text-neutral-950">Total Payable</span>
+                      <p className="text-[10.5px] text-neutral-400">Inclusive of all taxes</p>
+                    </div>
+                    <span className="font-serif text-xl sm:text-2xl font-semibold text-neutral-950 tabular-nums text-[#8C6734]">
+                      ₹{total.toLocaleString('en-IN')}
+                    </span>
                   </div>
-                )}
-
-                <div className="flex justify-between text-gray-600">
-                  <span>Express Shipping</span>
-                  <span className="font-semibold text-gray-900">
-                    {shipping === 0 ? <span className="text-emerald-700 font-bold uppercase text-[9.5px]">Free</span> : `₹${shipping}`}
-                  </span>
                 </div>
 
-                <div className="border-t border-gray-200 pt-2.5 flex justify-between items-baseline">
-                  <div>
-                    <span className="text-xs font-bold text-gray-950">Total Payable</span>
-                    <p className="text-[9.5px] text-gray-400">Incl. all taxes</p>
-                  </div>
-                  <span className="text-lg font-bold text-gray-950">
-                    ₹{total.toLocaleString('en-IN')}
-                  </span>
+                {/* Place Order CTA Button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-lg bg-neutral-950 py-3.5 text-xs font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition-all duration-200 hover:bg-[#8C6734] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  {loading ? (
+                    <>
+                      <BrandSpinner size="xs" variant="gold" inline={true} />
+                      <span>Processing Order...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LockClosedIcon className="w-3.5 h-3.5 text-[#C5A880]" />
+                      <span>Confirm &amp; Place Order (₹{total.toLocaleString('en-IN')})</span>
+                    </>
+                  )}
+                </button>
+
+                <div className="rounded-xl bg-[#FAF8F5] border border-neutral-200/80 p-3 text-[10.5px] text-neutral-600 space-y-1">
+                  <p className="flex items-center gap-1.5 font-semibold text-neutral-950">
+                    <ShieldCheckIcon className="w-3.5 h-3.5 text-[#8C6734]" />
+                    <span>The Krishna Privé Assurance</span>
+                  </p>
+                  <p className="text-neutral-500 pl-5 leading-relaxed">
+                    Verified product quality &bull; 7-day hassle-free replacement privilege
+                  </p>
                 </div>
+
               </div>
-
-              {/* Place Order CTA Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-full bg-[#111827] py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-xs transition hover:bg-black disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <BrandSpinner size="xs" variant="gold" inline={true} />
-                    <span>Processing Order...</span>
-                  </>
-                ) : (
-                  <>
-                    <LockClosedIcon className="w-3 h-3 text-amber-400" />
-                    <span>Place Order (₹{total.toLocaleString('en-IN')})</span>
-                  </>
-                )}
-              </button>
-
-              <div className="rounded-xl bg-gray-50 border border-gray-100 p-2.5 text-[9.5px] text-gray-500 space-y-0.5">
-                <p className="flex items-center gap-1 font-semibold text-gray-800">
-                  <ShieldCheckIcon className="w-3 h-3 text-emerald-600" />
-                  <span>Krishna Purchase Protection</span>
-                </p>
-                <p>Quality Products &bull; 7-Day Return Guarantee</p>
-              </div>
-
-            </div>
+            </Reveal>
           </div>
 
         </form>
