@@ -1,9 +1,9 @@
 // src/pages/SupplierDashboard.jsx
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getSupplierUser, logoutSupplier, setSupplierUser as saveSupplierUserAuth, isSupplier } from '../utils/auth';
+import { getSupplierUser, logoutSupplier } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
-import { getOrders, updateOrderStatus, getSuppliers, getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
+import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
 import {
   LayoutDashboard,
   Building2,
@@ -55,66 +55,15 @@ import {
   RotateCcw,
   FileText,
   User,
-  Users,
-  Bell
+  Users
 } from 'lucide-react';
 import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 
 export default function SupplierDashboard() {
   const navigate = useNavigate();
   const [supplierUser, setSupplierUser] = useState(() => getSupplierUser());
-  const suppliers = useMemo(() => getSuppliers() || [], []);
-  const [activeSupplierName, setActiveSupplierName] = useState(() => {
-    const sup = getSupplierUser();
-    return sup?.name || (suppliers.length > 0 ? suppliers[0].name : 'Apex Timepieces Ltd.');
-  });
-
-  // Notifications State & Popovers
-  const [notifications, setNotifications] = useState(() => getNotifications() || []);
-  const [notifsOpen, setNotifsOpen] = useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const notifsRef = useRef(null);
-  const userDropdownRef = useRef(null);
-
-  // Popover Dismiss Handler
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notifsRef.current && !notifsRef.current.contains(event.target)) {
-        setNotifsOpen(false);
-      }
-      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
-        setUserDropdownOpen(false);
-      }
-    };
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        setNotifsOpen(false);
-        setUserDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, []);
-
-  // Quick Supplier Login
-  const handleQuickSupplierLogin = () => {
-    const defaultVendor = {
-      id: 1,
-      name: 'Apex Timepieces Ltd.',
-      email: 'apex@timepieces.com',
-      role: 'supplier',
-      phone: '+91 98765 43210',
-      category: 'Watches'
-    };
-    saveSupplierUserAuth(defaultVendor);
-    setSupplierUser(defaultVendor);
-    setActiveSupplierName('Apex Timepieces Ltd.');
-    showToast('Signed in as Apex Timepieces Ltd.');
-  };
+  const suppliers = getSuppliers();
+  const [activeSupplierName, setActiveSupplierName] = useState(suppliers[0]?.name || 'Apex Timepieces Ltd.');
 
   // Navigation Hierarchical State (matching Admin structure)
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -224,7 +173,6 @@ export default function SupplierDashboard() {
     setIsRefreshing(true);
     setAllProducts(getProducts());
     setAllOrders(getOrders());
-    setNotifications(getNotifications());
     setSupplierUser(getSupplierUser());
     setTimeout(() => {
       setIsRefreshing(false);
@@ -236,12 +184,10 @@ export default function SupplierDashboard() {
     refreshData();
     window.addEventListener('productsUpdated', refreshData);
     window.addEventListener('ordersUpdated', refreshData);
-    window.addEventListener('notificationsUpdated', refreshData);
     window.addEventListener('authUpdated', refreshData);
     return () => {
       window.removeEventListener('productsUpdated', refreshData);
       window.removeEventListener('ordersUpdated', refreshData);
-      window.removeEventListener('notificationsUpdated', refreshData);
       window.removeEventListener('authUpdated', refreshData);
     };
   }, []);
@@ -326,56 +272,6 @@ export default function SupplierDashboard() {
     category: 'Luxury Accessories',
     rating: 4.9,
     status: 'Active'
-  };
-
-  // Supplier Alert Notifications List & Counter
-  const supplierAlerts = useMemo(() => {
-    const list = [];
-    if (pendingOrdersCount > 0) {
-      list.push({
-        id: 'alert-pending',
-        title: `${pendingOrdersCount} Orders Pending Dispatch`,
-        message: `You have ${pendingOrdersCount} customer orders awaiting packaging and courier tracking code.`,
-        date: 'Action required',
-        unread: true,
-        type: 'order',
-        section: 'fulfillment',
-        tab: 'orders'
-      });
-    }
-    if (lowStockItems.length > 0) {
-      list.push({
-        id: 'alert-stock',
-        title: `${lowStockItems.length} Products Low on Stock`,
-        message: `${lowStockItems.map(p => p.name).slice(0, 2).join(', ')} are running low (< 10 units).`,
-        date: 'Stock warning',
-        unread: true,
-        type: 'stock',
-        section: 'inventory',
-        tab: 'stock-control'
-      });
-    }
-    (notifications || []).forEach(n => {
-      list.push({
-        id: n.id,
-        title: n.title,
-        message: n.message,
-        date: n.date || 'Recent',
-        unread: n.unread,
-        type: n.type || 'info',
-        section: 'dashboard',
-        tab: 'overview'
-      });
-    });
-    return list;
-  }, [pendingOrdersCount, lowStockItems, notifications]);
-
-  const unreadNotifsCount = supplierAlerts.filter(a => a.unread).length;
-
-  const handleMarkAllRead = () => {
-    markAllNotificationsRead();
-    setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
-    showToast('All notifications marked as read');
   };
 
   // Navigation Structure (Exact hierarchy style of Admin)
@@ -607,55 +503,6 @@ export default function SupplierDashboard() {
     });
   };
 
-  // If not authenticated as supplier, display clean login card
-  if (!supplierUser && !isSupplier()) {
-    return (
-      <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 flex flex-col justify-center items-center px-4 py-12 font-sans selection:bg-zinc-900 selection:text-white">
-        <div className="w-full max-w-sm bg-white border border-zinc-200/80 rounded-2xl p-7 sm:p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] space-y-6 text-center">
-          <img
-            src="/images/krishna-logo.png"
-            alt="Krishna Accessories Logo"
-            onError={(e) => { e.currentTarget.src = '/logo.png'; }}
-            className="mx-auto h-12 w-12 object-contain rounded-xl bg-white p-1 shadow-xs border border-zinc-200"
-          />
-          <div>
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 block">
-              Supplier Partner Portal
-            </span>
-            <h1 className="text-xl font-semibold text-zinc-900 tracking-tight mt-1">
-              Krishna Accessories
-            </h1>
-            <p className="text-xs text-zinc-500 mt-1.5 leading-relaxed">
-              Vendor inventory catalog, dispatch fulfillment & earnings portal.
-            </p>
-          </div>
-          <div className="pt-2 space-y-2.5">
-            <button
-              onClick={handleQuickSupplierLogin}
-              className="w-full rounded-xl bg-zinc-900 hover:bg-black py-2.5 text-xs font-semibold text-white shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Building2 className="h-4 w-4" />
-              <span>1-Click Supplier Portal Login</span>
-            </button>
-            <Link
-              to="/login"
-              state={{ requiredRole: 'supplier' }}
-              className="block w-full rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 py-2.5 text-xs font-medium text-zinc-700 transition"
-            >
-              Sign In with Password &rarr;
-            </Link>
-            <Link
-              to="/"
-              className="inline-block text-xs text-zinc-400 hover:text-zinc-700 pt-2 transition font-medium"
-            >
-              &larr; Back to Storefront
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Find Current Active Section and Sub Item for Breadcrumbs
   const currentSectionObj = navSections.find(s => s.id === activeSection) || navSections[0];
   const currentSubItemObj = currentSectionObj.subItems.find(sub => sub.id === activeSubTab) || currentSectionObj.subItems[0];
@@ -685,15 +532,12 @@ export default function SupplierDashboard() {
       >
         {/* Sidebar Brand Header */}
         <div className="flex flex-col min-h-0 flex-1 overflow-hidden">
-          <div className={`flex h-16 items-center ${sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-4'} border-b border-zinc-800/80 shrink-0`}>
+          <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
             <div className="flex items-center gap-3 overflow-hidden min-w-0">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                onError={(e) => { e.currentTarget.src = '/logo.png'; }}
-                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs cursor-pointer"
-                onClick={() => sidebarCollapsed && setSidebarCollapsed(false)}
-                title={sidebarCollapsed ? "Expand sidebar" : undefined}
+                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs"
               />
               {!sidebarCollapsed && (
                 <div className="flex flex-col min-w-0">
@@ -706,15 +550,6 @@ export default function SupplierDashboard() {
                 </div>
               )}
             </div>
-
-            {/* Toggle Icon inside Sidebar Header */}
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700 text-xs transition cursor-pointer shrink-0"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-            </button>
 
             <button
               onClick={() => setMobileSidebarOpen(false)}
@@ -781,8 +616,8 @@ export default function SupplierDashboard() {
                       }
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 font-medium transition-colors cursor-pointer ${isSectionActive
-                        ? 'bg-zinc-800/90 text-white font-semibold'
-                        : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
+                      ? 'bg-zinc-800/90 text-white font-semibold'
+                      : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -814,8 +649,8 @@ export default function SupplierDashboard() {
                             key={sub.id}
                             onClick={() => handleNavSelect(sec.id, sub.id)}
                             className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-[11.5px] transition cursor-pointer ${isSubActive
-                                ? 'bg-zinc-800/80 text-white font-semibold'
-                                : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
+                              ? 'bg-zinc-800/80 text-white font-semibold'
+                              : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
                               }`}
                           >
                             <span className="truncate">{sub.label}</span>
@@ -919,15 +754,25 @@ export default function SupplierDashboard() {
               <Menu className="h-4 w-4" />
             </button>
 
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 hover:bg-zinc-200 text-xs font-mono shrink-0 cursor-pointer"
+              title="Toggle sidebar collapse"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+            </button>
+
             <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
-              <span className="text-zinc-700 font-medium truncate">{currentSectionObj.title}</span>
+              <span className="text-zinc-400 shrink-0">Supplier</span>
+              <span className="text-zinc-300 shrink-0">/</span>
+              <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
               <span className="text-zinc-300 shrink-0">/</span>
               <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
             </div>
           </div>
 
-          {/* Right: Search, Sync, Notifications & User Profile */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {/* Right: Search, Vendor Switcher, Sync & Add Product */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Search Input */}
             <div className="relative hidden md:block">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
@@ -945,6 +790,25 @@ export default function SupplierDashboard() {
               )}
             </div>
 
+            {/* Vendor Switcher */}
+            <div className="relative hidden sm:block">
+              <select
+                value={activeSupplierName}
+                onChange={(e) => {
+                  setActiveSupplierName(e.target.value);
+                  showToast(`Switched vendor context to "${e.target.value}"`);
+                }}
+                className="h-8 appearance-none rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 pl-2.5 pr-7 text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer transition shadow-2xs"
+              >
+                {suppliers.map(s => (
+                  <option key={s.id} value={s.name}>
+                    {s.name} ({s.category})
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400 pointer-events-none" />
+            </div>
+
             {/* Sync Data Button */}
             <button
               onClick={refreshData}
@@ -956,173 +820,14 @@ export default function SupplierDashboard() {
               <span className="hidden sm:inline">Sync</span>
             </button>
 
-            {/* Notifications Popover */}
-            <div className="relative" ref={notifsRef}>
-              <button
-                onClick={() => {
-                  setNotifsOpen(prev => !prev);
-                  setUserDropdownOpen(false);
-                }}
-                className="relative flex h-8 w-8 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 transition shadow-2xs cursor-pointer"
-                aria-label="Toggle notifications"
-                aria-expanded={notifsOpen}
-                title="Supplier Notifications"
-              >
-                <Bell className="h-3.5 w-3.5 text-zinc-600" />
-                {unreadNotifsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[8.5px] font-bold text-white shadow-xs animate-pulse">
-                    {unreadNotifsCount}
-                  </span>
-                )}
-              </button>
-
-              {notifsOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 sm:w-88 rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-xl z-50 animate-in fade-in duration-150">
-                  <div className="flex items-center justify-between border-b border-zinc-100 pb-2.5 mb-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <Bell className="h-3.5 w-3.5 text-zinc-800" />
-                      <span className="text-xs font-bold text-zinc-900">
-                        Supplier Notifications ({supplierAlerts.length})
-                      </span>
-                    </div>
-                    {unreadNotifsCount > 0 && (
-                      <button
-                        onClick={handleMarkAllRead}
-                        className="text-[10.5px] text-zinc-500 font-semibold hover:text-zinc-900 cursor-pointer"
-                      >
-                        Mark all read
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
-                    {supplierAlerts.map(n => (
-                      <div
-                        key={n.id}
-                        onClick={() => {
-                          if (n.tab) {
-                            setActiveSection(n.section || 'dashboard');
-                            setActiveSubTab(n.tab);
-                            setNotifsOpen(false);
-                          }
-                        }}
-                        className={`rounded-xl p-2.5 text-xs transition cursor-pointer ${
-                          n.unread ? 'bg-amber-50/80 border border-amber-200/80 font-medium' : 'hover:bg-zinc-50 text-zinc-600'
-                        }`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <span className="font-semibold text-zinc-900 text-xs flex items-center gap-1.5">
-                            {n.type === 'order' && <Truck className="h-3 w-3 text-amber-600 shrink-0" />}
-                            {n.type === 'stock' && <AlertTriangle className="h-3 w-3 text-rose-600 shrink-0" />}
-                            {n.type === 'info' && <CheckCircle2 className="h-3 w-3 text-emerald-600 shrink-0" />}
-                            <span className="truncate">{n.title}</span>
-                          </span>
-                          <span className="text-[9px] text-zinc-400 font-mono shrink-0 ml-2">{n.date}</span>
-                        </div>
-                        <p className="mt-1 text-[11px] text-zinc-600 leading-snug">{n.message}</p>
-                      </div>
-                    ))}
-                    {supplierAlerts.length === 0 && (
-                      <div className="py-6 text-center text-xs text-zinc-400">
-                        No active notifications at this time.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* User Profile Dropdown Menu */}
-            <div className="relative" ref={userDropdownRef}>
-              <button
-                onClick={() => {
-                  setUserDropdownOpen(prev => !prev);
-                  setNotifsOpen(false);
-                }}
-                className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-800 transition shadow-2xs cursor-pointer"
-                aria-label="Toggle user profile menu"
-                aria-expanded={userDropdownOpen}
-              >
-                <div className="relative flex h-6 w-6 items-center justify-center rounded-lg bg-zinc-900 text-white text-[10px] font-bold shrink-0">
-                  {supplierUser?.name ? supplierUser.name.charAt(0).toUpperCase() : activeSupplierName.charAt(0).toUpperCase()}
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-1.5 ring-white" />
-                </div>
-                <span className="hidden sm:inline text-xs font-semibold text-zinc-900 max-w-[120px] truncate">
-                  {supplierUser?.name || activeSupplierName}
-                </span>
-                <ChevronDown className={`h-3.5 w-3.5 text-zinc-400 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {userDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl border border-zinc-200 bg-white p-2 shadow-xl z-50 animate-in fade-in duration-150 text-xs">
-                  <div className="px-3 py-2.5 border-b border-zinc-100 mb-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <p className="font-bold text-zinc-900 truncate">{supplierUser?.name || 'Verified Supplier'}</p>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.2 text-[9px] font-bold text-emerald-700 border border-emerald-200">
-                        <span className="h-1 w-1 rounded-full bg-emerald-500" />
-                        Active
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-zinc-400 truncate">{supplierUser?.email || 'supplier@krishna.com'}</p>
-                    <div className="pt-1">
-                      <span className="text-[10.5px] text-zinc-600 font-medium block truncate">
-                        Vendor: <strong className="text-zinc-800">{activeSupplierName}</strong>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-0.5">
-                    <button
-                      onClick={() => {
-                        setActiveSection('catalog');
-                        setActiveSubTab('products');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left rounded-xl px-3 py-2 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer flex items-center gap-2.5 font-medium"
-                    >
-                      <Package className="h-3.5 w-3.5 text-zinc-400" />
-                      <span>Product Catalog ({supplierProducts.length})</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setActiveSection('financials');
-                        setActiveSubTab('payouts');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left rounded-xl px-3 py-2 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer flex items-center gap-2.5 font-medium"
-                    >
-                      <Wallet className="h-3.5 w-3.5 text-zinc-400" />
-                      <span>Earnings & Payouts (95%)</span>
-                    </button>
-
-                    <Link
-                      to="/"
-                      target="_blank"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="w-full text-left rounded-xl px-3 py-2 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer flex items-center gap-2.5 font-medium"
-                    >
-                      <Store className="h-3.5 w-3.5 text-zinc-400" />
-                      <span>View Storefront</span>
-                      <ExternalLink className="h-3 w-3 text-zinc-400 ml-auto" />
-                    </Link>
-                  </div>
-
-                  <div className="border-t border-zinc-100 pt-1 mt-1">
-                    <button
-                      onClick={() => {
-                        setUserDropdownOpen(false);
-                        handleSupplierLogout();
-                      }}
-                      className="w-full text-left rounded-xl px-3 py-2 text-rose-600 hover:bg-rose-50 font-semibold transition cursor-pointer flex items-center gap-2.5"
-                    >
-                      <LogOut className="h-3.5 w-3.5 text-rose-500" />
-                      <span>Sign Out</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* Add Product Button */}
+            <button
+              onClick={handleOpenAddProduct}
+              className="flex h-8 items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-black px-3 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span>Add Product</span>
+            </button>
           </div>
         </header>
 
@@ -1271,8 +976,8 @@ export default function SupplierDashboard() {
 
                         <div className="text-right space-y-1">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
-                              order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
-                                'bg-amber-50 text-amber-700 border border-amber-200/60'
+                            order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                              'bg-amber-50 text-amber-700 border border-amber-200/60'
                             }`}>
                             {order.status}
                           </span>
@@ -1471,10 +1176,10 @@ export default function SupplierDashboard() {
                           </td>
                           <td className="py-3.5 px-4">
                             <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono ${Number(p.stock) === 0
-                                ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
-                                : Number(p.stock) < 10
-                                  ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
-                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                              : Number(p.stock) < 10
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                                : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
                               }`}>
                               {p.stock} units
                             </span>
@@ -1598,9 +1303,9 @@ export default function SupplierDashboard() {
 
                           <td className="py-3.5 px-4">
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
-                                order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
-                                  order.status === 'Cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' :
-                                    'bg-amber-50 text-amber-700 border border-amber-200/60'
+                              order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                                order.status === 'Cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' :
+                                  'bg-amber-50 text-amber-700 border border-amber-200/60'
                               }`}>
                               {order.status}
                             </span>
