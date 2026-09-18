@@ -32,59 +32,70 @@ const DIFFERENCE_ITEMS = [
 
 export default function WhyChooseUsSection({ items = DIFFERENCE_ITEMS }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
-      {/* Header */}
-      <Reveal direction="up" delay={50}>
-        <div className="mb-7 sm:mb-9 text-center">
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-            THE KRISHNA PROMISE
-          </span>
-          <h2 className="mt-1.5 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
-            Why Shop With Us?
-          </h2>
-          <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed text-gray-500 sm:text-sm">
-            We hold ourselves to the highest standards of luxury curation, trusted product quality, and client satisfaction.
-          </p>
-        </div>
-      </Reveal>
+    <section className="relative w-full floor-artisan-hall py-14 sm:py-20 border-b border-[#E2DBD0] overflow-hidden">
+      {/* Subtle Inset Ambient Light */}
+      <div className="pointer-events-none absolute -top-40 left-1/3 h-96 w-96 rounded-full bg-[#C5A880]/10 blur-3xl" />
 
-      {/* 4-Column Feature Grid */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item, idx) => {
-          const Icon = item.icon || ShieldCheckIcon;
-          return (
-            <Reveal key={item.number} direction="up" delay={idx * 80} duration={650}>
-              <div className="group relative h-full rounded-3xl border border-gray-200/80 bg-white p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-gray-300 hover:shadow-[0_14px_30px_rgba(0,0,0,0.06)] flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-neutral-900 text-amber-300 shadow-2xs group-hover:scale-110 transition-transform duration-300">
-                      <Icon className="h-5 w-5" />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <Reveal direction="up" delay={50}>
+          <div className="mb-10 sm:mb-12 text-center">
+            <div className="flex items-center justify-center gap-2 mb-1.5">
+              <span className="h-1.5 w-6 rounded-full bg-[#C5A880]" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#8C6734]">
+                THE KRISHNA PROMISE
+              </span>
+              <span className="h-1.5 w-6 rounded-full bg-[#C5A880]" />
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-gray-950">
+              Why Shop With Us?
+            </h2>
+            <p className="mx-auto mt-2 max-w-xl text-xs sm:text-sm leading-relaxed text-neutral-600 font-normal">
+              We hold ourselves to the highest standards of luxury curation, verified authentic sourcing, and lifetime client relationships.
+            </p>
+          </div>
+        </Reveal>
+
+        {/* 4-Column Feature Grid */}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((item, idx) => {
+            const Icon = item.icon || ShieldCheckIcon;
+            return (
+              <Reveal key={item.number} direction="up" delay={idx * 80} duration={650}>
+                <div className="group relative h-full rounded-3xl border border-[#DCD5C6] bg-white/95 backdrop-blur-md p-6 sm:p-7 transition-all duration-300 hover:-translate-y-2 hover:border-[#C5A880] hover:shadow-[0_18px_38px_rgba(197,168,128,0.16)] flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#111827] text-[#E5D7C5] shadow-md group-hover:scale-110 transition-transform duration-300">
+                        <Icon className="h-5.5 w-5.5" />
+                      </div>
+                      <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#C5A880] group-hover:text-black transition-colors">
+                        {item.number}
+                      </span>
                     </div>
-                    <span className="font-mono text-xs font-bold tracking-[0.2em] text-neutral-300 group-hover:text-amber-600 transition-colors">
-                      {item.number}
-                    </span>
+
+                    <h3 className="mt-5 text-base sm:text-[17px] font-extrabold text-gray-950 leading-snug">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-2 text-xs sm:text-[13px] leading-relaxed text-neutral-600 font-normal">
+                      {item.text}
+                    </p>
                   </div>
 
-                  <h3 className="mt-5 text-base sm:text-[17px] font-bold text-gray-950 leading-snug">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-2 text-xs sm:text-[13px] leading-relaxed text-gray-500">
-                    {item.text}
-                  </p>
+                  <div className="mt-6 pt-4 border-t border-[#EFEAE1] flex items-center justify-between">
+                    <span className="text-[10.5px] font-bold text-neutral-500 uppercase tracking-wider group-hover:text-black transition-colors">
+                      Guaranteed
+                    </span>
+                    <div className="h-1.5 w-10 rounded-full bg-[#E8E2D6] transition-all duration-300 group-hover:w-16 group-hover:bg-[#C5A880]" />
+                  </div>
                 </div>
-
-                <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider group-hover:text-black transition-colors">
-                    Guaranteed
-                  </span>
-                  <div className="h-1.5 w-8 rounded-full bg-neutral-200 transition-all duration-300 group-hover:w-14 group-hover:bg-amber-400" />
-                </div>
-              </div>
-            </Reveal>
-          );
-        })}
+              </Reveal>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
+
