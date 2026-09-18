@@ -55,7 +55,9 @@ import {
   RotateCcw,
   FileText,
   User,
-  Users
+  Users,
+  Bell,
+  CheckCheck
 } from 'lucide-react';
 import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 
@@ -81,6 +83,52 @@ export default function SupplierDashboard() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+
+  // Notifications State & Ref
+  const [notifsOpen, setNotifsOpen] = useState(false);
+  const notifsRef = useRef(null);
+  const [notifications, setNotifications] = useState([
+    {
+      id: 'notif-1',
+      title: 'New Order Received',
+      message: 'Order #KA-8942 with 2 items assigned to your warehouse for dispatch.',
+      time: '12m ago',
+      type: 'order',
+      unread: true,
+      targetSection: 'fulfillment',
+      targetSubTab: 'orders'
+    },
+    {
+      id: 'notif-2',
+      title: 'Low Stock Alert',
+      message: 'Titan Octane Chronograph is down to 3 units. Restock recommended.',
+      time: '1h ago',
+      type: 'inventory',
+      unread: true,
+      targetSection: 'catalog',
+      targetSubTab: 'low-stock'
+    },
+    {
+      id: 'notif-3',
+      title: 'Payout Dispatched',
+      message: 'Bi-weekly vendor settlement of ₹58,400 successfully credited to HDFC Bank.',
+      time: 'Yesterday',
+      type: 'financial',
+      unread: false,
+      targetSection: 'financials',
+      targetSubTab: 'payouts'
+    },
+    {
+      id: 'notif-4',
+      title: 'Compliance Verified',
+      message: 'Supplier vendor license & GST compliance renewal verified for 2026.',
+      time: '2d ago',
+      type: 'system',
+      unread: false,
+      targetSection: 'financials',
+      targetSubTab: 'bank-info'
+    }
+  ]);
 
   // Scroll Container Ref
   const supplierContentScrollRef = useRef(null);
@@ -166,6 +214,46 @@ export default function SupplierDashboard() {
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
+  };
+
+  // Close notifications popover on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notifsRef.current && !notifsRef.current.contains(e.target)) {
+        setNotifsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Notifications Helpers
+  const unreadNotifsCount = notifications.filter(n => n.unread).length;
+
+  const markAllNotificationsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+    showToast('All notifications marked as read');
+  };
+
+  const markNotificationRead = (id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n));
+  };
+
+  const deleteNotification = (e, id) => {
+    e.stopPropagation();
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    showToast('Notification removed');
+  };
+
+  const handleNotificationClick = (notif) => {
+    markNotificationRead(notif.id);
+    if (notif.targetSection) {
+      setActiveSection(notif.targetSection);
+      if (notif.targetSubTab) {
+        setActiveSubTab(notif.targetSubTab);
+      }
+      setNotifsOpen(false);
+    }
   };
 
   // Data Refresh
@@ -791,23 +879,163 @@ export default function SupplierDashboard() {
               )}
             </div>
 
-            {/* Vendor Switcher */}
-            <div className="relative hidden sm:block">
-              <select
-                value={activeSupplierName}
-                onChange={(e) => {
-                  setActiveSupplierName(e.target.value);
-                  showToast(`Switched vendor context to "${e.target.value}"`);
-                }}
-                className="h-8 appearance-none rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 pl-2.5 pr-7 text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer transition shadow-2xs"
+            {/* Supplier Notifications Popover (Replaced vendor dropdown) */}
+            <div className="relative" ref={notifsRef}>
+              <button
+                onClick={() => setNotifsOpen(prev => !prev)}
+                className={`relative flex h-8 w-8 items-center justify-center rounded-xl border transition cursor-pointer shadow-2xs ${
+                  notifsOpen
+                    ? 'border-zinc-400 bg-zinc-100 text-zinc-900 ring-2 ring-zinc-900/5'
+                    : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100'
+                }`}
+                title="Supplier Notifications"
+                aria-label="Toggle notifications"
+                aria-expanded={notifsOpen}
               >
-                {suppliers.map(s => (
-                  <option key={s.id} value={s.name}>
-                    {s.name} ({s.category})
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400 pointer-events-none" />
+                <Bell className="h-4 w-4 text-zinc-700" />
+                {unreadNotifsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-rose-600 text-[9px] font-bold text-white shadow-xs">
+                    {unreadNotifsCount}
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 animate-ping -z-10" />
+                  </span>
+                )}
+              </button>
+
+              {notifsOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-200/90 bg-white p-3.5 sm:p-4 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  {/* Popover Header */}
+                  <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-2.5">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-zinc-900 text-white">
+                        <Bell className="h-3 w-3" />
+                      </div>
+                      <span className="text-xs font-bold text-zinc-900 tracking-tight">
+                        Supplier Alerts
+                      </span>
+                      {unreadNotifsCount > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">
+                          {unreadNotifsCount} new
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      {unreadNotifsCount > 0 && (
+                        <button
+                          onClick={markAllNotificationsRead}
+                          className="flex items-center gap-1 text-[10.5px] font-semibold text-zinc-600 hover:text-zinc-950 transition cursor-pointer px-1.5 py-0.5 rounded-md hover:bg-zinc-100"
+                        >
+                          <CheckCheck className="h-3 w-3 text-zinc-500" />
+                          <span>Mark read</span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setNotifsOpen(false)}
+                        className="text-zinc-400 hover:text-zinc-700 p-1 rounded-lg hover:bg-zinc-100 transition cursor-pointer"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Notification List */}
+                  {notifications.length === 0 ? (
+                    <div className="py-8 text-center text-zinc-400 space-y-2">
+                      <div className="h-10 w-10 mx-auto rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                      </div>
+                      <p className="text-xs font-semibold text-zinc-700">All caught up!</p>
+                      <p className="text-[11px] text-zinc-400">No new alerts for your supplier account.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+                      {notifications.map((n) => {
+                        let IconComponent = Bell;
+                        let iconBg = 'bg-zinc-100 text-zinc-700';
+                        if (n.type === 'order') {
+                          IconComponent = ShoppingBag;
+                          iconBg = 'bg-blue-50 text-blue-600 border border-blue-100';
+                        } else if (n.type === 'inventory') {
+                          IconComponent = AlertTriangle;
+                          iconBg = 'bg-amber-50 text-amber-600 border border-amber-100';
+                        } else if (n.type === 'financial') {
+                          IconComponent = Wallet;
+                          iconBg = 'bg-emerald-50 text-emerald-600 border border-emerald-100';
+                        } else if (n.type === 'system') {
+                          IconComponent = ShieldCheck;
+                          iconBg = 'bg-purple-50 text-purple-600 border border-purple-100';
+                        }
+
+                        return (
+                          <div
+                            key={n.id}
+                            onClick={() => handleNotificationClick(n)}
+                            className={`group relative flex items-start gap-3 rounded-xl p-2.5 text-xs transition cursor-pointer ${
+                              n.unread
+                                ? 'bg-zinc-50 border border-zinc-200/80 font-medium hover:bg-zinc-100/70'
+                                : 'hover:bg-zinc-50 text-zinc-600 border border-transparent'
+                            }`}
+                          >
+                            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${iconBg}`}>
+                              <IconComponent className="h-4 w-4" />
+                            </div>
+
+                            <div className="flex-1 min-w-0 pr-4">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className={`text-xs truncate ${n.unread ? 'font-bold text-zinc-900' : 'font-semibold text-zinc-700'}`}>
+                                  {n.title}
+                                </span>
+                                <span className="text-[9.5px] font-mono text-zinc-400 shrink-0">{n.time}</span>
+                              </div>
+                              <p className="mt-0.5 text-[11px] text-zinc-500 leading-snug line-clamp-2">
+                                {n.message}
+                              </p>
+                              {n.targetSection && (
+                                <div className="mt-1.5 flex items-center gap-1 text-[10px] font-bold text-zinc-900 group-hover:translate-x-0.5 transition">
+                                  <span>View details</span>
+                                  <ArrowRight className="h-2.5 w-2.5" />
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Unread indicator dot */}
+                            {n.unread && (
+                              <span className="absolute top-3 right-2.5 h-2 w-2 rounded-full bg-blue-600 shrink-0" />
+                            )}
+
+                            {/* Dismiss button on hover */}
+                            <button
+                              onClick={(e) => deleteNotification(e, n.id)}
+                              className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded transition cursor-pointer"
+                              title="Dismiss"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Popover Footer */}
+                  <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between text-[10.5px] text-zinc-400 px-1">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Live Supplier Stream
+                    </span>
+                    <button
+                      onClick={() => {
+                        setActiveSection('dashboard');
+                        setActiveSubTab('overview');
+                        setNotifsOpen(false);
+                      }}
+                      className="font-medium text-zinc-600 hover:text-zinc-900 transition cursor-pointer"
+                    >
+                      Activity Log →
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Sync Data Button */}
