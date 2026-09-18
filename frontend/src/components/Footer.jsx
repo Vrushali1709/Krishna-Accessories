@@ -37,39 +37,35 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative w-full floor-monolith-footer border-t border-[#C5A880]/30 text-white select-none overflow-hidden">
-      {/* Subtle Inset Ambient Light */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C5A880]/40 to-transparent" />
-      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-96 rounded-full bg-[#C5A880]/10 blur-3xl" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        {/* Main Grid: 4 Columns */}
+    <footer className="border-t border-neutral-800/80 bg-[#0E1015] text-white select-none">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Main Grid: Compact 4 Columns */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-12">
-          
+
           {/* Col 1: Brand Info & Quick Contact (Span 5 on lg) */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 space-y-3.5">
             <Link to="/" className="inline-flex items-center gap-3 group">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                className="h-10 w-10 object-contain rounded-xl bg-white p-1 group-hover:scale-105 transition-transform duration-200 shadow-md"
+                className="h-9 w-9 object-contain rounded-xl bg-white p-1 group-hover:scale-105 transition-transform duration-200"
               />
               <div>
-                <span className="text-base sm:text-lg font-extrabold tracking-tight text-white block leading-tight">
+                <span className="text-base font-bold tracking-tight text-white block leading-tight">
                   Krishna <span className="text-[#C5A880]">Accessories</span>
                 </span>
-                <span className="text-[9px] uppercase tracking-[0.22em] text-[#D5C2A5] font-semibold">
-                  Mumbai • Luxury &amp; Lifestyle
+                <span className="text-[9px] uppercase tracking-[0.2em] text-neutral-400 font-semibold">
+                  Mumbai • Luxury & Lifestyle
                 </span>
               </div>
             </Link>
 
-            <p className="text-xs text-neutral-400 leading-relaxed max-w-sm font-light">
-              Mumbai's distinguished sanctuary for verified Swiss timepieces, handcrafted full-grain leather goods, designer eyewear, and high-performance audio.
+            <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
+              Mumbai's destination for premium luxury timepieces, handcrafted leather goods, designer sunglasses, and lifestyle essentials.
             </p>
 
-            {/* Contact Badges */}
-            <div className="flex flex-col gap-2 text-xs text-neutral-300 pt-1">
+            {/* Compact Contact Badges */}
+            <div className="flex flex-col gap-1.5 text-xs text-neutral-300 pt-1">
               <a
                 href={`tel:+91${SHOP_INFO.rawPhone}`}
                 className="inline-flex items-center gap-2 hover:text-[#C5A880] transition-colors duration-150 w-fit"
@@ -108,7 +104,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   aria-label={social.name}
                   title={`Connect on ${social.name}`}
-                  className={`w-8.5 h-8.5 rounded-xl border border-white/10 bg-[#121622] text-neutral-400 flex items-center justify-center transition-all duration-200 ${social.hoverBg} hover:border-transparent active:scale-95 shadow-sm`}
+                  className={`w-8 h-8 rounded-lg border border-neutral-800 bg-neutral-900/90 text-neutral-400 flex items-center justify-center transition-all duration-200 ${social.hoverBg} hover:border-transparent active:scale-95`}
                 >
                   {social.icon}
                 </a>
@@ -118,10 +114,10 @@ export default function Footer() {
 
           {/* Col 2: Categories / Shop (Span 2 on lg) */}
           <div className="lg:col-span-2">
-            <h4 className="mb-3.5 text-xs font-bold uppercase tracking-[0.2em] text-[#C5A880]">
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#C5A880]">
               Categories
             </h4>
-            <ul className="space-y-2.5 text-xs text-neutral-400">
+            <ul className="space-y-2 text-xs text-neutral-400">
               <li>
                 <Link to="/shop?category=Watches" className="hover:text-white transition-colors duration-150 inline-block">
                   Watches
@@ -134,7 +130,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link to="/shop?category=Shoes" className="hover:text-white transition-colors duration-150 inline-block">
-                  Shoes &amp; Footwear
+                  Shoes
                 </Link>
               </li>
               <li>
@@ -143,8 +139,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/shop" className="text-[#C5A880] hover:text-[#E5D7C5] font-bold inline-flex items-center gap-1 mt-1 transition-colors duration-150">
-                  <span>Explore Catalog</span>
+                <Link to="/shop" className="text-[#C5A880] hover:text-[#E5D7C5] font-semibold inline-flex items-center gap-1 mt-1 transition-colors duration-150">
+                  <span>View All Shop</span>
                   <ArrowRightIcon className="w-3 h-3" />
                 </Link>
               </li>
@@ -153,10 +149,10 @@ export default function Footer() {
 
           {/* Col 3: Customer Care (Span 2 on lg) */}
           <div className="lg:col-span-2">
-            <h4 className="mb-3.5 text-xs font-bold uppercase tracking-[0.2em] text-[#C5A880]">
-              Concierge
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#C5A880]">
+              Customer Care
             </h4>
-            <ul className="space-y-2.5 text-xs text-neutral-400">
+            <ul className="space-y-2 text-xs text-neutral-400">
               <li>
                 <Link to="/tracking" className="hover:text-white transition-colors duration-150 inline-block">
                   Track Order
@@ -164,7 +160,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link to="/account" className="hover:text-white transition-colors duration-150 inline-block">
-                  My Account
+                  My Account &amp; Orders
                 </Link>
               </li>
               <li>
@@ -187,10 +183,10 @@ export default function Footer() {
 
           {/* Col 4: Boutique & Legal (Span 3 on lg) */}
           <div className="lg:col-span-3">
-            <h4 className="mb-3.5 text-xs font-bold uppercase tracking-[0.2em] text-[#C5A880]">
-              Heritage &amp; Policies
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#C5A880]">
+              About &amp; Policies
             </h4>
-            <ul className="space-y-2.5 text-xs text-neutral-400">
+            <ul className="space-y-2 text-xs text-neutral-400">
               <li>
                 <Link to="/about" className="hover:text-white transition-colors duration-150 inline-block">
                   Our Story &amp; Heritage
@@ -207,7 +203,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li className="pt-2 text-[11px] text-neutral-500 leading-normal">
-                <span className="text-neutral-300 font-semibold block">Boutique Hours:</span>
+                <span className="text-neutral-400 font-semibold block">Store Hours:</span>
                 Mon – Sat: 10:30 AM – 8:30 PM (IST)
               </li>
             </ul>
@@ -215,17 +211,17 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
-          <p className="text-neutral-500 text-center sm:text-left text-[11.5px]">
-            &copy; {currentYear} Krishna Accessories. Crafted with prestige standards in Mumbai.
+        {/* Bottom Bar: Clean & Compact */}
+        <div className="mt-8 pt-5 border-t border-neutral-800/70 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-400">
+          <p className="text-neutral-500 text-center sm:text-left text-[11px]">
+            &copy; {currentYear} Krishna Accessories. All rights reserved.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] text-neutral-400">
-            <span className="mr-1 text-neutral-500">Secure Payments:</span>
-            <span className="rounded-md border border-white/10 bg-[#121622] px-2.5 py-1 text-neutral-300 font-bold">UPI / QR</span>
-            <span className="rounded-md border border-white/10 bg-[#121622] px-2.5 py-1 text-neutral-300 font-bold">Credit/Debit Cards</span>
-            <span className="rounded-md border border-white/10 bg-[#121622] px-2.5 py-1 text-neutral-300 font-bold">NetBanking</span>
+          <div className="flex flex-wrap items-center justify-center gap-1.5 text-[10px] text-neutral-400">
+            <span className="mr-1 text-neutral-500">Accepted Payments:</span>
+            <span className="rounded border border-neutral-800 bg-neutral-900/90 px-2 py-0.5 text-neutral-300 font-medium">UPI</span>
+            <span className="rounded border border-neutral-800 bg-neutral-900/90 px-2 py-0.5 text-neutral-300 font-medium">Cards</span>
+            <span className="rounded border border-neutral-800 bg-neutral-900/90 px-2 py-0.5 text-neutral-300 font-medium">NetBanking</span>
           </div>
         </div>
       </div>

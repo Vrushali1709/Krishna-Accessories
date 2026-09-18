@@ -176,6 +176,7 @@
   from {
     transform: translate3d(100%, 0, 0);
   }
+
   to {
     transform: translate3d(0, 0, 0);
   }
@@ -347,107 +348,4 @@
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
-}
-
-/* ============================================================
-   ARCHITECTURAL FLOORING & BESPOKE SURFACE CANVAS STYLES
-   ============================================================ */
-
-/* 1. Obsidian Horology Floor */
-.floor-obsidian {
-  background-color: #06080C;
-  background-image: 
-    radial-gradient(circle at 50% 0%, rgba(197, 168, 128, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.5) 0%, transparent 50%);
-}
-
-/* 2. Cashmere Concierge Deck */
-.floor-cashmere {
-  background-color: #FAF8F5;
-  background-image: 
-    linear-gradient(180deg, #FAF8F5 0%, #F3EFE9 100%),
-    radial-gradient(circle at 50% 100%, rgba(197, 168, 128, 0.05) 0%, transparent 70%);
-}
-
-/* 3. Travertine & Limestone Arcade */
-.floor-travertine {
-  background-color: #F7F5F0;
-  background-image: 
-    linear-gradient(180deg, #F8F6F2 0%, #F1EDE4 100%);
-}
-
-/* 4. Midnight Slate & Obsidian Salon */
-.floor-midnight-salon {
-  background-color: #090C14;
-  background-image: 
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(197, 168, 128, 0.12) 0%, transparent 70%),
-    radial-gradient(circle at 100% 50%, rgba(30, 41, 59, 0.25) 0%, transparent 50%),
-    radial-gradient(circle at 0% 80%, rgba(15, 23, 42, 0.35) 0%, transparent 50%);
-}
-
-/* 5. Alabaster Heritage Vault */
-.floor-alabaster {
-  background-color: #FCFBF9;
-  background-image: 
-    linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 40%, #F5F1EA 100%);
-}
-
-/* 6. Sand & Walnut Atelier */
-.floor-sand-atelier {
-  background-color: #F4EFEB;
-  background-image: 
-    linear-gradient(180deg, #F5F0EC 0%, #ECE4DA 50%, #F4EFEB 100%);
-}
-
-/* 7. Cool Platinum Modernist Runway */
-.floor-platinum {
-  background-color: #F2F5F8;
-  background-image: 
-    linear-gradient(180deg, #F1F4F8 0%, #F8FAFC 50%, #EDF2F7 100%);
-}
-
-/* 8. Mirrored Heritage Promenade */
-.floor-brand-promenade {
-  background-color: #F8F7F4;
-  background-image: 
-    linear-gradient(180deg, #FBF9F6 0%, #F0EDE5 100%);
-}
-
-/* 9. Artisan Quality Hall */
-.floor-artisan-hall {
-  background-color: #F6F3EC;
-  background-image: 
-    linear-gradient(180deg, #F7F4ED 0%, #ECE7DD 100%);
-}
-
-/* 10. Velvet Client Lounge */
-.floor-velvet-lounge {
-  background-color: #080A10;
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(197, 168, 128, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 90% 80%, rgba(20, 26, 38, 0.4) 0%, transparent 50%);
-}
-
-/* 11. Gilded Monolith Sanctuary Floor */
-.floor-prive-sanctuary {
-  background-color: #F6F4EE;
-  background-image: 
-    linear-gradient(180deg, #F8F6F0 0%, #EEEAE0 100%);
-}
-
-/* 12. Grand Monolith Footer Base */
-.floor-monolith-footer {
-  background-color: #06070A;
-  background-image: 
-    radial-gradient(circle at 50% 0%, rgba(197, 168, 128, 0.07) 0%, transparent 50%);
-}
-
-/* Subtle gilded border accent utility */
-.border-gold-subtle {
-  border-color: rgba(197, 168, 128, 0.25);
-}
-
-.border-gold-glow {
-  border-color: rgba(197, 168, 128, 0.5);
-  box-shadow: 0 0 15px rgba(197, 168, 128, 0.15);
 }

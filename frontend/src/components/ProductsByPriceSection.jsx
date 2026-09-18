@@ -121,40 +121,32 @@ export default function ProductsByPriceSection({
   const ActiveTierIcon = activeTier.icon;
 
   return (
-    <section className="relative w-full floor-sand-atelier py-14 sm:py-20 border-b border-[#DFD8CC] overflow-hidden">
-      {/* Subtle Inset Ambient Light */}
-      <div className="pointer-events-none absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-[#C5A880]/15 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 right-1/4 h-96 w-96 rounded-full bg-[#D0B075]/10 blur-3xl" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="bg-white pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* ============================================================
             1. SECTION HEADER
         ============================================================ */}
         <Reveal direction="up" delay={50}>
-          <div className="text-center mb-10 sm:mb-12">
-            <div className="flex items-center justify-center gap-2 mb-1.5">
-              <span className="h-1.5 w-6 rounded-full bg-[#C5A880]" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#71522E]">
-                TAILORED PRICE TIERS
-              </span>
-              <span className="h-1.5 w-6 rounded-full bg-[#C5A880]" />
+          <div className="text-center mb-8 sm:mb-10">
+            <div className="flex items-center justify-center gap-3 sm:gap-4">
+              <span className="h-px w-8 sm:w-16 bg-neutral-300 hidden sm:inline-block" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
+                Shop by Budget
+              </h2>
+              <span className="h-px w-8 sm:w-16 bg-neutral-300 hidden sm:inline-block" />
             </div>
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-neutral-950">
-              Shop by Budget
-            </h2>
-
-            <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-lg mx-auto leading-relaxed">
-              Discover curated luxury accessories, horology, and audio tailored specifically for your investment range.
+            <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-lg mx-auto">
+              Discover curated luxury accessories and essentials tailored for your budget.
             </p>
           </div>
         </Reveal>
 
         {/* ============================================================
-            2. LUXURY INTERACTIVE PRICE TIER CARDS
+            2. MINIMAL INTERACTIVE PRICE TIER CARDS
         ============================================================ */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6 mb-10 sm:mb-12">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4 lg:gap-5 mb-8 sm:mb-10">
           {PRICE_TIERS.map((tier, idx) => {
             const isActive = activeTierId === tier.id;
             const count = tierCounts[tier.id] || 0;
@@ -164,33 +156,32 @@ export default function ProductsByPriceSection({
               <Reveal key={tier.id} direction="up" delay={idx * 60} duration={650}>
                 <div
                   onClick={() => setActiveTierId(tier.id)}
-                  className={`group relative flex min-w-0 flex-col justify-between rounded-3xl p-4 sm:p-6 border transition-all duration-300 cursor-pointer select-none ${
-                    isActive
-                      ? `bg-white shadow-[0_16px_36px_rgba(113,82,46,0.12)] ${tier.activeBorder} -translate-y-2`
-                      : 'bg-white/80 backdrop-blur-xs border-[#DBD3C5] hover:border-[#C5A880] hover:bg-white hover:shadow-md hover:-translate-y-1'
-                  }`}
+                  className={`group relative flex min-w-0 flex-col justify-between rounded-2xl p-3 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${isActive
+                    ? `bg-white shadow-[0_10px_25px_rgba(0,0,0,0.06)] ${tier.activeBorder} -translate-y-1`
+                    : 'bg-neutral-50/60 border-gray-200 hover:border-gray-300 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
+                    }`}
                 >
                   {/* Top: Badge & Count */}
                   <div>
                     <div className="flex items-center justify-between gap-2">
-                      <span className={`max-w-[62%] truncate rounded-full px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-bold uppercase tracking-wider border shadow-2xs ${tier.badgeColor}`}>
+                      <span className={`max-w-[58%] truncate rounded-md px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9.5px] font-bold uppercase tracking-wider border shadow-2xs ${tier.badgeColor}`}>
                         {tier.badge}
                       </span>
-                      <span className="shrink-0 text-[9.5px] sm:text-[11px] font-semibold text-neutral-500">
+                      <span className="shrink-0 text-[9px] sm:text-[11px] font-medium text-neutral-400">
                         {count > 0 ? `${count} items` : 'Curated'}
                       </span>
                     </div>
 
                     {/* Middle: Icon & Title */}
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl ${tier.iconBg} shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-2xs`}>
-                        <TierIcon className="w-5 h-5" />
+                    <div className="mt-3 flex items-center gap-2 sm:gap-3">
+                      <div className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl ${tier.iconBg} shrink-0 transition-transform duration-300 group-hover:scale-105`}>
+                        <TierIcon className="w-4 h-4" />
                       </div>
-                      <div className="min-w-0">
+                      <div>
                         <h3 className="truncate text-sm sm:text-lg font-bold tracking-tight text-neutral-950 leading-snug">
                           {tier.title}
                         </h3>
-                        <p className="truncate text-[9.5px] sm:text-xs font-medium text-neutral-500">
+                        <p className="truncate text-[9px] sm:text-xs font-medium text-neutral-500">
                           {tier.subtitle}
                         </p>
                       </div>
@@ -198,19 +189,19 @@ export default function ProductsByPriceSection({
                   </div>
 
                   {/* Bottom: Selection Status & Shop All Link */}
-                  <div className="mt-4 sm:mt-5 pt-3.5 border-t border-[#EAE4D8] flex items-center justify-between gap-1">
+                  <div className="mt-3 sm:mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-1">
                     <div className="flex items-center gap-1.5">
-                      <span className={`h-2 w-2 rounded-full ${isActive ? tier.accentDot : 'bg-neutral-300'}`} />
-                      <span className={`truncate text-[10px] sm:text-[11.5px] font-bold transition-colors ${isActive ? 'text-neutral-950' : 'text-neutral-500 group-hover:text-neutral-800'
+                      <span className={`h-1.5 w-1.5 rounded-full ${isActive ? tier.accentDot : 'bg-neutral-300'}`} />
+                      <span className={`truncate text-[9px] sm:text-[11px] font-semibold transition-colors ${isActive ? 'text-neutral-950' : 'text-neutral-500 group-hover:text-neutral-800'
                         }`}>
-                        {isActive ? 'Active Tier' : 'Select'}
+                        {isActive ? 'Selected' : 'Click to view'}
                       </span>
                     </div>
 
                     <Link
                       to={`/shop?maxPrice=${tier.maxPrice}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex shrink-0 items-center gap-1 text-[9.5px] sm:text-[11px] font-bold text-neutral-700 hover:text-black transition-colors rounded-full bg-[#EFEAE1] hover:bg-[#E2DDD3] px-2.5 py-1"
+                      className="inline-flex shrink-0 items-center gap-1 text-[9px] sm:text-[11px] font-semibold text-neutral-600 hover:text-black transition-colors rounded-full bg-neutral-100 hover:bg-neutral-200 px-2 sm:px-2.5 py-1"
                       title={`Open catalog under ₹${tier.maxPrice.toLocaleString('en-IN')}`}
                     >
                       <span>Shop All</span>
@@ -220,7 +211,7 @@ export default function ProductsByPriceSection({
 
                   {/* Active Indicator Line */}
                   {isActive && (
-                    <div className={`absolute -bottom-[1px] inset-x-8 h-[3px] rounded-full ${tier.accentDot}`} />
+                    <div className={`absolute -bottom-[1px] inset-x-6 h-[2.5px] rounded-full ${tier.accentDot}`} />
                   )}
                 </div>
               </Reveal>
@@ -231,20 +222,20 @@ export default function ProductsByPriceSection({
         {/* ============================================================
             3. PRODUCT CARDS GRID FOR THE SELECTED PRICE TIER
         ============================================================ */}
-        <div className="mb-10 sm:mb-12">
-          <div className="flex items-center justify-between mb-5 sm:mb-6">
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4 sm:mb-5">
             <div className="flex items-center gap-2">
-              <span className={`h-2.5 w-2.5 rounded-full ${activeTier.accentDot} animate-pulse`} />
-              <span className="text-sm sm:text-base font-extrabold text-gray-950">
+              <span className={`h-2 w-2 rounded-full ${activeTier.accentDot} animate-pulse`} />
+              <span className="text-xs sm:text-sm font-bold text-gray-900">
                 Top Recommendations ({activeTier.label})
               </span>
             </div>
 
             <Link
               to={`/shop?maxPrice=${activeTier.maxPrice}`}
-              className="group inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-neutral-800 hover:text-black transition-colors"
+              className="group inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-neutral-700 hover:text-black transition-colors"
             >
-              <span>View All ({tierCounts[activeTier.id] || 0}) Items</span>
+              <span>View All ({tierCounts[activeTier.id] || 0}) Products</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
@@ -268,13 +259,13 @@ export default function ProductsByPriceSection({
               ))}
             </div>
           ) : (
-            <div className="text-center py-14 rounded-3xl bg-white/90 backdrop-blur-md border border-[#DCD5C6] shadow-xs">
-              <p className="text-sm font-bold text-neutral-700">
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
+              <p className="text-sm font-semibold text-gray-700">
                 No products found in this price tier currently.
               </p>
               <Link
                 to="/shop"
-                className="mt-3.5 inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-6 py-2.5 text-xs font-bold text-white hover:bg-neutral-800 shadow-md"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2 text-xs font-bold text-white hover:bg-black"
               >
                 Explore Full Catalog
               </Link>
@@ -286,24 +277,24 @@ export default function ProductsByPriceSection({
             4. QUICK LINK BANNER FOR THIS PRICE TIER
         ============================================================ */}
         <Reveal direction="up" delay={100}>
-          <div className="rounded-3xl bg-gradient-to-r from-[#121622] to-[#1C2333] text-white p-5 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl border border-[#C5A880]/20">
-            <div className="flex items-center gap-4 text-center sm:text-left">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white shrink-0 shadow-inner">
-                <ActiveTierIcon className="w-6 h-6 text-amber-300" />
+          <div className="rounded-2xl bg-gradient-to-r from-[#0F172A] to-[#1E293B] text-white p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white shrink-0">
+                <ActiveTierIcon className="w-5 h-5 text-amber-300" />
               </div>
               <div>
-                <p className="font-bold text-sm sm:text-base text-white">
-                  Looking for more bespoke options {activeTier.label}?
+                <p className="font-bold text-xs sm:text-sm text-white">
+                  Looking for more options {activeTier.label}?
                 </p>
-                <p className="text-xs text-neutral-300 font-light mt-0.5">
-                  Filter by category, brand, and warranty directly in our specialized boutique view.
+                <p className="text-[11px] text-neutral-300">
+                  Filter by category, brand, and warranty directly in our specialized shop view.
                 </p>
               </div>
             </div>
 
             <Link
               to={`/shop?maxPrice=${activeTier.maxPrice}`}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-xs font-bold text-gray-950 uppercase tracking-wider transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-lg active:scale-95 shrink-0"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-gray-950 uppercase tracking-wider transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-md active:scale-95 shrink-0"
             >
               <span>Explore All {activeTier.label}</span>
               <ArrowRight className="w-3.5 h-3.5 text-black" />

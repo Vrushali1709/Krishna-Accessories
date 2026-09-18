@@ -165,34 +165,25 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
   }, [products, activeTab, selectedCategory]);
 
   return (
-    <section className="relative w-full floor-midnight-salon py-14 sm:py-20 border-b border-neutral-800/90 text-white overflow-hidden">
-      {/* Ambient Top Light Beam */}
-      <div className="pointer-events-none absolute -top-32 inset-x-0 mx-auto h-72 w-full max-w-4xl rounded-full bg-[#C5A880]/10 blur-3xl" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#FAFBFD] py-8 sm:py-10 border-t border-b border-gray-200/80">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* ============================================================
             1. SECTION HEADER WITH TABS
         ============================================================ */}
         <Reveal direction="up" delay={50}>
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-10">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="h-1.5 w-6 rounded-full bg-[#C5A880]" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#D5C2A5]">
-                  FLAGSHIP SALON
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mt-1">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950 mt-1">
                 Featured &amp; Trending Products
               </h2>
-              <p className="mt-1.5 text-xs sm:text-sm text-neutral-400 max-w-xl leading-relaxed font-light">
+              <p className="mt-1 text-xs sm:text-sm text-neutral-500 max-w-xl leading-relaxed">
                 Explore our handpicked curation of best-selling luxury timepieces, leather goods, smart electronics, and footwear.
               </p>
             </div>
 
-            {/* Interactive Feature Tabs in Brushed Onyx & Gold */}
-            <div className="grid grid-cols-2 gap-1.5 p-1.5 bg-[#121622]/90 backdrop-blur-md rounded-2xl border border-[#C5A880]/30 shadow-xl w-full lg:w-auto sm:flex sm:flex-wrap sm:items-center sm:gap-2">
+            {/* Interactive Feature Tabs (Clean 2x2 grid on Mobile, Flex on Desktop) */}
+            <div className="grid grid-cols-2 gap-1.5 p-1.5 bg-neutral-200/70 backdrop-blur-md rounded-2xl border border-neutral-300/60 shadow-xs w-full lg:w-auto sm:flex sm:flex-wrap sm:items-center sm:gap-2">
               {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -200,11 +191,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 text-center ${
-                      isActive
-                        ? 'bg-gradient-to-r from-[#C5A880] to-[#DFCCA8] text-black shadow-lg font-black scale-[1.02]'
-                        : 'text-neutral-300 hover:text-white hover:bg-white/10'
-                    }`}
+                    className={`w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 text-center ${isActive
+                        ? 'bg-neutral-950 text-white shadow-sm font-extrabold scale-[1.01]'
+                        : 'text-neutral-700 hover:text-black hover:bg-white/80 bg-white/40 sm:bg-transparent'
+                      }`}
                   >
                     <span className="text-sm shrink-0">{tab.icon}</span>
                     <span className="truncate">{tab.label}</span>
@@ -219,7 +209,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             2. CATEGORY FILTER SUB-BAR
         ============================================================ */}
         <Reveal direction="up" delay={100}>
-          <div className="flex items-center gap-2 overflow-x-auto pb-2.5 mb-8 sm:mb-10 no-scrollbar scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2.5 mb-6 sm:mb-8 no-scrollbar scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0">
             {categoryFilters.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
@@ -227,11 +217,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`shrink-0 px-4 py-2 text-xs font-bold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer ${
-                    isActive
-                      ? 'bg-white text-black font-black shadow-md scale-[1.03]'
-                      : 'bg-[#151B28] text-neutral-300 border border-white/10 hover:border-[#C5A880]/70 hover:text-white hover:bg-[#1A2234]'
-                  }`}
+                  className={`shrink-0 px-3.5 sm:px-4 py-1.5 text-xs sm:text-[12.5px] font-bold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer shadow-2xs ${isActive
+                      ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-xs font-black scale-[1.02]'
+                      : 'bg-white text-gray-700 border border-gray-200/90 hover:border-gray-400 hover:text-gray-950 hover:bg-gray-50'
+                    }`}
                 >
                   {cat}
                 </button>
@@ -241,10 +230,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
         </Reveal>
 
         {/* ============================================================
-            3. PRODUCT CARDS GRID (LUXURY MIDNIGHT PEDESTALS)
+            3. PRODUCT CARDS GRID (PROPER SIZES & LUXURY SPACING)
         ============================================================ */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-7">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-7">
             {filteredProducts.map((product, idx) => {
               const isWish = Boolean(wishlistMap[product.id]);
               const isAdded = Boolean(addedMap[product.id]);
@@ -267,18 +256,18 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                 badgeColor = 'bg-amber-500 text-white';
               } else if (product.rating >= 4.8) {
                 badgeText = '★ TOP RATED';
-                badgeColor = 'bg-[#C5A880] text-black font-black';
+                badgeColor = 'bg-neutral-900 text-white';
               } else {
                 badgeText = '✦ LUXE PICK';
-                badgeColor = 'bg-white/20 text-white backdrop-blur-md';
+                badgeColor = 'bg-neutral-900 text-white';
               }
 
               return (
                 <Reveal key={`feat-trend-${activeTab}-${selectedCategory}-${product.id}`} direction="up" delay={(idx % 4) * 80} duration={650}>
-                  <div className="group relative flex flex-col justify-between h-full rounded-3xl border border-white/10 bg-[#121724] p-3.5 sm:p-5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] transition-all duration-400 hover:shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:border-[#C5A880]/70 hover:-translate-y-2">
-                    
+                  <div className="group relative flex flex-col justify-between h-full rounded-[20px] sm:rounded-[28px] border border-gray-200/90 bg-white p-3 sm:p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-400 hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] hover:border-amber-400/70 hover:-translate-y-2">
+
                     {/* 1. Product Image Frame with Hover Canvas */}
-                    <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#090C14] mb-3.5 sm:mb-4 border border-white/5">
+                    <div className="relative aspect-square w-full overflow-hidden rounded-[16px] sm:rounded-[20px] bg-gradient-to-b from-[#F7F7F8] to-[#EDEDF0] mb-3 sm:mb-4">
                       <Link
                         to={`/product/${product.id}`}
                         className="relative flex h-full w-full items-center justify-center cursor-pointer overflow-hidden"
@@ -286,11 +275,10 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         <img
                           src={product.image || product.images?.[0]}
                           alt={product.name}
-                          className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
-                            product.images && product.images.length > 1
+                          className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${product.images && product.images.length > 1
                               ? 'group-hover:opacity-0 group-hover:scale-105'
                               : 'group-hover:scale-108'
-                          }`}
+                            }`}
                           loading="lazy"
                         />
                         {product.images && product.images.length > 1 && (
@@ -304,9 +292,9 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                       </Link>
 
                       {/* Top Badges & Actions Overlay */}
-                      <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
+                      <div className="absolute top-2 sm:top-3 inset-x-2 sm:inset-x-3 z-10 flex items-center justify-between pointer-events-none">
                         {/* Dynamic Badge */}
-                        <span className={`rounded-lg px-2.5 py-1 text-[8.5px] sm:text-[9.5px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md border border-white/10 ${badgeColor}`}>
+                        <span className={`rounded-md sm:rounded-lg px-2 sm:px-2.5 py-0.5 sm:py-1 text-[8.5px] sm:text-[9.5px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md border border-white/10 ${badgeColor}`}>
                           {badgeText}
                         </span>
 
@@ -315,20 +303,19 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                           type="button"
                           onClick={(e) => handleWishlistToggle(e, product)}
                           aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                          className={`pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
-                            isWish
-                              ? 'bg-rose-500 text-white shadow-rose-900/50 scale-105'
-                              : 'bg-black/60 text-white/80 hover:text-rose-400 border border-white/20 hover:bg-black/90'
-                          }`}
+                          className={`pointer-events-auto flex h-7.5 w-7.5 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${isWish
+                              ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100 scale-105'
+                              : 'bg-white/95 text-gray-700 hover:text-rose-600 border border-gray-200/90 hover:bg-white'
+                            }`}
                           title={isWish ? 'In Wishlist' : 'Add to Wishlist'}
                         >
-                          <HeartIcon className="w-3.5 h-3.5 transition-colors" filled={isWish} />
+                          <HeartIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors" filled={isWish} />
                         </button>
                       </div>
 
                       {/* Brand / Category Subtle Floating Bottom Pill */}
-                      <div className="absolute bottom-2.5 left-2.5 pointer-events-none">
-                        <span className="rounded-full bg-black/75 backdrop-blur-md px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-bold text-[#E5D7C5] uppercase tracking-wider border border-white/10">
+                      <div className="absolute bottom-2 sm:bottom-2.5 left-2 sm:left-3 pointer-events-none">
+                        <span className="rounded-full bg-black/65 backdrop-blur-md px-2 sm:px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-bold text-white uppercase tracking-wider border border-white/10">
                           {product.brand || product.category}
                         </span>
                       </div>
@@ -337,52 +324,52 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                     {/* 2. Product Information Content */}
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
-                        {/* Category Tag */}
+                        {/* Category & Verified Sourcing */}
                         <div className="flex items-center justify-between gap-1 mb-1">
-                          <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A880] truncate">
+                          <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-[#C5A880] truncate">
                             {product.category}
                           </span>
-                          <span className="text-[9px] sm:text-[10px] font-medium text-neutral-400">
-                            Verified
+                          <span className="text-[9px] sm:text-[10px] font-medium text-neutral-400 hidden xs:inline">
+                            Premium
                           </span>
                         </div>
 
                         {/* Product Title */}
                         <Link
                           to={`/product/${product.id}`}
-                          className="block font-bold text-white text-[14px] sm:text-[16px] transition-colors duration-200 hover:text-[#C5A880] line-clamp-1 leading-snug"
+                          className="block font-bold text-gray-950 text-[13.5px] sm:text-[16px] transition-colors duration-200 hover:text-[#9E8362] line-clamp-1 leading-snug"
                           title={product.name}
                         >
                           {product.name}
                         </Link>
 
                         {/* Rating Stars & Customer Review Count */}
-                        <div className="flex items-center gap-1.5 mt-1.5">
-                          <div className="flex items-center text-amber-400">
-                            <StarIcon className="w-3.5 h-3.5 text-amber-400" filled={true} />
+                        <div className="flex items-center gap-1 sm:gap-1.5 mt-1 sm:mt-2">
+                          <div className="flex items-center text-amber-500">
+                            <StarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" filled={true} />
                           </div>
-                          <span className="font-bold text-white text-[11px] sm:text-xs tabular-nums">
+                          <span className="font-bold text-gray-900 text-[11px] sm:text-xs tabular-nums">
                             {product.rating ? Number(product.rating).toFixed(1) : '4.9'}
                           </span>
-                          <span className="text-neutral-400 text-[10px] sm:text-[11px] tabular-nums truncate">
+                          <span className="text-gray-400 text-[10px] sm:text-[11px] tabular-nums truncate">
                             ({product.reviews || 48})
                           </span>
                         </div>
 
-                        {/* Price Architecture */}
-                        <div className="flex flex-wrap items-baseline gap-2 mt-2.5 pt-2.5 border-t border-white/10">
-                          <span className="text-base sm:text-xl font-extrabold text-white tabular-nums">
+                        {/* Price Architecture (Price + MRP + Save Pill) */}
+                        <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2 mt-2 pt-2 border-t border-gray-100">
+                          <span className="text-base sm:text-xl font-black text-gray-950 tabular-nums">
                             ₹{Number(product.price).toLocaleString('en-IN')}
                           </span>
 
                           {product.oldPrice && product.oldPrice > product.price && (
-                            <span className="text-[11px] sm:text-sm text-neutral-500 line-through tabular-nums font-normal">
+                            <span className="text-[11px] sm:text-sm text-neutral-400 line-through tabular-nums font-normal">
                               ₹{Number(product.oldPrice).toLocaleString('en-IN')}
                             </span>
                           )}
 
                           {discount > 0 && (
-                            <span className="ml-auto text-[9px] sm:text-[10px] font-extrabold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-full">
+                            <span className="ml-auto text-[9px] sm:text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-full">
                               -{discount}%
                             </span>
                           )}
@@ -390,25 +377,24 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                       </div>
 
                       {/* 3. Action Buttons (Add to Bag & Buy Now) */}
-                      <div className="mt-3.5 pt-3 border-t border-white/10 flex flex-col xs:flex-row items-center gap-2">
+                      <div className="mt-3 pt-2.5 border-t border-gray-100 flex flex-col xs:flex-row items-center gap-1.5 sm:gap-2">
                         {/* Primary Add to Bag Button */}
                         <button
                           type="button"
                           onClick={(e) => handleAddToCart(e, product)}
-                          className={`w-full flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-md flex items-center justify-center gap-1.5 cursor-pointer ${
-                            isAdded
-                              ? 'bg-emerald-600 text-white shadow-emerald-900/50 scale-[1.02]'
-                              : 'bg-white text-black hover:bg-[#E5D7C5] hover:shadow-lg'
-                          }`}
+                          className={`w-full flex-1 py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer ${isAdded
+                              ? 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700 scale-[1.02]'
+                              : 'bg-neutral-950 text-white hover:bg-black hover:shadow-md'
+                            }`}
                         >
                           {isAdded ? (
                             <>
-                              <CheckIcon className="w-3.5 h-3.5" />
+                              <CheckIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                               <span>Added</span>
                             </>
                           ) : (
                             <>
-                              <BagIcon className="w-3.5 h-3.5 text-black" />
+                              <BagIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-300" />
                               <span className="truncate">Add to Bag</span>
                             </>
                           )}
@@ -418,7 +404,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         <button
                           type="button"
                           onClick={(e) => handleBuyNow(e, product)}
-                          className="w-full xs:w-auto px-3.5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-all duration-300 active:scale-95 cursor-pointer shadow-sm shrink-0"
+                          className="w-full xs:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider border border-gray-300 bg-white text-gray-800 hover:border-gray-950 hover:bg-gray-50 transition-all duration-300 active:scale-95 cursor-pointer shadow-2xs shrink-0"
                         >
                           Buy
                         </button>
@@ -432,12 +418,12 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
             })}
           </div>
         ) : (
-          <div className="text-center py-16 rounded-3xl bg-[#121724] border border-white/10 shadow-xl">
-            <p className="text-sm font-semibold text-neutral-300">No products found for the selected filter.</p>
+          <div className="text-center py-16 rounded-3xl bg-white border border-gray-200/80 shadow-xs">
+            <p className="text-sm font-semibold text-neutral-700">No products found for the selected filter.</p>
             <button
               type="button"
               onClick={() => { setSelectedCategory('All'); setActiveTab('trending'); }}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-6 py-2.5 text-xs font-bold text-black hover:bg-[#E5D7C5] cursor-pointer shadow-md"
+              className="mt-3.5 inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2 text-xs font-bold text-white hover:bg-black cursor-pointer shadow-sm"
             >
               Reset Filters
             </button>
