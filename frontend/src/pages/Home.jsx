@@ -501,9 +501,9 @@ export default function Home() {
       )}
 
       {/* =========================================================
-          1. LUXURY WATCH HERO SLIDER SECTION
+          1. LUXURY WATCH HERO SLIDER SECTION (LUMINOUS WARM LUXURY)
       ========================================================= */}
-      <section className="relative w-full overflow-hidden bg-[#080A0F] text-white border-b border-neutral-800/80 min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] lg:h-[720px]">
+      <section className="relative w-full overflow-hidden bg-[#FAF8F5] text-neutral-900 border-b border-[#E8E1D5] min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] lg:h-[700px]">
         {/* Background Visual Staging & Slide Transitions */}
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
@@ -512,34 +512,36 @@ export default function Home() {
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
             >
+              {/* Product Visual */}
               <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[58%] xl:w-[52%] 2xl:w-[48%] h-full w-full">
                 <img
                   src={slide.image}
                   alt={slide.titleLine1}
                   className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center transition-transform duration-10000 ease-out"
                 />
-                <div className="hidden lg:block absolute inset-y-0 left-0 w-48 xl:w-64 bg-gradient-to-r from-[#080A0F] to-transparent pointer-events-none" />
+                <div className="hidden lg:block absolute inset-y-0 left-0 w-48 xl:w-64 bg-gradient-to-r from-[#FAF8F5] to-transparent pointer-events-none" />
               </div>
 
-              {/* Seamless luxury gradient masks for high editorial legibility */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#080A0F] via-[#080A0F]/85 to-black/30 lg:from-[#080A0F] lg:via-[#080A0F]/90 lg:via-48% lg:to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#080A0F] via-[#080A0F]/60 to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_45%,transparent_0%,rgba(8,10,15,0.2)_45%,rgba(8,10,15,0.7)_100%)] pointer-events-none" />
+              {/* Luminous luxury gradient masks for maximum legibility and warm elegance */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/90 to-transparent lg:from-[#FAF8F5] lg:via-[#FAF8F5]/95 lg:via-48% lg:to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/70 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_45%,transparent_0%,rgba(250,248,245,0.3)_45%,rgba(250,248,245,0.8)_100%)] pointer-events-none" />
             </div>
           ))}
         </div>
 
-        {/* Ambient Champagne Gold Lighting Highlight */}
-        <div className="pointer-events-none absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-[#C5A880]/10 blur-3xl" />
+        {/* Ambient Warm Champagne Glow */}
+        <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-[#C5A880]/15 blur-3xl" />
+        <div className="pointer-events-none absolute right-1/4 bottom-10 h-72 w-72 rounded-full bg-[#FAF0E4]/60 blur-2xl" />
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
+        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
           <div className="max-w-[620px] lg:my-auto lg:py-8" key={`hero-slide-${currentSlide}`}>
             
             {/* Category Tag */}
             <Reveal direction="down" delay={60}>
               <div className="mb-4 sm:mb-5 flex items-center gap-3">
-                <span className="h-px w-8 bg-gradient-to-r from-[#C5A880] to-transparent" />
-                <span className="text-[10px] sm:text-[11.5px] font-bold uppercase tracking-[0.28em] text-[#C5A880] font-sans">
+                <span className="h-px w-8 bg-[#8C6734]" />
+                <span className="text-[10px] sm:text-[11.5px] font-bold uppercase tracking-[0.28em] text-[#8C6734] font-sans">
                   {watchHeroSlides[currentSlide].tag}
                 </span>
               </div>
@@ -547,9 +549,9 @@ export default function Home() {
 
             {/* Main Editorial Heading */}
             <Reveal direction="up" delay={130}>
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.05]">
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#12141A] leading-[1.05]">
                 <span className="block">{watchHeroSlides[currentSlide].titleLine1}</span>
-                <span className="block mt-1 sm:mt-2 font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#F5E6D3] via-[#C5A880] to-[#E5D7C5]">
+                <span className="block mt-1 sm:mt-2 font-serif italic font-normal text-[#9B7036]">
                   {watchHeroSlides[currentSlide].titleLine2}
                 </span>
               </h1>
@@ -557,7 +559,7 @@ export default function Home() {
 
             {/* Description */}
             <Reveal direction="up" delay={200}>
-              <p className="mt-4 sm:mt-6 text-sm sm:text-base text-neutral-300 max-w-md font-light leading-relaxed">
+              <p className="mt-4 sm:mt-6 text-sm sm:text-base text-neutral-600 max-w-md font-normal leading-relaxed">
                 {watchHeroSlides[currentSlide].description}
               </p>
             </Reveal>
@@ -569,9 +571,9 @@ export default function Home() {
                   {watchHeroSlides[currentSlide].specs.map((spec, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10.5px] sm:text-[11px] font-medium text-neutral-300 backdrop-blur-xs shadow-2xs"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#DFD5C4] bg-white/90 px-3 py-1 text-[10.5px] sm:text-[11px] font-medium text-neutral-800 shadow-2xs backdrop-blur-xs"
                     >
-                      <span className="text-[#C5A880] text-[9px]">✦</span>
+                      <span className="text-[#8C6734] text-[9px]">✦</span>
                       <span>{spec}</span>
                     </span>
                   ))}
@@ -584,15 +586,15 @@ export default function Home() {
               <div className="mt-7 sm:mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
                 <Link
                   to="/shop?category=Watches"
-                  className="group/btn inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-[#C5A880] via-[#D5BA92] to-[#E5D7C5] px-7 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#080A0F] shadow-[0_8px_25px_rgba(197,168,128,0.25)] hover:shadow-[0_12px_35px_rgba(197,168,128,0.4)] hover:brightness-105 transition-all duration-300 active:scale-95 cursor-pointer"
+                  className="group/btn inline-flex items-center gap-2.5 rounded-full bg-[#12141A] hover:bg-black px-7 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-white shadow-[0_8px_20px_rgba(0,0,0,0.14)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition-all duration-300 active:scale-95 cursor-pointer"
                 >
                   <span>Shop Watches</span>
-                  <ArrowRightIcon className="w-4 h-4 text-[#080A0F] transition-transform duration-200 group-hover/btn:translate-x-1" />
+                  <ArrowRightIcon className="w-4 h-4 text-white transition-transform duration-200 group-hover/btn:translate-x-1" />
                 </Link>
 
                 <Link
                   to="/shop"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-6 sm:px-7 py-3.5 sm:py-4 text-xs sm:text-[13px] font-semibold tracking-[0.14em] uppercase text-white hover:border-[#C5A880]/70 hover:bg-white/10 transition-all duration-300 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#C5A880] bg-white/90 hover:bg-white hover:border-[#8C6734] px-6 sm:px-7 py-3.5 sm:py-4 text-xs sm:text-[13px] font-semibold tracking-[0.14em] uppercase text-[#12141A] transition-all duration-300 active:scale-95 shadow-2xs"
                 >
                   <span>All Collections</span>
                 </Link>
@@ -602,7 +604,7 @@ export default function Home() {
 
           {/* Slider Pagination & Quick Nav Controls */}
           <Reveal direction="up" delay={340}>
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
+            <div className="flex items-center justify-between border-t border-[#E8E1D5] pt-4">
               
               {/* Slide Bars */}
               <div className="flex items-center gap-2">
@@ -610,7 +612,7 @@ export default function Home() {
                   <button
                     key={i}
                     onClick={() => setCurrentSlide(i)}
-                    className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-10 bg-gradient-to-r from-[#C5A880] to-[#E5D7C5]' : 'w-2.5 bg-white/20 hover:bg-white/40'
+                    className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-10 bg-[#8C6734]' : 'w-2.5 bg-neutral-300 hover:bg-neutral-400'
                       }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
@@ -618,11 +620,11 @@ export default function Home() {
               </div>
 
               {/* Prev / Next Chevrons & Counter */}
-              <div className="flex items-center gap-3 text-neutral-400">
+              <div className="flex items-center gap-3 text-neutral-600">
                 <button
                   type="button"
                   onClick={() => setCurrentSlide((prev) => (prev - 1 + watchHeroSlides.length) % watchHeroSlides.length)}
-                  className="hidden sm:flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/5 text-neutral-300 hover:border-white/40 hover:text-white transition cursor-pointer"
+                  className="hidden sm:flex h-7.5 w-7.5 items-center justify-center rounded-full border border-[#DFD5C4] bg-white text-neutral-700 hover:text-black hover:border-neutral-500 transition shadow-2xs cursor-pointer"
                   aria-label="Previous slide"
                 >
                   <ChevronLeftIcon className="w-3.5 h-3.5" />
@@ -630,12 +632,12 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setCurrentSlide((prev) => (prev + 1) % watchHeroSlides.length)}
-                  className="hidden sm:flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/5 text-neutral-300 hover:border-white/40 hover:text-white transition cursor-pointer"
+                  className="hidden sm:flex h-7.5 w-7.5 items-center justify-center rounded-full border border-[#DFD5C4] bg-white text-neutral-700 hover:text-black hover:border-neutral-500 transition shadow-2xs cursor-pointer"
                   aria-label="Next slide"
                 >
                   <ChevronRightIcon className="w-3.5 h-3.5" />
                 </button>
-                <span className="text-[11px] font-mono font-semibold text-[#C5A880] tracking-widest pl-1">
+                <span className="text-[11.5px] font-mono font-bold text-[#8C6734] tracking-widest pl-1">
                   0{currentSlide + 1} — 0{watchHeroSlides.length}
                 </span>
               </div>
@@ -646,12 +648,12 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (FULL WIDTH)
+          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (LUMINOUS WARM CHAMPAGNE)
       ========================================================= */}
       <Reveal direction="up" delay={50}>
-        <div className="w-full relative bg-[#080A0F] text-white border-y border-[#C5A880]/25 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#080A0F] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#080A0F] to-transparent z-10" />
+        <div className="w-full relative bg-[#F4ECE1] text-neutral-900 border-y border-[#DFCDB7] py-3 sm:py-3.5 overflow-hidden select-none shadow-2xs">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#F4ECE1] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#F4ECE1] to-transparent z-10" />
 
           <div className="animate-marquee flex items-center gap-6 sm:gap-8">
             {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
@@ -660,15 +662,15 @@ export default function Home() {
                 onClick={() => item.code && handleCopyCode(item.code)}
                 className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
               >
-                <span className="text-[#C5A880] text-xs">✦</span>
+                <span className="text-[#8C6734] text-xs">✦</span>
 
                 {/* Offer / Category Badge */}
                 {item.badge && (
-                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30'}`}>
+                  <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border border-[#D5C2A5] bg-white text-[#785527] shadow-2xs">
                     {item.isOffer && (
                       <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C5A880] opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#E5D7C5]"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-600"></span>
                       </span>
                     )}
                     {item.badge}
@@ -676,12 +678,12 @@ export default function Home() {
                 )}
 
                 {/* Title */}
-                <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.16em] text-neutral-100">
+                <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.16em] text-neutral-900">
                   {item.title}
                 </span>
 
                 {/* Subtitle */}
-                <span className="text-[10.5px] sm:text-[11px] font-normal text-[#E5D7C5]/75 tracking-wide">
+                <span className="text-[10.5px] sm:text-[11px] font-medium text-[#6B5335] tracking-wide">
                   ({item.subtitle})
                 </span>
 
@@ -691,14 +693,14 @@ export default function Home() {
                     type="button"
                     onClick={(e) => handleCopyCode(item.code, e)}
                     title="Click to copy coupon code"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#C5A880]/20 hover:bg-[#C5A880]/30 px-2.5 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-[#E5D7C5] border border-[#C5A880]/40 transition active:scale-95 cursor-pointer shadow-xs"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#8C6734] hover:bg-[#755325] px-2.5 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-white border border-[#755325] transition active:scale-95 cursor-pointer shadow-2xs"
                   >
                     <span>CODE: {item.code}</span>
                     <span className="text-[10px]">📋</span>
                   </button>
                 )}
 
-                <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
+                <span className="h-1 w-1 rounded-full bg-[#C9B7A0] ml-1.5" />
               </div>
             ))}
           </div>
