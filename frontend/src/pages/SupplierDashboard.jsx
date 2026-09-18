@@ -532,12 +532,14 @@ export default function SupplierDashboard() {
       >
         {/* Sidebar Brand Header */}
         <div className="flex flex-col min-h-0 flex-1 overflow-hidden">
-          <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
+          <div className={`flex h-16 items-center ${sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-4'} border-b border-zinc-800/80 shrink-0`}>
             <div className="flex items-center gap-3 overflow-hidden min-w-0">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs"
+                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs cursor-pointer"
+                onClick={() => sidebarCollapsed && setSidebarCollapsed(false)}
+                title={sidebarCollapsed ? "Expand sidebar" : undefined}
               />
               {!sidebarCollapsed && (
                 <div className="flex flex-col min-w-0">
@@ -550,6 +552,15 @@ export default function SupplierDashboard() {
                 </div>
               )}
             </div>
+
+            {/* Toggle Icon inside Sidebar Header */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700 text-xs transition cursor-pointer shrink-0"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+            </button>
 
             <button
               onClick={() => setMobileSidebarOpen(false)}
@@ -616,8 +627,8 @@ export default function SupplierDashboard() {
                       }
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 font-medium transition-colors cursor-pointer ${isSectionActive
-                      ? 'bg-zinc-800/90 text-white font-semibold'
-                      : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
+                        ? 'bg-zinc-800/90 text-white font-semibold'
+                        : 'text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -649,8 +660,8 @@ export default function SupplierDashboard() {
                             key={sub.id}
                             onClick={() => handleNavSelect(sec.id, sub.id)}
                             className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-[11.5px] transition cursor-pointer ${isSubActive
-                              ? 'bg-zinc-800/80 text-white font-semibold'
-                              : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
+                                ? 'bg-zinc-800/80 text-white font-semibold'
+                                : 'text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200 font-normal'
                               }`}
                           >
                             <span className="truncate">{sub.label}</span>
@@ -754,18 +765,8 @@ export default function SupplierDashboard() {
               <Menu className="h-4 w-4" />
             </button>
 
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 hover:bg-zinc-200 text-xs font-mono shrink-0 cursor-pointer"
-              title="Toggle sidebar collapse"
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-            </button>
-
             <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
-              <span className="text-zinc-400 shrink-0">Supplier</span>
-              <span className="text-zinc-300 shrink-0">/</span>
-              <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
+              <span className="text-zinc-700 font-medium truncate">{currentSectionObj.title}</span>
               <span className="text-zinc-300 shrink-0">/</span>
               <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
             </div>
@@ -976,8 +977,8 @@ export default function SupplierDashboard() {
 
                         <div className="text-right space-y-1">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
-                            order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
-                              'bg-amber-50 text-amber-700 border border-amber-200/60'
+                              order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                                'bg-amber-50 text-amber-700 border border-amber-200/60'
                             }`}>
                             {order.status}
                           </span>
@@ -1176,10 +1177,10 @@ export default function SupplierDashboard() {
                           </td>
                           <td className="py-3.5 px-4">
                             <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono ${Number(p.stock) === 0
-                              ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
-                              : Number(p.stock) < 10
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
-                                : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                                : Number(p.stock) < 10
+                                  ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
                               }`}>
                               {p.stock} units
                             </span>
@@ -1303,9 +1304,9 @@ export default function SupplierDashboard() {
 
                           <td className="py-3.5 px-4">
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
-                              order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
-                                order.status === 'Cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' :
-                                  'bg-amber-50 text-amber-700 border border-amber-200/60'
+                                order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                                  order.status === 'Cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' :
+                                    'bg-amber-50 text-amber-700 border border-amber-200/60'
                               }`}>
                               {order.status}
                             </span>
