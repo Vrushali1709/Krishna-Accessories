@@ -626,36 +626,30 @@ export default function Navbar() {
                     }}
                     aria-label="User profile menu"
                     aria-expanded={userMenuOpen}
-                    className={`flex h-8.5 items-center gap-1.5 sm:gap-2 rounded-xl border px-2 sm:px-2.5 text-xs font-medium transition-all duration-150 shadow-2xs cursor-pointer shrink-0 ${
+                    className={`flex h-8.5 items-center gap-1.5 rounded-xl border px-2 text-xs font-semibold transition-all duration-150 shadow-2xs cursor-pointer shrink-0 ${
                       currentUser.role === 'admin'
-                        ? 'border-amber-300 bg-amber-50/80 hover:bg-amber-100 hover:border-amber-400 text-amber-950'
+                        ? 'border-amber-300/80 bg-amber-50/90 hover:bg-amber-100 hover:border-amber-400 text-amber-950'
                         : currentUser.role === 'supplier'
-                          ? 'border-blue-300 bg-blue-50/80 hover:bg-blue-100 hover:border-blue-400 text-blue-950'
+                          ? 'border-blue-300/80 bg-blue-50/90 hover:bg-blue-100 hover:border-blue-400 text-blue-950'
                           : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 text-gray-800'
                     }`}
                   >
-                    <div className={`flex h-5.5 w-5.5 items-center justify-center rounded-lg font-bold text-[11px] shadow-xs shrink-0 ${
+                    <div className={`flex h-5 w-5 items-center justify-center rounded-md font-bold text-[10.5px] shadow-2xs shrink-0 ${
                       currentUser.role === 'admin'
                         ? 'bg-amber-500 text-white'
                         : currentUser.role === 'supplier'
                           ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-900'
+                          : 'bg-gray-900 text-white'
                     }`}>
                       {currentUser.name ? currentUser.name[0].toUpperCase() : (currentUser.role === 'admin' ? 'A' : currentUser.role === 'supplier' ? 'S' : 'U')}
                     </div>
-                    <span className="truncate max-w-[70px] xl:max-w-[90px] text-[11.5px] font-bold">
-                      {currentUser.name || (currentUser.role === 'admin' ? 'Admin' : currentUser.email.split('@')[0])}
+                    <span className="text-[11.5px] font-bold whitespace-nowrap">
+                      {currentUser.role === 'admin'
+                        ? 'Admin'
+                        : currentUser.role === 'supplier'
+                          ? 'Vendor'
+                          : (currentUser.name ? currentUser.name.split(' ')[0] : currentUser.email.split('@')[0])}
                     </span>
-                    {currentUser.role === 'admin' && (
-                      <span className="hidden xl:inline-block rounded-md bg-amber-200/90 text-amber-900 text-[8.5px] font-extrabold px-1.5 py-0.5 tracking-wider shrink-0">
-                        ADMIN
-                      </span>
-                    )}
-                    {currentUser.role === 'supplier' && (
-                      <span className="hidden xl:inline-block rounded-md bg-blue-200/90 text-blue-900 text-[8.5px] font-extrabold px-1.5 py-0.5 tracking-wider shrink-0">
-                        VENDOR
-                      </span>
-                    )}
                     <ChevronDownIcon className={`w-2.5 h-2.5 shrink-0 ${
                       currentUser.role === 'admin' ? 'text-amber-800' : currentUser.role === 'supplier' ? 'text-blue-800' : 'text-gray-400'
                     }`} />
