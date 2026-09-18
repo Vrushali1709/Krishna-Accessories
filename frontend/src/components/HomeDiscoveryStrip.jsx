@@ -13,84 +13,78 @@ import {
 const features = [
   {
     id: 'shipping',
-    tag: 'FREE DELIVERY',
+    tag: 'EXPRESS DISPATCH',
     title: 'Free Express Shipping',
-    subtitle: 'Insured delivery across India above ₹2,000',
+    subtitle: 'Complimentary insured shipping across India on orders above ₹2,000',
     icon: TruckIcon,
-    to: '/shop',
-    iconBg: 'bg-blue-50 text-blue-700 border border-blue-200/70',
-    tagBg: 'bg-blue-50 text-blue-700 border-blue-200'
+    to: '/shop'
   },
   {
     id: 'returns',
     tag: 'EASY POLICY',
     title: '7-Day Easy Returns',
-    subtitle: 'Hassle-free replacement & return policy',
+    subtitle: 'Hassle-free 100% replacement and verified doorstep pickup',
     icon: RefreshIcon,
-    to: '/terms-conditions',
-    iconBg: 'bg-emerald-50 text-emerald-700 border border-emerald-200/70',
-    tagBg: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    to: '/terms-conditions'
   },
   {
     id: 'payments',
     tag: '100% ENCRYPTED',
     title: 'Secure Payment',
-    subtitle: 'Bank-grade 256-bit SSL & UPI checkout',
+    subtitle: 'Bank-grade 256-bit SSL, UPI, Credit Cards & NetBanking protection',
     icon: ShieldCheckIcon,
-    to: '/checkout',
-    iconBg: 'bg-amber-50 text-amber-700 border border-amber-200/70',
-    tagBg: 'bg-amber-50 text-amber-700 border-amber-200'
+    to: '/checkout'
   },
   {
     id: 'support',
-    tag: 'MUMBAI STORE',
+    tag: 'MUMBAI FLAGSHIP',
     title: '24/7 VIP Concierge',
-    subtitle: 'Direct Haji Ali boutique assistance',
+    subtitle: 'Direct boutique assistance and personal styling at Haji Ali Sanctuary',
     icon: HeadphonesIcon,
-    to: '/contact',
-    iconBg: 'bg-purple-50 text-purple-700 border border-purple-200/70',
-    tagBg: 'bg-purple-50 text-purple-700 border-purple-200'
+    to: '/contact'
   }
 ];
 
 export default function HomeDiscoveryStrip() {
   return (
-    <section className="relative w-full pt-6 sm:pt-8 md:pt-10 pb-4 sm:pb-6">
+    <section className="relative w-full py-6 sm:py-8 bg-[#FAFAFB]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* 4-Feature Interactive Grid with Generous Responsive Spacing */}
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:gap-5 lg:grid-cols-4 lg:gap-6">
-          {features.map(({ id, tag, title, subtitle, icon: Icon, to, iconBg, tagBg }, idx) => (
-            <Reveal key={id} direction="up" delay={idx * 65} duration={600}>
+        {/* 4-Column Luxury Service Feature Grid */}
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4.5">
+          {features.map(({ id, tag, title, subtitle, icon: Icon, to }, idx) => (
+            <Reveal key={id} direction="up" delay={idx * 60} duration={500}>
               <Link
                 to={to}
-                className="group relative flex min-h-[142px] min-w-0 flex-col items-start justify-between rounded-2xl sm:min-h-0 sm:flex-row sm:items-center sm:rounded-3xl border border-gray-200/85 bg-white p-3 sm:p-5 lg:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-gray-400 hover:shadow-[0_14px_28px_rgba(0,0,0,0.06)] active:scale-[0.99]"
+                className="group relative flex flex-col justify-between h-full rounded-2xl border border-neutral-200/90 bg-white p-5 shadow-[0_2px_14px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C5A880] hover:shadow-[0_12px_28px_rgba(197,168,128,0.12)] active:scale-[0.99]"
               >
-                <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
-                  {/* Luxury Rounded Icon Box */}
-                  <div
-                    className={`flex h-9 w-9 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl ${iconBg} transition-transform duration-300 group-hover:scale-108 shadow-2xs`}
-                  >
-                    <Icon className="h-4 w-4 sm:h-5.5 sm:w-5.5" />
-                  </div>
+                <div>
+                  {/* Top Row: Luxury Icon + Micro Tag */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-[#0F1115] text-[#E5D7C5] transition-all duration-300 group-hover:bg-[#C5A880] group-hover:text-neutral-950 shadow-xs">
+                      <Icon className="h-5 w-5" />
+                    </div>
 
-                  {/* Content & Tag */}
-                  <div className="min-w-0 max-w-full pr-5 sm:pr-1">
-                    <span className={`inline-block max-w-[calc(100%-8px)] truncate rounded-md px-1.5 py-0.2 text-[8px] sm:text-[9px] font-black uppercase tracking-wider border mb-1 ${tagBg}`}>
+                    <span className="inline-block rounded-full bg-[#FAF6F0] px-2.5 py-0.5 text-[9px] sm:text-[9.5px] font-bold uppercase tracking-[0.16em] text-[#9E7A4A] border border-[#EADBCA]/80">
                       {tag}
                     </span>
-                    <h3 className="truncate text-[12px] sm:text-[13.5px] lg:text-[14px] font-bold text-gray-950 transition-colors group-hover:text-black leading-tight">
+                  </div>
+
+                  {/* Title & Description — No Truncation */}
+                  <div className="mt-4">
+                    <h3 className="text-[14.5px] sm:text-[15px] font-bold text-neutral-900 tracking-tight transition-colors group-hover:text-neutral-950 leading-snug">
                       {title}
                     </h3>
-                    <p className="mt-0.5 text-[10px] sm:text-[11.5px] text-gray-500 line-clamp-2 leading-snug font-normal">
+                    <p className="mt-1.5 text-[11.5px] sm:text-[12px] text-neutral-500 leading-relaxed font-normal">
                       {subtitle}
                     </p>
                   </div>
                 </div>
 
-                {/* Hover Cue Arrow */}
-                <div className="absolute right-3 top-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-50 text-gray-400 transition-all duration-300 group-hover:bg-neutral-900 group-hover:text-white group-hover:translate-x-0.5 sm:static sm:ml-2 sm:h-7 sm:w-7">
-                  <ArrowRightIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                {/* Bottom Interactive Link Cue */}
+                <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] font-semibold text-neutral-400 transition-colors group-hover:text-[#9E7A4A]">
+                  <span>Discover More</span>
+                  <ArrowRightIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </Link>
             </Reveal>
