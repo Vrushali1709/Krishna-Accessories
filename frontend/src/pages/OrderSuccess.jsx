@@ -141,7 +141,7 @@ export default function OrderSuccess() {
               </div>
               {order.discount > 0 && (
                 <div className="flex justify-between text-emerald-700 font-semibold">
-                  <span>Coupon Discount</span>
+                  <span>Coupon Discount {order.coupon ? `(${order.coupon})` : ''}</span>
                   <span>−₹{order.discount?.toLocaleString('en-IN')}</span>
                 </div>
               )}

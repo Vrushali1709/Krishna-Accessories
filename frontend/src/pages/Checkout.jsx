@@ -97,12 +97,14 @@ export default function Checkout() {
     setLoading(true);
     showLoading('Securing your order & generating consignment invoice...');
 
+    const couponCodeStr = typeof coupon === 'object' && coupon?.code ? coupon.code : (typeof coupon === 'string' ? coupon : null);
     const orderPayload = {
       customer: form,
       items: cart,
       subtotal,
       shipping,
       discount,
+      coupon: couponCodeStr,
       total,
       paymentMethod,
     };

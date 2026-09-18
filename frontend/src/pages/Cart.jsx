@@ -78,7 +78,9 @@ export default function Cart() {
 
     const res = await applyCoupon(codeToApply, subtotal);
     if (res.success) {
-      const discountVal = res.discount ? `₹${res.discount.toLocaleString('en-IN')} saved` : '';
+      refreshCart();
+      const summary = calculateCartSummary();
+      const discountVal = summary.discount ? `₹${summary.discount.toLocaleString('en-IN')} saved` : (res.discount ? `₹${res.discount.toLocaleString('en-IN')} saved` : '');
       setCouponMsg({
         type: 'success',
         text: `✓ ${res.message} ${discountVal ? `(${discountVal})` : ''}`
@@ -438,7 +440,8 @@ export default function Cart() {
                   <div className="space-y-1">
                     {Object.values(AVAILABLE_COUPONS).map((c) => {
                       const isApplied = couponCodeString === c.code;
-                      const eligible = subtotal >= c.minSpend;
+                      const minSpendVal = c.minOrder || c.minSpend || 0;
+                      const eligible = subtotal >= minSpendVal;
                       return (
                         <div
                           key={c.code}
@@ -459,9 +462,9 @@ export default function Cart() {
                                 ? 'bg-gray-900 text-white hover:bg-black'
                                 : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
                                 }`}
-                              title={eligible ? 'Apply this coupon' : `Min. spend ₹${c.minSpend}`}
+                              title={eligible ? 'Apply this coupon' : `Min. spend ₹${minSpendVal.toLocaleString('en-IN')}`}
                             >
-                              {eligible ? 'Apply' : `Min ₹${c.minSpend}`}
+                              {eligible ? 'Apply' : `Min ₹${minSpendVal.toLocaleString('en-IN')}`}
                             </button>
                           )}
                         </div>

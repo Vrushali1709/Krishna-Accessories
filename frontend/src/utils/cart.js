@@ -35,9 +35,38 @@ let cartMemory = loadCartFromStorage();
 let appliedCouponMemory = loadCouponFromStorage();
 
 export const FREE_SHIPPING_THRESHOLD = 2000;
-export const STANDARD_SHIPPING_FEE = 99;
-
-export const AVAILABLE_COUPONS = {};
+export const AVAILABLE_COUPONS = {
+  KRISHNA10: {
+    code: 'KRISHNA10',
+    type: 'Percentage',
+    value: 10,
+    discountPercent: 10,
+    minSpend: 1000,
+    minOrder: 1000,
+    maxDiscount: null,
+    description: '10% instant discount on orders above ₹1,000'
+  },
+  FESTIVE20: {
+    code: 'FESTIVE20',
+    type: 'Percentage',
+    value: 20,
+    discountPercent: 20,
+    minSpend: 4999,
+    minOrder: 4999,
+    maxDiscount: 2000,
+    description: '20% off on luxury collections above ₹4,999'
+  },
+  WELCOME500: {
+    code: 'WELCOME500',
+    type: 'Fixed',
+    value: 500,
+    discountAmount: 500,
+    minSpend: 2999,
+    minOrder: 2999,
+    maxDiscount: 500,
+    description: 'Flat ₹500 off on orders above ₹2,999'
+  }
+};
 
 /**
  * Retrieves the current cart array from memory/localStorage.
@@ -287,15 +316,57 @@ export function getAppliedCoupon() {
  */
 export async function applyCoupon(code, currentSubtotal = null) {
   if (!code || typeof code !== 'string') {
-    return { success: false, message: 'Please provide a coupon code.' };
+    return { success: false, message: 'Please enter a valid voucher code.' };
   }
 
   const normalized = code.trim().toUpperCase();
   const subtotal = typeof currentSubtotal === 'number' ? currentSubtotal : getCartSubtotal();
-  const result = await promotionsApi.validateCoupon(normalized, subtotal);
-  if (!result.valid) return { success: false, message: result.message };
-  const coupon = result.coupon;
-  const discount = Number(result.discount) || 0;
+  
+  let coupon = null;
+  let discount = 0;
+  let message = '';
+
+  try {
+    const result = await promotionsApi.validateCoupon(normalized, subtotal);
+    if (result && result.valid) {
+      coupon = result.coupon;
+      discount = Number(result.discount) || 0;
+      message = result.message || `Coupon ${normalized} applied successfully!`;
+    } else if (result && result.message) {
+      return { success: false, message: result.message };
+    }
+  } catch (err) {
+    console.warn('[Cart] Backend coupon validation failed, checking fallback:', err);
+  }
+
+  // Fallback to AVAILABLE_COUPONS if backend was unreachable or coupon found locally
+  if (!coupon && AVAILABLE_COUPONS[normalized]) {
+    const local = AVAILABLE_COUPONS[normalized];
+    const minThreshold = Number(local.minOrder ?? local.minSpend ?? 0);
+    if (subtotal < minThreshold) {
+      return {
+        success: false,
+        message: `Minimum order value of ₹${minThreshold.toLocaleString('en-IN')} required for coupon ${normalized}.`
+      };
+    }
+    coupon = local;
+    const isPercent = (local.type || '').toLowerCase() === 'percentage' || local.discountPercent !== undefined;
+    const val = Number(local.value ?? local.discountPercent ?? local.discountAmount ?? 0);
+    if (isPercent) {
+      let calc = Math.round((subtotal * val) / 100);
+      if (local.maxDiscount && calc > Number(local.maxDiscount)) {
+        calc = Number(local.maxDiscount);
+      }
+      discount = calc;
+    } else {
+      discount = Math.min(subtotal, val);
+    }
+    message = `Coupon ${normalized} applied successfully!`;
+  }
+
+  if (!coupon) {
+    return { success: false, message: 'Invalid or expired voucher code.' };
+  }
 
   appliedCouponMemory = coupon;
   if (typeof window !== 'undefined' && window.localStorage) {
@@ -312,7 +383,7 @@ export async function applyCoupon(code, currentSubtotal = null) {
     success: true,
     coupon,
     discount,
-    message: result.message
+    message
   };
 }
 
@@ -343,12 +414,26 @@ export function calculateCartSummary() {
   let validCoupon = null;
 
   if (rawCoupon && subtotal > 0) {
-    if (subtotal >= (rawCoupon.minSpend || 0)) {
+    const minThreshold = Number(rawCoupon.minOrder ?? rawCoupon.minorder ?? rawCoupon.minSpend ?? 0);
+    if (subtotal >= minThreshold) {
       validCoupon = rawCoupon;
-      if (rawCoupon.discountPercent) {
-        discount = Math.round((subtotal * rawCoupon.discountPercent) / 100);
-      } else if (rawCoupon.discountAmount) {
-        discount = Math.min(subtotal, rawCoupon.discountAmount);
+      const typeStr = (rawCoupon.type || '').toString().toLowerCase();
+      const isPercent = typeStr === 'percentage' ||
+                        rawCoupon.discountPercent !== undefined ||
+                        (rawCoupon.value !== undefined && Number(rawCoupon.value) <= 100 && typeStr !== 'fixed');
+
+      const rawVal = rawCoupon.value ?? rawCoupon.discountPercent ?? rawCoupon.discountAmount ?? rawCoupon.discount ?? 0;
+      const numericVal = typeof rawVal === 'string' ? (parseFloat(rawVal.replace(/[^0-9.]/g, '')) || 0) : (Number(rawVal) || 0);
+
+      if (isPercent) {
+        let calc = Math.round((subtotal * numericVal) / 100);
+        const rawMax = rawCoupon.maxDiscount ?? rawCoupon.maxdiscount;
+        if (rawMax !== null && rawMax !== undefined && Number(rawMax) > 0 && calc > Number(rawMax)) {
+          calc = Number(rawMax);
+        }
+        discount = calc;
+      } else {
+        discount = Math.min(subtotal, numericVal);
       }
     } else {
       // Order amount fell below threshold; automatically invalidate coupon
