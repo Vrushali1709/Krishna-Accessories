@@ -98,36 +98,33 @@ const defaultCategoryBanners = [
   }
 ];
 
-// // ============================================================
+// ============================================================
 // WATCH HERO SLIDES
 // ============================================================
 const watchHeroSlides = [
   {
-    tag: 'HAUTE HORLOGERIE • 2026 COLLECTION',
-    titleLine1: 'Precision.',
-    titleLine2: 'Crafted for Time',
-    description: 'Where timeless Swiss horology meets modern prestige performance and certified authenticity.',
+    tag: 'NEW COLLECTION 2026',
+    titleLine1: 'PRECISION.',
+    titleLine2: 'CRAFTED FOR TIME.',
+    description: 'Where timeless Swiss horology meets modern prestige performance.',
     image: 'https://i.pinimg.com/736x/80/4d/7c/804d7c5ba3d69a866d1303f94299d564.jpg',
-    category: 'Watches',
-    specs: ['Swiss Movement', 'Sapphire Crystal', 'Automatic Calibre']
+    category: 'Watches'
   },
   {
     tag: 'LIMITED BESPOKE EDITION',
-    titleLine1: 'Heritage.',
-    titleLine2: 'Chronograph Luxe',
-    description: 'Engineered for absolute accuracy, rose gold casing, ceramic durability, and distinguished style.',
+    titleLine1: 'HERITAGE.',
+    titleLine2: 'CHRONOGRAPH LUXE.',
+    description: 'Engineered for absolute accuracy, ceramic durability, and distinguished style.',
     image: 'https://i.pinimg.com/736x/e6/df/98/e6df982c03d41dbf66fe9470007838c2.jpg',
-    category: 'Watches',
-    specs: ['Rose Gold Bezel', 'Genuine Calfskin', 'Dual Chrono']
+    category: 'Watches'
   },
   {
     tag: 'AUTOMATIC MASTERPIECES',
-    titleLine1: 'Timeless.',
-    titleLine2: 'Sapphire Luxury',
-    description: 'Crafted with genuine sapphire crystal, intricate mechanical movements, and Italian calfskin straps.',
+    titleLine1: 'TIMELESS.',
+    titleLine2: 'SAPPHIRE LUXURY.',
+    description: 'Crafted with genuine sapphire crystal, mechanical movements, and calfskin straps.',
     image: 'https://i.pinimg.com/736x/52/cc/2a/52cc2a9343298c070a2e66503a60b5cc.jpg',
-    category: 'Watches',
-    specs: ['Ceramic Bezel', 'Mechanical Movement', 'Handcrafted Strap']
+    category: 'Watches'
   }
 ];
 
@@ -137,7 +134,7 @@ const watchHeroSlides = [
 const storeTickerItems = [
   {
     badge: 'SPECIAL OFFER',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-amber-400/20 text-amber-300 border-amber-400/40',
     title: 'FLAT 10% OFF SITEWIDE',
     subtitle: 'Use Code: KRISHNA10 on orders above ₹1,000',
     code: 'KRISHNA10',
@@ -145,49 +142,49 @@ const storeTickerItems = [
   },
   {
     badge: 'FREE DELIVERY',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
     title: 'INSURED EXPRESS SHIPPING',
     subtitle: 'Free across India on prepaid orders above ₹2,000',
     isOffer: true
   },
   {
     badge: 'FESTIVE SALE',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
     title: 'UP TO 40% OFF LUXURY CATALOG',
     subtitle: 'Watches • Sunglasses • Premium Audio • Leather',
     isOffer: true
   },
   {
     badge: 'BUY 2 SAVE MORE',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
     title: 'EXTRA 5% COMBO SAVINGS',
     subtitle: 'Auto-applied at checkout on 2+ items',
     isOffer: true
   },
   {
     badge: 'PREMIUM QUALITY',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-amber-400/20 text-amber-300 border-amber-400/40',
     title: 'RELIABLE BRAND WARRANTY',
     subtitle: 'Titan • Casio • Fossil • Seiko • Apple • Sony',
     isOffer: false
   },
   {
     badge: 'PEACE OF MIND',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/40',
     title: '7-DAY HASSLE-FREE RETURNS',
     subtitle: '100% Client satisfaction guarantee',
     isOffer: false
   },
   {
     badge: 'LEATHER LUXE',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
     title: 'HANDCRAFTED LEATHER GOODS',
     subtitle: 'Hidesign • Wildcraft • Tommy Hilfiger',
     isOffer: false
   },
   {
     badge: 'FLAGSHIP STORE',
-    badgeColor: 'bg-[#C5A880]/15 text-[#E5D7C5] border-[#C5A880]/30',
+    badgeColor: 'bg-neutral-500/20 text-neutral-300 border-neutral-500/40',
     title: 'MUMBAI SANCTUARY',
     subtitle: 'Visit Heera Panna Shopping Center, Haji Ali',
     isOffer: false
@@ -501,10 +498,9 @@ export default function Home() {
       )}
 
       {/* =========================================================
-          1. LUXURY WATCH HERO SLIDER SECTION (LUMINOUS WARM LUXURY)
+          1. LUXURY WATCH HERO SLIDER SECTION
       ========================================================= */}
-      <section className="relative w-full overflow-hidden bg-[#FAF8F5] text-neutral-900 border-b border-[#E8E1D5] min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] lg:h-[700px]">
-        {/* Background Visual Staging & Slide Transitions */}
+      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[700px] lg:min-h-[700px]">
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
             <div
@@ -512,89 +508,59 @@ export default function Home() {
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
             >
-              {/* Product Visual */}
               <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[58%] xl:w-[52%] 2xl:w-[48%] h-full w-full">
                 <img
                   src={slide.image}
                   alt={slide.titleLine1}
-                  className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center transition-transform duration-10000 ease-out"
+                  className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center scale-[1.02] lg:scale-100 transition-transform duration-10000 ease-out"
                 />
-                <div className="hidden lg:block absolute inset-y-0 left-0 w-48 xl:w-64 bg-gradient-to-r from-[#FAF8F5] to-transparent pointer-events-none" />
+                <div className="hidden lg:block absolute inset-y-0 left-0 w-48 xl:w-64 bg-gradient-to-r from-[#070808] to-transparent pointer-events-none" />
               </div>
 
-              {/* Luminous luxury gradient masks for maximum legibility and warm elegance */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/90 to-transparent lg:from-[#FAF8F5] lg:via-[#FAF8F5]/95 lg:via-48% lg:to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/70 to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_45%,transparent_0%,rgba(250,248,245,0.3)_45%,rgba(250,248,245,0.8)_100%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/10 lg:from-[#070808] lg:via-[#070808]/90 lg:via-48% lg:to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/95 via-black/40 to-transparent lg:from-[#070808] lg:via-[#070808]/70 pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.1)_45%,rgba(0,0,0,0.4)_100%)] lg:bg-[radial-gradient(ellipse_at_75%_50%,transparent_30%,rgba(7,8,8,0.4)_75%,#070808_100%)] pointer-events-none" />
             </div>
           ))}
         </div>
 
-        {/* Ambient Warm Champagne Glow */}
-        <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-[#C5A880]/15 blur-3xl" />
-        <div className="pointer-events-none absolute right-1/4 bottom-10 h-72 w-72 rounded-full bg-[#FAF0E4]/60 blur-2xl" />
-
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
+        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
           <div className="max-w-[620px] lg:my-auto lg:py-8" key={`hero-slide-${currentSlide}`}>
-            
-            {/* Category Tag */}
             <Reveal direction="down" delay={60}>
-              <div className="mb-4 sm:mb-5 flex items-center gap-3">
-                <span className="h-px w-8 bg-[#8C6734]" />
-                <span className="text-[10px] sm:text-[11.5px] font-bold uppercase tracking-[0.28em] text-[#8C6734] font-sans">
+              <div className="mb-5 flex items-center gap-3">
+                <span className="h-px w-8 bg-[#C5A880]" />
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#D5C2A5]">
                   {watchHeroSlides[currentSlide].tag}
                 </span>
               </div>
             </Reveal>
 
-            {/* Main Editorial Heading */}
             <Reveal direction="up" delay={130}>
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#12141A] leading-[1.05]">
-                <span className="block">{watchHeroSlides[currentSlide].titleLine1}</span>
-                <span className="block mt-1 sm:mt-2 font-serif italic font-normal text-[#9B7036]">
-                  {watchHeroSlides[currentSlide].titleLine2}
-                </span>
+              <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-extrabold sm:text-5xl lg:text-[68px] xl:text-[76px]">
+                <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
+                <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
               </h1>
             </Reveal>
 
-            {/* Description */}
             <Reveal direction="up" delay={200}>
-              <p className="mt-4 sm:mt-6 text-sm sm:text-base text-neutral-600 max-w-md font-normal leading-relaxed">
+              <p className="mt-5 text-sm sm:text-base text-[#B0B2B8] max-w-md font-light leading-relaxed">
                 {watchHeroSlides[currentSlide].description}
               </p>
             </Reveal>
 
-            {/* Horological Specs Badges */}
-            {watchHeroSlides[currentSlide].specs && (
-              <Reveal direction="up" delay={240}>
-                <div className="mt-4 sm:mt-5 flex flex-wrap items-center gap-2">
-                  {watchHeroSlides[currentSlide].specs.map((spec, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#DFD5C4] bg-white/90 px-3 py-1 text-[10.5px] sm:text-[11px] font-medium text-neutral-800 shadow-2xs backdrop-blur-xs"
-                    >
-                      <span className="text-[#8C6734] text-[9px]">✦</span>
-                      <span>{spec}</span>
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
-            )}
-
-            {/* CTA Buttons */}
-            <Reveal direction="up" delay={300}>
-              <div className="mt-7 sm:mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
+            <Reveal direction="up" delay={280}>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
                   to="/shop?category=Watches"
-                  className="group/btn inline-flex items-center gap-2.5 rounded-full bg-[#12141A] hover:bg-black px-7 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-white shadow-[0_8px_20px_rgba(0,0,0,0.14)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.22)] transition-all duration-300 active:scale-95 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
                 >
                   <span>Shop Watches</span>
-                  <ArrowRightIcon className="w-4 h-4 text-white transition-transform duration-200 group-hover/btn:translate-x-1" />
+                  <ArrowRightIcon className="w-4 h-4 text-black" />
                 </Link>
 
                 <Link
                   to="/shop"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#C5A880] bg-white/90 hover:bg-white hover:border-[#8C6734] px-6 sm:px-7 py-3.5 sm:py-4 text-xs sm:text-[13px] font-semibold tracking-[0.14em] uppercase text-[#12141A] transition-all duration-300 active:scale-95 shadow-2xs"
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
                 >
                   <span>All Collections</span>
                 </Link>
@@ -602,58 +568,35 @@ export default function Home() {
             </Reveal>
           </div>
 
-          {/* Slider Pagination & Quick Nav Controls */}
           <Reveal direction="up" delay={340}>
-            <div className="flex items-center justify-between border-t border-[#E8E1D5] pt-4">
-              
-              {/* Slide Bars */}
+            <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
               <div className="flex items-center gap-2">
                 {watchHeroSlides.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentSlide(i)}
-                    className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-10 bg-[#8C6734]' : 'w-2.5 bg-neutral-300 hover:bg-neutral-400'
+                    className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
                       }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
                 ))}
               </div>
 
-              {/* Prev / Next Chevrons & Counter */}
-              <div className="flex items-center gap-3 text-neutral-600">
-                <button
-                  type="button"
-                  onClick={() => setCurrentSlide((prev) => (prev - 1 + watchHeroSlides.length) % watchHeroSlides.length)}
-                  className="hidden sm:flex h-7.5 w-7.5 items-center justify-center rounded-full border border-[#DFD5C4] bg-white text-neutral-700 hover:text-black hover:border-neutral-500 transition shadow-2xs cursor-pointer"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeftIcon className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCurrentSlide((prev) => (prev + 1) % watchHeroSlides.length)}
-                  className="hidden sm:flex h-7.5 w-7.5 items-center justify-center rounded-full border border-[#DFD5C4] bg-white text-neutral-700 hover:text-black hover:border-neutral-500 transition shadow-2xs cursor-pointer"
-                  aria-label="Next slide"
-                >
-                  <ChevronRightIcon className="w-3.5 h-3.5" />
-                </button>
-                <span className="text-[11.5px] font-mono font-bold text-[#8C6734] tracking-widest pl-1">
-                  0{currentSlide + 1} — 0{watchHeroSlides.length}
-                </span>
-              </div>
-
+              <span className="text-[11px] font-mono font-medium text-neutral-400 tracking-wider">
+                0{currentSlide + 1} / 0{watchHeroSlides.length}
+              </span>
             </div>
           </Reveal>
         </div>
       </section>
 
       {/* =========================================================
-          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (LUMINOUS WARM CHAMPAGNE)
+          2. CONTINUOUS SCROLLING SPECIAL OFFERS & TRUST TICKER RIBBON (FULL WIDTH)
       ========================================================= */}
       <Reveal direction="up" delay={50}>
-        <div className="w-full relative bg-[#F4ECE1] text-neutral-900 border-y border-[#DFCDB7] py-3 sm:py-3.5 overflow-hidden select-none shadow-2xs">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#F4ECE1] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#F4ECE1] to-transparent z-10" />
+        <div className="w-full relative bg-[#080B11] text-white border-y border-[#C5A880]/35 py-3 sm:py-3.5 overflow-hidden select-none shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-[#080B11] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-[#080B11] to-transparent z-10" />
 
           <div className="animate-marquee flex items-center gap-6 sm:gap-8">
             {[...storeTickerItems, ...storeTickerItems].map((item, idx) => (
@@ -662,15 +605,15 @@ export default function Home() {
                 onClick={() => item.code && handleCopyCode(item.code)}
                 className={`inline-flex items-center gap-2.5 sm:gap-3.5 shrink-0 transition-opacity duration-200 ${item.code ? 'cursor-pointer hover:opacity-90' : ''}`}
               >
-                <span className="text-[#8C6734] text-xs">✦</span>
+                <span className="text-amber-400 text-xs">✦</span>
 
                 {/* Offer / Category Badge */}
                 {item.badge && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border border-[#D5C2A5] bg-white text-[#785527] shadow-2xs">
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider border shadow-xs ${item.badgeColor || 'bg-amber-400/15 text-amber-300 border-amber-400/30'}`}>
                     {item.isOffer && (
                       <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-600"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-300"></span>
                       </span>
                     )}
                     {item.badge}
@@ -678,12 +621,12 @@ export default function Home() {
                 )}
 
                 {/* Title */}
-                <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.16em] text-neutral-900">
+                <span className="font-bold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-neutral-100">
                   {item.title}
                 </span>
 
                 {/* Subtitle */}
-                <span className="text-[10.5px] sm:text-[11px] font-medium text-[#6B5335] tracking-wide">
+                <span className="text-[10.5px] sm:text-[11px] font-normal text-amber-100/75 tracking-wide">
                   ({item.subtitle})
                 </span>
 
@@ -693,14 +636,14 @@ export default function Home() {
                     type="button"
                     onClick={(e) => handleCopyCode(item.code, e)}
                     title="Click to copy coupon code"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#8C6734] hover:bg-[#755325] px-2.5 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-white border border-[#755325] transition active:scale-95 cursor-pointer shadow-2xs"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 hover:bg-amber-400/25 px-2 py-0.5 text-[9.5px] sm:text-[10.5px] font-mono font-bold text-amber-300 border border-amber-400/40 transition active:scale-95 cursor-pointer shadow-xs"
                   >
                     <span>CODE: {item.code}</span>
                     <span className="text-[10px]">📋</span>
                   </button>
                 )}
 
-                <span className="h-1 w-1 rounded-full bg-[#C9B7A0] ml-1.5" />
+                <span className="h-1 w-1 rounded-full bg-neutral-600 ml-1.5" />
               </div>
             ))}
           </div>
@@ -925,5 +868,7 @@ export default function Home() {
       ========================================================= */}
       <Footer />
     </div>
+  );
+}   </div >
   );
 }
