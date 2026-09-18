@@ -295,27 +295,32 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-[#F9FAFB] via-[#F3F4F6] to-[#E5E7EB] text-gray-900 flex items-center justify-center p-4 sm:p-6 overflow-x-clip select-none relative">
-      <main className="w-full max-w-md my-auto z-10">
-        <div className="w-full rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-8 shadow-xl shadow-gray-200/50 space-y-5">
+    <div className="min-h-screen bg-[#F8F9FB] text-slate-900 flex items-center justify-center p-4 sm:p-6 select-none relative overflow-hidden">
+      {/* Subtle Ambient Glows */}
+      <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-100/60 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-slate-200/60 blur-3xl" />
 
-          <div className="text-center">
+      <main className="w-full max-w-md my-auto z-10">
+        <div className="w-full rounded-3xl border border-slate-200/80 bg-white p-7 sm:p-9 shadow-xl shadow-slate-200/50 space-y-6">
+
+          {/* Brand Header */}
+          <div className="text-center space-y-1.5">
             <img
               src="/images/krishna-logo.png"
               alt="Krishna Accessories Logo"
-              className="mx-auto h-12 w-12 object-contain rounded-2xl bg-white p-1 shadow-xs border border-gray-200 mb-2.5"
+              className="mx-auto h-12 w-12 object-contain rounded-2xl bg-white p-1 shadow-xs border border-slate-200 mb-2"
             />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Client Authentication
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 block">
+              Krishna Accessories
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-950 mt-1">Sign In to Your Account</h2>
-            <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+            <h1 className="text-2xl font-bold text-slate-950 tracking-tight">Sign In to Your Account</h1>
+            <p className="text-xs text-slate-500 max-w-xs mx-auto">
               Access your saved bag, order timeline tracking, and address book
             </p>
           </div>
 
           {redirectMessage && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-xs">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50/90 p-3 text-xs text-amber-900 font-medium flex items-center gap-2.5 shadow-xs">
               <span className="text-base">🔒</span>
               <div>
                 <strong className="font-bold block text-amber-950">Authentication Required</strong>
@@ -325,7 +330,7 @@ export default function Login() {
           )}
 
           {/* Auth Method Selector Tabs (Password vs Instant OTP) */}
-          <div className="flex items-center p-1 rounded-2xl bg-[#F4F4F6] border border-gray-200">
+          <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200/80">
             <button
               type="button"
               onClick={() => {
@@ -334,8 +339,8 @@ export default function Login() {
                 setSuccess('');
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${authMode === 'password'
-                ? 'bg-white text-gray-950 shadow-xs'
-                : 'text-neutral-500 hover:text-black'
+                ? 'bg-white text-slate-950 shadow-xs'
+                : 'text-slate-500 hover:text-slate-900'
                 }`}
             >
               <KeyRound className="w-3.5 h-3.5" />
@@ -350,8 +355,8 @@ export default function Login() {
                 setSuccess('');
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${authMode === 'otp'
-                ? 'bg-white text-gray-950 shadow-xs'
-                : 'text-neutral-500 hover:text-black'
+                ? 'bg-white text-slate-950 shadow-xs'
+                : 'text-slate-500 hover:text-slate-900'
                 }`}
             >
               <Mail className="w-3.5 h-3.5" />
@@ -360,13 +365,13 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-700 font-semibold text-center animate-fade-in">
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-xs text-red-700 font-semibold text-center animate-fade-in">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-2.5 text-xs text-emerald-800 font-semibold text-center flex items-center justify-center gap-1.5 animate-fade-in">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 font-semibold text-center flex items-center justify-center gap-1.5 animate-fade-in">
               <ShieldCheckIcon className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{success}</span>
             </div>
@@ -374,9 +379,9 @@ export default function Login() {
 
           {/* ================= METHOD 1: PASSWORD LOGIN ================= */}
           {authMode === 'password' && (
-            <form onSubmit={handlePasswordLogin} className="space-y-3.5" autoComplete="off">
+            <form onSubmit={handlePasswordLogin} className="space-y-4" autoComplete="off">
               <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1 block">Email Address</label>
+                <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Email Address</label>
                 <input
                   type="email"
                   required
@@ -390,13 +395,13 @@ export default function Login() {
                         ? 'admin@krishna.com'
                         : 'user@example.com'
                   }
-                  className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
                 />
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-semibold text-gray-700">Password</label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-semibold text-slate-700">Password</label>
                   <button
                     type="button"
                     onClick={() => {
@@ -418,13 +423,13 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 pr-11 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 pr-11 text-xs text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((visible) => !visible)}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 cursor-pointer p-0.5"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -434,7 +439,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer disabled:opacity-60 active:scale-95"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 hover:bg-black py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-slate-950/10 transition-all cursor-pointer disabled:opacity-60 active:scale-[0.98]"
               >
                 {submitting ? (
                   <>
@@ -455,26 +460,26 @@ export default function Login() {
           {authMode === 'otp' && (
             <div>
               {!loginOtpSent ? (
-                <form onSubmit={handleSendLoginOtp} className="space-y-3.5">
-                  <p className="text-xs text-neutral-500">
+                <form onSubmit={handleSendLoginOtp} className="space-y-4">
+                  <p className="text-xs text-slate-500 leading-relaxed">
                     We will dispatch a secure 6-digit OTP code directly to your email address for instant passwordless sign-in.
                   </p>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700 mb-1 block">Your Registered Email</label>
+                    <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Your Registered Email</label>
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="user@example.com"
-                      className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-black cursor-pointer disabled:opacity-60 active:scale-95"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 hover:bg-black py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-slate-950/10 transition-all cursor-pointer disabled:opacity-60 active:scale-[0.98]"
                   >
                     {submitting ? (
                       <>
@@ -490,8 +495,8 @@ export default function Login() {
                   </button>
                 </form>
               ) : (
-                <form onSubmit={handleVerifyLoginOtp} className="space-y-3.5">
-                  <div className="flex items-center justify-between text-xs text-neutral-600 bg-neutral-50 p-2.5 rounded-xl border border-neutral-200">
+                <form onSubmit={handleVerifyLoginOtp} className="space-y-4">
+                  <div className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 p-2.5 rounded-2xl border border-slate-200">
                     <span className="truncate">Sent to: <strong>{email}</strong></span>
                     <button
                       type="button"
@@ -503,7 +508,7 @@ export default function Login() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-gray-700 mb-1 block">Enter 6-Digit OTP Code</label>
+                    <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Enter 6-Digit OTP Code</label>
                     <input
                       type="text"
                       required
@@ -511,15 +516,15 @@ export default function Login() {
                       value={loginOtpCode}
                       onChange={(e) => setLoginOtpCode(e.target.value.replace(/\D/g, ''))}
                       placeholder="••••••"
-                      className="w-full rounded-xl border border-gray-300 bg-[#F4F4F6] px-4 py-3 text-center text-lg font-mono font-black tracking-widest text-gray-900 outline-none focus:border-neutral-900 focus:bg-white"
+                      className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-center text-lg font-mono font-bold tracking-widest text-slate-900 outline-none focus:border-slate-900 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
                       autoFocus
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-neutral-500">
+                  <div className="flex items-center justify-between text-xs text-slate-500">
                     <span>⏱️ Valid for 5 mins</span>
                     {loginOtpTimer > 0 ? (
-                      <span className="text-neutral-400 font-mono">Resend code in {loginOtpTimer}s</span>
+                      <span className="text-slate-400 font-mono">Resend code in {loginOtpTimer}s</span>
                     ) : (
                       <button
                         type="button"
@@ -535,7 +540,7 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-emerald-700 hover:bg-emerald-800 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition cursor-pointer disabled:opacity-60 active:scale-95"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-700 hover:bg-emerald-800 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-60 active:scale-[0.98]"
                   >
                     {submitting ? (
                       <>
@@ -554,48 +559,48 @@ export default function Login() {
             </div>
           )}
 
-          {/* Quick Access Account Selector */}
-          <div className="border-t border-gray-100 pt-4">
-            <p className="text-[10px] text-center text-gray-400 uppercase tracking-wider mb-2.5 font-bold">
-              Demo Access
+          {/* Quick Role Selection (Without 'Demo' label) */}
+          <div className="border-t border-slate-100 pt-4">
+            <p className="text-[10px] text-center text-slate-400 uppercase tracking-widest mb-2.5 font-bold">
+              Account Role
             </p>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handleSelectRole('customer')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'customer'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                className={`rounded-2xl py-2 px-1 text-xs transition truncate cursor-pointer font-bold ${selectedRole === 'customer'
+                  ? 'border border-slate-950 bg-slate-950 text-white shadow-xs'
+                  : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-950'
                   }`}
               >
-                Customer Demo
+                Customer
               </button>
               <button
                 type="button"
                 onClick={() => handleSelectRole('supplier')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'supplier'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                  : 'border border-gray-200 bg-[#F4F4F6] font-semibold text-gray-800 hover:bg-gray-200'
+                className={`rounded-2xl py-2 px-1 text-xs transition truncate cursor-pointer font-bold ${selectedRole === 'supplier'
+                  ? 'border border-slate-950 bg-slate-950 text-white shadow-xs'
+                  : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-950'
                   }`}
               >
-                Supplier Demo
+                Supplier
               </button>
               <button
                 type="button"
                 onClick={() => handleSelectRole('admin')}
-                className={`rounded-full py-1.5 px-1 text-[11px] sm:text-xs transition truncate cursor-pointer ${selectedRole === 'admin'
-                  ? 'border border-blue-200 bg-blue-50 font-bold text-blue-700'
-                  : 'border border-gray-300 bg-gray-100 font-semibold text-gray-950 hover:bg-gray-200'
+                className={`rounded-2xl py-2 px-1 text-xs transition truncate cursor-pointer font-bold ${selectedRole === 'admin'
+                  ? 'border border-slate-950 bg-slate-950 text-white shadow-xs'
+                  : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-950'
                   }`}
               >
-                Admin Demo
+                Admin
               </button>
             </div>
           </div>
 
-          <div className="text-center text-xs text-gray-500">
+          <div className="text-center text-xs text-slate-500 pt-1">
             Don&apos;t have an account?{' '}
-            <Link to="/register" state={location.state} className="font-bold text-gray-950 hover:underline">
+            <Link to="/register" state={location.state} className="font-bold text-slate-950 hover:underline">
               Create Account
             </Link>
           </div>
@@ -606,55 +611,55 @@ export default function Login() {
       {/* ================= FORGOT PASSWORD REAL OTP MODAL ================= */}
       {forgotModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl animate-fade-in">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-amber-50 text-amber-800 text-sm">
                   🔑
                 </span>
-                <h3 className="text-sm font-bold text-gray-950 uppercase tracking-wider">Reset Account Password</h3>
+                <h3 className="text-sm font-bold text-slate-950 uppercase tracking-wider">Reset Account Password</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setForgotModalOpen(false)}
-                className="text-gray-400 hover:text-black font-bold p-1 cursor-pointer"
+                className="text-slate-400 hover:text-black font-bold p-1 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {forgotError && (
-              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs font-semibold text-red-700 animate-fade-in">
+              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-2.5 text-xs font-semibold text-red-700 animate-fade-in">
                 {forgotError}
               </div>
             )}
 
             {forgotSuccess && (
-              <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800 animate-fade-in">
+              <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800 animate-fade-in">
                 {forgotSuccess}
               </div>
             )}
 
             {!forgotOtpSent ? (
               <form onSubmit={handleSendForgotOtp} className="space-y-3.5 text-xs">
-                <p className="text-gray-600">
+                <p className="text-slate-600">
                   Enter your registered email address to receive an instant 6-digit OTP verification code.
                 </p>
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Registered Email Address</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Registered Email Address</label>
                   <input
                     type="email"
                     required
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                     placeholder="registered@example.com"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs text-slate-900 outline-none focus:border-slate-800 focus:bg-white"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={sendingForgotOtp}
-                  className="w-full rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer disabled:opacity-60 active:scale-95"
+                  className="w-full rounded-2xl bg-slate-950 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer disabled:opacity-60 active:scale-95"
                 >
                   {sendingForgotOtp ? 'Dispatching Reset OTP...' : 'Send Reset Code'}
                 </button>
@@ -663,8 +668,8 @@ export default function Login() {
               <form onSubmit={handleResetPassword} className="space-y-3.5 text-xs">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="font-semibold text-gray-700">6-Digit Verification Code</label>
-                    <span className="text-[10px] text-neutral-400">Sent to {forgotEmail}</span>
+                    <label className="font-semibold text-slate-700">6-Digit Verification Code</label>
+                    <span className="text-[10px] text-slate-400">Sent to {forgotEmail}</span>
                   </div>
                   <input
                     type="text"
@@ -673,15 +678,15 @@ export default function Login() {
                     value={forgotOtpCode}
                     onChange={(e) => setForgotOtpCode(e.target.value.replace(/\D/g, ''))}
                     placeholder="••••••"
-                    className="w-full rounded-xl border border-gray-300 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-900 focus:bg-white tracking-widest text-center font-bold text-base font-mono"
+                    className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-xs text-slate-900 outline-none focus:border-slate-900 focus:bg-white tracking-widest text-center font-bold text-base font-mono"
                     autoFocus
                   />
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-neutral-500">
+                <div className="flex items-center justify-between text-[11px] text-slate-500">
                   <span>Valid for 5 mins</span>
                   {forgotOtpTimer > 0 ? (
-                    <span className="font-mono text-neutral-400">Resend in {forgotOtpTimer}s</span>
+                    <span className="font-mono text-slate-400">Resend in {forgotOtpTimer}s</span>
                   ) : (
                     <button
                       type="button"
@@ -694,32 +699,32 @@ export default function Login() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">New Password</label>
+                  <label className="font-semibold text-slate-700 block mb-1">New Password</label>
                   <input
                     type="password"
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new strong password"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs text-slate-900 outline-none focus:border-slate-800 focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="font-semibold text-gray-700 block mb-1">Confirm New Password</label>
+                  <label className="font-semibold text-slate-700 block mb-1">Confirm New Password</label>
                   <input
                     type="password"
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm new password"
-                    className="w-full rounded-xl border border-gray-200 bg-[#F4F4F6] px-4 py-2.5 text-xs text-gray-900 outline-none focus:border-gray-400 focus:bg-white"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs text-slate-900 outline-none focus:border-slate-800 focus:bg-white"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer active:scale-95 shadow-sm"
+                  className="w-full rounded-2xl bg-slate-950 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition cursor-pointer active:scale-95 shadow-sm"
                 >
                   Save New Password &amp; Continue
                 </button>
