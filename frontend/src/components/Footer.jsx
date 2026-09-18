@@ -41,7 +41,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         {/* Main Grid: Compact 4 Columns */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-12">
-
+          
           {/* Col 1: Brand Info & Quick Contact (Span 5 on lg) */}
           <div className="lg:col-span-5 space-y-3.5">
             <Link to="/" className="inline-flex items-center gap-3 group">

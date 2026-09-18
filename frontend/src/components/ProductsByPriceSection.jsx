@@ -156,9 +156,9 @@ export default function ProductsByPriceSection({
               <Reveal key={tier.id} direction="up" delay={idx * 60} duration={650}>
                 <div
                   onClick={() => setActiveTierId(tier.id)}
-                  className={`group relative flex min-w-0 flex-col justify-between rounded-2xl p-3 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${isActive
-                    ? `bg-white shadow-[0_10px_25px_rgba(0,0,0,0.06)] ${tier.activeBorder} -translate-y-1`
-                    : 'bg-neutral-50/60 border-gray-200 hover:border-gray-300 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
+                    className={`group relative flex min-w-0 flex-col justify-between rounded-2xl p-3 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${isActive
+                      ? `bg-white shadow-[0_10px_25px_rgba(0,0,0,0.06)] ${tier.activeBorder} -translate-y-1`
+                      : 'bg-neutral-50/60 border-gray-200 hover:border-gray-300 hover:bg-white hover:shadow-md hover:-translate-y-0.5'
                     }`}
                 >
                   {/* Top: Badge & Count */}

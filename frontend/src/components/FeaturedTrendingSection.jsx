@@ -191,10 +191,11 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 text-center ${isActive
+                    className={`w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 text-center ${
+                      isActive
                         ? 'bg-neutral-950 text-white shadow-sm font-extrabold scale-[1.01]'
                         : 'text-neutral-700 hover:text-black hover:bg-white/80 bg-white/40 sm:bg-transparent'
-                      }`}
+                    }`}
                   >
                     <span className="text-sm shrink-0">{tab.icon}</span>
                     <span className="truncate">{tab.label}</span>
@@ -217,10 +218,11 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`shrink-0 px-3.5 sm:px-4 py-1.5 text-xs sm:text-[12.5px] font-bold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer shadow-2xs ${isActive
+                  className={`shrink-0 px-3.5 sm:px-4 py-1.5 text-xs sm:text-[12.5px] font-bold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer shadow-2xs ${
+                    isActive
                       ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-xs font-black scale-[1.02]'
                       : 'bg-white text-gray-700 border border-gray-200/90 hover:border-gray-400 hover:text-gray-950 hover:bg-gray-50'
-                    }`}
+                  }`}
                 >
                   {cat}
                 </button>
@@ -265,7 +267,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
               return (
                 <Reveal key={`feat-trend-${activeTab}-${selectedCategory}-${product.id}`} direction="up" delay={(idx % 4) * 80} duration={650}>
                   <div className="group relative flex flex-col justify-between h-full rounded-[20px] sm:rounded-[28px] border border-gray-200/90 bg-white p-3 sm:p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-400 hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] hover:border-amber-400/70 hover:-translate-y-2">
-
+                    
                     {/* 1. Product Image Frame with Hover Canvas */}
                     <div className="relative aspect-square w-full overflow-hidden rounded-[16px] sm:rounded-[20px] bg-gradient-to-b from-[#F7F7F8] to-[#EDEDF0] mb-3 sm:mb-4">
                       <Link
@@ -275,10 +277,11 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         <img
                           src={product.image || product.images?.[0]}
                           alt={product.name}
-                          className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${product.images && product.images.length > 1
+                          className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+                            product.images && product.images.length > 1
                               ? 'group-hover:opacity-0 group-hover:scale-105'
                               : 'group-hover:scale-108'
-                            }`}
+                          }`}
                           loading="lazy"
                         />
                         {product.images && product.images.length > 1 && (
@@ -303,10 +306,11 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                           type="button"
                           onClick={(e) => handleWishlistToggle(e, product)}
                           aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                          className={`pointer-events-auto flex h-7.5 w-7.5 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${isWish
+                          className={`pointer-events-auto flex h-7.5 w-7.5 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-300 hover:scale-115 active:scale-90 cursor-pointer ${
+                            isWish
                               ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100 scale-105'
                               : 'bg-white/95 text-gray-700 hover:text-rose-600 border border-gray-200/90 hover:bg-white'
-                            }`}
+                          }`}
                           title={isWish ? 'In Wishlist' : 'Add to Wishlist'}
                         >
                           <HeartIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors" filled={isWish} />
@@ -382,10 +386,11 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
                         <button
                           type="button"
                           onClick={(e) => handleAddToCart(e, product)}
-                          className={`w-full flex-1 py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer ${isAdded
+                          className={`w-full flex-1 py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-300 active:scale-95 shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer ${
+                            isAdded
                               ? 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700 scale-[1.02]'
                               : 'bg-neutral-950 text-white hover:bg-black hover:shadow-md'
-                            }`}
+                          }`}
                         >
                           {isAdded ? (
                             <>

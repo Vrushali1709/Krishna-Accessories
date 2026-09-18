@@ -245,8 +245,9 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className={`flex gap-4 sm:gap-5 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-            }`}
+          className={`flex gap-4 sm:gap-5 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {reviews.map((review, idx) => (
@@ -307,10 +308,11 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             type="button"
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
-            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
+            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+              i === activeIndex
                 ? 'w-7 bg-gray-950'
                 : 'w-1.5 bg-gray-300 hover:bg-gray-400'
-              }`}
+            }`}
           />
         ))}
       </div>

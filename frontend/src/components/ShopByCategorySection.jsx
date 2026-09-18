@@ -56,7 +56,7 @@ export default function ShopByCategorySection({
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-
+      
       {/* 1. Minimal Header */}
       <Reveal direction="up" delay={40}>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
@@ -186,13 +186,15 @@ export default function ShopByCategorySection({
                     {item.name}
                   </span>
 
-                  <h3 className={`font-bold tracking-tight text-white mt-1 leading-snug ${isLarge ? 'text-xl sm:text-2xl lg:text-3xl' : 'text-base sm:text-lg'
-                    }`}>
+                  <h3 className={`font-bold tracking-tight text-white mt-1 leading-snug ${
+                    isLarge ? 'text-xl sm:text-2xl lg:text-3xl' : 'text-base sm:text-lg'
+                  }`}>
                     {item.title}
                   </h3>
 
-                  <p className={`mt-1 text-neutral-300 font-light line-clamp-2 ${isLarge ? 'text-xs sm:text-sm max-w-md' : 'text-xs'
-                    }`}>
+                  <p className={`mt-1 text-neutral-300 font-light line-clamp-2 ${
+                    isLarge ? 'text-xs sm:text-sm max-w-md' : 'text-xs'
+                  }`}>
                     {item.subtitle}
                   </p>
 
