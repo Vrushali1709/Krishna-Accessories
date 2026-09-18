@@ -5,8 +5,7 @@ import { setCurrentUser, setAuthToken } from '../utils/auth';
 import { usersApi } from '../utils/api';
 import { addSupplier } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendWelcomeEmail } from '../utils/emailService';
-import { ArrowRightIcon, LockClosedIcon, ShieldCheckIcon } from '../components/Icons';
-import { RefreshCw, Mail, ArrowLeft, KeyRound } from 'lucide-react';
+import { RefreshCw, Mail, KeyRound } from 'lucide-react';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
@@ -154,30 +153,9 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-[#F9FAFB] via-[#F3F4F6] to-[#E5E7EB] text-gray-900 flex flex-col justify-between overflow-x-clip select-none relative">
-      {/* Top Navigation Bar with Back Link and Brand */}
-      <header className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between z-10">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-600 hover:text-black bg-white/80 hover:bg-white px-3.5 py-1.5 rounded-full border border-gray-200/80 shadow-2xs backdrop-blur-xs transition-all cursor-pointer group active:scale-95"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-          <span>Back to Store</span>
-        </Link>
-        <Link to="/" className="flex items-center gap-2 group cursor-pointer">
-          <img
-            src="/images/krishna-logo.png"
-            alt="Krishna Accessories Logo"
-            className="h-7 w-7 object-contain rounded-lg bg-white p-0.5 shadow-2xs border border-gray-200 group-hover:scale-105 transition-transform"
-          />
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-800">
-            Krishna <span className="text-amber-800">Accessories</span>
-          </span>
-        </Link>
-      </header>
-
-      <main className="flex-1 flex items-center justify-center px-4 py-6 sm:py-10 z-10">
-        <div className="w-full max-w-md rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-8 shadow-xl shadow-gray-200/50 space-y-5">
+    <div className="min-h-screen bg-linear-to-b from-[#F9FAFB] via-[#F3F4F6] to-[#E5E7EB] text-gray-900 flex items-center justify-center p-4 sm:p-6 overflow-x-clip select-none relative">
+      <main className="w-full max-w-md my-auto z-10">
+        <div className="w-full rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-8 shadow-xl shadow-gray-200/50 space-y-5">
 
           <div className="text-center">
             <img
@@ -409,20 +387,6 @@ export default function Register() {
 
         </div>
       </main>
-
-      {/* Clean Minimal Auth Footer */}
-      <footer className="w-full max-w-5xl mx-auto px-4 py-5 text-center text-xs text-gray-400 space-y-2 z-10">
-        <div className="flex items-center justify-center gap-4 text-gray-500 text-[11px]">
-          <Link to="/privacy" className="hover:underline hover:text-gray-800">Privacy Policy</Link>
-          <span className="text-gray-300">•</span>
-          <Link to="/terms" className="hover:underline hover:text-gray-800">Terms &amp; Conditions</Link>
-          <span className="text-gray-300">•</span>
-          <Link to="/contact" className="hover:underline hover:text-gray-800">Contact Support</Link>
-        </div>
-        <p className="text-[11px] text-gray-400">
-          © {new Date().getFullYear()} Krishna Accessories. All rights reserved.
-        </p>
-      </footer>
     </div>
   );
 }
