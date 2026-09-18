@@ -532,12 +532,14 @@ export default function SupplierDashboard() {
       >
         {/* Sidebar Brand Header */}
         <div className="flex flex-col min-h-0 flex-1 overflow-hidden">
-          <div className="flex h-16 items-center justify-between px-4 border-b border-zinc-800/80 shrink-0">
+          <div className={`flex h-16 items-center ${sidebarCollapsed ? 'justify-center px-2' : 'justify-between px-4'} border-b border-zinc-800/80 shrink-0`}>
             <div className="flex items-center gap-3 overflow-hidden min-w-0">
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
-                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs"
+                className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs cursor-pointer"
+                onClick={() => sidebarCollapsed && setSidebarCollapsed(false)}
+                title={sidebarCollapsed ? "Expand sidebar" : undefined}
               />
               {!sidebarCollapsed && (
                 <div className="flex flex-col min-w-0">
@@ -550,6 +552,15 @@ export default function SupplierDashboard() {
                 </div>
               )}
             </div>
+
+            {/* Toggle Icon inside Sidebar Header */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700 text-xs transition cursor-pointer shrink-0"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+            </button>
 
             <button
               onClick={() => setMobileSidebarOpen(false)}
@@ -754,18 +765,8 @@ export default function SupplierDashboard() {
               <Menu className="h-4 w-4" />
             </button>
 
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 hover:bg-zinc-200 text-xs font-mono shrink-0 cursor-pointer"
-              title="Toggle sidebar collapse"
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-            </button>
-
             <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
-              <span className="text-zinc-400 shrink-0">Supplier</span>
-              <span className="text-zinc-300 shrink-0">/</span>
-              <span className="text-zinc-700 truncate">{currentSectionObj.title}</span>
+              <span className="text-zinc-700 font-medium truncate">{currentSectionObj.title}</span>
               <span className="text-zinc-300 shrink-0">/</span>
               <span className="text-zinc-900 font-semibold truncate">{currentSubItemObj.label}</span>
             </div>
