@@ -94,19 +94,8 @@ export default function Login() {
   const handleSelectRole = (role) => {
     setSelectedRole(role);
     setError('');
-    if (role === 'customer') {
-      setEmail('rahul.patel@example.com');
-      setPassword('customer123');
-    } else if (role === 'admin') {
-      setEmail('admin@krishna.com');
-      setPassword('krishna123');
-    } else if (role === 'supplier') {
-      setEmail('supplier@krishna.com');
-      setPassword('supplier123');
-    } else {
-      setEmail('');
-      setPassword('');
-    }
+    setEmail('');
+    setPassword('');
   };
 
   // Standard Password Authentication
