@@ -87,6 +87,10 @@ export default function SupplierDashboard() {
   // Notifications State & Ref
   const [notifsOpen, setNotifsOpen] = useState(false);
   const notifsRef = useRef(null);
+
+  // Profile Menu State & Ref
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userDropdownRef = useRef(null);
   const [notifications, setNotifications] = useState([
     {
       id: 'notif-1',
@@ -216,11 +220,14 @@ export default function SupplierDashboard() {
     }, 3500);
   };
 
-  // Close notifications popover on click outside
+  // Close popovers on click outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (notifsRef.current && !notifsRef.current.contains(e.target)) {
         setNotifsOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+        setUserDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -1057,6 +1064,140 @@ export default function SupplierDashboard() {
               <Plus className="h-3.5 w-3.5" />
               <span>Add Product</span>
             </button>
+
+            {/* Profile Dropdown Menu */}
+            <div className="relative" ref={userDropdownRef}>
+              <button
+                onClick={() => {
+                  setUserDropdownOpen(prev => !prev);
+                  setNotifsOpen(false);
+                }}
+                className={`flex h-8 items-center gap-2 rounded-xl border px-2 text-xs font-semibold transition cursor-pointer shadow-2xs ${
+                  userDropdownOpen
+                    ? 'border-zinc-400 bg-zinc-100 text-zinc-900 ring-2 ring-zinc-900/5'
+                    : 'border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50 hover:border-zinc-300'
+                }`}
+                title="Supplier Account Profile"
+                aria-label="Toggle user profile menu"
+                aria-expanded={userDropdownOpen}
+              >
+                <div className="relative flex h-5 w-5 items-center justify-center rounded-lg bg-zinc-900 text-white text-[9.5px] font-bold shrink-0">
+                  {supplierUser?.name ? supplierUser.name.charAt(0).toUpperCase() : 'V'}
+                  <span className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-emerald-500 ring-1 ring-white" />
+                </div>
+                <div className="hidden sm:flex flex-col text-left leading-none">
+                  <span className="text-[11.5px] font-bold text-zinc-900 truncate max-w-[110px] lg:max-w-[140px]">
+                    {supplierUser?.name || activeSupplierName}
+                  </span>
+                  <span className="text-[8.5px] font-medium text-emerald-600 mt-0.5">Verified Vendor</span>
+                </div>
+                <ChevronDown className={`h-3 w-3 text-zinc-400 transition-transform duration-150 ${userDropdownOpen ? 'rotate-180 text-zinc-800' : ''}`} />
+              </button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-zinc-200/90 bg-white p-2.5 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  {/* Profile Header Card */}
+                  <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-50 border border-zinc-100 mb-1.5">
+                    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white text-sm font-bold shrink-0 shadow-xs">
+                      {supplierUser?.name ? supplierUser.name.charAt(0).toUpperCase() : 'V'}
+                      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-zinc-50" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-zinc-900 truncate">
+                        {supplierUser?.name || activeSupplierName}
+                      </p>
+                      <p className="text-[10px] text-zinc-500 truncate">{supplierUser?.email || 'supplier@krishna.com'}</p>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[9px] font-bold">
+                          <span className="h-1 w-1 rounded-full bg-emerald-600" />
+                          Verified
+                        </span>
+                        <span className="text-[9.5px] font-mono text-zinc-400">★ 4.9</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Navigation Links */}
+                  <div className="space-y-0.5 text-xs font-medium text-zinc-700">
+                    <Link
+                      to="/"
+                      target="_blank"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-2.5 py-2 hover:bg-zinc-100/80 transition"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Store className="h-3.5 w-3.5 text-zinc-500" />
+                        <span>View Storefront</span>
+                      </div>
+                      <ExternalLink className="h-3 w-3 text-zinc-400" />
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        handleNavSelect('catalog', 'products');
+                        setUserDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between rounded-xl px-2.5 py-2 hover:bg-zinc-100/80 transition cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Package className="h-3.5 w-3.5 text-zinc-500" />
+                        <span>My Catalog</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-zinc-400">{supplierProducts.length} items</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        handleNavSelect('fulfillment', 'orders');
+                        setUserDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between rounded-xl px-2.5 py-2 hover:bg-zinc-100/80 transition cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Truck className="h-3.5 w-3.5 text-zinc-500" />
+                        <span>Packaging & Orders</span>
+                      </div>
+                      {pendingOrdersCount > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 text-[9.5px] font-bold">
+                          {pendingOrdersCount} pending
+                        </span>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        handleNavSelect('financials', 'bank-info');
+                        setUserDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between rounded-xl px-2.5 py-2 hover:bg-zinc-100/80 transition cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Building2 className="h-3.5 w-3.5 text-zinc-500" />
+                        <span>Bank & KYC Settings</span>
+                      </div>
+                      <span className="text-[9.5px] font-semibold text-emerald-600">Active</span>
+                    </button>
+                  </div>
+
+                  {/* Divider & Sign Out */}
+                  <div className="border-t border-zinc-100 mt-1.5 pt-1.5">
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        handleSupplierLogout();
+                      }}
+                      className="w-full flex items-center justify-between rounded-xl px-2.5 py-2 text-rose-600 hover:bg-rose-50 font-semibold transition cursor-pointer text-xs"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <LogOut className="h-3.5 w-3.5 text-rose-500" />
+                        <span>Sign Out</span>
+                      </div>
+                      <ChevronRight className="h-3 w-3 text-rose-400" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
