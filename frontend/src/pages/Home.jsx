@@ -500,7 +500,7 @@ export default function Home() {
       {/* =========================================================
           1. LUXURY WATCH HERO SLIDER SECTION
       ========================================================= */}
-      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[700px] lg:min-h-[700px]">
+      <section className="relative w-full overflow-hidden bg-[#070808] text-white border-b border-neutral-800 lg:h-[490px] xl:h-[510px]">
         <div className="absolute inset-0">
           {watchHeroSlides.map((slide, index) => (
             <div
@@ -508,59 +508,59 @@ export default function Home() {
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
             >
-              <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[58%] xl:w-[52%] 2xl:w-[48%] h-full w-full">
+              <div className="absolute inset-0 lg:left-auto lg:right-0 lg:w-[56%] xl:w-[50%] 2xl:w-[46%] h-full w-full">
                 <img
                   src={slide.image}
                   alt={slide.titleLine1}
-                  className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center scale-[1.02] lg:scale-100 transition-transform duration-10000 ease-out"
+                  className="h-full w-full object-cover object-[72%_center] sm:object-[68%_center] lg:object-center scale-[1.01] transition-transform duration-10000 ease-out"
                 />
-                <div className="hidden lg:block absolute inset-y-0 left-0 w-48 xl:w-64 bg-gradient-to-r from-[#070808] to-transparent pointer-events-none" />
+                <div className="hidden lg:block absolute inset-y-0 left-0 w-36 xl:w-48 bg-gradient-to-r from-[#070808] to-transparent pointer-events-none" />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/10 lg:from-[#070808] lg:via-[#070808]/90 lg:via-48% lg:to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/95 via-black/40 to-transparent lg:from-[#070808] lg:via-[#070808]/70 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20 lg:from-[#070808] lg:via-[#070808]/90 lg:via-46% lg:to-transparent pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 h-28 sm:h-36 bg-gradient-to-t from-black/95 via-black/40 to-transparent lg:from-[#070808] lg:via-[#070808]/60 pointer-events-none" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,transparent_0%,rgba(0,0,0,0.1)_45%,rgba(0,0,0,0.4)_100%)] lg:bg-[radial-gradient(ellipse_at_75%_50%,transparent_30%,rgba(7,8,8,0.4)_75%,#070808_100%)] pointer-events-none" />
             </div>
           ))}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
-          <div className="max-w-[620px] lg:my-auto lg:py-8" key={`hero-slide-${currentSlide}`}>
+        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[440px] sm:min-h-[460px] lg:min-h-[490px] xl:min-h-[510px] lg:h-full px-5 sm:px-8 lg:px-10 pt-10 sm:pt-12 lg:pt-6 pb-5 sm:pb-6 flex flex-col justify-between">
+          <div className="max-w-[580px] lg:my-auto lg:py-3" key={`hero-slide-${currentSlide}`}>
             <Reveal direction="down" delay={60}>
-              <div className="mb-5 flex items-center gap-3">
-                <span className="h-px w-8 bg-[#C5A880]" />
-                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-[#D5C2A5]">
+              <div className="mb-3 sm:mb-4 flex items-center gap-3">
+                <span className="h-px w-7 bg-[#C5A880]" />
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.28em] text-[#D5C2A5]">
                   {watchHeroSlides[currentSlide].tag}
                 </span>
               </div>
             </Reveal>
 
             <Reveal direction="up" delay={130}>
-              <h1 className="text-[42px] leading-[1.02] tracking-[-0.03em] font-extrabold sm:text-5xl lg:text-[68px] xl:text-[76px]">
+              <h1 className="text-3xl leading-[1.04] tracking-[-0.03em] font-extrabold sm:text-4xl lg:text-[48px] xl:text-[54px]">
                 <span className="block text-white">{watchHeroSlides[currentSlide].titleLine1}</span>
-                <span className="block mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
+                <span className="block mt-0.5 sm:mt-1 font-light text-[#C9AB80]">{watchHeroSlides[currentSlide].titleLine2}</span>
               </h1>
             </Reveal>
 
             <Reveal direction="up" delay={200}>
-              <p className="mt-5 text-sm sm:text-base text-[#B0B2B8] max-w-md font-light leading-relaxed">
+              <p className="mt-3 sm:mt-3.5 text-xs sm:text-sm lg:text-[14px] text-[#B0B2B8] max-w-md font-light leading-relaxed">
                 {watchHeroSlides[currentSlide].description}
               </p>
             </Reveal>
 
             <Reveal direction="up" delay={280}>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
                 <Link
                   to="/shop?category=Watches"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-5.5 py-2.5 sm:px-6.5 sm:py-3 text-xs sm:text-[13px] font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
                 >
                   <span>Shop Watches</span>
-                  <ArrowRightIcon className="w-4 h-4 text-black" />
+                  <ArrowRightIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black" />
                 </Link>
 
                 <Link
                   to="/shop"
-                  className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-[13px] font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
                 >
                   <span>All Collections</span>
                 </Link>
@@ -569,7 +569,7 @@ export default function Home() {
           </div>
 
           <Reveal direction="up" delay={340}>
-            <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
+            <div className="flex items-center justify-between border-t border-neutral-800/80 pt-3 sm:pt-4">
               <div className="flex items-center gap-2">
                 {watchHeroSlides.map((_, i) => (
                   <button
