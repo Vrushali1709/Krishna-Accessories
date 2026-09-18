@@ -1,6 +1,8 @@
 // src/pages/SupplierDashboard.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { getSupplierUser, logoutSupplier } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
@@ -33,12 +35,7 @@ import {
   Info,
   ChevronDown,
   LogOut,
-  Image as ImageIcon,
-  Store,
-  Phone,
-  Mail,
-  MapPin,
-  Check
+  Image as ImageIcon
 } from 'lucide-react';
 import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 
@@ -52,7 +49,6 @@ export default function SupplierDashboard() {
   const [allProducts, setAllProducts] = useState(() => getProducts());
   const [allOrders, setAllOrders] = useState(() => getOrders());
 
-  // Modal States
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -60,13 +56,8 @@ export default function SupplierDashboard() {
   const [courierInput, setCourierInput] = useState('BlueDart Express');
   const [awbInput, setAwbInput] = useState('');
 
-  // Toast Notification state
-  const [toastMessage, setToastMessage] = useState('');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // Filters for products catalog
+  // Search filter for products table
   const [productSearch, setProductSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All');
 
   // Product Form state
   const [form, setForm] = useState({
@@ -94,49 +85,21 @@ export default function SupplierDashboard() {
   const categories = getCategories();
   const brands = getBrands();
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 3500);
-  };
-
-  // Reload data on store events
+  // Reload data on events
   const refreshData = () => {
     setAllProducts(getProducts());
     setAllOrders(getOrders());
-    setSupplierUser(getSupplierUser());
-  };
-
-  const handleManualRefresh = () => {
-    setIsRefreshing(true);
-    refreshData();
-    setTimeout(() => {
-      setIsRefreshing(false);
-      showToast('Supplier data synchronized successfully!');
-    }, 400);
   };
 
   useEffect(() => {
     refreshData();
     window.addEventListener('productsUpdated', refreshData);
     window.addEventListener('ordersUpdated', refreshData);
-    window.addEventListener('authUpdated', refreshData);
     return () => {
       window.removeEventListener('productsUpdated', refreshData);
       window.removeEventListener('ordersUpdated', refreshData);
-      window.removeEventListener('authUpdated', refreshData);
     };
   }, []);
-
-  // Find active supplier metadata
-  const activeSupplierData = useMemo(() => {
-    return suppliers.find(s => s.name.toLowerCase() === activeSupplierName.toLowerCase()) || {
-      name: activeSupplierName,
-      category: 'General Luxury',
-      email: 'vendor@krishna.com',
-      phone: '+91 93213 22761',
-      status: 'Active'
-    };
-  }, [suppliers, activeSupplierName]);
 
   // Filter products for the active supplier
   const supplierProducts = useMemo(() => {
@@ -150,20 +113,17 @@ export default function SupplierDashboard() {
     );
   }, [allOrders, activeSupplierName]);
 
-  // Filtered products with search and category filter
+  // Filtered products with search
   const filteredProducts = useMemo(() => {
-    return supplierProducts.filter(p => {
-      const matchesCategory = categoryFilter === 'All' || (p.category && p.category.toLowerCase() === categoryFilter.toLowerCase());
-      if (!productSearch.trim()) return matchesCategory;
-      const q = productSearch.toLowerCase();
-      const matchesSearch =
-        p.name?.toLowerCase().includes(q) ||
-        p.sku?.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q) ||
-        p.brand?.toLowerCase().includes(q);
-      return matchesCategory && matchesSearch;
-    });
-  }, [supplierProducts, productSearch, categoryFilter]);
+    if (!productSearch.trim()) return supplierProducts;
+    const q = productSearch.toLowerCase();
+    return supplierProducts.filter(p =>
+      p.name?.toLowerCase().includes(q) ||
+      p.sku?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q) ||
+      p.brand?.toLowerCase().includes(q)
+    );
+  }, [supplierProducts, productSearch]);
 
   // Calculate Metrics
   const totalStockUnits = supplierProducts.reduce((sum, p) => sum + Number(p.stock || 0), 0);
@@ -171,12 +131,12 @@ export default function SupplierDashboard() {
   const totalRevenue = supplierOrders
     .filter(o => o.status !== 'Cancelled' && o.status !== 'Refunded')
     .reduce((sum, o) => sum + Number(o.total || 0), 0);
-  const netEarnings = Math.round(totalRevenue * 0.95); // 5% marketplace commission
+  const netEarnings = Math.round(totalRevenue * 0.95); // 5% platform fee
 
   // Low stock products (< 10 units)
   const lowStockItems = supplierProducts.filter(p => Number(p.stock || 0) < 10);
 
-  // Handle Add/Edit Product Modal
+  // Handle Add/Edit Product
   const handleOpenAddModal = () => {
     setEditingProduct(null);
     setForm({
@@ -277,28 +237,24 @@ export default function SupplierDashboard() {
       imageAngles: finalAngles,
       description: form.description || 'Luxury product provided by verified supplier.',
       specifications: {
-        Material: form.material || 'Premium Quality',
+        Material: form.material || 'Premium',
         Warranty: form.warranty || '2 Years'
       }
     };
 
     saveProduct(productPayload);
     setModalOpen(false);
-    showToast(editingProduct ? `Updated "${productPayload.name}" successfully!` : `Added "${productPayload.name}" to catalog!`);
   };
 
   const handleDeleteProduct = (id) => {
-    const target = supplierProducts.find(p => p.id === id);
-    if (window.confirm(`Are you sure you want to delete "${target?.name || id}" from your supplier catalog?`)) {
+    if (window.confirm('Are you sure you want to delete this product from your supplier catalog?')) {
       deleteProduct(id);
-      showToast('Product deleted from supplier catalog.');
     }
   };
 
   const handleQuickStockAdjust = (product, delta) => {
     const newStock = Math.max(0, Number(product.stock || 0) + delta);
     saveProduct({ ...product, stock: newStock });
-    showToast(`Stock for ${product.name.substring(0, 24)}... adjusted to ${newStock} units`);
   };
 
   // Status Change Dialog for Order
@@ -317,7 +273,6 @@ export default function SupplierDashboard() {
     });
     setStatusModalOpen(false);
     setSelectedOrderToUpdate(null);
-    showToast(`Order #${selectedOrderToUpdate.id} updated to "${newStatus}"!`);
   };
 
   const handleSupplierLogout = () => {
@@ -332,195 +287,80 @@ export default function SupplierDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
+      <Navbar />
 
-      {/* ========================================================
-          1. FLOATING TOAST FEEDBACK NOTIFICATION
-      ======================================================== */}
-      {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 rounded-xl bg-zinc-900 text-white border border-zinc-800 px-4 py-3 text-xs font-medium shadow-2xl animate-fade-in flex items-center gap-2.5">
-          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* ========================================================
-          2. DEDICATED SUPPLIER PORTAL TOPBAR (NO STOREFRONT NAVBAR)
-      ======================================================== */}
-      <header className="sticky top-0 z-40 bg-[#121316] text-white border-b border-zinc-800/90 shadow-md">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between gap-4">
-
-            {/* Brand Logo & Portal Identifier */}
-            <div className="flex items-center gap-3.5 min-w-0">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center text-zinc-950 font-black text-sm shadow-sm ring-1 ring-white/20 shrink-0">
-                KA
-              </div>
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm tracking-tight text-zinc-100 truncate">
-                    Krishna Accessories
-                  </span>
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded-md bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-400/20">
-                    <Sparkles className="h-2.5 w-2.5" />
-                    Supplier Portal
-                  </span>
-                </div>
-                <span className="text-[11px] text-zinc-400 font-medium truncate">
-                  Vendor Fulfillment & Catalog Hub
+      {/* Supplier Top Header */}
+      <section className="border-b border-zinc-200/80 bg-white sticky top-0 z-30 shadow-xs">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 border border-emerald-200/60">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Verified Supplier
                 </span>
+                <span className="text-xs text-zinc-400 font-medium tracking-wide">Fulfillment & Inventory Console</span>
               </div>
+              <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+                  <Building2 className="h-4 w-4 text-white" />
+                </div>
+                <span>{activeSupplierName}</span>
+              </h1>
             </div>
 
-            {/* Actions: View Storefront, Vendor Selector, Quick Add & Logout */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-
-              {/* View Storefront Link */}
-              <Link
-                to="/"
-                target="_blank"
-                rel="noreferrer"
-                className="hidden md:inline-flex items-center gap-1.5 rounded-xl border border-zinc-700/80 bg-zinc-800/80 hover:bg-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:text-white transition shadow-2xs"
-                title="Open storefront in new tab"
-              >
-                <Store className="h-3.5 w-3.5 text-zinc-400" />
-                <span>Storefront</span>
-                <ExternalLink className="h-3 w-3 text-zinc-400" />
-              </Link>
-
-              {/* Refresh Sync Button */}
-              <button
-                type="button"
-                onClick={handleManualRefresh}
-                className="h-9 w-9 rounded-xl border border-zinc-700/80 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white flex items-center justify-center transition cursor-pointer shadow-2xs"
-                title="Synchronize data"
-              >
-                <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin text-amber-400' : ''}`} />
-              </button>
-
-              {/* Vendor Switcher Dropdown */}
-              <div className="relative flex items-center">
-                <select
-                  value={activeSupplierName}
-                  onChange={(e) => {
-                    setActiveSupplierName(e.target.value);
-                    showToast(`Switched vendor context to "${e.target.value}"`);
-                  }}
-                  className="appearance-none rounded-xl border border-zinc-700 bg-zinc-850 hover:bg-zinc-800 pl-3 pr-8 py-2 text-xs font-semibold text-zinc-100 outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400/50 cursor-pointer transition shadow-xs max-w-[160px] sm:max-w-[210px] truncate"
-                >
-                  {suppliers.map(s => (
-                    <option key={s.id} value={s.name} className="bg-zinc-900 text-white">
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+            {/* Actions & Vendor Switching */}
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              {/* Supplier Switcher Dropdown */}
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-zinc-500 whitespace-nowrap font-medium hidden sm:inline">Vendor:</label>
+                <div className="relative">
+                  <select
+                    value={activeSupplierName}
+                    onChange={(e) => setActiveSupplierName(e.target.value)}
+                    className="appearance-none rounded-xl border border-zinc-200 bg-zinc-50/80 hover:bg-zinc-100/70 pl-3 pr-8 py-2 text-xs font-semibold text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-400 cursor-pointer transition shadow-2xs"
+                  >
+                    {suppliers.map(s => (
+                      <option key={s.id} value={s.name}>
+                        {s.name} ({s.category})
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+                </div>
               </div>
 
-              {/* Quick Add Product Button */}
-              <button
-                type="button"
-                onClick={handleOpenAddModal}
-                className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 px-3.5 py-2 text-xs font-bold text-zinc-950 shadow-sm transition cursor-pointer"
-              >
-                <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
-                <span>Add Product</span>
-              </button>
 
-              {/* Sign Out Button */}
+              {/* Supplier Sign Out Button */}
               <button
                 type="button"
                 onClick={handleSupplierLogout}
-                className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-2 text-xs font-semibold text-rose-300 hover:text-rose-200 transition shadow-2xs cursor-pointer"
-                title="Sign out of Supplier Portal"
+                className="flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/90 hover:bg-rose-100 px-3.5 py-2 text-xs font-bold text-rose-700 hover:text-rose-800 transition shadow-2xs cursor-pointer"
+                title="Sign out from Supplier account"
               >
                 <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Sign Out</span>
+                <span>Sign Out</span>
               </button>
             </div>
-
-          </div>
-        </div>
-      </header>
-
-      {/* ========================================================
-          3. VENDOR HERO CONTEXT BANNER
-      ======================================================== */}
-      <section className="bg-white border-b border-zinc-200/90 shadow-2xs">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-            {/* Left: Supplier Identity Details */}
-            <div className="flex items-start sm:items-center gap-3.5">
-              <div className="h-12 w-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center shadow-md shrink-0 ring-4 ring-zinc-100">
-                <Building2 className="h-6 w-6 text-amber-400" />
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-black text-zinc-900 tracking-tight">
-                    {activeSupplierName}
-                  </h1>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 border border-emerald-200">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Verified Vendor
-                  </span>
-                </div>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-zinc-500">
-                  <span className="flex items-center gap-1">
-                    <Layers className="h-3.5 w-3.5 text-zinc-400" />
-                    <strong>Category:</strong> {activeSupplierData.category || 'Luxury Goods'}
-                  </span>
-                  <span className="hidden sm:inline text-zinc-300">&bull;</span>
-                  <span className="flex items-center gap-1 font-mono">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                    GSTIN Verified &bull; Active License
-                  </span>
-                  <span className="hidden sm:inline text-zinc-300">&bull;</span>
-                  <span className="flex items-center gap-1 font-mono text-zinc-600">
-                    {supplierProducts.length} Live Items &bull; {totalStockUnits} Units In Stock
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Quick Restock / Mobile Add Button */}
-            <div className="flex items-center gap-2.5">
-              <button
-                type="button"
-                onClick={handleOpenAddModal}
-                className="sm:hidden flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-2 text-xs font-bold text-white shadow-xs"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                <span>Add Product</span>
-              </button>
-            </div>
-
           </div>
         </div>
       </section>
 
-      {/* ========================================================
-          4. MAIN PORTAL BODY
-      ======================================================== */}
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6 flex-1 w-full">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
 
-        {/* 4.1 KPI STAT CARDS */}
+        {/* KPI Stat Cards */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
 
           {/* KPI 1: Active Catalog */}
-          <div
-            onClick={() => setActiveTab('products')}
-            className="group rounded-2xl border border-zinc-200/90 bg-white p-4 sm:p-5 shadow-2xs transition-all hover:shadow-md hover:border-zinc-300 cursor-pointer"
-          >
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Active Catalog</span>
-              <div className="h-8 w-8 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-700 group-hover:bg-zinc-900 group-hover:text-white transition">
-                <Package className="h-4 w-4" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Active Catalog</span>
+              <div className="h-7 w-7 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700 group-hover:bg-zinc-900 group-hover:text-white transition">
+                <Package className="h-3.5 w-3.5" />
               </div>
             </div>
-            <p className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-mono">
-              {supplierProducts.length}
-            </p>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{supplierProducts.length}</p>
             <div className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
               Live in Storefront Catalog
@@ -528,19 +368,14 @@ export default function SupplierDashboard() {
           </div>
 
           {/* KPI 2: Total Stock Units */}
-          <div
-            onClick={() => setActiveTab('inventory')}
-            className="group rounded-2xl border border-zinc-200/90 bg-white p-4 sm:p-5 shadow-2xs transition-all hover:shadow-md hover:border-zinc-300 cursor-pointer"
-          >
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Total Stock Units</span>
-              <div className="h-8 w-8 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-700 group-hover:bg-zinc-900 group-hover:text-white transition">
-                <Boxes className="h-4 w-4" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Total Stock Units</span>
+              <div className="h-7 w-7 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-700 group-hover:bg-zinc-900 group-hover:text-white transition">
+                <Boxes className="h-3.5 w-3.5" />
               </div>
             </div>
-            <p className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-mono">
-              {totalStockUnits.toLocaleString()}
-            </p>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{totalStockUnits.toLocaleString()}</p>
             <div className="mt-2 text-[11px]">
               {lowStockItems.length > 0 ? (
                 <span className="inline-flex items-center gap-1 font-semibold text-amber-700">
@@ -548,7 +383,7 @@ export default function SupplierDashboard() {
                   {lowStockItems.length} items low on stock
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 font-semibold text-emerald-700">
+                <span className="inline-flex items-center gap-1 font-semibold text-zinc-600">
                   <CheckCircle2 className="h-3 w-3 text-emerald-600" />
                   Optimal inventory depth
                 </span>
@@ -556,52 +391,38 @@ export default function SupplierDashboard() {
             </div>
           </div>
 
-          {/* KPI 3: Pending Dispatch */}
-          <div
-            onClick={() => setActiveTab('orders')}
-            className="group rounded-2xl border border-zinc-200/90 bg-white p-4 sm:p-5 shadow-2xs transition-all hover:shadow-md hover:border-zinc-300 cursor-pointer"
-          >
+          {/* KPI 3: Pending Orders */}
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Pending Dispatch</span>
-              <div className={`h-8 w-8 rounded-xl flex items-center justify-center transition ${pendingOrdersCount > 0 ? 'bg-amber-100 text-amber-800 group-hover:bg-amber-600 group-hover:text-white' : 'bg-zinc-100 text-zinc-700'}`}>
-                <Truck className="h-4 w-4" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Pending Dispatch</span>
+              <div className="h-7 w-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-700 transition">
+                <Truck className="h-3.5 w-3.5" />
               </div>
             </div>
-            <p className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-amber-600 font-mono">
-              {pendingOrdersCount}
-            </p>
-            <span className="mt-2 text-[11px] text-zinc-500 font-medium block">
-              Awaiting packaging & courier
-            </span>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-amber-600 font-mono">{pendingOrdersCount}</p>
+            <span className="mt-2 text-[11px] text-zinc-600 font-medium block">Awaiting packaging & courier</span>
           </div>
 
           {/* KPI 4: Net Supplier Payout */}
-          <div
-            onClick={() => setActiveTab('earnings')}
-            className="group rounded-2xl border border-zinc-200/90 bg-white p-4 sm:p-5 shadow-2xs transition-all hover:shadow-md hover:border-zinc-300 cursor-pointer"
-          >
+          <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Net Earnings (95%)</span>
-              <div className="h-8 w-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white transition">
-                <Wallet className="h-4 w-4" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-600">Net Earnings (95%)</span>
+              <div className="h-7 w-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700 transition">
+                <Wallet className="h-3.5 w-3.5" />
               </div>
             </div>
-            <p className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-mono">
-              ₹{netEarnings.toLocaleString('en-IN')}
-            </p>
-            <span className="mt-2 text-[11px] text-zinc-500 block">
-              Gross volume: ₹{totalRevenue.toLocaleString('en-IN')}
-            </span>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">₹{netEarnings.toLocaleString('en-IN')}</p>
+            <span className="mt-2 text-[11px] text-zinc-600 block">Gross volume: ₹{totalRevenue.toLocaleString('en-IN')}</span>
           </div>
 
         </div>
 
-        {/* 4.2 TAB NAVIGATION PILL BAR */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-zinc-200/70 border border-zinc-200 max-w-full overflow-x-auto">
+        {/* Tab Navigation Pill Bar */}
+        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-zinc-200/60 border border-zinc-200 max-w-fit overflow-x-auto">
           {[
             { id: 'overview', label: 'Dashboard Overview', icon: BarChart3, count: null },
             { id: 'products', label: 'My Products', icon: Package, count: supplierProducts.length },
-            { id: 'inventory', label: 'Stock Control', icon: Boxes, count: lowStockItems.length > 0 ? `${lowStockItems.length} Low` : null, alert: lowStockItems.length > 0 },
+            { id: 'inventory', label: 'Stock Control', icon: Boxes, count: null },
             { id: 'orders', label: 'Order Fulfillment', icon: Truck, count: supplierOrders.length },
             { id: 'earnings', label: 'Payouts & Earnings', icon: Wallet, count: null }
           ].map(tab => {
@@ -611,21 +432,15 @@ export default function SupplierDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition whitespace-nowrap cursor-pointer ${isActive
-                  ? 'bg-white text-zinc-950 shadow-xs border border-zinc-200/80'
-                  : 'text-zinc-600 hover:text-zinc-950 hover:bg-white/60'
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition whitespace-nowrap ${isActive
+                  ? 'bg-white text-zinc-950 shadow-xs border border-zinc-200/70'
+                  : 'text-zinc-600 hover:text-zinc-950 hover:bg-white/50'
                   }`}
               >
-                <Icon className={`h-4 w-4 ${isActive ? 'text-zinc-950' : 'text-zinc-400'}`} />
+                <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-zinc-900' : 'text-zinc-400'}`} />
                 <span>{tab.label}</span>
                 {tab.count !== null && (
-                  <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
-                    tab.alert
-                      ? 'bg-amber-100 text-amber-800'
-                      : isActive
-                        ? 'bg-zinc-100 text-zinc-900'
-                        : 'bg-zinc-200/80 text-zinc-600'
-                  }`}>
+                  <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-mono font-bold ${isActive ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-200/70 text-zinc-500'}`}>
                     {tab.count}
                   </span>
                 )}
@@ -634,17 +449,15 @@ export default function SupplierDashboard() {
           })}
         </div>
 
-        {/* ========================================================
-            TAB 1: OVERVIEW TAB
-        ======================================================== */}
+        {/* Tab 1: Overview */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
 
-            {/* Urgent Dispatch Banner */}
+            {/* Urgent Fulfillment Banner */}
             {pendingOrdersCount > 0 && (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200/90 bg-amber-50/80 p-5 shadow-2xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200/80 bg-amber-50/70 p-5 shadow-2xs">
                 <div className="flex items-start sm:items-center gap-3.5">
-                  <div className="h-10 w-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
+                  <div className="h-9 w-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
                     <AlertTriangle className="h-5 w-5" />
                   </div>
                   <div>
@@ -652,13 +465,13 @@ export default function SupplierDashboard() {
                       {pendingOrdersCount} customer {pendingOrdersCount === 1 ? 'order requires' : 'orders require'} urgent fulfillment
                     </h4>
                     <p className="text-xs text-amber-800/90 mt-0.5">
-                      Process packaging and attach courier tracking number to notify customers in real-time.
+                      Process packaging and attach courier tracking number to notify customers.
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setActiveTab('orders')}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs shrink-0 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs shrink-0"
                 >
                   <span>View Order Queue</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -666,11 +479,11 @@ export default function SupplierDashboard() {
               </div>
             )}
 
-            {/* Quick Actions & Previews */}
+            {/* Quick Actions & Recent Orders Preview */}
             <div className="grid gap-6 lg:grid-cols-2">
 
               {/* Recent Orders Card */}
-              <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4">
+              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
                   <div>
                     <h3 className="text-sm font-bold text-zinc-900">Recent Customer Orders</h3>
@@ -678,7 +491,7 @@ export default function SupplierDashboard() {
                   </div>
                   <button
                     onClick={() => setActiveTab('orders')}
-                    className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline"
                   >
                     <span>View all ({supplierOrders.length})</span>
                     <ChevronRight className="h-3.5 w-3.5" />
@@ -687,11 +500,11 @@ export default function SupplierDashboard() {
 
                 <div className="divide-y divide-zinc-100">
                   {supplierOrders.slice(0, 4).map(order => (
-                    <div key={order.id} className="py-3.5 first:pt-1 last:pb-1 flex items-center justify-between hover:bg-zinc-50/60 rounded-xl px-2 -mx-2 transition">
+                    <div key={order.id} className="py-3.5 first:pt-1 last:pb-1 flex items-center justify-between hover:bg-zinc-50/50 rounded-xl px-2 -mx-2 transition">
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs font-bold text-zinc-900">{order.id}</span>
-                          <span className="text-zinc-300">&bull;</span>
+                          <span className="text-zinc-300">•</span>
                           <span className="text-xs text-zinc-500">{order.date}</span>
                         </div>
                         <p className="text-xs font-medium text-zinc-800">
@@ -703,13 +516,10 @@ export default function SupplierDashboard() {
                       </div>
 
                       <div className="text-right space-y-1">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${
-                          order.status === 'Delivered'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
-                            : order.status === 'Shipped'
-                              ? 'bg-blue-50 text-blue-700 border border-blue-200/60'
-                              : 'bg-amber-50 text-amber-700 border border-amber-200/60'
-                        }`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
+                          order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                            'bg-amber-50 text-amber-700 border border-amber-200/60'
+                          }`}>
                           {order.status}
                         </span>
                         <p className="text-xs font-bold font-mono text-zinc-900">₹{Number(order.total || 0).toLocaleString('en-IN')}</p>
@@ -725,7 +535,7 @@ export default function SupplierDashboard() {
               </div>
 
               {/* Low Stock Alerts Card */}
-              <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4">
+              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
                   <div>
                     <h3 className="text-sm font-bold text-zinc-900">Inventory Stock Health</h3>
@@ -733,7 +543,7 @@ export default function SupplierDashboard() {
                   </div>
                   <button
                     onClick={() => setActiveTab('inventory')}
-                    className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline"
                   >
                     <span>Manage stock</span>
                     <ChevronRight className="h-3.5 w-3.5" />
@@ -743,7 +553,7 @@ export default function SupplierDashboard() {
                 {lowStockItems.length > 0 ? (
                   <div className="divide-y divide-zinc-100">
                     {lowStockItems.slice(0, 4).map(item => (
-                      <div key={item.id} className="py-3 first:pt-1 last:pb-1 flex items-center justify-between hover:bg-zinc-50/60 rounded-xl px-2 -mx-2 transition">
+                      <div key={item.id} className="py-3 first:pt-1 last:pb-1 flex items-center justify-between hover:bg-zinc-50/50 rounded-xl px-2 -mx-2 transition">
                         <div className="flex items-center gap-3">
                           <img
                             src={item.image}
@@ -761,7 +571,7 @@ export default function SupplierDashboard() {
                           </span>
                           <button
                             onClick={() => handleQuickStockAdjust(item, 10)}
-                            className="rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-900 text-[11px] font-semibold px-2.5 py-1 transition shadow-2xs cursor-pointer"
+                            className="rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-900 text-[11px] font-semibold px-2.5 py-1 transition shadow-2xs"
                           >
                             +10 Restock
                           </button>
@@ -785,30 +595,25 @@ export default function SupplierDashboard() {
           </div>
         )}
 
-        {/* ========================================================
-            TAB 2: MY PRODUCTS CATALOG
-        ======================================================== */}
+        {/* Tab 2: My Products Catalog */}
         {activeTab === 'products' && (
           <div className="space-y-5">
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-zinc-900">Product Catalog ({supplierProducts.length})</h3>
-                <p className="text-xs text-zinc-500">
-                  Products assigned to {activeSupplierName} displayed across Krishna Accessories store.
-                </p>
+                <p className="text-xs text-zinc-500">Products assigned to {activeSupplierName} displayed across Krishna Accessories store.</p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2.5">
-                {/* Search Input */}
+              <div className="flex items-center gap-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
                   <input
                     type="text"
-                    placeholder="Search SKU, name..."
+                    placeholder="Search SKU, name, category..."
                     value={productSearch}
                     onChange={(e) => setProductSearch(e.target.value)}
-                    className="pl-8 pr-7 py-2 text-xs rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-900/5 w-48 sm:w-56 transition shadow-2xs"
+                    className="pl-8 pr-3 py-2 text-xs rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-900/5 w-56 transition shadow-2xs"
                   />
                   {productSearch && (
                     <button onClick={() => setProductSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700">
@@ -817,26 +622,13 @@ export default function SupplierDashboard() {
                   )}
                 </div>
 
-                {/* Category Filter */}
-                <select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-700 outline-none focus:border-zinc-400 shadow-2xs cursor-pointer"
-                >
-                  <option value="All">All Categories</option>
-                  {categories.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-
-                {/* Add Product Button */}
                 <button
                   type="button"
                   onClick={handleOpenAddModal}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  <span>Add Product</span>
+                  <span>Add New Product</span>
                 </button>
               </div>
             </div>
@@ -844,7 +636,7 @@ export default function SupplierDashboard() {
             <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-zinc-200/80 bg-zinc-50/80 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
+                  <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
                     <tr>
                       <th className="py-3 px-4">Product Details</th>
                       <th className="py-3 px-4">Department & Brand</th>
@@ -867,7 +659,6 @@ export default function SupplierDashboard() {
                             <div>
                               <Link
                                 to={`/product/${p.id}`}
-                                target="_blank"
                                 className="font-bold text-zinc-900 hover:text-zinc-700 transition inline-flex items-center gap-1"
                               >
                                 <span>{p.name}</span>
@@ -875,7 +666,7 @@ export default function SupplierDashboard() {
                               </Link>
                               <div className="flex items-center gap-2 mt-0.5">
                                 <span className="text-[10px] text-amber-600 font-semibold">★ {p.rating || 4.8}</span>
-                                <span className="text-zinc-300">&bull;</span>
+                                <span className="text-zinc-300">•</span>
                                 <span className="text-[10px] text-zinc-400">{p.subcategory || 'Standard'}</span>
                               </div>
                             </div>
@@ -907,14 +698,14 @@ export default function SupplierDashboard() {
                         <td className="py-3.5 px-4 text-right space-x-1.5">
                           <button
                             onClick={() => handleOpenEditModal(p)}
-                            className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 transition shadow-2xs cursor-pointer"
+                            className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-700 transition shadow-2xs"
                           >
                             <Edit3 className="h-3 w-3" />
                             <span>Edit</span>
                           </button>
                           <button
                             onClick={() => handleDeleteProduct(p.id)}
-                            className="inline-flex items-center gap-1 rounded-lg border border-rose-200/80 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-700 transition shadow-2xs cursor-pointer"
+                            className="inline-flex items-center gap-1 rounded-lg border border-rose-200/80 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-700 transition shadow-2xs"
                           >
                             <Trash2 className="h-3 w-3" />
                             <span>Delete</span>
@@ -924,8 +715,8 @@ export default function SupplierDashboard() {
                     ))}
                     {filteredProducts.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-xs text-zinc-400">
-                          No matching products found.
+                        <td colSpan={6} className="py-10 text-center text-xs text-zinc-400">
+                          No matching products found for query "{productSearch}".
                         </td>
                       </tr>
                     )}
@@ -937,9 +728,7 @@ export default function SupplierDashboard() {
           </div>
         )}
 
-        {/* ========================================================
-            TAB 3: INVENTORY STOCK CONTROL
-        ======================================================== */}
+        {/* Tab 3: Inventory Management */}
         {activeTab === 'inventory' && (
           <div className="space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -967,7 +756,7 @@ export default function SupplierDashboard() {
                     </div>
 
                     <div className="mt-4 flex items-center justify-between rounded-xl bg-zinc-50/80 p-3 border border-zinc-100">
-                      <span className="text-xs text-zinc-500 font-medium">Available Stock:</span>
+                      <span className="text-xs text-zinc-500 font-medium">Current Available Stock:</span>
                       <span className={`text-sm font-bold font-mono ${p.stock < 10 ? 'text-rose-600' : 'text-emerald-700'}`}>
                         {p.stock} Units
                       </span>
@@ -977,21 +766,21 @@ export default function SupplierDashboard() {
                   <div className="mt-4 flex gap-2">
                     <button
                       onClick={() => handleQuickStockAdjust(p, -1)}
-                      className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/80 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition cursor-pointer"
+                      className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/80 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition"
                       title="Decrease by 1"
                     >
                       −1
                     </button>
                     <button
                       onClick={() => handleQuickStockAdjust(p, +5)}
-                      className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/80 py-1.5 text-xs font-semibold text-zinc-800 hover:bg-zinc-100 transition cursor-pointer"
+                      className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/80 py-1.5 text-xs font-semibold text-zinc-800 hover:bg-zinc-100 transition"
                       title="Add 5 units"
                     >
                       +5
                     </button>
                     <button
                       onClick={() => handleQuickStockAdjust(p, +20)}
-                      className="flex-1 rounded-xl bg-zinc-900 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs cursor-pointer"
+                      className="flex-1 rounded-xl bg-zinc-900 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs"
                       title="Add 20 units"
                     >
                       +20
@@ -999,31 +788,22 @@ export default function SupplierDashboard() {
                   </div>
                 </div>
               ))}
-              {supplierProducts.length === 0 && (
-                <div className="col-span-full py-12 text-center text-xs text-zinc-400">
-                  No products registered under this supplier to adjust stock.
-                </div>
-              )}
             </div>
           </div>
         )}
 
-        {/* ========================================================
-            TAB 4: ORDER FULFILLMENT RESPONSIBILITY
-        ======================================================== */}
+        {/* Tab 4: Order Fulfillment Responsibility */}
         {activeTab === 'orders' && (
           <div className="space-y-5">
             <div>
               <h3 className="text-base font-bold text-zinc-900">Customer Order Fulfillment Queue</h3>
-              <p className="text-xs text-zinc-500">
-                Advance order dispatch stages from Processing to Shipped & Delivered. Status updates sync in real-time with customer tracking.
-              </p>
+              <p className="text-xs text-zinc-500">Advance order dispatch stages from Processing to Shipped & Delivered. Status updates sync in real-time with customer tracking.</p>
             </div>
 
             <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-zinc-200/80 bg-zinc-50/80 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
+                  <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
                     <tr>
                       <th className="py-3 px-4">Order ID & Date</th>
                       <th className="py-3 px-4">Customer & Destination</th>
@@ -1039,7 +819,7 @@ export default function SupplierDashboard() {
                         <td className="py-3.5 px-4">
                           <span className="font-mono text-xs font-bold text-zinc-900">{order.id}</span>
                           <p className="text-[10px] text-zinc-400 mt-0.5">{order.date}</p>
-                          <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.5 text-[9px] font-medium text-zinc-600 mt-1">
+                          <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.2 text-[9px] font-medium text-zinc-600 mt-1">
                             {order.paymentMethod || 'Prepaid'}
                           </span>
                         </td>
@@ -1055,7 +835,7 @@ export default function SupplierDashboard() {
                             <div key={idx} className="text-xs text-zinc-700 flex items-center gap-1.5">
                               <span className="h-1 w-1 rounded-full bg-zinc-400"></span>
                               <span>{it.name}</span>
-                              <strong className="text-zinc-900 font-mono">&times;{it.quantity}</strong>
+                              <strong className="text-zinc-900 font-mono">×{it.quantity}</strong>
                             </div>
                           ))}
                         </td>
@@ -1079,6 +859,16 @@ export default function SupplierDashboard() {
                             }`}>
                             {order.status}
                           </span>
+                          {order.cancellation && (
+                            <p className="text-[10px] text-rose-600 mt-1 font-medium truncate max-w-[150px]">
+                              Cancel: {order.cancellation.reason}
+                            </p>
+                          )}
+                          {order.returnRequest && (
+                            <p className="text-[10px] text-purple-700 mt-1 font-medium truncate max-w-[150px]">
+                              Return: {order.returnRequest.reason}
+                            </p>
+                          )}
                           {order.trackingNumber && (
                             <p className="text-[10px] font-mono text-zinc-400 mt-1">AWB: {order.trackingNumber}</p>
                           )}
@@ -1087,7 +877,7 @@ export default function SupplierDashboard() {
                         <td className="py-3.5 px-4 text-right">
                           <button
                             onClick={() => handleOpenStatusModal(order)}
-                            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs cursor-pointer"
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs"
                           >
                             <Truck className="h-3 w-3" />
                             <span>Update Logistics</span>
@@ -1097,7 +887,7 @@ export default function SupplierDashboard() {
                     ))}
                     {supplierOrders.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-xs text-zinc-400">
+                        <td colSpan={6} className="py-10 text-center text-xs text-zinc-400">
                           No orders currently assigned to {activeSupplierName}.
                         </td>
                       </tr>
@@ -1109,9 +899,7 @@ export default function SupplierDashboard() {
           </div>
         )}
 
-        {/* ========================================================
-            TAB 5: PAYOUTS & EARNINGS
-        ======================================================== */}
+        {/* Tab 5: Payouts & Earnings */}
         {activeTab === 'earnings' && (
           <div className="space-y-6">
             <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-6">
@@ -1155,9 +943,7 @@ export default function SupplierDashboard() {
 
       </main>
 
-      {/* ========================================================
-          MODAL 1: ADD / EDIT PRODUCT MODAL (WITH 4-ANGLE GALLERY)
-      ======================================================== */}
+      {/* Add / Edit Product Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
           <div className="w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-7 shadow-xl max-h-[92vh] overflow-y-auto">
@@ -1300,6 +1086,7 @@ export default function SupplierDashboard() {
                         onChange={e => setForm({ ...form, angle1: e.target.value })}
                         placeholder="Front View"
                         className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -1328,6 +1115,7 @@ export default function SupplierDashboard() {
                         onChange={e => setForm({ ...form, angle2: e.target.value })}
                         placeholder="Side Profile"
                         className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -1355,6 +1143,7 @@ export default function SupplierDashboard() {
                         onChange={e => setForm({ ...form, angle3: e.target.value })}
                         placeholder="Back View"
                         className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -1382,6 +1171,7 @@ export default function SupplierDashboard() {
                         onChange={e => setForm({ ...form, angle4: e.target.value })}
                         placeholder="Detail View"
                         className="w-24 text-[10.5px] px-1.5 py-0.5 border border-zinc-200 rounded text-right text-zinc-600 focus:outline-none focus:border-zinc-400"
+                        title="Perspective label"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -1412,13 +1202,13 @@ export default function SupplierDashboard() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition cursor-pointer"
+                  className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-xl bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-black transition shadow-xs cursor-pointer"
+                  className="rounded-xl bg-zinc-900 px-5 py-2 text-xs font-semibold text-white hover:bg-black transition shadow-xs"
                 >
                   {editingProduct ? 'Update Product' : 'Publish Product to Store'}
                 </button>
@@ -1429,9 +1219,7 @@ export default function SupplierDashboard() {
         </div>
       )}
 
-      {/* ========================================================
-          MODAL 2: ORDER STATUS & LOGISTICS UPDATE MODAL
-      ======================================================== */}
+      {/* Order Status Update Modal */}
       {statusModalOpen && selectedOrderToUpdate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
           <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl space-y-5">
@@ -1443,7 +1231,7 @@ export default function SupplierDashboard() {
               </div>
               <button
                 onClick={() => setStatusModalOpen(false)}
-                className="h-8 w-8 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition cursor-pointer"
+                className="h-8 w-8 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1471,14 +1259,14 @@ export default function SupplierDashboard() {
               </div>
             </div>
 
-            {/* Stage Advance Buttons */}
+            {/* Quick Status Advance Buttons */}
             <div className="space-y-2 pt-3 border-t border-zinc-100">
               <span className="text-[11px] text-zinc-500 block font-semibold">Advance Order Stage:</span>
 
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Processing')}
-                className="w-full flex items-center justify-between rounded-xl border border-amber-200/80 bg-amber-50/70 px-4 py-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl border border-amber-200/80 bg-amber-50/70 px-4 py-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition"
               >
                 <span>1. Mark as Processing & Packaging</span>
                 <Clock className="h-3.5 w-3.5 text-amber-600" />
@@ -1487,7 +1275,7 @@ export default function SupplierDashboard() {
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Shipped')}
-                className="w-full flex items-center justify-between rounded-xl border border-blue-200/80 bg-blue-50/70 px-4 py-2.5 text-xs font-semibold text-blue-900 hover:bg-blue-100 transition cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl border border-blue-200/80 bg-blue-50/70 px-4 py-2.5 text-xs font-semibold text-blue-900 hover:bg-blue-100 transition"
               >
                 <span>2. Mark as Shipped via Courier</span>
                 <Truck className="h-3.5 w-3.5 text-blue-600" />
@@ -1496,7 +1284,7 @@ export default function SupplierDashboard() {
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Out for Delivery')}
-                className="w-full flex items-center justify-between rounded-xl border border-purple-200/80 bg-purple-50/70 px-4 py-2.5 text-xs font-semibold text-purple-900 hover:bg-purple-100 transition cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl border border-purple-200/80 bg-purple-50/70 px-4 py-2.5 text-xs font-semibold text-purple-900 hover:bg-purple-100 transition"
               >
                 <span>3. Mark as Out for Delivery</span>
                 <ArrowRight className="h-3.5 w-3.5 text-purple-600" />
@@ -1505,7 +1293,7 @@ export default function SupplierDashboard() {
               <button
                 type="button"
                 onClick={() => handleUpdateOrderStatusSubmit('Delivered')}
-                className="w-full flex items-center justify-between rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-semibold text-white hover:bg-emerald-500 transition shadow-2xs cursor-pointer"
+                className="w-full flex items-center justify-between rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-semibold text-white hover:bg-emerald-500 transition shadow-2xs"
               >
                 <span>4. Mark as Delivered</span>
                 <CheckCircle2 className="h-3.5 w-3.5 text-white" />
@@ -1516,11 +1304,7 @@ export default function SupplierDashboard() {
         </div>
       )}
 
-      {/* Clean Portal Minimal Sub-footer */}
-      <footer className="mt-auto border-t border-zinc-200 bg-white py-3 px-4 text-center text-xs text-zinc-400">
-        Krishna Accessories Vendor Operations Engine &bull; Confidential &bull; Version 2.4
-      </footer>
-
+      <Footer />
     </div>
   );
 }
