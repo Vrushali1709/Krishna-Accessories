@@ -5,7 +5,8 @@ import { setCurrentUser, setAuthToken } from '../utils/auth';
 import { usersApi } from '../utils/api';
 import { addSupplier } from '../utils/orderStore';
 import { sendOtpEmail, verifyOtp, resendOtp, sendWelcomeEmail } from '../utils/emailService';
-import { RefreshCw, Mail, KeyRound } from 'lucide-react';
+import { ArrowRightIcon, ShieldCheckIcon } from '../components/Icons';
+import { RefreshCw, Mail, KeyRound, ArrowLeft } from 'lucide-react';
 import { useLoading } from '../context/LoadingContext';
 import BrandSpinner from '../components/BrandSpinner';
 
