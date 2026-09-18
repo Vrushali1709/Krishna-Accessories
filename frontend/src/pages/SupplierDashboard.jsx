@@ -1,7 +1,7 @@
 // src/pages/SupplierDashboard.jsx
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getSupplierUser, logoutSupplier } from '../utils/auth';
+import { getSupplierUser, logoutSupplier, setSupplierUser as saveSupplierUserAuth, isSupplier } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
 import { getOrders, updateOrderStatus, getSuppliers, getNotifications, markNotificationRead, markAllNotificationsRead } from '../utils/orderStore';
 import {
@@ -63,8 +63,58 @@ import ProductImagePicker, { ProductImagePreview } from '../components/ProductIm
 export default function SupplierDashboard() {
   const navigate = useNavigate();
   const [supplierUser, setSupplierUser] = useState(() => getSupplierUser());
-  const suppliers = getSuppliers();
-  const [activeSupplierName, setActiveSupplierName] = useState(suppliers[0]?.name || 'Apex Timepieces Ltd.');
+  const suppliers = useMemo(() => getSuppliers() || [], []);
+  const [activeSupplierName, setActiveSupplierName] = useState(() => {
+    const sup = getSupplierUser();
+    return sup?.name || (suppliers.length > 0 ? suppliers[0].name : 'Apex Timepieces Ltd.');
+  });
+
+  // Notifications State & Popovers
+  const [notifications, setNotifications] = useState(() => getNotifications() || []);
+  const [notifsOpen, setNotifsOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const notifsRef = useRef(null);
+  const userDropdownRef = useRef(null);
+
+  // Popover Dismiss Handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifsRef.current && !notifsRef.current.contains(event.target)) {
+        setNotifsOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setNotifsOpen(false);
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
+  // Quick Supplier Login
+  const handleQuickSupplierLogin = () => {
+    const defaultVendor = {
+      id: 1,
+      name: 'Apex Timepieces Ltd.',
+      email: 'apex@timepieces.com',
+      role: 'supplier',
+      phone: '+91 98765 43210',
+      category: 'Watches'
+    };
+    saveSupplierUserAuth(defaultVendor);
+    setSupplierUser(defaultVendor);
+    setActiveSupplierName('Apex Timepieces Ltd.');
+    showToast('Signed in as Apex Timepieces Ltd.');
+  };
 
   // Navigation Hierarchical State (matching Admin structure)
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -557,6 +607,55 @@ export default function SupplierDashboard() {
     });
   };
 
+  // If not authenticated as supplier, display clean login card
+  if (!supplierUser && !isSupplier()) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 flex flex-col justify-center items-center px-4 py-12 font-sans selection:bg-zinc-900 selection:text-white">
+        <div className="w-full max-w-sm bg-white border border-zinc-200/80 rounded-2xl p-7 sm:p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] space-y-6 text-center">
+          <img
+            src="/images/krishna-logo.png"
+            alt="Krishna Accessories Logo"
+            onError={(e) => { e.currentTarget.src = '/logo.png'; }}
+            className="mx-auto h-12 w-12 object-contain rounded-xl bg-white p-1 shadow-xs border border-zinc-200"
+          />
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 block">
+              Supplier Partner Portal
+            </span>
+            <h1 className="text-xl font-semibold text-zinc-900 tracking-tight mt-1">
+              Krishna Accessories
+            </h1>
+            <p className="text-xs text-zinc-500 mt-1.5 leading-relaxed">
+              Vendor inventory catalog, dispatch fulfillment & earnings portal.
+            </p>
+          </div>
+          <div className="pt-2 space-y-2.5">
+            <button
+              onClick={handleQuickSupplierLogin}
+              className="w-full rounded-xl bg-zinc-900 hover:bg-black py-2.5 text-xs font-semibold text-white shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Building2 className="h-4 w-4" />
+              <span>1-Click Supplier Portal Login</span>
+            </button>
+            <Link
+              to="/login"
+              state={{ requiredRole: 'supplier' }}
+              className="block w-full rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 py-2.5 text-xs font-medium text-zinc-700 transition"
+            >
+              Sign In with Password &rarr;
+            </Link>
+            <Link
+              to="/"
+              className="inline-block text-xs text-zinc-400 hover:text-zinc-700 pt-2 transition font-medium"
+            >
+              &larr; Back to Storefront
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Find Current Active Section and Sub Item for Breadcrumbs
   const currentSectionObj = navSections.find(s => s.id === activeSection) || navSections[0];
   const currentSubItemObj = currentSectionObj.subItems.find(sub => sub.id === activeSubTab) || currentSectionObj.subItems[0];
@@ -591,6 +690,7 @@ export default function SupplierDashboard() {
               <img
                 src="/images/krishna-logo.png"
                 alt="Krishna Accessories Logo"
+                onError={(e) => { e.currentTarget.src = '/logo.png'; }}
                 className="h-8 w-8 shrink-0 rounded-lg object-contain bg-white p-0.5 border border-zinc-700/60 shadow-xs cursor-pointer"
                 onClick={() => sidebarCollapsed && setSidebarCollapsed(false)}
                 title={sidebarCollapsed ? "Expand sidebar" : undefined}
