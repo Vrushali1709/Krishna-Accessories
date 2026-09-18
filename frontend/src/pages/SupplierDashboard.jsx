@@ -135,6 +135,20 @@ export default function SupplierDashboard() {
   const categories = getCategories();
   const brands = getBrands();
 
+  // User Profile Dropdown state & ref
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // Scroll handling
   const handleSupplierScroll = (e) => {
     if (e.currentTarget.scrollTop > 200) {
@@ -757,14 +771,6 @@ export default function SupplierDashboard() {
               <Menu className="h-4 w-4" />
             </button>
 
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 hover:bg-zinc-200 text-xs font-mono shrink-0 cursor-pointer"
-              title="Toggle sidebar collapse"
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-            </button>
-
             <div className="flex items-center gap-1.5 text-xs text-zinc-500 truncate min-w-0 font-medium">
               <span className="text-zinc-400 shrink-0">Supplier</span>
               <span className="text-zinc-300 shrink-0">/</span>
@@ -774,7 +780,7 @@ export default function SupplierDashboard() {
             </div>
           </div>
 
-          {/* Right: Search, Vendor Switcher, Sync & Add Product */}
+          {/* Right: Search, Sync & User Profile */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Search Input */}
             <div className="relative hidden md:block">
@@ -793,25 +799,6 @@ export default function SupplierDashboard() {
               )}
             </div>
 
-            {/* Vendor Switcher */}
-            <div className="relative hidden sm:block">
-              <select
-                value={activeSupplierName}
-                onChange={(e) => {
-                  setActiveSupplierName(e.target.value);
-                  showToast(`Switched vendor context to "${e.target.value}"`);
-                }}
-                className="h-8 appearance-none rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 pl-2.5 pr-7 text-xs font-semibold text-zinc-900 outline-none focus:border-zinc-400 cursor-pointer transition shadow-2xs"
-              >
-                {suppliers.map(s => (
-                  <option key={s.id} value={s.name}>
-                    {s.name} ({s.category})
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400 pointer-events-none" />
-            </div>
-
             {/* Sync Data Button */}
             <button
               onClick={refreshData}
@@ -823,14 +810,94 @@ export default function SupplierDashboard() {
               <span className="hidden sm:inline">Sync</span>
             </button>
 
-            {/* Add Product Button */}
-            <button
-              onClick={handleOpenAddProduct}
-              className="flex h-8 items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-black px-3 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span>Add Product</span>
-            </button>
+            {/* User Profile Dropdown Menu */}
+            <div className="relative" ref={userDropdownRef}>
+              <button
+                onClick={() => setUserDropdownOpen(prev => !prev)}
+                className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-800 transition shadow-2xs cursor-pointer"
+                aria-label="Toggle user profile menu"
+                aria-expanded={userDropdownOpen}
+              >
+                <div className="relative flex h-6 w-6 items-center justify-center rounded-lg bg-zinc-900 text-white text-[10px] font-bold shrink-0">
+                  {supplierUser?.name ? supplierUser.name.charAt(0).toUpperCase() : activeSupplierName.charAt(0).toUpperCase()}
+                  <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-1.5 ring-white" />
+                </div>
+                <span className="hidden sm:inline text-xs font-semibold text-zinc-900 max-w-[120px] truncate">
+                  {supplierUser?.name || activeSupplierName}
+                </span>
+                <ChevronDown className={`h-3.5 w-3.5 text-zinc-400 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl border border-zinc-200 bg-white p-2 shadow-xl z-50 animate-in fade-in duration-150 text-xs">
+                  <div className="px-3 py-2.5 border-b border-zinc-100 mb-1 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <p className="font-bold text-zinc-900 truncate">{supplierUser?.name || 'Verified Supplier'}</p>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.2 text-[9px] font-bold text-emerald-700 border border-emerald-200">
+                        <span className="h-1 w-1 rounded-full bg-emerald-500" />
+                        Active
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-zinc-400 truncate">{supplierUser?.email || 'supplier@krishna.com'}</p>
+                    <div className="pt-1">
+                      <span className="text-[10.5px] text-zinc-600 font-medium block truncate">
+                        Vendor: <strong className="text-zinc-800">{activeSupplierName}</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <button
+                      onClick={() => {
+                        setActiveSection('catalog');
+                        setActiveSubTab('products');
+                        setUserDropdownOpen(false);
+                      }}
+                      className="w-full text-left rounded-xl px-3 py-2 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer flex items-center gap-2.5 font-medium"
+                    >
+                      <Package className="h-3.5 w-3.5 text-zinc-400" />
+                      <span>Product Catalog ({supplierProducts.length})</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setActiveSection('financials');
+                        setActiveSubTab('payouts');
+                        setUserDropdownOpen(false);
+                      }}
+                      className="w-full text-left rounded-xl px-3 py-2 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer flex items-center gap-2.5 font-medium"
+                    >
+                      <Wallet className="h-3.5 w-3.5 text-zinc-400" />
+                      <span>Earnings & Payouts (95%)</span>
+                    </button>
+
+                    <Link
+                      to="/"
+                      target="_blank"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="w-full text-left rounded-xl px-3 py-2 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer flex items-center gap-2.5 font-medium"
+                    >
+                      <Store className="h-3.5 w-3.5 text-zinc-400" />
+                      <span>View Storefront</span>
+                      <ExternalLink className="h-3 w-3 text-zinc-400 ml-auto" />
+                    </Link>
+                  </div>
+
+                  <div className="border-t border-zinc-100 pt-1 mt-1">
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        handleSupplierLogout();
+                      }}
+                      className="w-full text-left rounded-xl px-3 py-2 text-rose-600 hover:bg-rose-50 font-semibold transition cursor-pointer flex items-center gap-2.5"
+                    >
+                      <LogOut className="h-3.5 w-3.5 text-rose-500" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
