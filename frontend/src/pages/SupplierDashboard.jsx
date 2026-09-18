@@ -331,16 +331,6 @@ export default function SupplierDashboard() {
                 </div>
               </div>
 
-              {/* View Storefront Link */}
-              <Link
-                to="/"
-                target="_blank"
-                className="hidden md:inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 px-3 py-2 text-xs font-semibold text-zinc-700 hover:text-zinc-950 transition shadow-2xs"
-                title="Open customer storefront in new tab"
-              >
-                <span>Storefront</span>
-                <ExternalLink className="h-3 w-3 text-zinc-400" />
-              </Link>
 
               {/* Supplier Sign Out Button */}
               <button
