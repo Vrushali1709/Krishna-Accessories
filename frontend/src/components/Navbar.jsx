@@ -213,14 +213,38 @@ export default function Navbar() {
       <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'shadow-md bg-white/98 backdrop-blur-md' : 'bg-white/95 backdrop-blur-md'}`}>
 
         {/* Top Announcement & Boutique Contact Bar */}
-        <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-6 lg:px-8 xl:px-10 overflow-hidden">
+        <div className="bg-[#0B1120] text-slate-300 border-b border-slate-800 text-[11px] py-1.5 px-3 sm:px-5 lg:px-6 2xl:px-10 overflow-hidden">
           <div className="mx-auto flex items-center justify-between gap-2 min-w-0">
 
-            {/* Boutique Location */}
-            <div className="flex items-center gap-1.5 min-w-0 truncate text-slate-300">
-              <span className="text-amber-400 font-bold shrink-0">📍 Mumbai Boutique:</span>
-              <span className="truncate hidden sm:inline text-slate-200">{SHOP_INFO.address}</span>
-              <span className="truncate sm:hidden text-slate-200">Heera Panna, Haji Ali</span>
+            {/* Boutique Location & Role Shortcut Indicator */}
+            <div className="flex items-center gap-2 min-w-0 truncate text-slate-300">
+              {currentUser?.role === 'admin' && (
+                <Link
+                  to="/admin"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40 text-[10px] font-bold transition shrink-0"
+                  title="Direct Access to Admin Dashboard"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                  <span>Admin Dashboard</span>
+                  <span>&rarr;</span>
+                </Link>
+              )}
+              {currentUser?.role === 'supplier' && (
+                <Link
+                  to="/supplier"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border border-blue-500/40 text-[10px] font-bold transition shrink-0"
+                  title="Direct Access to Supplier Portal"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shrink-0"></span>
+                  <span>Supplier Portal</span>
+                  <span>&rarr;</span>
+                </Link>
+              )}
+              <div className="flex items-center gap-1.5 min-w-0 truncate">
+                <span className="text-amber-400 font-bold shrink-0">📍 Mumbai Boutique:</span>
+                <span className="truncate hidden sm:inline text-slate-200">{SHOP_INFO.address}</span>
+                <span className="truncate sm:hidden text-slate-200">Heera Panna, Haji Ali</span>
+              </div>
             </div>
 
             {/* Quick Direct Contacts & Social Icons */}
@@ -285,33 +309,33 @@ export default function Navbar() {
         </div>
 
         {/* Main Navigation Bar */}
-        <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 border-b border-gray-200/80">
-          <div className="relative flex h-14 sm:h-16 items-center justify-between gap-2">
+        <div className="w-full px-3 sm:px-5 lg:px-6 2xl:px-10 border-b border-gray-200/80 bg-white">
+          <div className="relative flex h-14 sm:h-16 items-center justify-between gap-3 lg:gap-4 min-w-0">
 
             {/* Left: Brand Identity */}
-            <div className="flex items-center min-w-0 z-10">
-              <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 sm:gap-3 group min-w-0">
+            <div className="flex items-center shrink-0 z-10">
+              <Link to="/" aria-label="Krishna Accessories home" className="flex items-center gap-2 sm:gap-3 group">
                 <img
                   src="/images/krishna-logo.png"
                   alt="Krishna Accessories Logo"
                   className="h-8 w-8 sm:h-10 sm:w-10 object-contain rounded-xl bg-white p-0.5 shadow-2xs border border-amber-500/30 transition-transform group-hover:scale-105 shrink-0"
                 />
-                <div className="flex flex-col min-w-0">
-                  <span className="font-extrabold text-[13px] xs:text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors truncate">
+                <div className="flex flex-col">
+                  <span className="font-extrabold text-[13px] xs:text-sm sm:text-base tracking-tight text-gray-950 leading-none group-hover:text-amber-950 transition-colors whitespace-nowrap">
                     Krishna <span className="text-amber-700">Accessories</span>
                   </span>
-                  <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5 truncate">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-gray-400 font-medium hidden xs:block mt-0.5 whitespace-nowrap">
                     Curated Luxury
                   </span>
                 </div>
               </Link>
             </div>
 
-            {/* Center: Desktop Navigation Links (Centered on Desktop) */}
-            <nav className="hidden xl:flex items-center gap-7 text-[12px] font-semibold uppercase tracking-[0.14em] text-gray-600 absolute left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
+            {/* Center: Desktop Navigation Links (Responsive Flexbox without overlapping) */}
+            <nav className="hidden xl:flex items-center justify-center flex-1 min-w-0 px-2 2xl:px-6 gap-4 2xl:gap-7 text-[11.5px] 2xl:text-[12px] font-semibold uppercase tracking-[0.12em] 2xl:tracking-[0.14em] text-gray-600 z-10 pointer-events-auto">
               <Link
                 to="/"
-                className={`relative py-1.5 transition-colors ${location.pathname === '/'
+                className={`relative py-1.5 transition-colors whitespace-nowrap ${location.pathname === '/'
                   ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                   : 'hover:text-gray-950'
                   }`}
@@ -321,7 +345,7 @@ export default function Navbar() {
 
               <Link
                 to="/about"
-                className={`relative py-1.5 transition-colors ${location.pathname === '/about'
+                className={`relative py-1.5 transition-colors whitespace-nowrap ${location.pathname === '/about'
                   ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                   : 'hover:text-gray-950'
                   }`}
@@ -343,7 +367,7 @@ export default function Navbar() {
                     setNotificationsOpen(false);
                     setUserMenuOpen(false);
                   }}
-                  className={`flex items-center gap-1.5 py-1.5 transition-colors uppercase cursor-pointer ${location.pathname === '/shop' && !location.search
+                  className={`flex items-center gap-1.5 py-1.5 transition-colors uppercase cursor-pointer whitespace-nowrap ${location.pathname === '/shop' && !location.search
                     ? 'text-gray-950 font-bold'
                     : 'hover:text-gray-950'
                     }`}
@@ -372,7 +396,6 @@ export default function Navbar() {
                             {allCategories.length} Collections
                           </span>
                         </div>
-
                       </div>
 
                       {/* All Categories 2-Column Clean Grid */}
@@ -417,7 +440,7 @@ export default function Navbar() {
 
               <Link
                 to="/shop"
-                className={`relative py-1.5 transition-colors ${location.pathname === '/shop' && !location.search
+                className={`relative py-1.5 transition-colors whitespace-nowrap ${location.pathname === '/shop' && !location.search
                   ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                   : 'hover:text-gray-950'
                   }`}
@@ -427,7 +450,7 @@ export default function Navbar() {
 
               <Link
                 to="/new-arrivals"
-                className={`relative py-1.5 transition-colors ${location.pathname === '/new-arrivals'
+                className={`relative py-1.5 transition-colors whitespace-nowrap ${location.pathname === '/new-arrivals'
                   ? 'text-gray-950 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#111827]'
                   : 'hover:text-gray-950'
                   }`}
@@ -440,7 +463,7 @@ export default function Navbar() {
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto z-10">
 
               {/* Search Input Bar (Desktop lg+) */}
-              <form onSubmit={handleSearchSubmit} className="hidden lg:block relative w-36 xl:w-44 focus-within:w-56 transition-all duration-250">
+              <form onSubmit={handleSearchSubmit} className="hidden lg:block relative w-32 xl:w-36 2xl:w-44 focus-within:w-44 2xl:focus-within:w-56 transition-all duration-250">
                 <input
                   type="text"
                   value={searchQuery}
@@ -603,15 +626,39 @@ export default function Navbar() {
                     }}
                     aria-label="User profile menu"
                     aria-expanded={userMenuOpen}
-                    className="flex h-8.5 items-center gap-2 rounded-xl border border-gray-200 bg-white px-2.5 text-xs font-medium text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 shadow-2xs cursor-pointer"
+                    className={`flex h-8.5 items-center gap-1.5 sm:gap-2 rounded-xl border px-2 sm:px-2.5 text-xs font-medium transition-all duration-150 shadow-2xs cursor-pointer shrink-0 ${
+                      currentUser.role === 'admin'
+                        ? 'border-amber-300 bg-amber-50/80 hover:bg-amber-100 hover:border-amber-400 text-amber-950'
+                        : currentUser.role === 'supplier'
+                          ? 'border-blue-300 bg-blue-50/80 hover:bg-blue-100 hover:border-blue-400 text-blue-950'
+                          : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 text-gray-800'
+                    }`}
                   >
-                    <div className="flex h-5.5 w-5.5 items-center justify-center rounded-lg bg-gray-100 text-gray-900 font-bold text-[11px]">
-                      {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                    <div className={`flex h-5.5 w-5.5 items-center justify-center rounded-lg font-bold text-[11px] shadow-xs shrink-0 ${
+                      currentUser.role === 'admin'
+                        ? 'bg-amber-500 text-white'
+                        : currentUser.role === 'supplier'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-900'
+                    }`}>
+                      {currentUser.name ? currentUser.name[0].toUpperCase() : (currentUser.role === 'admin' ? 'A' : currentUser.role === 'supplier' ? 'S' : 'U')}
                     </div>
-                    <span className="truncate max-w-[85px] text-[11.5px] text-gray-900 font-semibold">
-                      {currentUser.name || currentUser.email.split('@')[0]}
+                    <span className="truncate max-w-[70px] xl:max-w-[90px] text-[11.5px] font-bold">
+                      {currentUser.name || (currentUser.role === 'admin' ? 'Admin' : currentUser.email.split('@')[0])}
                     </span>
-                    <ChevronDownIcon className="w-2.5 h-2.5 text-gray-400 shrink-0" />
+                    {currentUser.role === 'admin' && (
+                      <span className="hidden xl:inline-block rounded-md bg-amber-200/90 text-amber-900 text-[8.5px] font-extrabold px-1.5 py-0.5 tracking-wider shrink-0">
+                        ADMIN
+                      </span>
+                    )}
+                    {currentUser.role === 'supplier' && (
+                      <span className="hidden xl:inline-block rounded-md bg-blue-200/90 text-blue-900 text-[8.5px] font-extrabold px-1.5 py-0.5 tracking-wider shrink-0">
+                        VENDOR
+                      </span>
+                    )}
+                    <ChevronDownIcon className={`w-2.5 h-2.5 shrink-0 ${
+                      currentUser.role === 'admin' ? 'text-amber-800' : currentUser.role === 'supplier' ? 'text-blue-800' : 'text-gray-400'
+                    }`} />
                   </button>
 
                   {userMenuOpen && (
