@@ -884,8 +884,8 @@ export default function SupplierDashboard() {
               <button
                 onClick={() => setNotifsOpen(prev => !prev)}
                 className={`relative flex h-8 w-8 items-center justify-center rounded-xl border transition cursor-pointer shadow-2xs ${notifsOpen
-                  ? 'border-zinc-400 bg-zinc-100 text-zinc-900 ring-2 ring-zinc-900/5'
-                  : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100'
+                    ? 'border-zinc-400 bg-zinc-100 text-zinc-900 ring-2 ring-zinc-900/5'
+                    : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100'
                   }`}
                 title="Supplier Notifications"
                 aria-label="Toggle notifications"
@@ -970,8 +970,8 @@ export default function SupplierDashboard() {
                             key={n.id}
                             onClick={() => handleNotificationClick(n)}
                             className={`group relative flex items-start gap-3 rounded-xl p-2.5 text-xs transition cursor-pointer ${n.unread
-                              ? 'bg-zinc-50 border border-zinc-200/80 font-medium hover:bg-zinc-100/70'
-                              : 'hover:bg-zinc-50 text-zinc-600 border border-transparent'
+                                ? 'bg-zinc-50 border border-zinc-200/80 font-medium hover:bg-zinc-100/70'
+                                : 'hover:bg-zinc-50 text-zinc-600 border border-transparent'
                               }`}
                           >
                             <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${iconBg}`}>
@@ -2096,7 +2096,5 @@ export default function SupplierDashboard() {
       )}
 
     </div>
-  );
-}   </div >
   );
 }
