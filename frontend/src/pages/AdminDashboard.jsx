@@ -1271,17 +1271,6 @@ export default function AdminDashboard() {
           {/* Right: Actions, Notifications & Profile */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
 
-            {/* Python Backend Status Pill */}
-            <div
-              title={backendStatus.connected ? "Python FastAPI backend connected & operational on port 8000" : "Python backend offline (running in local storage cache mode)"}
-              className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${backendStatus.connected
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : 'bg-amber-50 text-amber-700 border-amber-200'
-                }`}
-            >
-              <span className={`h-2 w-2 rounded-full shrink-0 ${backendStatus.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-              <span className="truncate">{backendStatus.connected ? 'Python API (Port 8000)' : 'Local Mode'}</span>
-            </div>
 
             {/* Sync Backend Data Button */}
             <button
