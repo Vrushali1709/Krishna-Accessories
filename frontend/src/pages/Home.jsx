@@ -19,7 +19,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
-import HomeDiscoveryStrip from '../components/HomeDiscoveryStrip';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import ProductsByPriceSection from '../components/ProductsByPriceSection';
@@ -650,10 +649,6 @@ export default function Home() {
         </div>
       </Reveal>
 
-      {/* =========================================================
-          3. SERVICE & BENEFIT BUTTONS (FREE SHIPPING, EASY RETURNS, SECURE PAYMENT, CONCIERGE)
-      ========================================================= */}
-      <HomeDiscoveryStrip />
 
       {/* =========================================================
           4. SHOP BY CATEGORY (ALL CATEGORIES & CURATED CAROUSEL)
