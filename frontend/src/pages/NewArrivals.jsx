@@ -317,7 +317,7 @@ export default function NewArrivals() {
                   <div className="relative mx-auto max-w-md lg:max-w-none group">
                     <div className="aspect-[4/4.8] rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 shadow-xl relative transition-transform duration-500 hover:shadow-2xl">
                       <img
-                        src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop"
+                        src="https://i.pinimg.com/736x/c3/7a/84/c37a8441b798d917defa413de43a72a6.jpg"
                         alt="New Luxury Arrivals & Accessories"
                         className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                       />
