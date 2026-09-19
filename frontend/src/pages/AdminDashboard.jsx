@@ -3174,515 +3174,86 @@ export default function AdminDashboard() {
           {activeSection === 'analytics' && (
             <div className="space-y-6 animate-fade-in">
 
-              {/* Header & Sub-Tab Switcher */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                    Store Analytics & Intelligence
-                  </h1>
-                  <p className="text-xs text-zinc-500 mt-0.5">Commercial metrics, conversion, and supplier performance reporting.</p>
+              <div>
+                <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
+                  Store Analytics & Intelligence
+                </h1>
+                <p className="text-xs text-zinc-500 mt-0.5">Commercial metrics, conversion, and supplier performance reporting.</p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-zinc-400">Total GMV</span>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{Number(analyticsData?.totalRevenue ?? totalRevenue).toLocaleString('en-IN')}</p>
+                  <p className="text-[10.5px] text-zinc-500 font-medium mt-0.5">{analyticsLoading ? 'Refreshing...' : `${analyticsData?.totalOrders ?? orders.length} valid orders`}</p>
                 </div>
-                {/* Sub-tab quick navigation pills */}
-                <div className="flex items-center gap-1.5 overflow-x-auto rounded-xl bg-zinc-100/90 p-1 text-xs border border-zinc-200/60 max-w-full">
-                  {[
-                    { id: 'overview', label: 'Overview' },
-                    { id: 'daily-sales', label: 'Daily Sales' },
-                    { id: 'monthly-sales', label: 'Monthly Sales' },
-                    { id: 'product-perf', label: 'Product Performance' },
-                    { id: 'supplier-perf', label: 'Supplier GMV' },
-                    { id: 'customer-reports', label: 'Customer Retention' }
-                  ].map(tab => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveSubTab(tab.id)}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition cursor-pointer ${
-                        activeSubTab === tab.id
-                          ? 'bg-white text-zinc-900 shadow-xs font-semibold'
-                          : 'text-zinc-600 hover:text-zinc-900 hover:bg-white/60'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-zinc-400">Average Order Value</span>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
+                    ₹{Math.round(Number(analyticsData?.totalRevenue ?? totalRevenue) / Math.max(1, analyticsData?.totalOrders ?? orders.length)).toLocaleString('en-IN')}
+                  </p>
+                  <p className="text-[10.5px] text-zinc-400 mt-0.5">Based on completed sales</p>
+                </div>
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-zinc-400">Repeat Retention Rate</span>
+                  <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.uniqueCustomers ? Math.round((analyticsData.repeatCustomers / analyticsData.uniqueCustomers) * 100) : 0}%</p>
+                  <p className="text-[10.5px] text-zinc-400 mt-0.5">Repeat customers</p>
                 </div>
               </div>
 
-              {/* =========================================================
-                  SUB-VIEW 1: OVERVIEW (Default combined view)
-              ========================================================= */}
-              {(activeSubTab === 'overview' || !activeSubTab) && (
-                <div className="space-y-6">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total GMV</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{Number(analyticsData?.totalRevenue ?? totalRevenue).toLocaleString('en-IN')}</p>
-                      <p className="text-[10.5px] text-zinc-500 font-medium mt-0.5">{analyticsLoading ? 'Refreshing...' : `${analyticsData?.totalOrders ?? orders.length} valid orders`}</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Average Order Value</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        ₹{Math.round(Number(analyticsData?.totalRevenue ?? totalRevenue) / Math.max(1, analyticsData?.totalOrders ?? orders.length)).toLocaleString('en-IN')}
-                      </p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Based on completed sales</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Repeat Retention Rate</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.uniqueCustomers ? Math.round((analyticsData.repeatCustomers / analyticsData.uniqueCustomers) * 100) : 0}%</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">{analyticsData?.repeatCustomers || 0} repeat customers out of {analyticsData?.uniqueCustomers || 0}</p>
-                    </div>
-                  </div>
+              {/* Top Products Table */}
+              <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Top Performing Products</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
+                      <tr>
+                        <th className="p-3">Product Name</th>
+                        <th className="p-3">Department</th>
+                        <th className="p-3">Unit Price</th>
+                        <th className="p-3 text-right">Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100 font-normal">
+                      {(analyticsData?.productPerformance || []).slice(0, 5).map(p => (
+                        <tr key={p.product} className="hover:bg-zinc-50/75">
+                          <td className="p-3 font-semibold text-zinc-900">{p.product}</td>
+                          <td className="p-3 text-zinc-500">{p.category}</td>
+                          <td className="p-3 font-medium text-zinc-900 tabular-nums">₹{Number(p.revenue).toLocaleString('en-IN')}</td>
+                          <td className="p-3 text-right font-mono tabular-nums">{p.units}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-                  {/* Top Products Table */}
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Top Performing Products</h3>
-                      <button onClick={() => setActiveSubTab('product-perf')} className="text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">View All →</button>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs">
-                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                          <tr>
-                            <th className="p-3">Product Name</th>
-                            <th className="p-3">Department</th>
-                            <th className="p-3">Revenue</th>
-                            <th className="p-3 text-right">Units Sold</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 font-normal">
-                          {(analyticsData?.productPerformance || []).slice(0, 5).map(p => (
-                            <tr key={p.product} className="hover:bg-zinc-50/75">
-                              <td className="p-3 font-semibold text-zinc-900">{p.product}</td>
-                              <td className="p-3 text-zinc-500">{p.category}</td>
-                              <td className="p-3 font-medium text-zinc-900 tabular-nums">₹{Number(p.revenue).toLocaleString('en-IN')}</td>
-                              <td className="p-3 text-right font-mono tabular-nums">{p.units}</td>
-                            </tr>
-                          ))}
-                          {!(analyticsData?.productPerformance?.length) && (
-                            <tr>
-                              <td colSpan={4} className="p-4 text-center text-zinc-400">No product sales data available yet.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-6 lg:grid-cols-2">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Monthly Sales</h3>
-                        <button onClick={() => setActiveSubTab('monthly-sales')} className="text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">View All →</button>
+              <div className="grid gap-6 lg:grid-cols-2">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                  <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Monthly Sales</h3>
+                  <div className="divide-y divide-zinc-100 text-xs">
+                    {(analyticsData?.monthlySales || []).map(period => (
+                      <div key={period.month} className="flex items-center justify-between py-3">
+                        <span className="font-medium text-zinc-700">{period.month}</span>
+                        <span className="text-right"><strong className="text-zinc-900">₹{Number(period.revenue).toLocaleString('en-IN')}</strong><small className="ml-2 text-zinc-400">{period.orders} orders</small></span>
                       </div>
-                      <div className="divide-y divide-zinc-100 text-xs">
-                        {(analyticsData?.monthlySales || []).slice(0, 4).map(period => (
-                          <div key={period.month} className="flex items-center justify-between py-3">
-                            <span className="font-medium text-zinc-700">{period.month}</span>
-                            <span className="text-right"><strong className="text-zinc-900">₹{Number(period.revenue).toLocaleString('en-IN')}</strong><small className="ml-2 text-zinc-400">{period.orders} orders</small></span>
-                          </div>
-                        ))}
-                        {!analyticsData?.monthlySales?.length && <p className="py-3 text-zinc-400">No monthly sales data available.</p>}
+                    ))}
+                    {!analyticsData?.monthlySales?.length && <p className="py-3 text-zinc-400">No sales data available.</p>}
+                  </div>
+                </div>
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
+                  <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Supplier GMV</h3>
+                  <div className="divide-y divide-zinc-100 text-xs">
+                    {(analyticsData?.supplierPerformance || []).map(supplier => (
+                      <div key={supplier.supplier} className="flex items-center justify-between py-3">
+                        <span className="font-medium text-zinc-700">{supplier.supplier}</span>
+                        <span className="text-right"><strong className="text-zinc-900">₹{Number(supplier.revenue).toLocaleString('en-IN')}</strong><small className="ml-2 text-zinc-400">{supplier.orders} items</small></span>
                       </div>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-semibold text-zinc-900 uppercase tracking-wider">Supplier GMV</h3>
-                        <button onClick={() => setActiveSubTab('supplier-perf')} className="text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">View All →</button>
-                      </div>
-                      <div className="divide-y divide-zinc-100 text-xs">
-                        {(analyticsData?.supplierPerformance || []).slice(0, 4).map(supplier => (
-                          <div key={supplier.supplier} className="flex items-center justify-between py-3">
-                            <span className="font-medium text-zinc-700">{supplier.supplier}</span>
-                            <span className="text-right"><strong className="text-zinc-900">₹{Number(supplier.revenue).toLocaleString('en-IN')}</strong><small className="ml-2 text-zinc-400">{supplier.orders} items</small></span>
-                          </div>
-                        ))}
-                        {!analyticsData?.supplierPerformance?.length && <p className="py-3 text-zinc-400">No supplier data available.</p>}
-                      </div>
-                    </div>
+                    ))}
+                    {!analyticsData?.supplierPerformance?.length && <p className="py-3 text-zinc-400">No supplier data available.</p>}
                   </div>
                 </div>
-              )}
-
-              {/* =========================================================
-                  SUB-VIEW 2: DAILY SALES
-              ========================================================= */}
-              {activeSubTab === 'daily-sales' && (
-                <div className="space-y-5">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total Recorded Days</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.dailySales?.length || 0}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Active trading calendar</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total Valid Orders</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.totalOrders ?? orders.length}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Across all recorded dates</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Avg Daily Revenue</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        ₹{Math.round(Number(analyticsData?.totalRevenue ?? totalRevenue) / Math.max(1, analyticsData?.dailySales?.length || 1)).toLocaleString('en-IN')}
-                      </p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Per active trading day</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-sm font-semibold text-zinc-900">Daily Sales Breakdown</h3>
-                        <p className="text-xs text-zinc-500">Day-by-day order velocity, ticket size, and revenue.</p>
-                      </div>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs min-w-[600px]">
-                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                          <tr>
-                            <th className="p-3.5">Date</th>
-                            <th className="p-3.5">Orders Count</th>
-                            <th className="p-3.5">Total Revenue</th>
-                            <th className="p-3.5">Avg Order Value</th>
-                            <th className="p-3.5 text-right">% of Total GMV</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 font-normal">
-                          {(analyticsData?.dailySales || []).map(d => {
-                            const totRev = Number(analyticsData?.totalRevenue || totalRevenue || 1);
-                            const revShare = Math.round((Number(d.revenue) / totRev) * 100);
-                            const aov = Math.round(Number(d.revenue) / Math.max(1, d.orders));
-                            return (
-                              <tr key={d.date} className="hover:bg-zinc-50/75">
-                                <td className="p-3.5 font-semibold text-zinc-900">{d.date}</td>
-                                <td className="p-3.5">
-                                  <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 font-medium text-zinc-800">
-                                    {d.orders} {d.orders === 1 ? 'order' : 'orders'}
-                                  </span>
-                                </td>
-                                <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{Number(d.revenue).toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-zinc-600 tabular-nums">₹{aov.toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-right font-mono text-zinc-700">{revShare}%</td>
-                              </tr>
-                            );
-                          })}
-                          {!analyticsData?.dailySales?.length && (
-                            <tr>
-                              <td colSpan={5} className="p-6 text-center text-zinc-400">No daily sales recorded yet. Place an order to see live daily trends.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* =========================================================
-                  SUB-VIEW 3: MONTHLY SALES
-              ========================================================= */}
-              {activeSubTab === 'monthly-sales' && (
-                <div className="space-y-5">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total GMV</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{Number(analyticsData?.totalRevenue ?? totalRevenue).toLocaleString('en-IN')}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Cumulative platform volume</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total Active Months</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.monthlySales?.length || 0}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Monthly trading periods</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Monthly Run Rate</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        ₹{Math.round(Number(analyticsData?.totalRevenue ?? totalRevenue) / Math.max(1, analyticsData?.monthlySales?.length || 1)).toLocaleString('en-IN')}
-                      </p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Average revenue per month</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div>
-                      <h3 className="text-sm font-semibold text-zinc-900">Monthly Financial Growth</h3>
-                      <p className="text-xs text-zinc-500">Period-wise performance, order count, and revenue pacing.</p>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs min-w-[600px]">
-                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                          <tr>
-                            <th className="p-3.5">Month Period</th>
-                            <th className="p-3.5">Orders Processed</th>
-                            <th className="p-3.5">Gross Revenue (GMV)</th>
-                            <th className="p-3.5">Avg Order Value</th>
-                            <th className="p-3.5 text-right">Revenue Share</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 font-normal">
-                          {(analyticsData?.monthlySales || []).map(m => {
-                            const totRev = Number(analyticsData?.totalRevenue || totalRevenue || 1);
-                            const revShare = Math.round((Number(m.revenue) / totRev) * 100);
-                            const aov = Math.round(Number(m.revenue) / Math.max(1, m.orders));
-                            return (
-                              <tr key={m.month} className="hover:bg-zinc-50/75">
-                                <td className="p-3.5 font-semibold text-zinc-900">{m.month}</td>
-                                <td className="p-3.5 font-medium text-zinc-800">{m.orders} orders</td>
-                                <td className="p-3.5 font-bold text-zinc-900 tabular-nums">₹{Number(m.revenue).toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-zinc-600 tabular-nums">₹{aov.toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-right font-mono text-zinc-800 font-medium">{revShare}%</td>
-                              </tr>
-                            );
-                          })}
-                          {!analyticsData?.monthlySales?.length && (
-                            <tr>
-                              <td colSpan={5} className="p-6 text-center text-zinc-400">No monthly sales data recorded.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* =========================================================
-                  SUB-VIEW 4: PRODUCT PERFORMANCE
-              ========================================================= */}
-              {activeSubTab === 'product-perf' && (
-                <div className="space-y-5">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Active Selling SKUs</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.productPerformance?.length || 0}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Products with registered orders</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total Units Sold</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        {(analyticsData?.productPerformance || []).reduce((acc, curr) => acc + (Number(curr.units) || 0), 0)}
-                      </p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Cumulative product quantity</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Top Grossing SKU</span>
-                      <p className="text-sm font-semibold text-zinc-900 mt-1 truncate">
-                        {analyticsData?.productPerformance?.[0]?.product || '—'}
-                      </p>
-                      <p className="text-[10.5px] text-emerald-600 font-medium mt-0.5">
-                        {analyticsData?.productPerformance?.[0] ? `₹${Number(analyticsData.productPerformance[0].revenue).toLocaleString('en-IN')}` : 'No sales'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div>
-                      <h3 className="text-sm font-semibold text-zinc-900">Product Performance Leaderboard</h3>
-                      <p className="text-xs text-zinc-500">Ranked by gross merchandise value generated across all orders.</p>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs min-w-[650px]">
-                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                          <tr>
-                            <th className="p-3.5 w-12 text-center">Rank</th>
-                            <th className="p-3.5">Product Name</th>
-                            <th className="p-3.5">Department</th>
-                            <th className="p-3.5">Units Sold</th>
-                            <th className="p-3.5">Gross Revenue</th>
-                            <th className="p-3.5 text-right">GMV Share</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 font-normal">
-                          {(analyticsData?.productPerformance || []).map((p, idx) => {
-                            const totRev = Number(analyticsData?.totalRevenue || totalRevenue || 1);
-                            const share = Math.round((Number(p.revenue) / totRev) * 100);
-                            return (
-                              <tr key={p.product} className="hover:bg-zinc-50/75">
-                                <td className="p-3.5 text-center font-bold text-zinc-400">#{idx + 1}</td>
-                                <td className="p-3.5 font-semibold text-zinc-900">{p.product}</td>
-                                <td className="p-3.5 text-zinc-500">
-                                  <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-700">
-                                    {p.category}
-                                  </span>
-                                </td>
-                                <td className="p-3.5 font-mono text-zinc-800 font-medium">{p.units} units</td>
-                                <td className="p-3.5 font-semibold text-zinc-900 tabular-nums">₹{Number(p.revenue).toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-right font-mono text-zinc-700">{share}%</td>
-                              </tr>
-                            );
-                          })}
-                          {!analyticsData?.productPerformance?.length && (
-                            <tr>
-                              <td colSpan={6} className="p-6 text-center text-zinc-400">No product sales data available.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* =========================================================
-                  SUB-VIEW 5: SUPPLIER GMV
-              ========================================================= */}
-              {activeSubTab === 'supplier-perf' && (
-                <div className="space-y-5">
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Active Vendor Partners</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.supplierPerformance?.length || 0}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Suppliers with verified sales</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Top Performing Supplier</span>
-                      <p className="text-sm font-semibold text-zinc-900 mt-1 truncate">
-                        {analyticsData?.supplierPerformance?.[0]?.supplier || '—'}
-                      </p>
-                      <p className="text-[10.5px] text-indigo-600 font-medium mt-0.5">
-                        {analyticsData?.supplierPerformance?.[0] ? `₹${Number(analyticsData.supplierPerformance[0].revenue).toLocaleString('en-IN')}` : 'No sales'}
-                      </p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Total Supplier GMV</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">₹{Number(analyticsData?.totalRevenue ?? totalRevenue).toLocaleString('en-IN')}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Fulfilled merchandise revenue</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div>
-                      <h3 className="text-sm font-semibold text-zinc-900">Supplier Revenue Performance & GMV</h3>
-                      <p className="text-xs text-zinc-500">Commercial throughput, items sold, and GMV contribution by vendor.</p>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs min-w-[650px]">
-                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                          <tr>
-                            <th className="p-3.5">Supplier / Vendor Partner</th>
-                            <th className="p-3.5">Items Fulfilled</th>
-                            <th className="p-3.5">Total Vendor GMV</th>
-                            <th className="p-3.5">Avg Revenue / Item</th>
-                            <th className="p-3.5 text-right">Contribution Share</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 font-normal">
-                          {(analyticsData?.supplierPerformance || []).map(s => {
-                            const totRev = Number(analyticsData?.totalRevenue || totalRevenue || 1);
-                            const share = Math.round((Number(s.revenue) / totRev) * 100);
-                            const avgPerItem = Math.round(Number(s.revenue) / Math.max(1, s.orders));
-                            return (
-                              <tr key={s.supplier} className="hover:bg-zinc-50/75">
-                                <td className="p-3.5 font-semibold text-zinc-900">{s.supplier}</td>
-                                <td className="p-3.5 font-mono text-zinc-800">{s.orders} items</td>
-                                <td className="p-3.5 font-bold text-zinc-900 tabular-nums">₹{Number(s.revenue).toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-zinc-600 tabular-nums">₹{avgPerItem.toLocaleString('en-IN')}</td>
-                                <td className="p-3.5 text-right font-mono font-medium text-zinc-800">{share}%</td>
-                              </tr>
-                            );
-                          })}
-                          {!analyticsData?.supplierPerformance?.length && (
-                            <tr>
-                              <td colSpan={5} className="p-6 text-center text-zinc-400">No supplier sales recorded yet.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* =========================================================
-                  SUB-VIEW 6: CUSTOMER RETENTION
-              ========================================================= */}
-              {activeSubTab === 'customer-reports' && (
-                <div className="space-y-5">
-                  <div className="grid gap-4 sm:grid-cols-4">
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Repeat Retention Rate</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        {analyticsData?.uniqueCustomers ? Math.round((analyticsData.repeatCustomers / analyticsData.uniqueCustomers) * 100) : 0}%
-                      </p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Repeat buyers ratio</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Unique Customers</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">{analyticsData?.uniqueCustomers || 0}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">Total distinct buyers</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">Repeat Buyers</span>
-                      <p className="text-2xl font-semibold text-emerald-600 mt-1 tabular-nums">{analyticsData?.repeatCustomers || 0}</p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">&gt; 1 order placed</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-200/80 bg-white p-4 shadow-2xs">
-                      <span className="text-[10px] font-semibold uppercase text-zinc-400">First-time Buyers</span>
-                      <p className="text-2xl font-semibold text-zinc-900 mt-1 tabular-nums">
-                        {Math.max(0, (analyticsData?.uniqueCustomers || 0) - (analyticsData?.repeatCustomers || 0))}
-                      </p>
-                      <p className="text-[10.5px] text-zinc-400 mt-0.5">1 order placed</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-2xs space-y-4">
-                    <div>
-                      <h3 className="text-sm font-semibold text-zinc-900">Customer Retention & Loyalty Intelligence</h3>
-                      <p className="text-xs text-zinc-500">Order frequency, customer lifetime spend, and loyalty tier status.</p>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs min-w-[650px]">
-                        <thead className="border-b border-zinc-200 bg-zinc-50/75 text-zinc-500 uppercase text-[10px] font-semibold">
-                          <tr>
-                            <th className="p-3.5">Customer Name</th>
-                            <th className="p-3.5">Contact</th>
-                            <th className="p-3.5">Total Orders</th>
-                            <th className="p-3.5">Total Spend (LTV)</th>
-                            <th className="p-3.5">Loyalty Tier</th>
-                            <th className="p-3.5 text-right">Latest Order</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 font-normal">
-                          {(analyticsData?.customerRetentionList || []).map(c => {
-                            const isRepeat = c.orders > 1;
-                            const isVip = c.revenue > 50000 || c.orders >= 3;
-                            return (
-                              <tr key={c.email || c.name} className="hover:bg-zinc-50/75">
-                                <td className="p-3.5 font-semibold text-zinc-900">{c.name}</td>
-                                <td className="p-3.5">
-                                  <span className="font-mono text-zinc-700 block">{c.email}</span>
-                                  {c.phone !== '—' && <span className="text-[10.5px] text-zinc-400">{c.phone}</span>}
-                                </td>
-                                <td className="p-3.5 font-mono text-zinc-800 font-medium">{c.orders} {c.orders === 1 ? 'order' : 'orders'}</td>
-                                <td className="p-3.5 font-bold text-zinc-900 tabular-nums">₹{Number(c.revenue).toLocaleString('en-IN')}</td>
-                                <td className="p-3.5">
-                                  {isVip ? (
-                                    <span className="rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[10px] font-semibold text-amber-800">
-                                      ⭐ VIP Customer
-                                    </span>
-                                  ) : isRepeat ? (
-                                    <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-medium text-emerald-800">
-                                      Repeat Buyer
-                                    </span>
-                                  ) : (
-                                    <span className="rounded-full bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 text-[10px] font-medium text-zinc-700">
-                                      First-time Buyer
-                                    </span>
-                                  )}
-                                </td>
-                                <td className="p-3.5 text-right text-zinc-500 text-[11px]">{c.lastDate || 'Recent'}</td>
-                              </tr>
-                            );
-                          })}
-                          {!analyticsData?.customerRetentionList?.length && (
-                            <tr>
-                              <td colSpan={6} className="p-6 text-center text-zinc-400">No customer purchase history available yet.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              )}
+              </div>
 
             </div>
           )}
