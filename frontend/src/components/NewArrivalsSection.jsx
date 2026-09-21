@@ -422,6 +422,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
               View all novelties
             </Link>
           </div>
+          
         )}
 
       </div>
