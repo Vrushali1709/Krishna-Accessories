@@ -624,17 +624,21 @@ def add_supplier(supplier: Dict[str, Any] = Body(...)):
     productsCount = int(supplier.get("productsCount", 0))
     totalEarnings = float(supplier.get("totalEarnings", 0))
     address = supplier.get("address", "")
+    gstin = supplier.get("gstin", "")
+    panNumber = supplier.get("panNumber", "")
+    bankDetails = dump_json_field(supplier.get("bankDetails", {}))
+    contactPerson = supplier.get("contactPerson", "")
 
     cursor.execute("""
-    INSERT OR REPLACE INTO suppliers (id, name, email, phone, category, status, joinedDate, rating, productsCount, totalEarnings, address)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (sup_id, name, email, phone, category, status_str, joinedDate, rating, productsCount, totalEarnings, address))
+    INSERT OR REPLACE INTO suppliers (id, name, email, phone, category, status, joinedDate, rating, productsCount, totalEarnings, address, gstin, panNumber, bankDetails, contactPerson)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (sup_id, name, email, phone, category, status_str, joinedDate, rating, productsCount, totalEarnings, address, gstin, panNumber, bankDetails, contactPerson))
     conn.commit()
 
     cursor.execute("SELECT * FROM suppliers ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    return [dict(r) for r in rows]
+    return [row_to_dict(r) for r in rows]
 
 @app.put("/api/suppliers/{sup_id}")
 def update_supplier(sup_id: int, payload: Dict[str, Any] = Body(...)):
@@ -646,24 +650,28 @@ def update_supplier(sup_id: int, payload: Dict[str, Any] = Body(...)):
         conn.close()
         raise HTTPException(status_code=404, detail="Supplier not found")
 
-    merged = {**dict(existing), **payload}
+    merged = {**row_to_dict(existing), **payload}
+    bankDetails = dump_json_field(merged.get("bankDetails", {}))
+
     cursor.execute("""
     UPDATE suppliers SET
         name = ?, email = ?, phone = ?, category = ?, status = ?,
-        rating = ?, productsCount = ?, totalEarnings = ?, address = ?
+        rating = ?, productsCount = ?, totalEarnings = ?, address = ?,
+        gstin = ?, panNumber = ?, bankDetails = ?, contactPerson = ?
     WHERE id = ?
     """, (
         merged.get("name"), merged.get("email"), merged.get("phone"),
         merged.get("category"), merged.get("status"), float(merged.get("rating", 5.0)),
         int(merged.get("productsCount", 0)), float(merged.get("totalEarnings", 0)),
-        merged.get("address"), sup_id
+        merged.get("address"), merged.get("gstin", ""), merged.get("panNumber", ""),
+        bankDetails, merged.get("contactPerson", ""), sup_id
     ))
     conn.commit()
 
     cursor.execute("SELECT * FROM suppliers WHERE id = ?", (sup_id,))
     updated = cursor.fetchone()
     conn.close()
-    return dict(updated)
+    return row_to_dict(updated)
 
 @app.delete("/api/suppliers/{sup_id}")
 def delete_supplier(sup_id: int):
@@ -673,6 +681,118 @@ def delete_supplier(sup_id: int):
     conn.commit()
     conn.close()
     return {"success": True}
+
+@app.get("/api/suppliers/{sup_id}/reports")
+@app.get("/api/supplier/reports")
+def get_supplier_reports(sup_id: Optional[int] = None, name: Optional[str] = None):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    target_name = name
+    if sup_id:
+        cursor.execute("SELECT * FROM suppliers WHERE id = ?", (sup_id,))
+        sup_row = cursor.fetchone()
+        if sup_row:
+            target_name = dict(sup_row).get("name")
+
+    # Fetch supplier products
+    if target_name:
+        cursor.execute("SELECT * FROM products WHERE LOWER(supplier) = LOWER(?)", (target_name,))
+    else:
+        cursor.execute("SELECT * FROM products")
+    product_rows = [row_to_dict(r) for r in cursor.fetchall()]
+    
+    total_products = len(product_rows)
+    low_stock = sum(1 for p in product_rows if 0 < int(p.get("stock") or 0) < 10)
+    out_of_stock = sum(1 for p in product_rows if int(p.get("stock") or 0) == 0)
+    total_stock_units = sum(int(p.get("stock") or 0) for p in product_rows)
+    total_stock_value = sum(float(p.get("price") or 0) * int(p.get("stock") or 0) for p in product_rows)
+
+    # Fetch all orders to compute supplier sales
+    cursor.execute("SELECT * FROM orders ORDER BY createdAt DESC")
+    order_rows = [row_to_dict(r) for r in cursor.fetchall()]
+
+    supplier_orders = []
+    product_sales = defaultdict(lambda: {"name": "", "sku": "", "units": 0, "revenue": 0, "image": ""})
+    daily_sales = defaultdict(lambda: {"orders": 0, "revenue": 0, "units": 0})
+    
+    gross_revenue = 0.0
+    delivered_count = 0
+    processing_count = 0
+    shipped_count = 0
+    return_count = 0
+
+    for order in order_rows:
+        items = parse_json_field(order.get("items")) or []
+        supplier_items = [
+            it for it in items
+            if not target_name or (it.get("supplier") and it.get("supplier").lower() == target_name.lower())
+        ]
+        if not supplier_items:
+            continue
+
+        order_copy = {**order, "items": supplier_items}
+        supplier_orders.append(order_copy)
+
+        order_status = order.get("orderStatus") or order.get("status") or "Processing"
+        is_cancelled_or_refunded = order_status in ("Cancelled", "Refunded")
+
+        if order_status == "Delivered":
+            delivered_count += 1
+        elif order_status in ("Processing", "Placed", "Pending"):
+            processing_count += 1
+        elif order_status in ("Shipped", "Out for Delivery"):
+            shipped_count += 1
+        if order_status in ("Cancelled", "Refunded", "Return Requested"):
+            return_count += 1
+
+        order_date = order.get("date") or order.get("createdAt") or "Recent"
+        day_key = str(order_date)[:11].strip()
+
+        for item in supplier_items:
+            qty = int(item.get("quantity") or 1)
+            price = float(item.get("price") or 0)
+            line_total = price * qty
+
+            if not is_cancelled_or_refunded:
+                gross_revenue += line_total
+                daily_sales[day_key]["orders"] += 1
+                daily_sales[day_key]["revenue"] += line_total
+                daily_sales[day_key]["units"] += qty
+
+                p_name = item.get("name") or "Product"
+                product_sales[p_name]["name"] = p_name
+                product_sales[p_name]["sku"] = item.get("sku") or ""
+                product_sales[p_name]["units"] += qty
+                product_sales[p_name]["revenue"] += line_total
+                if not product_sales[p_name]["image"]:
+                    product_sales[p_name]["image"] = item.get("image") or ""
+
+    conn.close()
+
+    platform_fee = round(gross_revenue * 0.05, 2)
+    net_earnings = round(gross_revenue * 0.95, 2)
+
+    top_products = sorted(product_sales.values(), key=lambda x: x["revenue"], reverse=True)[:10]
+
+    return {
+        "supplierName": target_name,
+        "totalProducts": total_products,
+        "totalStockUnits": total_stock_units,
+        "totalStockValue": total_stock_value,
+        "lowStockCount": low_stock,
+        "outOfStockCount": out_of_stock,
+        "totalOrders": len(supplier_orders),
+        "deliveredOrders": delivered_count,
+        "processingOrders": processing_count,
+        "shippedOrders": shipped_count,
+        "returnOrders": return_count,
+        "grossRevenue": gross_revenue,
+        "platformFee": platform_fee,
+        "netEarnings": net_earnings,
+        "topProducts": top_products,
+        "dailySales": [{"date": k, **v} for k, v in sorted(daily_sales.items())]
+    }
 
 # -------------------------------------------------------------------
 # 6. USERS & AUTHENTICATION

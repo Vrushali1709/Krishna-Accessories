@@ -417,7 +417,11 @@ def init_db():
             rating DOUBLE PRECISION DEFAULT 5.0,
             productsCount INTEGER DEFAULT 0,
             totalEarnings DOUBLE PRECISION DEFAULT 0,
-            address TEXT
+            address TEXT,
+            gstin TEXT,
+            panNumber TEXT,
+            bankDetails TEXT,
+            contactPerson TEXT
         )
         """,
         # 9. Promotions / Coupons
@@ -590,6 +594,10 @@ def init_db():
         "ALTER TABLE user_addresses ALTER COLUMN id TYPE BIGINT",
         "ALTER TABLE user_addresses ALTER COLUMN userId TYPE BIGINT",
         "ALTER TABLE otp_codes ALTER COLUMN id TYPE BIGINT",
+        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS gstin TEXT",
+        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS panNumber TEXT",
+        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS bankDetails TEXT",
+        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS contactPerson TEXT",
     ]
     for alt in alter_statements:
         try:
