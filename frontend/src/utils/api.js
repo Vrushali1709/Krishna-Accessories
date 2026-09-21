@@ -50,6 +50,9 @@ async function request(endpoint, options = {}) {
     return await response.json();
   } catch (err) {
     console.warn(`[API] Error on ${options.method || 'GET'} ${endpoint}:`, err.message);
+    if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+      throw new Error(`Unable to connect to the server (${API_BASE_URL}). Please verify that your Python backend is running.`);
+    }
     throw err;
   }
 }
