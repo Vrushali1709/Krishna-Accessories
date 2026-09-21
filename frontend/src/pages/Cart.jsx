@@ -1,5 +1,5 @@
 // src/pages/Cart.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -15,96 +15,20 @@ import {
   FREE_SHIPPING_THRESHOLD
 } from '../utils/cart';
 import {
-  ShoppingBag,
-  Trash2,
-  Tag,
-  ArrowRight,
-  ShieldCheck,
-  Truck,
-  RotateCcw,
-  Sparkles,
-  Check,
-  Plus,
-  Minus,
-  Lock
-} from 'lucide-react';
-
-// =========================================================================
-// CUSTOM ANIMATION HOOK: Intersection Observer for on-scroll reveals
-// =========================================================================
-function useInView(options = { threshold: 0.1, triggerOnce: true }) {
-  const [inView, setInView] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setInView(true);
-        if (options.triggerOnce) {
-          observer.unobserve(entry.target);
-        }
-      }
-    }, options);
-
-    const currentElem = ref.current;
-    if (currentElem) observer.observe(currentElem);
-
-    return () => {
-      if (currentElem) observer.unobserve(currentElem);
-    };
-  }, [options.threshold, options.triggerOnce]);
-
-  return [ref, inView];
-}
-
-function Reveal({
-  children,
-  delay = 0,
-  direction = 'up',
-  className = '',
-  threshold = 0.08
-}) {
-  const [ref, inView] = useInView({ threshold, triggerOnce: true });
-
-  const getTransform = () => {
-    if (inView) return 'translate3d(0, 0, 0) scale(1)';
-    switch (direction) {
-      case 'up':
-        return 'translate3d(0, 24px, 0)';
-      case 'down':
-        return 'translate3d(0, -24px, 0)';
-      case 'left':
-        return 'translate3d(24px, 0, 0)';
-      case 'right':
-        return 'translate3d(-24px, 0, 0)';
-      case 'zoom':
-        return 'scale(0.97)';
-      default:
-        return 'translate3d(0, 20px, 0)';
-    }
-  };
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: getTransform(),
-        transition: `opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
-        willChange: 'opacity, transform',
-      }}
-      className={className}
-    >
-      {children}
-    </div>
-  );
-}
+  ShieldCheckIcon,
+  TruckIcon,
+  TagIcon,
+  ArrowRightIcon,
+  BagIcon,
+  TrashIcon
+} from '../components/Icons';
 
 export default function Cart() {
   const navigate = useNavigate();
   const [cartSummary, setCartSummary] = useState(() => calculateCartSummary());
   const [couponCodeInput, setCouponCodeInput] = useState('');
   const [couponMsg, setCouponMsg] = useState(null);
+  const [clearingCart, setClearingCart] = useState(false);
 
   const refreshCart = () => {
     const summary = calculateCartSummary();
@@ -177,61 +101,37 @@ export default function Cart() {
   );
 
   const couponCodeString = typeof coupon === 'object' && coupon?.code ? coupon.code : (typeof coupon === 'string' ? coupon : '');
-  const totalItemCount = cart.reduce((s, i) => s + (i.quantity || 1), 0);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white overflow-x-clip">
+    <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
       <Navbar />
 
-      {/* ========================================================================= */}
-      {/* 1. HERO BANNER (Luxury Editorial Header Matching About & New Arrivals)    */}
-      {/* ========================================================================= */}
-      <section className="relative bg-white border-b border-neutral-200/80 overflow-hidden">
-        {/* Subtle decorative background pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
-            backgroundSize: '24px 24px'
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          {/* Breadcrumbs */}
-          <div className="flex items-center gap-2 text-xs text-neutral-400 mb-3 font-medium">
-            <Link to="/" className="hover:text-neutral-950 transition">Home</Link>
+      {/* Breadcrumb & Cart Header */}
+      <section className="border-b border-gray-200/80 bg-white py-5 sm:py-7">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 text-xs text-gray-400 mb-1.5 font-medium">
+            <Link to="/" className="hover:text-gray-950 transition">Home</Link>
             <span>/</span>
-            <Link to="/shop" className="hover:text-neutral-950 transition">Catalog</Link>
+            <Link to="/shop" className="hover:text-gray-950 transition">Catalog</Link>
             <span>/</span>
-            <span className="text-[#8C6734] font-semibold">Shopping Bag</span>
+            <span className="text-gray-900 font-semibold">Shopping Bag</span>
           </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
             <div>
-              {/* Eyebrow Badge with Pulse */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 shadow-2xs mb-2">
-                <span className="w-2 h-2 rounded-full bg-[#8C6734] animate-ping" />
-                <span className="text-[10.5px] font-semibold tracking-[0.2em] uppercase text-[#8C6734]">
-                  Boutique Bag &amp; Reservation
-                </span>
-              </div>
-
-              <h1 className="font-serif text-2xl sm:text-4xl font-medium tracking-tight text-neutral-950">
-                Your Shopping Bag{' '}
-                <span className="italic font-normal text-[#8C6734]">
-                  ({totalItemCount} {totalItemCount === 1 ? 'Piece' : 'Pieces'})
-                </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#B89758]">
+                Boutique Cart & Selection
+              </span>
+              <h1 className="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">
+                Your Shopping Bag ({cart.reduce((s, i) => s + (i.quantity || 1), 0)} {cart.length === 1 && cart[0]?.quantity === 1 ? 'item' : 'items'})
               </h1>
             </div>
-
             {cart.length > 0 && (
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-neutral-200 bg-white text-xs font-semibold text-neutral-600 hover:text-rose-600 hover:border-rose-300 transition-colors cursor-pointer self-start sm:self-auto"
+                className="text-xs font-semibold text-gray-400 hover:text-rose-600 transition flex items-center gap-1 self-start sm:self-auto cursor-pointer"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <TrashIcon className="w-3.5 h-3.5" />
                 <span>Empty Bag</span>
               </button>
             )}
@@ -239,327 +139,420 @@ export default function Cart() {
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 2. BAG CONTENTS & ORDER SUMMARY                                           */}
-      {/* ========================================================================= */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8">
+
         {cart.length === 0 ? (
           /* Empty Bag State */
-          <Reveal delay={0} direction="up">
-            <div className="mx-auto max-w-md rounded-2xl border border-neutral-200/80 bg-white py-16 px-6 text-center shadow-sm">
-              <div className="w-14 h-14 rounded-full bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mx-auto mb-4 border border-[#C5A880]/40">
-                <ShoppingBag className="w-6 h-6" />
-              </div>
-              <h2 className="font-serif text-2xl font-medium text-neutral-950 mb-2">
-                Your Bag is Currently Empty
-              </h2>
-              <p className="text-xs text-neutral-500 leading-relaxed mb-6 max-w-sm mx-auto">
-                Discover our curated selections of luxury Swiss timepieces, handcrafted Italian leather, sneakers, and modern audio accessories.
-              </p>
+          <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-gray-200/80 bg-white p-8 text-center shadow-xs">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200/60 text-amber-800 mb-2">
+              <BagIcon className="w-8 h-8" />
+            </div>
+            <h2 className="mt-3 text-xl font-bold text-gray-950">Your Shopping Bag is Empty</h2>
+            <p className="mt-1.5 max-w-md text-xs sm:text-sm text-gray-500 leading-relaxed">
+              Explore our curated boutique collection of premium Swiss timepieces, handcrafted Italian leather, designer footwear, and modern electronics.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-[0.14em] hover:bg-[#8C6734] transition-colors duration-200 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-full bg-[#111827] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-black"
               >
                 <span>Explore Full Catalog</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                to="/new-arrivals"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-[#F4F4F6] px-5 py-2.5 text-xs font-semibold text-gray-800 transition hover:bg-gray-200"
+              >
+                <span>Season New Arrivals</span>
               </Link>
             </div>
-          </Reveal>
+          </div>
         ) : (
-          <div className="grid gap-8 lg:grid-cols-12 items-start">
+          /* 2-Column Cart Grid */
+          <div className="grid gap-6 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_390px]">
 
-            {/* Left 8 Cols: Free Shipping Bar + Items List + Promo Coupons */}
-            <div className="lg:col-span-8 space-y-6">
+            {/* Left Column: Items List & Free Shipping Meter */}
+            <div className="space-y-4 min-w-0">
 
               {/* Free Shipping Progress Indicator */}
-              <Reveal delay={0} direction="up">
-                <div className="rounded-xl border border-neutral-200/80 bg-white p-4 sm:p-5 shadow-2xs space-y-2.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2 font-semibold text-neutral-900">
-                      <Truck className="w-4 h-4 text-[#8C6734]" />
-                      <span>
-                        {qualifiesForFreeShipping
-                          ? '🎉 You have unlocked complimentary insured express delivery!'
-                          : `Add ₹${freeShippingDifference?.toLocaleString('en-IN')} more to unlock FREE Express Delivery`}
+              <div className="rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-2xs">
+                <div className="flex items-center justify-between text-xs mb-2 gap-2">
+                  <div className="flex items-center gap-2 font-semibold text-gray-900 truncate">
+                    <TruckIcon className="w-4 h-4 text-[#B89758] shrink-0" />
+                    {freeShippingDifference > 0 ? (
+                      <span className="truncate text-xs">
+                        Add <strong className="text-[#B89758] font-bold">₹{freeShippingDifference.toLocaleString('en-IN')}</strong> more for <strong className="text-gray-950">Free Express Air Shipping</strong>
                       </span>
-                    </div>
-                    <span className="text-[11px] font-bold text-[#8C6734] bg-[#F5F2EB] px-2 py-0.5 rounded-sm border border-[#C5A880]/40">
-                      {progressToFreeShipping}%
-                    </span>
+                    ) : (
+                      <span className="text-emerald-700 font-bold flex items-center gap-1">
+                        <span>✓</span> Unlocked Complimentary Express Shipping!
+                      </span>
+                    )}
                   </div>
-
-                  <div className="h-1.5 w-full rounded-full bg-neutral-100 overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-[#C5A880] to-[#8C6734] transition-all duration-500 rounded-full"
-                      style={{ width: `${progressToFreeShipping}%` }}
-                    />
-                  </div>
+                  <span className="text-[10px] font-bold text-gray-400 shrink-0">{progressToFreeShipping}%</span>
                 </div>
-              </Reveal>
 
-              {/* Cart Items List */}
-              <div className="space-y-3.5">
-                {cart.map((item, index) => (
-                  <Reveal key={`${item.id}-${item.color || ''}-${item.variant || ''}-${item.size || ''}`} delay={index * 40} direction="up">
-                    <div className="group rounded-2xl border border-neutral-200/80 bg-white p-4 sm:p-5 shadow-2xs transition-all duration-300 hover:border-[#C5A880]/60 hover:shadow-md flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                      
-                      {/* Product Thumbnail */}
-                      <Link
-                        to={`/product/${item.id}`}
-                        className="h-24 w-24 sm:h-28 sm:w-28 rounded-xl bg-[#FAFAFB] border border-neutral-200/80 p-2 flex items-center justify-center shrink-0 overflow-hidden"
-                      >
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </Link>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${qualifiesForFreeShipping ? 'bg-emerald-600' : 'bg-[#111827]'}`}
+                    style={{ width: `${progressToFreeShipping}%` }}
+                  />
+                </div>
+              </div>
 
-                      {/* Item Details */}
-                      <div className="flex-1 text-center sm:text-left min-w-0 space-y-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6734]">
-                          {item.brand || 'Krishna Verified'}
-                        </span>
+              {/* Items List Table Card */}
+              <div className="rounded-3xl border border-gray-200/80 bg-white p-4 sm:p-6 shadow-xs divide-y divide-gray-100">
+                <div className="pb-3 flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    Product Details ({cart.length} unique items)
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 hidden sm:block">
+                    Quantity & Subtotal
+                  </span>
+                </div>
+
+                {cart.map((item, idx) => {
+                  const itemColor = (item.color || item.selectedColor || '').trim();
+                  const itemVariant = (item.variant || item.selectedVariant || '').trim();
+                  const itemSize = (item.size || item.selectedSize || '').trim();
+                  const lineTotal = (Number(item.price) || 0) * (item.quantity || 1);
+
+                  return (
+                    <div
+                      key={`${item.id}-${itemColor}-${itemSize}-${itemVariant}-${idx}`}
+                      className="py-4 sm:py-5 first:pt-4 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
+
+                      {/* Item Image & Description */}
+                      <div className="flex items-center gap-3.5 min-w-0">
                         <Link
                           to={`/product/${item.id}`}
-                          className="block font-serif text-base sm:text-lg font-medium text-neutral-950 hover:text-[#8C6734] transition-colors truncate"
+                          className="aspect-square h-20 w-20 sm:h-22 sm:w-22 shrink-0 overflow-hidden rounded-2xl bg-[#F6F7F9] p-2 border border-gray-200/80 flex items-center justify-center group"
                         >
-                          {item.name}
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80';
+                              }}
+                              className="h-full w-full object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-108"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-gray-400 text-xs font-semibold">
+                              KA
+                            </div>
+                          )}
                         </Link>
 
-                        {/* Variants / Color / Size Chips */}
-                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-0.5 text-[11px] text-neutral-500">
-                          {item.color && (
-                            <span className="px-2 py-0.5 rounded bg-[#FAFAFB] border border-neutral-200">
-                              Color: {item.color}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[9.5px] font-bold uppercase tracking-[0.14em] text-gray-400 truncate">
+                              {item.brand || 'Krishna Essentials'}
                             </span>
-                          )}
-                          {item.size && (
-                            <span className="px-2 py-0.5 rounded bg-[#FAFAFB] border border-neutral-200">
-                              Size: {item.size}
-                            </span>
-                          )}
-                          {item.variant && (
-                            <span className="px-2 py-0.5 rounded bg-[#FAFAFB] border border-neutral-200">
-                              Edition: {item.variant}
-                            </span>
-                          )}
-                        </div>
+                            {item.category && (
+                              <span className="rounded-full bg-gray-100 px-2 py-0.2 text-[9px] font-semibold text-gray-600">
+                                {item.category}
+                              </span>
+                            )}
+                          </div>
 
-                        {/* Price Breakdown */}
-                        <div className="pt-1 flex items-baseline justify-center sm:justify-start gap-2">
-                          <span className="font-serif text-sm font-medium text-neutral-950">
-                            ₹{Number(item.price).toLocaleString('en-IN')}
-                          </span>
-                          {item.oldPrice && item.oldPrice > item.price && (
-                            <span className="text-xs text-neutral-400 line-through">
-                              ₹{Number(item.oldPrice).toLocaleString('en-IN')}
-                            </span>
+                          <Link
+                            to={`/product/${item.id}`}
+                            className="font-semibold text-xs sm:text-sm text-gray-950 hover:underline block truncate mt-0.5"
+                            title={item.name}
+                          >
+                            {item.name}
+                          </Link>
+
+                          {/* Selected Color & Variant Spec Chips */}
+                          {(itemColor || itemSize || itemVariant) && (
+                            <div className="flex items-center gap-2 mt-1 flex-wrap">
+                              {itemColor && (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
+                                  <span>Color:</span>
+                                  <strong className="font-semibold text-gray-900">{itemColor}</strong>
+                                </span>
+                              )}
+                              {itemSize && (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
+                                  <span>Size:</span>
+                                  <strong className="font-semibold text-gray-900">{itemSize}</strong>
+                                </span>
+                              )}
+                              {itemVariant && (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-[#F4F4F6] border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700">
+                                  <span>Spec:</span>
+                                  <strong className="font-semibold text-gray-900">{itemVariant}</strong>
+                                </span>
+                              )}
+                            </div>
                           )}
+
+                          {/* Price Display */}
+                          <div className="flex items-baseline gap-2 mt-1.5">
+                            <span className="text-xs sm:text-sm font-bold text-gray-950">
+                              ₹{Number(item.price).toLocaleString('en-IN')}
+                            </span>
+                            {item.oldPrice && item.oldPrice > item.price && (
+                              <span className="text-[10px] text-gray-400 line-through">
+                                ₹{Number(item.oldPrice).toLocaleString('en-IN')}
+                              </span>
+                            )}
+                            <span className="text-[9.5px] text-gray-400 font-mono">
+                              (SKU: {item.sku || `KA-${item.id}`})
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Quantity Stepper & Remove */}
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-neutral-100">
-                        <span className="font-serif text-base sm:text-lg font-medium text-neutral-950 tabular-nums">
-                          ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                        </span>
+                      {/* Stepper + Subtotal + Remove */}
+                      <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100 shrink-0">
 
-                        <div className="flex items-center gap-3">
-                          {/* Stepper */}
-                          <div className="inline-flex items-center rounded-lg border border-neutral-200 bg-white">
-                            <button
-                              type="button"
-                              onClick={() => handleQuantityChange(item, item.quantity - 1)}
-                              className="px-2.5 py-1 text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-l-lg transition cursor-pointer text-xs"
-                              aria-label="Decrease quantity"
-                            >
-                              <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="px-2.5 py-1 text-xs font-semibold text-neutral-900 tabular-nums min-w-[28px] text-center">
-                              {item.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => handleQuantityChange(item, item.quantity + 1)}
-                              className="px-2.5 py-1 text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-r-lg transition cursor-pointer text-xs"
-                              aria-label="Increase quantity"
-                            >
-                              <Plus className="w-3 h-3" />
-                            </button>
-                          </div>
+                        {/* Quantity Counter */}
+                        <div className="flex items-center rounded-full border border-gray-200 bg-[#F4F4F6] p-0.5 shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(item, (item.quantity || 1) - 1)}
+                            className="flex h-7 w-7 sm:h-7 sm:w-7 items-center justify-center rounded-full text-xs font-bold text-gray-700 hover:bg-white hover:text-black hover:shadow-2xs transition active:scale-95 cursor-pointer"
+                            title="Decrease quantity"
+                          >
+                            −
+                          </button>
+                          <span className="w-8 text-center text-xs font-bold text-gray-950">
+                            {item.quantity || 1}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(item, (item.quantity || 1) + 1)}
+                            className="flex h-7 w-7 sm:h-7 sm:w-7 items-center justify-center rounded-full text-xs font-bold text-gray-700 hover:bg-white hover:text-black hover:shadow-2xs transition active:scale-95 cursor-pointer"
+                            title="Increase quantity"
+                          >
+                            +
+                          </button>
+                        </div>
 
-                          {/* Delete Button */}
+                        {/* Line Total & Remove Action */}
+                        <div className="text-right min-w-[95px]">
+                          <span className="text-xs sm:text-sm font-bold text-gray-950 block tabular-nums">
+                            ₹{lineTotal.toLocaleString('en-IN')}
+                          </span>
                           <button
                             type="button"
                             onClick={() => handleRemove(item)}
-                            className="text-neutral-400 hover:text-rose-600 p-1.5 rounded-md hover:bg-rose-50 transition cursor-pointer"
-                            title="Remove piece from bag"
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-500 hover:text-rose-700 hover:underline transition mt-0.5 cursor-pointer"
+                            title="Remove item"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <TrashIcon className="w-3 h-3 text-rose-500" />
+                            <span>Remove</span>
                           </button>
                         </div>
+
                       </div>
 
                     </div>
-                  </Reveal>
-                ))}
+                  );
+                })}
               </div>
 
-              {/* Available Promo Vouchers Strip */}
-              <Reveal delay={100} direction="up">
-                <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-2xs space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-900">
-                    <Tag className="w-4 h-4 text-[#8C6734]" />
-                    <span>Exclusive Concierge Vouchers Available</span>
-                  </div>
+              {/* Bottom Actions Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <Link
+                  to="/shop"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-black transition"
+                >
+                  <span>&larr;</span>
+                  <span>Continue Shopping Catalog</span>
+                </Link>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {AVAILABLE_COUPONS.map((cpn) => (
-                      <button
-                        key={cpn.code}
-                        type="button"
-                        onClick={(e) => handleApplyCoupon(e, cpn.code)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                          couponCodeString === cpn.code
-                            ? 'border-[#8C6734] bg-[#FAF8F5] ring-1 ring-[#8C6734]'
-                            : 'border-neutral-200/80 bg-[#FAFAFB] hover:border-[#C5A880] hover:bg-white'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono text-xs font-bold text-[#8C6734] uppercase tracking-wider">
-                            {cpn.code}
-                          </span>
-                          {couponCodeString === cpn.code && (
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded">
-                              APPLIED
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-neutral-600 mt-1 font-medium">{cpn.description}</p>
-                      </button>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-3 text-xs text-gray-500">
+                  <span>🔒 256-bit Secure Checkout</span>
+                  <span>•</span>
+                  <span>📦 Doorstep Insured Delivery</span>
                 </div>
-              </Reveal>
+              </div>
 
             </div>
 
-            {/* Right 4 Cols: Order Summary Sticky Card */}
-            <div className="lg:col-span-4 sticky top-24 space-y-5">
-              <Reveal delay={150} direction="left">
-                <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm space-y-5">
-                  <div className="border-b border-neutral-100 pb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C6734]">
-                      Checkout Summary
-                    </span>
-                    <h3 className="font-serif text-xl font-medium text-neutral-950 mt-0.5">
-                      Order Breakdown
-                    </h3>
-                  </div>
+            {/* Right Column: Coupon & Order Financial Summary */}
+            <div className="space-y-4">
 
-                  {/* Voucher Application Form */}
-                  <div>
-                    <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={couponCodeInput}
-                        onChange={(e) => setCouponCodeInput(e.target.value)}
-                        placeholder="Enter voucher code"
-                        className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs font-mono uppercase tracking-wider text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-[#8C6734] transition-all"
-                      />
-                      <button
-                        type="submit"
-                        className="px-4 py-2 rounded-lg bg-neutral-950 text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#8C6734] transition-colors cursor-pointer"
-                      >
-                        Apply
-                      </button>
-                    </form>
+              {/* Coupon Voucher Form & Recommendations */}
+              <div className="rounded-3xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400 block">
+                    Voucher Privé Code
+                  </span>
+                  <TagIcon className="w-3.5 h-3.5 text-amber-600" />
+                </div>
 
-                    {couponMsg && (
-                      <div className={`mt-2 text-xs font-semibold p-2 rounded-lg ${
-                        couponMsg.type === 'success'
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                          : couponMsg.type === 'error'
-                            ? 'bg-rose-50 text-rose-800 border border-rose-200'
-                            : 'bg-neutral-100 text-neutral-700'
-                      }`}>
-                        {couponMsg.text}
+                {couponCodeString ? (
+                  <div className="flex items-center justify-between rounded-2xl bg-emerald-50 border border-emerald-200 p-3 text-xs text-emerald-900 font-semibold gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white text-[10px] font-bold">✓</span>
+                      <div className="truncate">
+                        <p className="font-bold truncate text-emerald-950">{couponCodeString} Applied</p>
+                        <p className="text-[10.5px] text-emerald-700 font-normal">
+                          {discount > 0 ? `₹${discount.toLocaleString('en-IN')} instant savings applied` : 'Active voucher'}
+                        </p>
                       </div>
-                    )}
-
-                    {couponCodeString && (
-                      <div className="mt-2 flex items-center justify-between text-xs bg-[#FAF8F5] border border-[#C5A880]/40 p-2 rounded-lg">
-                        <span className="font-mono font-bold text-[#8C6734]">{couponCodeString} Applied</span>
-                        <button
-                          type="button"
-                          onClick={handleRemoveCoupon}
-                          className="text-rose-600 hover:underline font-semibold cursor-pointer text-[11px]"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Summary Rows */}
-                  <div className="space-y-2.5 text-xs text-neutral-600 border-t border-neutral-100 pt-4">
-                    <div className="flex justify-between">
-                      <span>Bag Subtotal ({totalItemCount} pieces)</span>
-                      <span className="font-semibold text-neutral-900">₹{subtotal.toLocaleString('en-IN')}</span>
                     </div>
-
-                    {discount > 0 && (
-                      <div className="flex justify-between text-emerald-700 font-semibold">
-                        <span>Voucher Savings</span>
-                        <span>−₹{discount.toLocaleString('en-IN')}</span>
-                      </div>
-                    )}
-
-                    <div className="flex justify-between">
-                      <span>Insured Express Shipping</span>
-                      <span className="font-semibold text-emerald-700">
-                        {shipping === 0 ? 'FREE COMPLIMENTARY' : `₹${shipping}`}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between border-t border-neutral-200 pt-3 text-sm font-bold text-neutral-950">
-                      <span>Total Amount</span>
-                      <span className="font-serif text-lg text-neutral-950">₹{total.toLocaleString('en-IN')}</span>
-                    </div>
-                  </div>
-
-                  {/* Checkout Button */}
-                  <div className="pt-2">
                     <button
                       type="button"
-                      onClick={() => navigate('/checkout')}
-                      className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-[0.14em] hover:bg-[#8C6734] transition-colors duration-200 shadow-sm cursor-pointer"
+                      onClick={handleRemoveCoupon}
+                      className="text-[11px] text-rose-600 hover:text-rose-800 font-bold hover:underline shrink-0 cursor-pointer"
                     >
-                      <Lock className="w-3.5 h-3.5 text-[#C5A880]" />
-                      <span>Proceed to Secure Checkout</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      Remove
                     </button>
                   </div>
+                ) : (
+                  <form onSubmit={(e) => handleApplyCoupon(e)} className="flex gap-1.5">
+                    <input
+                      type="text"
+                      value={couponCodeInput}
+                      onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
+                      placeholder="e.g. KRISHNA10"
+                      className="flex-1 rounded-full border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs text-gray-900 uppercase font-semibold placeholder:normal-case placeholder:font-normal outline-none focus:border-gray-400 focus:bg-white min-w-0 transition"
+                    />
+                    <button
+                      type="submit"
+                      className="rounded-full bg-[#111827] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition shrink-0 cursor-pointer"
+                    >
+                      Apply
+                    </button>
+                  </form>
+                )}
 
-                  {/* Trust Micro-Badges */}
-                  <div className="pt-2 border-t border-neutral-100 space-y-2 text-[11px] text-neutral-500">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#8C6734] shrink-0" />
-                      <span>100% Quality &amp; Authenticity Guaranteed</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <RotateCcw className="w-3.5 h-3.5 text-[#8C6734] shrink-0" />
-                      <span>7-Day Inspection &amp; Replacement Policy</span>
-                    </div>
+                {couponMsg && (
+                  <p className={`text-[11px] font-semibold ${couponMsg.type === 'success' ? 'text-emerald-700' : couponMsg.type === 'error' ? 'text-rose-600' : 'text-blue-600'}`}>
+                    {couponMsg.text}
+                  </p>
+                )}
+
+                {/* Quick 1-Click Available Vouchers */}
+                <div className="pt-2 border-t border-gray-100 space-y-1.5">
+                  <span className="text-[9.5px] font-bold uppercase tracking-wider text-gray-400 block">
+                    Available Offers
+                  </span>
+                  <div className="space-y-1">
+                    {Object.values(AVAILABLE_COUPONS).map((c) => {
+                      const isApplied = couponCodeString === c.code;
+                      const eligible = subtotal >= c.minSpend;
+                      return (
+                        <div
+                          key={c.code}
+                          className={`flex items-center justify-between p-2 rounded-xl border text-[11px] transition ${isApplied
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                            : 'bg-gray-50/80 border-gray-200/80 text-gray-700 hover:border-gray-300'
+                            }`}
+                        >
+                          <div className="min-w-0 pr-2">
+                            <span className="font-mono font-bold text-gray-900">{c.code}</span>
+                            <span className="text-gray-500 block text-[10px]">{c.description}</span>
+                          </div>
+                          {!isApplied && (
+                            <button
+                              type="button"
+                              onClick={() => handleApplyCoupon(null, c.code)}
+                              className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition shrink-0 cursor-pointer ${eligible
+                                ? 'bg-gray-900 text-white hover:bg-black'
+                                : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
+                                }`}
+                              title={eligible ? 'Apply this coupon' : `Min. spend ₹${c.minSpend}`}
+                            >
+                              {eligible ? 'Apply' : `Min ₹${c.minSpend}`}
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Summary Total Card */}
+              <div className="rounded-3xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-xs space-y-4">
+                <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-gray-950 border-b border-gray-100 pb-3 flex items-center justify-between">
+                  <span>Order Summary</span>
+                  <span className="text-[10.5px] font-normal text-gray-400 normal-case">
+                    {cart.reduce((s, i) => s + (i.quantity || 1), 0)} items
+                  </span>
+                </h3>
+
+                <div className="space-y-2.5 text-xs text-gray-600">
+                  <div className="flex justify-between">
+                    <span>Cart Subtotal</span>
+                    <span className="font-bold text-gray-950 tabular-nums">₹{subtotal.toLocaleString('en-IN')}</span>
                   </div>
 
+                  {discount > 0 && (
+                    <div className="flex justify-between text-emerald-700 font-semibold">
+                      <span className="flex items-center gap-1">
+                        <span>🏷️ Discount</span>
+                        {couponCodeString && <span className="font-mono text-[10px]">({couponCodeString})</span>}
+                      </span>
+                      <span className="tabular-nums">−₹{discount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span>Express Air Shipping</span>
+                      {shipping === 0 && subtotal > 0 && (
+                        <p className="text-[9.5px] text-emerald-600 font-medium">Free Boutique Delivery</p>
+                      )}
+                    </div>
+                    <span className="font-semibold text-gray-900 tabular-nums">
+                      {shipping === 0 ? (
+                        <span className="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          Free
+                        </span>
+                      ) : (
+                        `₹${shipping}`
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="border-t border-gray-200/90 pt-3 flex justify-between items-baseline">
+                    <div>
+                      <span className="text-sm font-bold text-gray-950">Total Amount</span>
+                      <p className="text-[10px] text-gray-400 font-medium">Inclusive of all duties & taxes</p>
+                    </div>
+                    <span className="text-xl sm:text-2xl font-bold text-gray-950 tabular-nums">
+                      ₹{total.toLocaleString('en-IN')}
+                    </span>
+                  </div>
                 </div>
-              </Reveal>
+
+                {/* Primary Proceed Button */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/checkout')}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#111827] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-black active:scale-98 cursor-pointer"
+                >
+                  <span>Proceed to Checkout</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </button>
+
+                {/* Trust & Guarantees */}
+                <div className="rounded-2xl bg-gray-50 border border-gray-100 p-3 text-[10px] text-gray-600 space-y-1">
+                  <p className="flex items-center gap-1.5 font-semibold text-gray-900">
+                    <ShieldCheckIcon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Quality Assured Shopping Experience</span>
+                  </p>
+                  <p className="text-gray-500 pl-5 leading-relaxed">
+                    Brand warranty coverage, tamper-proof luxury packaging &amp; 7-day easy exchange.
+                  </p>
+                </div>
+
+              </div>
+
             </div>
 
           </div>
         )}
+
       </main>
 
       <Footer />

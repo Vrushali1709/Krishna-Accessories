@@ -1,112 +1,12 @@
 // src/pages/Account.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getCurrentUser, logout } from '../utils/auth';
-import {
-  getOrders,
-  getUserAddresses,
-  saveUserAddress,
-  deleteUserAddress,
-  cancelOrder,
-  requestReturn,
-  getOrderById
-} from '../utils/orderStore';
+import { getOrders, getUserAddresses, saveUserAddress, deleteUserAddress, cancelOrder, requestReturn, getOrderById } from '../utils/orderStore';
 import { getWishlist } from '../utils/productStore';
-import {
-  User,
-  Truck,
-  Heart,
-  ShieldCheck,
-  Lock,
-  Search,
-  CheckCircle2,
-  Package,
-  MapPin,
-  Clock,
-  RotateCcw,
-  LogOut,
-  Sparkles,
-  Award,
-  AlertCircle,
-  Plus,
-  Trash2,
-  Edit2,
-  ArrowRight
-} from 'lucide-react';
-import BrandSpinner from '../components/BrandSpinner';
-
-// =========================================================================
-// CUSTOM ANIMATION HOOK: Intersection Observer for on-scroll reveals
-// =========================================================================
-function useInView(options = { threshold: 0.1, triggerOnce: true }) {
-  const [inView, setInView] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setInView(true);
-        if (options.triggerOnce) {
-          observer.unobserve(entry.target);
-        }
-      }
-    }, options);
-
-    const currentElem = ref.current;
-    if (currentElem) observer.observe(currentElem);
-
-    return () => {
-      if (currentElem) observer.unobserve(currentElem);
-    };
-  }, [options.threshold, options.triggerOnce]);
-
-  return [ref, inView];
-}
-
-function Reveal({
-  children,
-  delay = 0,
-  direction = 'up',
-  className = '',
-  threshold = 0.08
-}) {
-  const [ref, inView] = useInView({ threshold, triggerOnce: true });
-
-  const getTransform = () => {
-    if (inView) return 'translate3d(0, 0, 0) scale(1)';
-    switch (direction) {
-      case 'up':
-        return 'translate3d(0, 24px, 0)';
-      case 'down':
-        return 'translate3d(0, -24px, 0)';
-      case 'left':
-        return 'translate3d(24px, 0, 0)';
-      case 'right':
-        return 'translate3d(-24px, 0, 0)';
-      case 'zoom':
-        return 'scale(0.97)';
-      default:
-        return 'translate3d(0, 20px, 0)';
-    }
-  };
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: getTransform(),
-        transition: `opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
-        willChange: 'opacity, transform',
-      }}
-      className={className}
-    >
-      {children}
-    </div>
-  );
-}
+import { UserIcon, TruckIcon, HeartIcon, ShieldCheckIcon, LockClosedIcon, SearchIcon, CheckCircleIcon } from '../components/Icons';
 
 export default function Account() {
   const navigate = useNavigate();
@@ -186,13 +86,13 @@ export default function Account() {
     setEditingAddr(null);
     setAddrForm({
       label: 'Home',
-      firstName: currentUser?.name?.split(' ')[0] || '',
-      lastName: currentUser?.name?.split(' ')[1] || '',
-      phone: currentUser?.phone || '',
+      firstName: currentUser?.name?.split(' ')[0] || 'Rahul',
+      lastName: currentUser?.name?.split(' ')[1] || 'Patel',
+      phone: currentUser?.phone || '9876512345',
       address: '',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      pincode: '400026',
+      city: 'Ahmedabad',
+      state: 'Gujarat',
+      pincode: '380054',
       isDefault: addresses.length === 0
     });
     setAddrModalOpen(true);
@@ -275,276 +175,774 @@ export default function Account() {
     refreshData();
   };
 
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'Delivered':
+        return 'bg-emerald-50 border-emerald-200 text-emerald-800';
+      case 'Shipped':
+        return 'bg-blue-50 border-blue-200 text-blue-800';
+      case 'Out for Delivery':
+        return 'bg-sky-50 border-sky-200 text-sky-800';
+      case 'Processing':
+        return 'bg-indigo-50 border-indigo-200 text-indigo-800';
+      case 'Confirmed':
+        return 'bg-amber-50 border-amber-200 text-amber-800';
+      case 'Return Requested':
+        return 'bg-purple-50 border-purple-200 text-purple-800 animate-pulse';
+      case 'Return Approved':
+        return 'bg-teal-50 border-teal-200 text-teal-800';
+      case 'Refunded':
+        return 'bg-emerald-100 border-emerald-300 text-emerald-900 font-bold';
+      case 'Cancelled':
+        return 'bg-rose-50 border-rose-200 text-rose-800';
+      case 'Return Rejected':
+        return 'bg-red-50 border-red-200 text-red-800';
+      default:
+        return 'bg-stone-50 border-stone-200 text-stone-800';
+    }
+  };
+
+  // If user is not logged in, redirect to login
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F5] text-stone-900 flex flex-col justify-between">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center px-4 py-16">
+          <div className="w-full max-w-md rounded-xs border border-stone-200 bg-white p-8 text-center shadow-xs space-y-4">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xs bg-[#FAF9F5] text-stone-800 border border-stone-200">
+              <UserIcon className="w-5 h-5" />
+            </div>
+            <h2 className="font-editorial-serif text-2xl font-normal text-stone-950">Client Sign In Required</h2>
+            <p className="text-xs text-stone-500">
+              Access your consignment history, saved delivery address book, and personalized concierge desk.
+            </p>
+            <Link
+              to="/login"
+              className="inline-block rounded-xs bg-[#121316] px-8 py-3 text-xs font-bold uppercase tracking-[0.16em] text-[#FAF9F5] hover:bg-[#25262B]"
+            >
+              Sign In to Your Account &rarr;
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const userOrders = orders.filter(
+    o => !o.customer?.email || o.customer?.email?.toLowerCase() === currentUser?.email?.toLowerCase() || orders.length > 0
+  );
+
+  const lookupOrder = (id) => {
+    if (!id || !id.trim()) {
+      setActiveTrackingOrder(null);
+      setTrackingNotFound(false);
+      return;
+    }
+    const cleanId = id.trim();
+    const allOrders = getOrders();
+    const found = getOrderById(cleanId) || allOrders.find(o =>
+      o.id?.toLowerCase() === cleanId.toLowerCase() ||
+      (o.trackingNumber && o.trackingNumber.toLowerCase() === cleanId.toLowerCase())
+    );
+    if (found) {
+      setActiveTrackingOrder(found);
+      setTrackingNotFound(false);
+    } else {
+      setActiveTrackingOrder(null);
+      setTrackingNotFound(true);
+    }
+  };
+
+  // Sync tab and id with URL search params
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    const idParam = searchParams.get('id');
+    if (tabParam && ['orders', 'tracking', 'addresses', 'wishlist', 'profile'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+    if (idParam) {
+      setTrackingIdInput(idParam);
+      lookupOrder(idParam);
+    }
+  }, [searchParams]);
+
+  // When activeTab is set to tracking and no specific order is loaded, auto-load first order or test reference
+  useEffect(() => {
+    if (activeTab === 'tracking') {
+      const idToLookup = trackingIdInput || searchParams.get('id') || (userOrders.length > 0 ? userOrders[0].id : 'KA-98421');
+      if (idToLookup && (!activeTrackingOrder || activeTrackingOrder.id !== idToLookup)) {
+        setTrackingIdInput(idToLookup);
+        lookupOrder(idToLookup);
+      }
+    }
+  }, [activeTab, orders]);
+
+  const handleTrackSearch = (e) => {
+    e.preventDefault();
+    if (trackingIdInput && trackingIdInput.trim()) {
+      setSearchParams({ tab: 'tracking', id: trackingIdInput.trim() });
+      lookupOrder(trackingIdInput.trim());
+    }
+  };
+
+  const handleSelectOrderToTrack = (orderId) => {
+    setTrackingIdInput(orderId);
+    setActiveTab('tracking');
+    setSearchParams({ tab: 'tracking', id: orderId });
+    lookupOrder(orderId);
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white overflow-x-clip">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#1A1A1A] overflow-x-clip">
       <Navbar />
 
-      {/* ========================================================================= */}
-      {/* 1. PROFILE HEADER HERO                                                    */}
-      {/* ========================================================================= */}
-      <section className="relative bg-white border-b border-neutral-200/80 overflow-hidden">
-        {/* Subtle decorative background pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
-            backgroundSize: '24px 24px'
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-
+      {/* Header Profile Hero */}
+      <section className="border-b border-stone-200/80 bg-white py-8 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              {/* Avatar Initial in Gold/Dark Circle */}
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-neutral-950 text-[#C5A880] border border-[#C5A880]/40 flex items-center justify-center font-serif text-2xl sm:text-3xl font-medium shadow-md">
-                {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'K'}
+              <div className="flex h-13 w-13 items-center justify-center rounded-xs bg-[#121316] text-[#CBB080] font-serif font-bold text-2xl border border-[#CBB080]/30 shadow-xs">
+                {(currentUser.name || currentUser.email)[0].toUpperCase()}
               </div>
-
-              <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 text-[10px] font-bold uppercase tracking-wider text-[#8C6734]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
-                  <span>Krishna Privé Client</span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="font-editorial-serif text-2xl sm:text-3xl font-normal text-stone-950">
+                    {currentUser.name || 'Client Account'}
+                  </h1>
+                  <span className="rounded-xs bg-stone-100 border border-stone-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-stone-800">
+                    {currentUser.role || 'Customer'}
+                  </span>
                 </div>
-                <h1 className="font-serif text-2xl sm:text-3xl font-medium text-neutral-950">
-                  {currentUser?.name || 'Valued Client'}
-                </h1>
-                <p className="text-xs text-neutral-500">
-                  {currentUser?.email || 'Logged in member'} &bull; {currentUser?.phone || '+91 Direct Contact'}
-                </p>
+                <p className="text-xs text-stone-500 mt-0.5">{currentUser.email} &bull; {currentUser.phone || '+91 98765 12345'}</p>
               </div>
             </div>
 
-            {/* Quick Stats & Logout */}
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-3 rounded-xl border border-neutral-200/80 bg-[#FAFAFB] px-4 py-2 text-xs">
-                <div>
-                  <span className="text-neutral-400 block text-[10px] font-semibold uppercase">Total Orders</span>
-                  <span className="font-serif font-medium text-sm text-neutral-950">{orders.length}</span>
-                </div>
-                <div className="h-6 w-px bg-neutral-200" />
-                <div>
-                  <span className="text-neutral-400 block text-[10px] font-semibold uppercase">Wishlist</span>
-                  <span className="font-serif font-medium text-sm text-neutral-950">{wishlist.length}</span>
-                </div>
-              </div>
-
+            <div className="flex items-center gap-2.5">
+              {currentUser.role === 'admin' && (
+                <Link
+                  to="/admin"
+                  className="rounded-xs bg-[#121316] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-black transition"
+                >
+                  Admin Console &rarr;
+                </Link>
+              )}
+              {currentUser.role === 'supplier' && (
+                <Link
+                  to="/supplier"
+                  className="rounded-xs bg-[#9C7C44] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#7A5E30] transition"
+                >
+                  Vendor Portal &rarr;
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-neutral-300 bg-white text-xs font-semibold uppercase tracking-wider text-neutral-700 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50/50 transition-colors cursor-pointer"
+                className="rounded-xs border border-stone-300 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-stone-700 hover:bg-stone-100 transition"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                Sign Out
               </button>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 2. TAB NAVIGATION & MAIN CONTENT                                          */}
-      {/* ========================================================================= */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
-        
-        {/* Tab Switcher */}
-        <div className="flex gap-2 overflow-x-auto border-b border-neutral-200 pb-3 no-scrollbar text-xs font-semibold">
+      {/* Main Account Tabs */}
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+
+        {/* Tab Strip */}
+        <div className="flex border-b border-stone-200 gap-6 mb-8 overflow-x-auto">
           {[
-            { id: 'orders', label: `My Orders (${orders.length})`, icon: Package },
-            { id: 'addresses', label: `Saved Addresses (${addresses.length})`, icon: MapPin },
-            { id: 'wishlist', label: `Wishlist (${wishlist.length})`, icon: Heart }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isCurrent = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg whitespace-nowrap uppercase tracking-wider transition-all cursor-pointer ${
-                  isCurrent
-                    ? 'bg-neutral-950 text-white shadow-2xs'
-                    : 'bg-white text-neutral-700 border border-neutral-200 hover:border-[#C5A880] hover:bg-[#FAF8F5]'
+            { id: 'orders', label: `Consignments (${userOrders.length})` },
+            { id: 'tracking', label: `Track Order` },
+            { id: 'addresses', label: `Address Book (${addresses.length})` },
+            { id: 'wishlist', label: `Saved Wishlist (${wishlist.length})` },
+            { id: 'profile', label: `Profile Preferences` }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveTab(tab.id);
+                if (tab.id === 'tracking') {
+                  const targetId = activeTrackingOrder?.id || trackingIdInput || (userOrders[0]?.id || 'KA-98421');
+                  setSearchParams({ tab: 'tracking', id: targetId });
+                } else {
+                  setSearchParams({ tab: tab.id });
+                }
+              }}
+              className={`pb-3 text-xs font-bold uppercase tracking-[0.16em] transition border-b-2 whitespace-nowrap cursor-pointer ${activeTab === tab.id
+                ? 'border-[#121316] text-[#121316]'
+                : 'border-transparent text-stone-400 hover:text-stone-900'
                 }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isCurrent ? 'text-[#C5A880]' : 'text-[#8C6734]'}`} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+            >
+              {tab.id === 'tracking' ? (
+                <span className="flex items-center gap-1.5">
+                  <TruckIcon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                </span>
+              ) : (
+                tab.label
+              )}
+            </button>
+          ))}
         </div>
 
-        {/* Tab 1: Orders History */}
+        {/* ================= TAB 1: ORDERS & CONSIGNMENTS ================= */}
         {activeTab === 'orders' && (
-          <div className="mt-8 space-y-6">
-            {orders.length === 0 ? (
-              <div className="rounded-2xl border border-neutral-200/80 bg-white p-12 text-center max-w-md mx-auto shadow-2xs">
-                <div className="w-12 h-12 rounded-full bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mx-auto mb-3 border border-[#C5A880]/40">
-                  <Package className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif text-lg font-medium text-neutral-950 mb-1">No Orders Recorded Yet</h3>
-                <p className="text-xs text-neutral-500 mb-5">Explore our boutique catalog to place your first luxury order.</p>
-                <Link
-                  to="/shop"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#8C6734] transition-colors"
-                >
-                  <span>Explore Catalog</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+          <div className="space-y-6 animate-fade-in">
+            {userOrders.length === 0 ? (
+              <div className="rounded-xs border border-stone-200 bg-white p-8 text-center shadow-2xs space-y-3">
+                <h3 className="font-editorial-serif text-xl text-stone-950 font-normal">No Consignments Placed Yet</h3>
+                <p className="text-xs text-stone-500">Explore our curated collections and place your first consignment.</p>
+                <Link to="/shop" className="mt-2 inline-block rounded-xs bg-[#121316] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B]">
+                  Explore Catalog
                 </Link>
               </div>
             ) : (
-              orders.map((order) => (
-                <div
-                  key={order.id}
-                  className="rounded-2xl border border-neutral-200/80 bg-white p-6 sm:p-7 shadow-sm space-y-4 transition hover:border-[#C5A880]/60"
-                >
-                  {/* Order Top Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-neutral-100 pb-4">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6734]">Order Code:</span>
-                        <span className="font-mono font-bold text-neutral-950 text-sm">{order.id}</span>
-                      </div>
-                      <p className="text-xs text-neutral-500 mt-0.5">Placed on {order.date} &bull; {order.paymentMethod}</p>
-                    </div>
+              <div className="space-y-4">
+                {userOrders.map(order => (
+                  <div key={order.id} className="rounded-xs border border-stone-200 bg-white p-6 shadow-xs space-y-4">
 
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        order.status === 'Delivered'
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                          : order.status === 'Cancelled'
-                            ? 'bg-rose-50 text-rose-800 border border-rose-200'
-                            : 'bg-[#F5F2EB] text-[#8C6734] border border-[#C5A880]/50'
-                      }`}>
-                        {order.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Purchased Items Preview */}
-                  <div className="divide-y divide-neutral-100">
-                    {order.items?.map((it, idx) => (
-                      <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={it.image}
-                            alt=""
-                            className="h-10 w-10 rounded-lg object-contain bg-[#FAFAFB] border border-neutral-200 p-0.5 shrink-0"
-                          />
-                          <div>
-                            <p className="font-semibold text-neutral-950">{it.name}</p>
-                            <span className="text-[10.5px] text-neutral-500">{it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}</span>
-                          </div>
+                    {/* Top Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-3.5">
+                      <div>
+                        <span className="text-[9.5px] font-bold uppercase tracking-wider text-stone-400">Order Reference</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-sm font-bold text-stone-950">{order.id}</span>
+                          <span className="text-xs text-stone-500">&bull; {order.date}</span>
                         </div>
-                        <span className="font-serif font-medium text-neutral-950">
-                          ₹{(it.price * it.quantity).toLocaleString('en-IN')}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <span className={`rounded-xs border px-2.5 py-0.5 text-[10.5px] font-bold ${getStatusBadge(order.status)}`}>
+                          {order.status}
+                        </span>
+
+                        {/* Customer Action: Cancel Order for Confirmed or Processing */}
+                        {(order.status === 'Confirmed' || order.status === 'Processing') && (
+                          <button
+                            onClick={() => handleOpenCancelModal(order)}
+                            className="rounded-xs border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 transition"
+                          >
+                            Cancel Order
+                          </button>
+                        )}
+
+                        {/* Customer Action: Return / Refund Request for Delivered orders */}
+                        {order.status === 'Delivered' && (
+                          <button
+                            onClick={() => handleOpenReturnModal(order)}
+                            className="rounded-xs border border-amber-300 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-900 transition flex items-center gap-1"
+                          >
+                            <span>↩</span> Return / Refund
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => handleSelectOrderToTrack(order.id)}
+                          className="rounded-xs bg-[#121316] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B] shadow-2xs transition cursor-pointer"
+                        >
+                          Track Status &rarr;
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Status Feedback Notice Banners */}
+                    {order.status === 'Cancelled' && (
+                      <div className="rounded-xs border border-rose-200 bg-rose-50/70 p-3 text-xs text-rose-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <p className="font-bold flex items-center gap-1.5">
+                            <span>🚫</span> Consignment Cancelled ({order.cancellation?.date || order.date})
+                          </p>
+                          <p className="text-[11px] text-rose-700 mt-0.5">
+                            Reason: {order.cancellation?.reason || 'Cancelled upon customer request.'}
+                          </p>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-rose-100 border border-rose-300 text-rose-800 self-start sm:self-auto">
+                          Payment: {order.paymentStatus}
                         </span>
                       </div>
-                    ))}
-                  </div>
+                    )}
 
-                  {/* Order Footer & Actions */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-neutral-100 text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="text-neutral-500">Total Settled:</span>
-                      <span className="font-serif text-base font-medium text-neutral-950">₹{order.total?.toLocaleString('en-IN')}</span>
+                    {order.status === 'Return Requested' && (
+                      <div className="rounded-xs border border-purple-200 bg-purple-50/70 p-3 text-xs text-purple-950 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <p className="font-bold flex items-center gap-1.5">
+                            <span>⏳</span> Return & Refund Request Under Verification
+                          </p>
+                          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-purple-100 border border-purple-300 text-purple-800">
+                            Pending Concierge Approval
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-purple-800">
+                          <strong>Reason:</strong> {order.returnRequest?.reason || 'Customer Return'} &bull; <strong>Mode:</strong> {order.returnRequest?.refundPreference}
+                          {order.returnRequest?.upiId && ` (${order.returnRequest.upiId})`}
+                        </p>
+                        <p className="text-[10px] text-purple-600">Our concierge inspection desk will arrange reverse-courier pickup within 24-48 hours.</p>
+                      </div>
+                    )}
+
+                    {order.status === 'Return Approved' && (
+                      <div className="rounded-xs border border-teal-200 bg-teal-50/70 p-3 text-xs text-teal-950 space-y-1">
+                        <p className="font-bold flex items-center gap-1.5">
+                          <span>📦</span> Return Approved &amp; Reverse Pickup Scheduled
+                        </p>
+                        <p className="text-[11px] text-teal-800">
+                          Please keep the product in its original box with all warranty cards and packaging. BlueDart courier will pick up within 1 business day.
+                        </p>
+                      </div>
+                    )}
+
+                    {order.status === 'Refunded' && (
+                      <div className="rounded-xs border border-emerald-300 bg-emerald-50/80 p-3 text-xs text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <p className="font-bold flex items-center gap-1.5 text-emerald-900">
+                            <span>✅</span> Refund of ₹{(order.refundDetails?.amount || order.total)?.toLocaleString('en-IN')} Completed
+                          </p>
+                          <p className="text-[11px] text-emerald-700 mt-0.5">
+                            Settled on {order.refundDetails?.date || order.date} &bull; Mode: {order.refundDetails?.refundMode || order.paymentMethod} &bull; Txn: <span className="font-mono font-bold">{order.refundDetails?.transactionId || 'REF-CONFIRMED'}</span>
+                          </p>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-emerald-600 text-white shadow-2xs self-start sm:self-auto">
+                          Refund Settled
+                        </span>
+                      </div>
+                    )}
+
+                    {order.status === 'Return Rejected' && (
+                      <div className="rounded-xs border border-red-200 bg-red-50/70 p-3 text-xs text-red-950 space-y-1">
+                        <p className="font-bold flex items-center gap-1.5 text-red-900">
+                          <span>⚠️</span> Return Request Declined
+                        </p>
+                        <p className="text-[11px] text-red-700">
+                          Notes: {order.returnRequest?.adminNotes || 'Does not meet the return inspection conditions under the 7-day guarantee.'}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Items summary */}
+                    <div className="divide-y divide-stone-100">
+                      {order.items?.map((it, idx) => (
+                        <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="flex items-center gap-3">
+                            <img src={it.image} alt="" className="h-11 w-11 rounded-xs object-contain bg-[#FAF9F5] border border-stone-200 p-1" />
+                            <div>
+                              <p className="font-bold text-stone-950">{it.name}</p>
+                              <span className="text-[10px] text-stone-400">{it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}</span>
+                            </div>
+                          </div>
+                          <span className="font-bold text-stone-950">
+                            ₹{(it.price * it.quantity).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      ))}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Link
-                        to={`/tracking?id=${order.id}`}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#8C6734] transition-colors"
-                      >
-                        <Truck className="w-3.5 h-3.5" />
-                        <span>Live Tracking</span>
-                      </Link>
-
-                      {order.status !== 'Cancelled' && order.status !== 'Delivered' && !String(order.status).includes('Return') && (
-                        <button
-                          type="button"
-                          onClick={() => handleOpenCancelModal(order)}
-                          className="px-3.5 py-2 rounded-md border border-neutral-300 text-neutral-700 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50 text-xs font-semibold cursor-pointer transition"
-                        >
-                          Cancel Order
-                        </button>
-                      )}
-
-                      {order.status === 'Delivered' && (
-                        <button
-                          type="button"
-                          onClick={() => handleOpenReturnModal(order)}
-                          className="px-3.5 py-2 rounded-md border border-neutral-300 text-neutral-700 hover:text-[#8C6734] hover:border-[#C5A880] text-xs font-semibold cursor-pointer transition"
-                        >
-                          7-Day Return Request
-                        </button>
-                      )}
+                    {/* Bottom Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-stone-100 pt-3 text-xs text-stone-600">
+                      <div>
+                        <span>Destination: <strong className="text-stone-900">{order.customer?.city}, {order.customer?.state}</strong></span>
+                        <span className="ml-2 text-stone-400">&bull; Courier: {order.courier || 'BlueDart Air'} ({order.trackingNumber || 'Processing'})</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-stone-500">Settled Total: </span>
+                        <strong className="text-sm font-bold text-stone-950">₹{order.total?.toLocaleString('en-IN')}</strong>
+                      </div>
                     </div>
+
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         )}
 
-        {/* Tab 2: Saved Addresses */}
-        {activeTab === 'addresses' && (
-          <div className="mt-8 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-serif text-xl font-medium text-neutral-950">Saved Delivery Destinations</h3>
-                <p className="text-xs text-neutral-500 mt-0.5">Manage coordinates for expedited checkout</p>
+        {/* ================= TAB: LIVE TRACK ORDER & CONSIGNMENT ================= */}
+        {activeTab === 'tracking' && (
+          <div className="space-y-6 animate-fade-in">
+            {/* Top Search & Lookup Banner */}
+            <div className="rounded-xs border border-stone-200 bg-white p-6 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 pb-3">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">
+                    Live Logistics & Milestone Tracking
+                  </span>
+                  <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-stone-950 mt-0.5">
+                    Track Consignment
+                  </h3>
+                </div>
+                <p className="text-xs text-stone-500">
+                  Real-time status updates synced directly with courier hubs and boutique dispatch.
+                </p>
               </div>
-              <button
-                type="button"
-                onClick={handleOpenAddAddress}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#8C6734] transition-colors cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5 text-[#C5A880]" />
-                <span>Add New Address</span>
-              </button>
+
+              {/* Order ID Search Form */}
+              <form onSubmit={handleTrackSearch} className="flex flex-col sm:flex-row gap-2 max-w-2xl">
+                <div className="relative flex-1 min-w-0">
+                  <input
+                    type="text"
+                    value={trackingIdInput}
+                    onChange={(e) => setTrackingIdInput(e.target.value)}
+                    placeholder="Enter Consignment ID (e.g. KA-98421) or Courier AWB..."
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] pl-8 pr-4 py-2.5 text-xs font-mono uppercase text-stone-900 outline-none focus:border-stone-400 focus:bg-white"
+                  />
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none">
+                    <SearchIcon className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xs bg-[#121316] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B] transition shadow-xs cursor-pointer shrink-0"
+                >
+                  <TruckIcon className="w-4 h-4 shrink-0 text-[#CBB080]" />
+                  <span>Track Consignment</span>
+                </button>
+              </form>
+
+              {/* Quick-Select Your Orders Chips */}
+              <div className="pt-2">
+                <div className="flex items-center justify-between text-xs text-stone-500 mb-2 font-medium">
+                  <span>Select from your placed consignments:</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('orders')}
+                    className="text-[11px] font-bold text-stone-700 hover:text-black uppercase tracking-wider cursor-pointer"
+                  >
+                    View All Consignments &rarr;
+                  </button>
+                </div>
+                {userOrders.length === 0 ? (
+                  <p className="text-xs text-stone-400 italic">No orders placed yet in this account.</p>
+                ) : (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {userOrders.map((ord) => {
+                      const isSelected = activeTrackingOrder?.id === ord.id;
+                      return (
+                        <button
+                          key={ord.id}
+                          type="button"
+                          onClick={() => handleSelectOrderToTrack(ord.id)}
+                          className={`flex items-center gap-2 rounded-xs border px-3 py-1.5 text-xs transition cursor-pointer ${isSelected
+                            ? 'border-[#121316] bg-[#121316] text-white shadow-xs'
+                            : 'border-stone-200 bg-[#FAF9F5] text-stone-700 hover:border-stone-400 hover:bg-white'
+                            }`}
+                        >
+                          <span className="font-mono font-bold">{ord.id}</span>
+                          <span className={`text-[9.5px] font-semibold px-1.5 py-0.2 rounded-2xs ${isSelected ? 'bg-white/20 text-white' : getStatusBadge(ord.status)
+                            }`}>
+                            {ord.status}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {addresses.map((addr) => (
-                <div
-                  key={addr.id}
-                  className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-2xs space-y-3 relative flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between border-b border-neutral-100 pb-2.5">
-                      <span className="font-semibold text-xs text-neutral-950 flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#8C6734]" />
-                        {addr.label || 'Home'}
+            {/* Tracking Result View */}
+            {trackingNotFound ? (
+              <div className="rounded-xs border border-rose-200 bg-white p-8 text-center shadow-xs space-y-3">
+                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                  <span className="text-base font-bold">✕</span>
+                </div>
+                <h3 className="font-editorial-serif text-lg font-normal text-stone-950">
+                  Consignment Reference Not Found
+                </h3>
+                <p className="text-xs text-stone-500 max-w-md mx-auto">
+                  No active shipment was found matching <strong className="font-mono text-stone-900">{trackingIdInput}</strong>. Please verify the consignment code or select one of your placed orders above.
+                </p>
+                {userOrders.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => handleSelectOrderToTrack(userOrders[0].id)}
+                    className="inline-block rounded-xs bg-[#121316] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#25262B] cursor-pointer"
+                  >
+                    Track Latest Order ({userOrders[0].id}) &rarr;
+                  </button>
+                )}
+              </div>
+            ) : activeTrackingOrder ? (
+              <div className="space-y-6">
+
+                {/* Overview Card */}
+                <div className="rounded-xs border border-stone-200 bg-white p-6 shadow-xs space-y-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-4">
+                    <div>
+                      <span className="text-[9.5px] font-bold uppercase tracking-wider text-stone-400">
+                        Consignment Reference ID
                       </span>
-                      {addr.isDefault && (
-                        <span className="text-[10px] font-bold text-[#8C6734] bg-[#F5F2EB] px-2 py-0.5 rounded border border-[#C5A880]/40">
-                          DEFAULT
-                        </span>
-                      )}
+                      <h2 className="font-mono text-xl sm:text-2xl font-bold text-stone-950 mt-0.5">
+                        {activeTrackingOrder.id}
+                      </h2>
+                      <p className="text-xs text-stone-500 mt-0.5">
+                        Placed on {activeTrackingOrder.date} &bull; Payment: {activeTrackingOrder.paymentMethod}
+                      </p>
                     </div>
-                    <div className="pt-2 text-xs text-neutral-600 leading-relaxed space-y-0.5">
-                      <p className="font-bold text-neutral-950">{addr.firstName} {addr.lastName}</p>
-                      <p>{addr.address}</p>
-                      <p>{addr.city}, {addr.state} - {addr.pincode}</p>
-                      <p className="text-[11px] text-neutral-400 pt-1">Phone: {addr.phone}</p>
+
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className={`rounded-xs border px-3 py-1 text-xs font-bold ${getStatusBadge(activeTrackingOrder.status)}`}>
+                        Status: {activeTrackingOrder.status}
+                      </span>
+
+                      {/* Cancel Order Action */}
+                      {(activeTrackingOrder.status === 'Confirmed' || activeTrackingOrder.status === 'Processing') && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenCancelModal(activeTrackingOrder)}
+                          className="rounded-xs border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-700 transition cursor-pointer"
+                        >
+                          Cancel Consignment
+                        </button>
+                      )}
+
+                      {/* Return Order Action */}
+                      {activeTrackingOrder.status === 'Delivered' && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenReturnModal(activeTrackingOrder)}
+                          className="rounded-xs border border-amber-300 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-900 transition flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>↩</span> Return / Refund
+                        </button>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100 text-xs">
+                  {/* Special Status Notices */}
+                  {activeTrackingOrder.status === 'Cancelled' && (
+                    <div className="rounded-xs border border-rose-200 bg-rose-50/70 p-3.5 text-xs text-rose-900 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <span>🚫</span> Consignment Cancelled ({activeTrackingOrder.cancellation?.date || activeTrackingOrder.date})
+                      </p>
+                      <p className="text-[11px] text-rose-700">
+                        Reason: {activeTrackingOrder.cancellation?.reason || 'Cancelled upon customer request.'}
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Return Requested' && (
+                    <div className="rounded-xs border border-purple-200 bg-purple-50/70 p-3.5 text-xs text-purple-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <span>⏳</span> Return & Refund Request Under Concierge Review
+                      </p>
+                      <p className="text-[11px] text-purple-800">
+                        Reason: {activeTrackingOrder.returnRequest?.reason} &bull; Mode: {activeTrackingOrder.returnRequest?.refundPreference}
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Return Approved' && (
+                    <div className="rounded-xs border border-teal-200 bg-teal-50/70 p-3.5 text-xs text-teal-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <span>📦</span> Return Approved &amp; Reverse Courier Pickup Scheduled
+                      </p>
+                      <p className="text-[11px] text-teal-800">
+                        Please keep the item inside original box with warranty cards intact. BlueDart courier will collect it within 24-48 hours.
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Refunded' && (
+                    <div className="rounded-xs border border-emerald-300 bg-emerald-50/80 p-3.5 text-xs text-emerald-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5 text-emerald-900">
+                        <span>✅</span> Refund of ₹{(activeTrackingOrder.refundDetails?.amount || activeTrackingOrder.total)?.toLocaleString('en-IN')} Settled
+                      </p>
+                      <p className="text-[11px] text-emerald-700">
+                        Transaction ID: <span className="font-mono font-bold">{activeTrackingOrder.refundDetails?.transactionId || 'REF-CONFIRMED'}</span> &bull; {activeTrackingOrder.refundDetails?.date || activeTrackingOrder.date}
+                      </p>
+                    </div>
+                  )}
+
+                  {activeTrackingOrder.status === 'Return Rejected' && (
+                    <div className="rounded-xs border border-red-200 bg-red-50/70 p-3.5 text-xs text-red-950 space-y-1">
+                      <p className="font-bold flex items-center gap-1.5 text-red-900">
+                        <span>⚠️</span> Return Request Declined
+                      </p>
+                      <p className="text-[11px] text-red-700">
+                        Notes: {activeTrackingOrder.returnRequest?.adminNotes || 'Does not meet return quality verification conditions.'}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Carrier & Delivery Destination Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-3 border-y border-stone-100 text-xs">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        Courier Partner
+                      </span>
+                      <span className="font-bold text-stone-900 mt-1 block">
+                        {activeTrackingOrder.courier || 'BlueDart Express Air'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        AWB Airway Bill Code
+                      </span>
+                      <span className="font-mono font-bold text-stone-900 mt-1 block">
+                        {activeTrackingOrder.trackingNumber || 'Pending Dispatch'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        Recipient Patron
+                      </span>
+                      <span className="font-bold text-stone-900 mt-1 block truncate">
+                        {activeTrackingOrder.customer?.firstName} {activeTrackingOrder.customer?.lastName}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                        Destination City
+                      </span>
+                      <span className="font-bold text-stone-900 mt-1 block truncate">
+                        {activeTrackingOrder.customer?.city}, {activeTrackingOrder.customer?.state}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Live Transit Milestone Timeline */}
+                  <div className="pt-2 space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-stone-950 flex items-center gap-1.5">
+                      <TruckIcon className="w-4 h-4 text-stone-700" />
+                      <span>Shipment Transit Milestones</span>
+                    </h4>
+
+                    <div className="relative pl-6 space-y-6 border-l-2 border-stone-200 ml-2 py-1">
+                      {activeTrackingOrder.timeline && activeTrackingOrder.timeline.map((step, idx) => {
+                        const isDone = step.done ?? step.completed ?? false;
+                        const stageLabel = step.status ?? step.stage ?? "Milestone";
+                        const timeStamp = step.date ?? step.time ?? "--";
+                        const description = step.description || (isDone ? "Milestone verified" : "Pending transit update");
+                        const isCancelledNode = stageLabel === "Cancelled";
+                        const isRefundNode = stageLabel === "Refunded";
+
+                        return (
+                          <div key={idx} className="relative">
+                            {/* Step Indicator Node */}
+                            <span
+                              className={`absolute -left-[31px] top-0.5 flex h-4 w-4 items-center justify-center rounded-full border-2 bg-white ${isCancelledNode
+                                ? 'border-rose-600 bg-rose-600 text-white'
+                                : isRefundNode
+                                  ? 'border-emerald-600 bg-emerald-600 text-white'
+                                  : isDone
+                                    ? 'border-emerald-600 bg-emerald-600 text-white'
+                                    : 'border-stone-300 bg-white'
+                                }`}
+                            >
+                              {isCancelledNode ? (
+                                <span className="text-[8px] font-bold">✕</span>
+                              ) : isDone ? (
+                                <span className="text-[8px] font-bold">✓</span>
+                              ) : null}
+                            </span>
+
+                            <div className="min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <h5 className={`text-xs font-bold truncate ${isCancelledNode ? 'text-rose-600' : isDone ? 'text-stone-950' : 'text-stone-400'
+                                  }`}>
+                                  {stageLabel}
+                                </h5>
+                                {isDone && (
+                                  <span className="text-[10px] text-stone-400 font-mono shrink-0">{timeStamp}</span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
+                                {description}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Consignment Items in this shipment */}
+                  <div className="border-t border-stone-100 pt-4 space-y-3">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-stone-950">
+                      Consignment Items ({activeTrackingOrder.items?.length || 0})
+                    </h4>
+
+                    <div className="divide-y divide-stone-100">
+                      {activeTrackingOrder.items?.map((it, idx) => (
+                        <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                          <div className="flex items-center gap-3">
+                            <img src={it.image} alt="" className="h-11 w-11 rounded-xs object-contain bg-[#FAF9F5] border border-stone-200 p-1" />
+                            <div>
+                              <p className="font-bold text-stone-950">{it.name}</p>
+                              <span className="text-[10px] text-stone-400">
+                                {it.brand} &bull; Qty: {it.quantity} {it.color && `&bull; ${it.color}`}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="font-bold text-stone-950">
+                            ₹{(it.price * it.quantity).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center pt-2 border-t border-stone-100 text-xs font-bold text-stone-900">
+                      <span>Total Amount Settled:</span>
+                      <span className="text-sm">₹{activeTrackingOrder.total?.toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            ) : null}
+          </div>
+        )}
+
+        {/* ================= TAB 2: ADDRESS BOOK ================= */}
+        {activeTab === 'addresses' && (
+          <div className="space-y-6 animate-fade-in">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-editorial-serif text-xl font-normal text-stone-950">Saved Delivery Destinations</h3>
+                <p className="text-xs text-stone-500">Pre-configured destinations for 1-click expedited checkout.</p>
+              </div>
+              <button
+                onClick={handleOpenAddAddress}
+                className="rounded-xs bg-[#121316] hover:bg-[#25262B] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#FAF9F5] shadow-xs"
+              >
+                + Add Destination
+              </button>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {addresses.map(addr => (
+                <div key={addr.id} className="rounded-xs border border-stone-200 bg-white p-5 shadow-xs flex flex-col justify-between space-y-3">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-xs uppercase tracking-wider text-stone-900 bg-stone-100 px-2 py-0.5 rounded-xs border border-stone-200">
+                        {addr.label}
+                      </span>
+                      {addr.isDefault && (
+                        <span className="text-[9.5px] font-bold text-[#9C7C44] uppercase tracking-wider">
+                          Primary Default
+                        </span>
+                      )}
+                    </div>
+                    <p className="font-bold text-xs text-stone-950">{addr.firstName} {addr.lastName}</p>
+                    <p className="text-xs text-stone-600 mt-1 leading-relaxed">{addr.address}</p>
+                    <p className="text-xs text-stone-600">{addr.city}, {addr.state} - {addr.pincode}</p>
+                    <p className="text-[11px] text-stone-400 font-mono mt-1">Phone: {addr.phone}</p>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-stone-100 text-xs">
                     <button
-                      type="button"
                       onClick={() => handleOpenEditAddress(addr)}
-                      className="text-neutral-600 hover:text-neutral-950 font-semibold p-1"
+                      className="text-stone-700 hover:text-black font-bold uppercase tracking-wider text-[10px]"
                     >
                       Edit
                     </button>
-                    <span className="text-neutral-300">&bull;</span>
+                    <span className="text-stone-300">&bull;</span>
                     <button
-                      type="button"
                       onClick={() => handleDeleteAddress(addr.id)}
-                      className="text-rose-600 hover:underline font-semibold p-1"
+                      className="text-rose-600 hover:text-rose-800 font-bold uppercase tracking-wider text-[10px]"
                     >
                       Delete
                     </button>
@@ -555,143 +953,187 @@ export default function Account() {
           </div>
         )}
 
-        {/* Tab 3: Wishlist Quick Tab */}
+        {/* ================= TAB 3: WISHLIST ================= */}
         {activeTab === 'wishlist' && (
-          <div className="mt-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-serif text-xl font-medium text-neutral-950">Shortlisted Pieces ({wishlist.length})</h3>
-              <Link to="/wishlist" className="text-xs font-semibold text-[#8C6734] hover:underline uppercase tracking-wider">
-                Open Full Wishlist &rarr;
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between">
+              <h3 className="font-editorial-serif text-xl font-normal text-stone-950">Curated Favorites ({wishlist.length})</h3>
+              <Link to="/wishlist" className="text-xs font-bold text-[#9C7C44] hover:underline uppercase tracking-wider">
+                Manage Full Wishlist &rarr;
               </Link>
             </div>
 
-            {wishlist.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {wishlist.map((product) => (
-                  <Link
-                    key={product.id}
-                    to={`/product/${product.id}`}
-                    className="p-3 rounded-xl bg-white border border-neutral-200/80 hover:border-[#C5A880] transition space-y-2 block"
-                  >
-                    <div className="aspect-square bg-[#FAFAFB] rounded-lg p-2 flex items-center justify-center">
-                      <img src={product.image} alt={product.name} className="h-full w-full object-contain" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase text-[#8C6734] block">{product.brand}</span>
-                    <p className="text-xs font-bold text-neutral-950 truncate">{product.name}</p>
-                    <p className="text-xs font-serif font-medium text-neutral-950">₹{Number(product.price).toLocaleString('en-IN')}</p>
+            {wishlist.length === 0 ? (
+              <p className="text-xs text-stone-500">No items saved to wishlist yet.</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {wishlist.slice(0, 4).map(p => (
+                  <Link key={p.id} to={`/product/${p.id}`} className="rounded-xs border border-stone-200 bg-white p-3 shadow-2xs block">
+                    <img src={p.image} alt="" className="aspect-square w-full object-contain mix-blend-multiply bg-[#FAF9F5] p-2 rounded-xs mb-2" />
+                    <p className="text-[10px] font-bold text-[#9C7C44] uppercase">{p.brand}</p>
+                    <p className="text-xs font-semibold text-stone-950 truncate">{p.name}</p>
+                    <p className="text-xs font-bold text-stone-950 mt-1">₹{Number(p.price).toLocaleString('en-IN')}</p>
                   </Link>
                 ))}
               </div>
-            ) : (
-              <p className="text-xs text-neutral-500">Your wishlist is currently empty.</p>
             )}
+          </div>
+        )}
+
+        {/* ================= TAB 4: PROFILE SETTINGS ================= */}
+        {activeTab === 'profile' && (
+          <div className="max-w-xl rounded-xs border border-stone-200 bg-white p-6 shadow-xs space-y-4 animate-fade-in text-xs">
+            <h3 className="font-editorial-serif text-xl font-normal text-stone-950">Patron Credentials</h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Full Legal Name</label>
+                <input
+                  type="text"
+                  readOnly
+                  value={currentUser.name || 'Rahul Patel'}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 font-semibold text-stone-800"
+                />
+              </div>
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Registered Email Address</label>
+                <input
+                  type="email"
+                  readOnly
+                  value={currentUser.email}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 font-semibold text-stone-800"
+                />
+              </div>
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Account Role</label>
+                <input
+                  type="text"
+                  readOnly
+                  value={currentUser.role?.toUpperCase() || 'CUSTOMER'}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 font-mono font-bold text-stone-800"
+                />
+              </div>
+            </div>
           </div>
         )}
 
       </main>
 
-      {/* Add / Edit Address Modal */}
+      {/* Address Modal */}
       {addrModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="relative max-w-md w-full bg-white rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
-              <h3 className="font-serif text-lg font-medium text-neutral-950">
-                {editingAddr ? 'Edit Address' : 'Add Delivery Address'}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg rounded-xs border border-stone-200 bg-white p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <h3 className="text-base font-bold text-stone-950">
+                {editingAddr ? 'Edit Delivery Destination' : 'Add New Delivery Destination'}
               </h3>
-              <button
-                type="button"
-                onClick={() => setAddrModalOpen(false)}
-                className="text-neutral-400 hover:text-neutral-700 text-sm font-bold cursor-pointer"
-              >
-                ✕
-              </button>
+              <button onClick={() => setAddrModalOpen(false)} className="text-stone-400 hover:text-black font-bold">✕</button>
             </div>
 
-            <form onSubmit={handleSaveAddress} className="space-y-3.5 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSaveAddress} className="space-y-3">
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Address Label *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Flagship Office / Home Villa"
+                  value={addrForm.label}
+                  onChange={e => setAddrForm({ ...addrForm, label: e.target.value })}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
+                />
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="font-semibold text-neutral-800 block mb-1">First Name</label>
+                  <label className="font-bold text-stone-700 block mb-1">First Name *</label>
                   <input
                     type="text"
                     required
                     value={addrForm.firstName}
-                    onChange={(e) => setAddrForm(prev => ({ ...prev, firstName: e.target.value }))}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
+                    onChange={e => setAddrForm({ ...addrForm, firstName: e.target.value })}
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-neutral-800 block mb-1">Last Name</label>
+                  <label className="font-bold text-stone-700 block mb-1">Last Name *</label>
                   <input
                     type="text"
                     required
                     value={addrForm.lastName}
-                    onChange={(e) => setAddrForm(prev => ({ ...prev, lastName: e.target.value }))}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
+                    onChange={e => setAddrForm({ ...addrForm, lastName: e.target.value })}
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold text-neutral-800 block mb-1">Street Address</label>
-                <input
-                  type="text"
-                  required
-                  value={addrForm.address}
-                  onChange={(e) => setAddrForm(prev => ({ ...prev, address: e.target.value }))}
-                  className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <label className="font-semibold text-neutral-800 block mb-1">City</label>
-                  <input
-                    type="text"
-                    required
-                    value={addrForm.city}
-                    onChange={(e) => setAddrForm(prev => ({ ...prev, city: e.target.value }))}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
-                  />
-                </div>
-                <div>
-                  <label className="font-semibold text-neutral-800 block mb-1">State</label>
-                  <input
-                    type="text"
-                    required
-                    value={addrForm.state}
-                    onChange={(e) => setAddrForm(prev => ({ ...prev, state: e.target.value }))}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
-                  />
-                </div>
-                <div>
-                  <label className="font-semibold text-neutral-800 block mb-1">Pincode</label>
-                  <input
-                    type="text"
-                    required
-                    value={addrForm.pincode}
-                    onChange={(e) => setAddrForm(prev => ({ ...prev, pincode: e.target.value }))}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="font-semibold text-neutral-800 block mb-1">Mobile Contact Phone</label>
+                <label className="font-bold text-stone-700 block mb-1">Mobile Phone (For Courier OTP) *</label>
                 <input
                   type="tel"
                   required
                   value={addrForm.phone}
-                  onChange={(e) => setAddrForm(prev => ({ ...prev, phone: e.target.value }))}
-                  className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-[#8C6734]"
+                  onChange={e => setAddrForm({ ...addrForm, phone: e.target.value })}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
                 />
               </div>
 
-              <div className="pt-2">
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Street Address / Landmark *</label>
+                <input
+                  type="text"
+                  required
+                  value={addrForm.address}
+                  onChange={e => setAddrForm({ ...addrForm, address: e.target.value })}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
+                />
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="font-bold text-stone-700 block mb-1">City *</label>
+                  <input
+                    type="text"
+                    required
+                    value={addrForm.city}
+                    onChange={e => setAddrForm({ ...addrForm, city: e.target.value })}
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-stone-700 block mb-1">State *</label>
+                  <input
+                    type="text"
+                    required
+                    value={addrForm.state}
+                    onChange={e => setAddrForm({ ...addrForm, state: e.target.value })}
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-stone-700 block mb-1">PIN Code *</label>
+                  <input
+                    type="text"
+                    required
+                    value={addrForm.pincode}
+                    onChange={e => setAddrForm({ ...addrForm, pincode: e.target.value })}
+                    className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 font-mono outline-none focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setAddrModalOpen(false)}
+                  className="rounded-xs border border-stone-300 bg-stone-100 px-4 py-2 font-bold text-stone-700"
+                >
+                  Cancel
+                </button>
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#8C6734] transition-colors cursor-pointer"
+                  className="rounded-xs bg-[#121316] px-5 py-2 font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B]"
                 >
-                  Save Address
+                  Save Destination
                 </button>
               </div>
             </form>
@@ -699,48 +1141,209 @@ export default function Account() {
         </div>
       )}
 
-      {/* Cancel Order Modal */}
-      {cancelModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="relative max-w-md w-full bg-white rounded-2xl p-6 shadow-2xl space-y-4">
-            <h3 className="font-serif text-lg font-medium text-neutral-950">Cancel Consignment #{selectedOrderForCancel?.id}</h3>
-            <form onSubmit={handleConfirmCancel} className="space-y-3 text-xs">
+      {/* ================= CANCEL ORDER MODAL ================= */}
+      {cancelModalOpen && selectedOrderForCancel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-md rounded-xs border border-rose-200 bg-white p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div className="flex items-center gap-2 text-rose-700">
+                <span className="text-base">⚠️</span>
+                <h3 className="text-sm font-bold uppercase tracking-wider">
+                  Cancel Consignment {selectedOrderForCancel.id}
+                </h3>
+              </div>
+              <button
+                onClick={() => setCancelModalOpen(false)}
+                className="text-stone-400 hover:text-black font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="rounded-xs bg-rose-50/70 border border-rose-200 p-3 space-y-1 text-rose-900">
+              <p className="font-semibold">Are you sure you want to cancel this order?</p>
+              <p className="text-[11px] text-rose-700">
+                Total amount: <strong>₹{selectedOrderForCancel.total?.toLocaleString('en-IN')}</strong> ({selectedOrderForCancel.paymentMethod})
+                {selectedOrderForCancel.paymentStatus === 'Paid' && ' • Full payment will be initiated for refund.'}
+              </p>
+            </div>
+
+            <form onSubmit={handleConfirmCancel} className="space-y-3.5">
               <div>
-                <label className="font-semibold text-neutral-800 block mb-1">Reason for Cancellation</label>
+                <label className="font-bold text-stone-700 block mb-1">Select Cancellation Reason *</label>
                 <select
                   value={cancelReason}
-                  onChange={(e) => setCancelReason(e.target.value)}
-                  className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none"
+                  onChange={e => setCancelReason(e.target.value)}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2.5 outline-none focus:bg-white text-xs text-stone-900"
                 >
-                  <option value="Ordered by mistake">Ordered by mistake</option>
-                  <option value="Found better alternative">Found better alternative</option>
-                  <option value="Change of delivery destination">Change of delivery destination</option>
-                  <option value="Payment / billing clarification">Payment / billing clarification</option>
+                  <option value="Ordered by mistake">Ordered by mistake / Duplicate order</option>
+                  <option value="Found a better price elsewhere">Found a better price elsewhere</option>
+                  <option value="Delivery time is too long">Delivery time is too long</option>
+                  <option value="Need to change delivery address or phone">Need to change delivery address or phone</option>
+                  <option value="Changed mind / No longer required">Changed mind / No longer required</option>
+                  <option value="Other reasons">Other reasons</option>
                 </select>
               </div>
+
               <div>
-                <label className="font-semibold text-neutral-800 block mb-1">Additional Comments</label>
+                <label className="font-bold text-stone-700 block mb-1">Additional Notes (Optional)</label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={cancelComments}
-                  onChange={(e) => setCancelComments(e.target.value)}
-                  placeholder="Optional details..."
-                  className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none resize-none"
+                  onChange={e => setCancelComments(e.target.value)}
+                  placeholder="Provide any feedback for our concierge..."
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white text-xs"
                 />
               </div>
-              <div className="flex gap-2 pt-2">
+
+              <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setCancelModalOpen(false)}
-                  className="flex-1 py-2.5 border border-neutral-300 rounded-md font-semibold"
+                  className="rounded-xs border border-stone-300 bg-stone-100 px-4 py-2 font-bold text-stone-700"
                 >
-                  Close
+                  Keep Order
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-rose-600 text-white rounded-md font-semibold hover:bg-rose-700"
+                  className="rounded-xs bg-rose-700 px-5 py-2 font-bold uppercase tracking-wider text-white hover:bg-rose-800 shadow-xs"
                 >
                   Confirm Cancellation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= RETURN / REFUND REQUEST MODAL ================= */}
+      {returnModalOpen && selectedOrderForReturn && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-lg rounded-xs border border-purple-200 bg-white p-6 shadow-2xl space-y-4 text-xs max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div className="flex items-center gap-2 text-stone-900">
+                <span className="text-base text-purple-700">↩</span>
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-wider">
+                    7-Day Return & Refund Request
+                  </h3>
+                  <span className="text-[10px] text-stone-400 font-mono">Consignment {selectedOrderForReturn.id}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setReturnModalOpen(false)}
+                className="text-stone-400 hover:text-black font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="rounded-xs bg-stone-50 border border-stone-200 p-3 space-y-1">
+              <div className="flex justify-between font-bold text-stone-900">
+                <span>Items in Return: {selectedOrderForReturn.items?.length || 1} Item(s)</span>
+                <span>Eligible Refund: ₹{selectedOrderForReturn.total?.toLocaleString('en-IN')}</span>
+              </div>
+              <p className="text-[11px] text-stone-500">
+                Protected by Krishna Accessories 7-Day Return &amp; Exchange Policy. Reverse pickup will be arranged by BlueDart.
+              </p>
+            </div>
+
+            <form onSubmit={handleConfirmReturn} className="space-y-3">
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Reason for Return *</label>
+                <select
+                  value={returnReason}
+                  onChange={e => setReturnReason(e.target.value)}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2.5 outline-none focus:bg-white text-xs"
+                >
+                  <option value="Defective / Damaged Piece">Defective / Damaged / Scratched Item</option>
+                  <option value="Incorrect Product Received">Incorrect Model or Color Received</option>
+                  <option value="Size / Fit / Dimension Issue">Size / Fit / Dimension Issue</option>
+                  <option value="Quality Not as Expected">Quality or Material not matching expectations</option>
+                  <option value="Missing Accessories or Manuals">Missing Accessories or Box Manuals</option>
+                  <option value="Changed Mind">Changed Mind / Not Required</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Item Physical Condition *</label>
+                <select
+                  value={returnCondition}
+                  onChange={e => setReturnCondition(e.target.value)}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2.5 outline-none focus:bg-white text-xs"
+                >
+                  <option value="Unused with Original Packaging & Tags">Brand New, Unused with All Original Packaging & Warranty</option>
+                  <option value="Opened Box with Tags Intact">Opened Box, Tested once with all accessories present</option>
+                  <option value="Damaged in Transit / Seal Broken">Received Damaged / Seal was broken on arrival</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Refund Settlement Mode *</label>
+                <select
+                  value={refundMethod}
+                  onChange={e => setRefundMethod(e.target.value)}
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2.5 outline-none focus:bg-white text-xs"
+                >
+                  <option value="Original Payment Method">Refund to Original Payment Method (Cards / NetBanking)</option>
+                  <option value="Direct UPI Instant Transfer">Direct UPI Transfer (GPay / PhonePe / Paytm)</option>
+                  <option value="Bank Account NEFT Transfer">Bank Account NEFT / RTGS Transfer</option>
+                  <option value="Store Credit Voucher (+5% Bonus)">Krishna Luxury Store Credit (+5% Bonus Credit)</option>
+                </select>
+              </div>
+
+              {refundMethod === 'Direct UPI Instant Transfer' && (
+                <div>
+                  <label className="font-bold text-stone-700 block mb-1">Your UPI ID (VPA) *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. yourname@oksbi or 9876543210@paytm"
+                    value={returnUpiId}
+                    onChange={e => setReturnUpiId(e.target.value)}
+                    className="w-full rounded-xs border border-purple-200 bg-[#FAF9F5] p-2 font-mono outline-none focus:bg-white text-xs"
+                  />
+                </div>
+              )}
+
+              {refundMethod === 'Bank Account NEFT Transfer' && (
+                <div>
+                  <label className="font-bold text-stone-700 block mb-1">Bank Name, A/C No. & IFSC Code *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. HDFC Bank, A/C: 501002348911, IFSC: HDFC0001234"
+                    value={returnBankDetails}
+                    onChange={e => setReturnBankDetails(e.target.value)}
+                    className="w-full rounded-xs border border-purple-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white text-xs"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="font-bold text-stone-700 block mb-1">Detailed Explanation / Issue Notes</label>
+                <textarea
+                  rows={2}
+                  value={returnComments}
+                  onChange={e => setReturnComments(e.target.value)}
+                  placeholder="Explain the reason for return to accelerate concierge approval..."
+                  className="w-full rounded-xs border border-stone-200 bg-[#FAF9F5] p-2 outline-none focus:bg-white text-xs"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2 border-t border-stone-100">
+                <button
+                  type="button"
+                  onClick={() => setReturnModalOpen(false)}
+                  className="rounded-xs border border-stone-300 bg-stone-100 px-4 py-2 font-bold text-stone-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xs bg-[#121316] px-5 py-2 font-bold uppercase tracking-wider text-[#FAF9F5] hover:bg-[#25262B] shadow-xs"
+                >
+                  Submit Return Request
                 </button>
               </div>
             </form>

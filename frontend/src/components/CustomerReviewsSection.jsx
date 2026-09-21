@@ -1,7 +1,7 @@
 // src/components/CustomerReviewsSection.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Reveal } from './useScrollReveal';
-import { ChevronLeft, ChevronRight, Star, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
 
 const DEFAULT_REVIEWS = [
   {
@@ -103,21 +103,28 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
-    el.addEventListener('scroll', checkScroll, { passive: true });
     checkScroll();
-    return () => el.removeEventListener('scroll', checkScroll);
+    el.addEventListener('scroll', checkScroll, { passive: true });
+    window.addEventListener('resize', checkScroll);
+    return () => {
+      el.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
   }, [checkScroll]);
 
+  // Smooth scroll handler
   const scrollCarousel = (direction) => {
     if (!carouselRef.current) return;
     const container = carouselRef.current;
-    const scrollAmount = (container.firstElementChild?.clientWidth || 320) + 16;
+    const cardWidth = container.firstElementChild?.clientWidth || 320;
+    const scrollAmount = cardWidth + 16;
     container.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth'
     });
   };
 
+  // Scroll directly to a specific slide index
   const scrollToIndex = (index) => {
     if (!carouselRef.current) return;
     const container = carouselRef.current;
@@ -145,6 +152,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
     return () => clearInterval(timer);
   }, [isPaused, isDragging]);
 
+  // Drag to scroll handlers
   const handleMouseDown = (e) => {
     if (!carouselRef.current) return;
     setIsDragging(true);
@@ -168,7 +176,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
 
   return (
     <section
-      className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 pb-10 sm:pb-14 lg:px-8 select-none"
+      className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);
@@ -179,29 +187,28 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
       <Reveal direction="up" delay={50}>
         <div className="mb-6 sm:mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 shadow-2xs mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
-              <span className="text-[10.5px] font-semibold tracking-[0.2em] uppercase text-[#8C6734]">
-                Verified Client Feedback
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span className="text-[10.5px] font-bold uppercase tracking-[0.24em] text-neutral-400">
+                VERIFIED CLIENT FEEDBACK
               </span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-4xl font-medium tracking-tight text-neutral-950">
-              Customer Reviews &amp; Testimonials <br />
-              <span className="italic font-normal text-[#8C6734]">Trusted Experiences Across India.</span>
+            <h2 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-950">
+              Customer Reviews &amp; Testimonials
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-xl">
-              Real impressions from clients who rely on Krishna Accessories for authentic luxury curation and reliable boutique service.
+            <p className="mt-1 text-xs sm:text-sm text-gray-500 max-w-xl">
+              Real experiences from clients who trust Krishna Accessories for premium products and a reliable shopping experience.
             </p>
           </div>
 
           {/* Rating Score & Navigation Controls */}
           <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-            <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-1.5 shadow-2xs">
+            <div className="flex items-center gap-2 rounded-full border border-gray-200/90 bg-white px-4 py-1.5 shadow-2xs">
               <span className="flex items-center gap-0.5 text-xs text-amber-500">
                 {'★'.repeat(5)}
               </span>
-              <span className="text-xs font-bold text-neutral-900">
-                4.9 / 5 <span className="text-neutral-500 font-normal hidden sm:inline">(2,840+ verified reviews)</span>
+              <span className="text-xs font-bold text-gray-800">
+                4.9 / 5 <span className="text-gray-400 font-normal hidden sm:inline">(2,840+ verified reviews)</span>
               </span>
             </div>
 
@@ -211,19 +218,19 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
                 type="button"
                 onClick={() => scrollCarousel('left')}
                 disabled={!canScrollLeft}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 shadow-2xs hover:bg-neutral-950 hover:text-white hover:border-neutral-950 transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
+                className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
                 aria-label="Previous review"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeftIcon className="w-4 h-4" />
               </button>
               <button
                 type="button"
                 onClick={() => scrollCarousel('right')}
                 disabled={!canScrollRight}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 shadow-2xs hover:bg-neutral-950 hover:text-white hover:border-neutral-950 transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
+                className="flex h-8.5 w-8.5 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-2xs hover:bg-black hover:text-white hover:border-black transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-90 cursor-pointer"
                 aria-label="Next review"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRightIcon className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -238,15 +245,14 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className={`flex gap-4 sm:gap-5 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${
-            isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          }`}
+          className={`flex gap-4 sm:gap-5 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {reviews.map((review, idx) => (
             <div
               key={review.id || review.name || idx}
-              className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[390px] snap-start flex flex-col justify-between rounded-2xl border border-neutral-200/80 bg-white p-6 sm:p-7 shadow-2xs transition-all duration-300 hover:shadow-md hover:border-[#C5A880] hover:-translate-y-1 relative"
+              className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[390px] snap-start flex flex-col justify-between rounded-3xl border border-gray-200/90 bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.08)] hover:-translate-y-1 relative"
             >
               <div>
                 {/* Top Row: Stars + Category/Product Badge */}
@@ -255,36 +261,36 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
                     {'★'.repeat(review.rating || 5)}
                   </div>
                   {review.product && (
-                    <span className="truncate max-w-[190px] text-[10px] font-semibold text-[#8C6734] bg-[#F5F2EB] border border-[#C5A880]/40 rounded-md px-2 py-0.5">
+                    <span className="truncate max-w-[190px] text-[10px] font-semibold text-neutral-800 bg-neutral-100 border border-neutral-200/80 rounded-full px-2.5 py-0.5">
                       {review.product}
                     </span>
                   )}
                 </div>
 
                 {/* Review Quote Text */}
-                <p className="mt-4 text-xs sm:text-[13px] leading-relaxed text-neutral-700 font-normal">
+                <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-700 font-normal">
                   “{review.text}”
                 </p>
               </div>
 
               {/* Author Footer */}
-              <div className="mt-6 flex items-center justify-between border-t border-neutral-100 pt-4">
+              <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h3 className="text-xs sm:text-sm font-semibold text-neutral-950">
+                    <h3 className="text-xs sm:text-[13.5px] font-bold text-gray-950">
                       {review.name}
                     </h3>
-                    <span className="text-[10px] text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-md flex items-center gap-0.5">
+                    <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
                       <span>✓</span> Verified
                     </span>
                   </div>
-                  <p className="mt-0.5 text-[10.5px] text-neutral-400">
+                  <p className="mt-0.5 text-[10px] sm:text-[11px] text-gray-400">
                     {review.location}
                   </p>
                 </div>
 
-                {/* Avatar Initial with Stylish Accent */}
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-950 text-xs font-serif font-bold text-[#C5A880] border border-[#C5A880]/40 shadow-2xs shrink-0">
+                {/* Avatar Initial with Stylish Gradient */}
+                <span className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-[#111827] text-xs font-bold text-amber-300 border border-neutral-700 shadow-2xs shrink-0">
                   {review.name.charAt(0)}
                 </span>
               </div>
@@ -301,11 +307,10 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             type="button"
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
-            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
-              i === activeIndex
-                ? 'w-7 bg-neutral-950'
-                : 'w-1.5 bg-neutral-300 hover:bg-neutral-400'
-            }`}
+            className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
+                ? 'w-7 bg-gray-950'
+                : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+              }`}
           />
         ))}
       </div>
