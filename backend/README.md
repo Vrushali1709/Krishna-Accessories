@@ -60,9 +60,34 @@ Seeds initial catalog fixtures, brands, categories, and demo admin/supplier acco
 
 ---
 
+## 4. Deploying to Render (Cloud Hosting)
+
+When deploying this backend to Render:
+
+1. **Create a Free PostgreSQL Instance on Render:**
+   - Go to [dashboard.render.com](https://dashboard.render.com/) -> Click **New +** -> **PostgreSQL**.
+   - Set Name: `krishna-db`, Database: `krishna_db`, User: `krishna_user`.
+   - Select Free Tier and click **Create Database**.
+   - Copy the **Internal Database URL** (or External Database URL).
+
+2. **Configure Environment Variable in Render Web Service:**
+   - Go to your FastAPI Web Service on Render (`krishna-backend-3os6`).
+   - Go to the **Environment** tab.
+   - Add environment variable:
+     - **Key:** `DATABASE_URL`
+     - **Value:** `postgresql://...` (your copied database connection string)
+   - Click **Save Changes**.
+
+3. Render will automatically redeploy, create all 21 tables, and seed initial demo data on startup!
+
+---
+
 ## Gujarati Guide (ગુજરાતી માર્ગદર્શિકા)
 
-1. **ડેટાબેઝ સેટઅપ:** PostgreSQL માં `krishna_db` ડેટાબેઝ ઓટોમેટિક બની ગયો છે અને તમામ 21 ટેબલ્સ કનેક્ટ થઈ ગયા છે.
+1. **લોકલ ડેટાબેઝ સેટઅપ:** તમારા કોમ્પ્યુટર પર PostgreSQL માં `krishna_db` ડેટાબેઝ બની ગયો છે અને તમામ 21 ટેબલ્સ કનેક્ટ થઈ ગયા છે.
 2. **કનેક્શન ટેસ્ટ કરવા માટે:** `python test_db_connection.py` રન કરો.
 3. **બેકએન્ડ ચલાવવા માટે:** `python run_backend.py` અથવા `run.bat` ડબલ ક્લિક કરો.
-4. **ડેટા સેવિંગ:** હવે વેબસાઈટ પર થતી તમામ ક્રિયાઓ (પ્રોડક્ટ્સ, ઓર્ડર્સ, યુઝર્સ, કાર્ટ, વગેરે) સીધા PostgreSQL ડેટાબેઝમાં સ્ટોર થશે.
+4. **Render પર Deploy કરતી વખતે Error સોલ્યુશન:**
+   - Render ના Web Service container માં `localhost:5432` નથી હોતું.
+   - Render Dashboard માં **New +** -> **PostgreSQL** બનાવીને તેની **Internal Database URL** કોપી કરો.
+   - તમારા Web Service ના **Environment** ટેબમાં `DATABASE_URL` વેરીએબલ ઉમેરી દો. Render આપમેળે ઓનલાઇન ડેટાબેઝ સાથે કનેક્ટ થઈ જશે.

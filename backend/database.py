@@ -9,9 +9,10 @@ from typing import Any, List, Dict, Optional, Tuple, Union
 import psycopg2
 from dotenv import load_dotenv
 
-# Load environment variables from backend/.env
+# Load environment variables from backend/.env if present (for local development)
 ENV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-load_dotenv(ENV_PATH)
+if os.path.exists(ENV_PATH):
+    load_dotenv(ENV_PATH)
 
 PGHOST = os.getenv("PGHOST", "localhost")
 PGPORT = int(os.getenv("PGPORT", "5432"))
@@ -19,6 +20,16 @@ PGUSER = os.getenv("PGUSER", "postgres")
 PGPASSWORD = os.getenv("PGPASSWORD", "vrushali")
 PGDATABASE = os.getenv("PGDATABASE", "krishna_db")
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+def get_database_url() -> Optional[str]:
+    url = os.getenv("DATABASE_URL")
+    if url:
+        url = url.strip()
+        # Normalize postgres:// to postgresql:// for compatibility
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql://", 1)
+        return url
+    return None
 
 TABLE_CONFLICT_KEYS = {
     'products': ['id'],
@@ -248,37 +259,80 @@ class PgConnectionWrapper:
         self._conn.close()
 
 def ensure_postgres_database_exists():
-    """Ensure the target database (krishna_db) exists in PostgreSQL."""
+    """Ensure the target database (krishna_db) exists in local PostgreSQL."""
+    # Skip database creation if using cloud connection string (Render/Neon/Supabase)
+    db_url = get_database_url()
+    if db_url:
+        return
+
+    host = os.getenv("PGHOST", "localhost")
+    if host not in ("localhost", "127.0.0.1", "::1"):
+        return
+
+    port = int(os.getenv("PGPORT", "5432"))
+    user = os.getenv("PGUSER", "postgres")
+    password = os.getenv("PGPASSWORD", "vrushali")
+    dbname = os.getenv("PGDATABASE", "krishna_db")
+
     try:
         conn = psycopg2.connect(
-            host=PGHOST,
-            port=PGPORT,
-            user=PGUSER,
-            password=PGPASSWORD,
-            dbname="postgres"
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            dbname="postgres",
+            connect_timeout=3
         )
         conn.autocommit = True
         cur = conn.cursor()
-        cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (PGDATABASE,))
+        cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (dbname,))
         exists = cur.fetchone()
         if not exists:
-            cur.execute(f'CREATE DATABASE "{PGDATABASE}"')
-            print(f"[PostgreSQL] Created database '{PGDATABASE}' successfully.")
+            cur.execute(f'CREATE DATABASE "{dbname}"')
+            print(f"[PostgreSQL] Created database '{dbname}' successfully.")
         cur.close()
         conn.close()
     except Exception:
         pass
 
 def get_raw_pg_connection():
-    if DATABASE_URL:
-        return psycopg2.connect(DATABASE_URL)
-    return psycopg2.connect(
-        host=PGHOST,
-        port=PGPORT,
-        user=PGUSER,
-        password=PGPASSWORD,
-        dbname=PGDATABASE
-    )
+    db_url = get_database_url()
+    if db_url:
+        try:
+            return psycopg2.connect(db_url)
+        except Exception as e:
+            print(f"[PostgreSQL Error] Connection to DATABASE_URL failed: {e}")
+            raise
+
+    host = os.getenv("PGHOST", "localhost")
+    port = int(os.getenv("PGPORT", "5432"))
+    user = os.getenv("PGUSER", "postgres")
+    password = os.getenv("PGPASSWORD", "vrushali")
+    dbname = os.getenv("PGDATABASE", "krishna_db")
+
+    try:
+        return psycopg2.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            dbname=dbname,
+            connect_timeout=10
+        )
+    except psycopg2.OperationalError as e:
+        is_cloud = bool(os.getenv("RENDER") or os.getenv("PORT") or os.getenv("RENDER_SERVICE_ID"))
+        if is_cloud or host in ("localhost", "127.0.0.1"):
+            print("\n" + "=" * 75)
+            print("🚨 [DATABASE CONNECTION ERROR] 🚨")
+            print(f"Could not connect to PostgreSQL server at '{host}:{port}'.")
+            print("\n👉 IF RUNNING ON RENDER / CLOUD:")
+            print("1. Create a PostgreSQL database on Render: Dashboard -> New + -> PostgreSQL")
+            print("2. Copy the 'Internal Database URL' (or External Database URL)")
+            print("3. In your Web Service -> Environment -> Add Environment Variable:")
+            print("   Key:   DATABASE_URL")
+            print("   Value: postgresql://username:password@hostname/database_name")
+            print("=" * 75 + "\n")
+        raise
 
 def get_db_connection() -> PgConnectionWrapper:
     """Returns an active, wrapped PostgreSQL database connection."""
