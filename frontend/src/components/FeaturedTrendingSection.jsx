@@ -166,7 +166,7 @@ export default function FeaturedTrendingSection({ products = [], onToast }) {
 
   return (
     <section className="bg-[#FAFBFD] py-8 sm:py-10 border-t border-b border-gray-200/80">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
 
         {/* ============================================================
             1. SECTION HEADER WITH TABS

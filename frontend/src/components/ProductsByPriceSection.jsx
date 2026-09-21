@@ -122,7 +122,7 @@ export default function ProductsByPriceSection({
 
   return (
     <section className="bg-white pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
 
         {/* ============================================================
             1. SECTION HEADER

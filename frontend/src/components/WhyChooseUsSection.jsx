@@ -32,7 +32,7 @@ const DIFFERENCE_ITEMS = [
 
 export default function WhyChooseUsSection({ items = DIFFERENCE_ITEMS }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
+    <section className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 pt-6 sm:pt-10 pb-4 sm:pb-6">
       {/* Header */}
       <Reveal direction="up" delay={50}>
         <div className="mb-7 sm:mb-9 text-center">

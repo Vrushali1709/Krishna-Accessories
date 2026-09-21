@@ -1843,7 +1843,7 @@ export default function Shop() {
 
       {/* Clean Minimal Header Section */}
       <section className="border-b border-gray-200 bg-white py-5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
           {/* Breadcrumb Trail */}
           <nav className="flex items-center gap-1.5 text-xs text-gray-500 font-medium mb-2">
             <Link to="/" className="hover:text-gray-900 transition">Home</Link>
@@ -1883,7 +1883,7 @@ export default function Shop() {
       </section>
 
       {/* Main Catalogue Container with Persistent Side Filters */}
-      <main ref={productsTopRef} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+      <main ref={productsTopRef} className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-6">
 
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
 

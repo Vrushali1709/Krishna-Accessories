@@ -9,14 +9,14 @@ export default function TermsConditions() {
       <Navbar />
 
       <section className="bg-white border-b border-gray-200 py-12">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 text-center max-w-4xl">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Legal Agreement</span>
           <h1 className="mt-1 text-2xl sm:text-4xl font-bold tracking-tight text-gray-950">Terms & Conditions</h1>
           <p className="mt-2 text-xs text-gray-500">Effective Date: 01 September 2026</p>
         </div>
       </section>
 
-      <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-5xl w-full px-4 py-12 sm:px-6 lg:px-8 2xl:px-12">
         <div className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-10 shadow-sm space-y-6 text-xs sm:text-sm text-gray-700 leading-relaxed">
           <section className="space-y-2">
             <h2 className="text-base font-bold text-gray-950">1. Acceptance of Terms</h2>

@@ -55,7 +55,7 @@ export default function ShopByCategorySection({
   const [showAllDrawer, setShowAllDrawer] = useState(false);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <section className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-10 sm:py-16">
       
       {/* 1. Minimal Header */}
       <Reveal direction="up" delay={40}>

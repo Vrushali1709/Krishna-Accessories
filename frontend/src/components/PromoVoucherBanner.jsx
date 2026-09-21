@@ -33,7 +33,7 @@ export default function PromoVoucherBanner({ onToast }) {
   };
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <section className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-4 sm:py-6">
       <Reveal direction="zoom" delay={50} duration={700}>
         <div className="relative overflow-hidden rounded-[26px] sm:rounded-[32px] bg-gradient-to-r from-[#090B10] via-[#111624] to-[#0A0D15] text-white p-5 sm:p-7 md:p-8 border border-[#C5A880]/30 shadow-[0_12px_40px_rgba(0,0,0,0.18)] transition-all duration-300 hover:border-[#C5A880]/50 hover:shadow-[0_16px_48px_rgba(197,168,128,0.1)]">
           

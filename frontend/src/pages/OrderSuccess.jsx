@@ -37,7 +37,7 @@ export default function OrderSuccess() {
     <div className="min-h-screen bg-[#FAFAFB] text-gray-900 overflow-x-clip">
       <Navbar />
 
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-4xl w-full px-4 py-8 sm:px-6 lg:px-8 2xl:px-12">
 
         {/* Success Card */}
         <div className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 text-center shadow-xs">

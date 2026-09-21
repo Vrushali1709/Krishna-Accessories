@@ -108,7 +108,7 @@ export default function Cart() {
 
       {/* Breadcrumb & Cart Header */}
       <section className="border-b border-gray-200/80 bg-white py-5 sm:py-7">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
           <div className="flex items-center gap-2 text-xs text-gray-400 mb-1.5 font-medium">
             <Link to="/" className="hover:text-gray-950 transition">Home</Link>
             <span>/</span>
@@ -139,7 +139,7 @@ export default function Cart() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full px-4 py-6 sm:py-8 sm:px-6 lg:px-8 2xl:px-12">
 
         {cart.length === 0 ? (
           /* Empty Bag State */

@@ -75,7 +75,7 @@ export default function FAQ() {
 
       {/* Header */}
       <section className="bg-white border-b border-gray-200 py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-2xl">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 text-center max-w-2xl">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
             Knowledge Center
           </span>
@@ -88,7 +88,7 @@ export default function FAQ() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 space-y-12">
+      <main className="mx-auto max-w-5xl w-full px-4 py-12 sm:px-6 lg:px-8 2xl:px-12 space-y-12">
         {faqCategories.map((group, groupIdx) => (
           <div key={groupIdx} className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-wider text-gray-950 border-b border-gray-200 pb-2">

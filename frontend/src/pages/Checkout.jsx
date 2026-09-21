@@ -131,7 +131,7 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
         <Navbar />
-        <main className="mx-auto flex min-h-[60vh] max-w-7xl items-center justify-center px-4">
+        <main className="mx-auto flex min-h-[60vh] w-full items-center justify-center px-4 sm:px-6 lg:px-8 2xl:px-12">
           <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-xs">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-800">
               <BagIcon className="w-6 h-6" />
@@ -159,7 +159,7 @@ export default function Checkout() {
 
       {/* Checkout Header */}
       <section className="border-b border-gray-200/80 bg-white py-6 sm:py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-[#B89758]">
               Encrypted 256-Bit Transaction
@@ -193,7 +193,7 @@ export default function Checkout() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full px-4 py-6 sm:px-6 lg:px-8 2xl:px-12">
 
         <form onSubmit={handlePlaceOrder} className="grid gap-6 lg:grid-cols-[1fr_320px]">
 
