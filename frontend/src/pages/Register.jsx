@@ -18,9 +18,6 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('Customer');
   const [supplierCategory, setSupplierCategory] = useState('Watches');
-  const [supplierGstin, setSupplierGstin] = useState('');
-  const [supplierAddress, setSupplierAddress] = useState('');
-  const [supplierContactPerson, setSupplierContactPerson] = useState('');
 
   // OTP Verification state
   const [otpCode, setOtpCode] = useState('');
@@ -128,14 +125,12 @@ export default function Register() {
         email: cleanEmail,
         phone: phone.trim(),
         category: supplierCategory,
-        address: supplierAddress.trim() || "Gujarat, India",
-        gstin: supplierGstin.trim() || "",
-        contactPerson: supplierContactPerson.trim() || name.trim(),
+        address: "Gujarat, India",
         status: "Pending Approval"
       });
       setSubmitting(false);
       hideLoading();
-      setSuccess('Supplier onboarding registered & verified! Directing to vendor portal...');
+      setSuccess('Supplier registered & verified! Directing to vendor portal...');
       setTimeout(() => navigate('/supplier'), 600);
     } else {
       setSubmitting(false);
@@ -260,58 +255,22 @@ export default function Register() {
               </div>
 
               {role === 'Supplier' && (
-                <>
-                  <div>
-                    <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Contact Person Name</label>
-                    <input
-                      type="text"
-                      value={supplierContactPerson}
-                      onChange={(e) => setSupplierContactPerson(e.target.value)}
-                      placeholder="e.g. Rajesh Vora (Director/Manager)"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Primary Product Category *</label>
-                    <select
-                      value={supplierCategory}
-                      onChange={(e) => setSupplierCategory(e.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5 cursor-pointer"
-                    >
-                      <option value="Watches">Watches &amp; Horology</option>
-                      <option value="Bags & Wallets">Bags &amp; Leather Wallets</option>
-                      <option value="Shoes">Footwear &amp; Sneakers</option>
-                      <option value="Mobiles">Mobiles &amp; Smart Tech</option>
-                      <option value="Clothes & Fashion">Clothes &amp; Luxury Apparel</option>
-                      <option value="Laptops">Laptops &amp; Workstations</option>
-                      <option value="Electronics">Electronics &amp; Audio</option>
-                    </select>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-semibold text-slate-700 mb-1.5 block">GSTIN / Tax ID</label>
-                      <input
-                        type="text"
-                        value={supplierGstin}
-                        onChange={(e) => setSupplierGstin(e.target.value)}
-                        placeholder="24AAACA1234F1Z8"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs font-mono uppercase text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Warehouse Dispatch City/State</label>
-                      <input
-                        type="text"
-                        value={supplierAddress}
-                        onChange={(e) => setSupplierAddress(e.target.value)}
-                        placeholder="Surat, Gujarat"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5"
-                      />
-                    </div>
-                  </div>
-                </>
+                <div>
+                  <label className="text-xs font-semibold text-slate-700 mb-1.5 block">Primary Product Category *</label>
+                  <select
+                    value={supplierCategory}
+                    onChange={(e) => setSupplierCategory(e.target.value)}
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-800 focus:bg-white focus:ring-4 focus:ring-slate-800/5 cursor-pointer"
+                  >
+                    <option value="Watches">Watches &amp; Horology</option>
+                    <option value="Bags & Wallets">Bags &amp; Leather Wallets</option>
+                    <option value="Shoes">Footwear &amp; Sneakers</option>
+                    <option value="Mobiles">Mobiles &amp; Smart Tech</option>
+                    <option value="Clothes & Fashion">Clothes &amp; Luxury Apparel</option>
+                    <option value="Laptops">Laptops &amp; Workstations</option>
+                    <option value="Electronics">Electronics &amp; Audio</option>
+                  </select>
+                </div>
               )}
 
               <div>

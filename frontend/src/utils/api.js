@@ -129,18 +129,9 @@ export const ordersApi = {
 // ==========================================
 export const suppliersApi = {
   getAll: () => request('/suppliers'),
-  getById: (id) => request(`/suppliers/${id}`),
   create: (supplier) => request('/suppliers', { method: 'POST', body: supplier }),
   update: (id, data) => request(`/suppliers/${id}`, { method: 'PUT', body: data }),
-  updateProfile: (id, data) => request(`/suppliers/${id}`, { method: 'PUT', body: data }),
-  delete: (id) => request(`/suppliers/${id}`, { method: 'DELETE' }),
-  getReports: (supIdOrName) => {
-    if (typeof supIdOrName === 'number') {
-      return request(`/suppliers/${supIdOrName}/reports`);
-    }
-    const qs = supIdOrName ? `?name=${encodeURIComponent(supIdOrName)}` : '';
-    return request(`/supplier/reports${qs}`);
-  }
+  delete: (id) => request(`/suppliers/${id}`, { method: 'DELETE' })
 };
 
 // ==========================================

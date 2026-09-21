@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getSupplierUser, logoutSupplier } from '../utils/auth';
 import { getProducts, saveProduct, deleteProduct, getCategories, getBrands } from '../utils/productStore';
-import { getOrders, updateOrderStatus, getSuppliers, updateSupplierProfile } from '../utils/orderStore';
+import { getOrders, updateOrderStatus, getSuppliers } from '../utils/orderStore';
 import {
   LayoutDashboard,
   Building2,
@@ -57,13 +57,7 @@ import {
   User,
   Users,
   Bell,
-  CheckCheck,
-  Download,
-  Printer,
-  PieChart,
-  Landmark,
-  Save,
-  CheckSquare
+  CheckCheck
 } from 'lucide-react';
 import ProductImagePicker, { ProductImagePreview } from '../components/ProductImagePicker';
 
@@ -73,18 +67,15 @@ export default function SupplierDashboard() {
   const suppliers = getSuppliers();
   const [activeSupplierName, setActiveSupplierName] = useState(suppliers[0]?.name || 'Apex Timepieces Ltd.');
 
-  // 7 Dedicated Pages matching Image 2
-  // 'dashboard' | 'products' | 'inventory' | 'orders' | 'reports' | 'earnings' | 'profile'
+  // Navigation Hierarchical State (matching Admin structure)
   const [activeSection, setActiveSection] = useState('dashboard');
   const [activeSubTab, setActiveSubTab] = useState('overview');
   const [expandedSections, setExpandedSections] = useState({
     dashboard: true,
-    products: true,
+    catalog: true,
+    fulfillment: true,
     inventory: true,
-    orders: true,
-    reports: true,
-    earnings: true,
-    profile: true
+    financials: true
   });
 
   // Shell Layout States
@@ -100,42 +91,42 @@ export default function SupplierDashboard() {
     {
       id: 'notif-1',
       title: 'New Order Received',
-      message: 'Order #KA-98421 with line items assigned to your warehouse for dispatch.',
+      message: 'Order #KA-8942 with 2 items assigned to your warehouse for dispatch.',
       time: '12m ago',
       type: 'order',
       unread: true,
-      targetSection: 'orders',
-      targetSubTab: 'all-orders'
+      targetSection: 'fulfillment',
+      targetSubTab: 'orders'
     },
     {
       id: 'notif-2',
-      title: 'Low Stock Warning',
-      message: 'Catalog product stock is below 10 units. Restock recommended.',
+      title: 'Low Stock Alert',
+      message: 'Titan Octane Chronograph is down to 3 units. Restock recommended.',
       time: '1h ago',
       type: 'inventory',
       unread: true,
-      targetSection: 'inventory',
+      targetSection: 'catalog',
       targetSubTab: 'low-stock'
     },
     {
       id: 'notif-3',
       title: 'Payout Dispatched',
-      message: 'Weekly vendor settlement of ₹58,400 successfully processed to bank account.',
+      message: 'Bi-weekly vendor settlement of ₹58,400 successfully credited to HDFC Bank.',
       time: 'Yesterday',
       type: 'financial',
       unread: false,
-      targetSection: 'earnings',
+      targetSection: 'financials',
       targetSubTab: 'payouts'
     },
     {
       id: 'notif-4',
-      title: 'Vendor License Active',
-      message: 'GST & Vendor Partner documentation verified by Platform Admin.',
+      title: 'Compliance Verified',
+      message: 'Supplier vendor license & GST compliance renewal verified for 2026.',
       time: '2d ago',
       type: 'system',
       unread: false,
-      targetSection: 'profile',
-      targetSubTab: 'vendor-profile'
+      targetSection: 'financials',
+      targetSubTab: 'bank-info'
     }
   ]);
 
@@ -157,9 +148,6 @@ export default function SupplierDashboard() {
   const [orderSearch, setOrderSearch] = useState('');
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
 
-  // Reports Filter State
-  const [reportDateRange, setReportDateRange] = useState('30D');
-
   // Modals State
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -169,7 +157,7 @@ export default function SupplierDashboard() {
   const [awbInput, setAwbInput] = useState('');
   const [productToDelete, setProductToDelete] = useState(null);
 
-  // Product Form State (with Color/Size Variants support matching Image 3 Bullet 4)
+  // Product Form State
   const [productForm, setProductForm] = useState({
     name: '',
     brand: 'Titan',
@@ -179,9 +167,6 @@ export default function SupplierDashboard() {
     price: '',
     oldPrice: '',
     stock: '20',
-    colors: 'Gold, Silver, Black',
-    sizes: 'Standard, 42mm',
-    variants: 'Standard',
     image: '',
     image2: '',
     image3: '',
@@ -191,66 +176,9 @@ export default function SupplierDashboard() {
     angle3: 'Back View',
     angle4: 'Detail View',
     description: '',
-    material: 'Stainless Steel',
+    material: '',
     warranty: '2 Years'
   });
-
-  // Profile Form State
-  const activeSupplierData = useMemo(() => {
-    return suppliers.find(s => s.name?.toLowerCase() === activeSupplierName?.toLowerCase()) || suppliers[0] || {
-      name: activeSupplierName,
-      category: 'Watches',
-      email: 'supplier@krishna.com',
-      phone: '+91 98765 43210',
-      address: 'Ring Road, Surat, Gujarat',
-      gstin: '24AAACA1234F1Z8',
-      panNumber: 'AAACA1234F',
-      contactPerson: 'Rajesh Vora',
-      rating: 4.9,
-      status: 'Active',
-      bankDetails: {
-        accountName: 'Apex Timepieces Ltd',
-        accountNumber: '50200049281729',
-        bankName: 'HDFC Bank',
-        ifsc: 'HDFC0000123',
-        branch: 'Ring Road Branch, Surat'
-      }
-    };
-  }, [suppliers, activeSupplierName]);
-
-  const [profileForm, setProfileForm] = useState({
-    name: activeSupplierData.name || '',
-    category: activeSupplierData.category || 'Watches',
-    email: activeSupplierData.email || '',
-    phone: activeSupplierData.phone || '',
-    contactPerson: activeSupplierData.contactPerson || '',
-    gstin: activeSupplierData.gstin || '',
-    panNumber: activeSupplierData.panNumber || '',
-    address: activeSupplierData.address || '',
-    accountName: activeSupplierData.bankDetails?.accountName || activeSupplierData.name || '',
-    accountNumber: activeSupplierData.bankDetails?.accountNumber || '',
-    bankName: activeSupplierData.bankDetails?.bankName || '',
-    ifsc: activeSupplierData.bankDetails?.ifsc || '',
-    branch: activeSupplierData.bankDetails?.branch || ''
-  });
-
-  useEffect(() => {
-    setProfileForm({
-      name: activeSupplierData.name || '',
-      category: activeSupplierData.category || 'Watches',
-      email: activeSupplierData.email || '',
-      phone: activeSupplierData.phone || '',
-      contactPerson: activeSupplierData.contactPerson || '',
-      gstin: activeSupplierData.gstin || '',
-      panNumber: activeSupplierData.panNumber || '',
-      address: activeSupplierData.address || '',
-      accountName: activeSupplierData.bankDetails?.accountName || activeSupplierData.name || '',
-      accountNumber: activeSupplierData.bankDetails?.accountNumber || '',
-      bankName: activeSupplierData.bankDetails?.bankName || '',
-      ifsc: activeSupplierData.bankDetails?.ifsc || '',
-      branch: activeSupplierData.bankDetails?.branch || ''
-    });
-  }, [activeSupplierData]);
 
   const categories = getCategories();
   const brands = getBrands();
@@ -345,12 +273,10 @@ export default function SupplierDashboard() {
     window.addEventListener('productsUpdated', refreshData);
     window.addEventListener('ordersUpdated', refreshData);
     window.addEventListener('authUpdated', refreshData);
-    window.addEventListener('suppliersUpdated', refreshData);
     return () => {
       window.removeEventListener('productsUpdated', refreshData);
       window.removeEventListener('ordersUpdated', refreshData);
       window.removeEventListener('authUpdated', refreshData);
-      window.removeEventListener('suppliersUpdated', refreshData);
     };
   }, []);
 
@@ -365,16 +291,6 @@ export default function SupplierDashboard() {
       o.items && o.items.some(item => !item.supplier || item.supplier.toLowerCase() === activeSupplierName.toLowerCase())
     );
   }, [allOrders, activeSupplierName]);
-
-  // Filtered Returns & Refunds for active supplier (Image 3 Bullet 8)
-  const supplierReturns = useMemo(() => {
-    return supplierOrders.filter(o =>
-      o.status === 'Return Requested' ||
-      o.status === 'Refunded' ||
-      o.status === 'Cancelled' ||
-      o.returnRequest
-    );
-  }, [supplierOrders]);
 
   // Filtered Products
   const filteredProducts = useMemo(() => {
@@ -417,7 +333,7 @@ export default function SupplierDashboard() {
       else if (orderStatusFilter === 'Processing') matchesStatus = o.status === 'Processing' || o.status === 'Placed' || o.status === 'Pending';
       else if (orderStatusFilter === 'Shipped') matchesStatus = o.status === 'Shipped' || o.status === 'Out for Delivery';
       else if (orderStatusFilter === 'Delivered') matchesStatus = o.status === 'Delivered';
-      else if (orderStatusFilter === 'Returns') matchesStatus = o.status === 'Return Requested' || o.status === 'Refunded' || o.status === 'Cancelled' || o.returnRequest;
+      else if (orderStatusFilter === 'Cancelled') matchesStatus = o.status === 'Cancelled' || o.status === 'Refunded' || o.status === 'Return Requested';
       else matchesStatus = o.status === orderStatusFilter;
 
       return matchesSearch && matchesStatus;
@@ -439,54 +355,47 @@ export default function SupplierDashboard() {
   const lowStockItems = supplierProducts.filter(p => Number(p.stock || 0) < 10 && Number(p.stock || 0) > 0);
   const outOfStockItems = supplierProducts.filter(p => Number(p.stock || 0) === 0);
 
-  // Top Selling Products Breakdown for Reports
-  const topProductsReport = useMemo(() => {
-    const counts = {};
-    supplierOrders.forEach(o => {
-      if (o.status !== 'Cancelled' && o.status !== 'Refunded') {
-        o.items?.forEach(it => {
-          if (!it.supplier || it.supplier.toLowerCase() === activeSupplierName.toLowerCase()) {
-            const key = it.name || 'Product';
-            if (!counts[key]) {
-              counts[key] = {
-                name: key,
-                brand: it.brand || 'Luxury',
-                category: it.category || 'Accessories',
-                units: 0,
-                revenue: 0,
-                price: it.price || 0,
-                image: it.image || ''
-              };
-            }
-            counts[key].units += Number(it.quantity || 1);
-            counts[key].revenue += Number(it.price || 0) * Number(it.quantity || 1);
-          }
-        });
-      }
-    });
-    return Object.values(counts).sort((a, b) => b.revenue - a.revenue);
-  }, [supplierOrders, activeSupplierName]);
+  const activeSupplierData = suppliers.find(s => s.name.toLowerCase() === activeSupplierName.toLowerCase()) || {
+    name: activeSupplierName,
+    category: 'Luxury Accessories',
+    rating: 4.9,
+    status: 'Active'
+  };
 
-  // 7 Dedicated Pages Sidebar Navigation (Exact Match to Image 2)
+  // Navigation Structure (Exact hierarchy style of Admin)
   const navSections = [
     {
       id: 'dashboard',
-      title: 'Supplier Dashboard',
+      title: 'Dashboard',
       icon: LayoutDashboard,
       badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}` : null,
       subItems: [
-        { id: 'overview', label: 'Overview & Stats' },
-        { id: 'pending', label: 'Pending Dispatch', badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}` : null }
+        { id: 'overview', label: 'Overview' },
+        { id: 'pending', label: 'Pending Dispatch', badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}` : null },
+        { id: 'insights', label: 'Performance & Revenue' }
       ]
     },
     {
-      id: 'products',
-      title: 'Products',
+      id: 'catalog',
+      title: 'Catalog',
       icon: Package,
       badge: supplierProducts.length,
       subItems: [
-        { id: 'my-products', label: 'My Products' },
-        { id: 'add-product', label: 'Add New Product' }
+        { id: 'products', label: 'My Products' },
+        { id: 'add-product', label: 'Add New Product' },
+        { id: 'low-stock', label: 'Low Stock Alerts', badge: lowStockItems.length > 0 ? `${lowStockItems.length}` : null }
+      ]
+    },
+    {
+      id: 'fulfillment',
+      title: 'Fulfillment',
+      icon: Truck,
+      badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}` : null,
+      subItems: [
+        { id: 'orders', label: 'All Orders' },
+        { id: 'processing', label: 'Packaging Queue', badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}` : null },
+        { id: 'shipped', label: 'In-Transit Logistics' },
+        { id: 'delivered', label: 'Delivered History' }
       ]
     },
     {
@@ -495,48 +404,19 @@ export default function SupplierDashboard() {
       icon: Boxes,
       badge: lowStockItems.length + outOfStockItems.length > 0 ? `${lowStockItems.length + outOfStockItems.length}` : null,
       subItems: [
-        { id: 'stock-control', label: 'Stock Control & Units' },
-        { id: 'low-stock', label: 'Low Stock Alerts', badge: lowStockItems.length > 0 ? `${lowStockItems.length}` : null }
+        { id: 'stock-control', label: 'Stock Control' },
+        { id: 'replenishment', label: 'Fast Restock' }
       ]
     },
     {
-      id: 'orders',
-      title: 'Orders',
-      icon: Truck,
-      badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}` : null,
-      subItems: [
-        { id: 'all-orders', label: 'All Orders' },
-        { id: 'returns-refunds', label: 'Returns & Refunds', badge: supplierReturns.length > 0 ? `${supplierReturns.length}` : null }
-      ]
-    },
-    {
-      id: 'reports',
-      title: 'Reports',
-      icon: BarChart3,
-      badge: 'Live',
-      subItems: [
-        { id: 'sales-summary', label: 'Sales & Revenue Report' },
-        { id: 'top-products', label: 'Product Performance' }
-      ]
-    },
-    {
-      id: 'earnings',
-      title: 'Earnings',
+      id: 'financials',
+      title: 'Financials',
       icon: Wallet,
       badge: '95%',
       subItems: [
-        { id: 'payouts', label: 'Payouts & Settlement' },
-        { id: 'bank-ledger', label: 'Disbursement Ledger' }
-      ]
-    },
-    {
-      id: 'profile',
-      title: 'Profile',
-      icon: User,
-      badge: activeSupplierData.status === 'Active' ? 'Verified' : 'Pending',
-      subItems: [
-        { id: 'vendor-profile', label: 'Business Profile' },
-        { id: 'bank-tax-info', label: 'GST & Bank Details' }
+        { id: 'payouts', label: 'Payouts & Earnings' },
+        { id: 'settlement', label: 'Settlement Ledger' },
+        { id: 'bank-info', label: 'Verified Bank Account' }
       ]
     }
   ];
@@ -558,7 +438,7 @@ export default function SupplierDashboard() {
     setMobileSidebarOpen(false);
   };
 
-  // Add / Edit Product Modals (With Variants: Colors, Sizes, Price Deltas)
+  // Add / Edit Product Modals
   const handleOpenAddProduct = () => {
     setEditingProduct(null);
     setProductForm({
@@ -570,9 +450,6 @@ export default function SupplierDashboard() {
       price: '',
       oldPrice: '',
       stock: '20',
-      colors: 'Gold, Silver, Black',
-      sizes: 'Standard',
-      variants: 'Standard',
       image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700',
       image2: '',
       image3: '',
@@ -595,9 +472,6 @@ export default function SupplierDashboard() {
       ? p.imageAngles
       : ['Front View', 'Side Profile', 'Back View', 'Detail View'];
 
-    const colorsStr = Array.isArray(p.colors) ? p.colors.join(', ') : (p.colors || 'Standard');
-    const sizesStr = Array.isArray(p.sizes) ? p.sizes.join(', ') : (p.sizes || 'Standard');
-
     setProductForm({
       name: p.name || '',
       brand: p.brand || brands[0],
@@ -607,9 +481,6 @@ export default function SupplierDashboard() {
       price: p.price || '',
       oldPrice: p.oldPrice || '',
       stock: p.stock || 0,
-      colors: colorsStr,
-      sizes: sizesStr,
-      variants: Array.isArray(p.variants) ? p.variants.join(', ') : (p.variants || 'Standard'),
       image: imgList[0] || p.image || '',
       image2: imgList[1] || '',
       image3: imgList[2] || '',
@@ -650,10 +521,6 @@ export default function SupplierDashboard() {
       productForm.angle4?.trim() || 'Detail View'
     ].slice(0, Math.max(4, finalImages.length));
 
-    const parsedColors = productForm.colors.split(',').map(s => s.trim()).filter(Boolean);
-    const parsedSizes = productForm.sizes.split(',').map(s => s.trim()).filter(Boolean);
-    const parsedVariants = productForm.variants.split(',').map(s => s.trim()).filter(Boolean);
-
     const payload = {
       id: editingProduct ? editingProduct.id : Date.now(),
       name: productForm.name.trim(),
@@ -665,9 +532,6 @@ export default function SupplierDashboard() {
       oldPrice,
       discount,
       stock: Number(productForm.stock) || 0,
-      colors: parsedColors.length > 0 ? parsedColors : ['Standard'],
-      sizes: parsedSizes.length > 0 ? parsedSizes : ['Standard'],
-      variants: parsedVariants.length > 0 ? parsedVariants : ['Standard'],
       rating: editingProduct?.rating || 4.8,
       supplier: activeSupplierName,
       image: mainImage,
@@ -716,59 +580,6 @@ export default function SupplierDashboard() {
     setSelectedOrderToUpdate(null);
   };
 
-  // Save Supplier Profile
-  const handleSaveProfile = (e) => {
-    e.preventDefault();
-    const updatedData = {
-      name: profileForm.name.trim(),
-      category: profileForm.category,
-      email: profileForm.email.trim(),
-      phone: profileForm.phone.trim(),
-      contactPerson: profileForm.contactPerson.trim(),
-      gstin: profileForm.gstin.trim(),
-      panNumber: profileForm.panNumber.trim(),
-      address: profileForm.address.trim(),
-      bankDetails: {
-        accountName: profileForm.accountName.trim(),
-        accountNumber: profileForm.accountNumber.trim(),
-        bankName: profileForm.bankName.trim(),
-        ifsc: profileForm.ifsc.trim(),
-        branch: profileForm.branch.trim()
-      }
-    };
-
-    updateSupplierProfile(activeSupplierData.id, updatedData);
-    if (profileForm.name !== activeSupplierName) {
-      setActiveSupplierName(profileForm.name);
-    }
-    showToast('Supplier profile, GSTIN & bank details saved successfully!');
-  };
-
-  // CSV Report Exporter
-  const handleExportReportCsv = () => {
-    const headers = ['Order ID', 'Date', 'Customer', 'Product Items', 'Total (INR)', 'Status', 'Courier', 'AWB Tracking'];
-    const rows = supplierOrders.map(o => [
-      o.id,
-      o.date,
-      `"${o.customer?.firstName || ''} ${o.customer?.lastName || ''}"`,
-      `"${o.items?.map(it => `${it.name} (x${it.quantity})`).join(', ') || ''}"`,
-      o.total || 0,
-      o.status,
-      o.courier || 'N/A',
-      o.trackingNumber || 'N/A'
-    ]);
-
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Supplier_Report_${activeSupplierName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast('Sales & fulfillment report exported as CSV');
-  };
-
   const handleSupplierLogout = () => {
     logoutSupplier();
     navigate('/login', {
@@ -801,7 +612,7 @@ export default function SupplierDashboard() {
       )}
 
       {/* ==========================================
-          1. DEDICATED ADMIN-STYLE SIDEBAR (7 PAGES)
+          1. DEDICATED ADMIN-STYLE SIDEBAR
       ========================================== */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-[#121316] text-zinc-300 border-r border-zinc-800/80 transition-all duration-300 ease-in-out lg:static lg:h-screen lg:max-h-screen shrink-0 ${mobileSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
@@ -880,7 +691,7 @@ export default function SupplierDashboard() {
             </div>
           )}
 
-          {/* 7 Navigation Accordion Sections (Matching Image 2) */}
+          {/* Navigation Accordion Sections */}
           <nav className="flex-1 overflow-y-auto min-h-0 p-3 space-y-1 text-xs">
             {navSections.map((sec) => {
               const isSectionActive = activeSection === sec.id;
@@ -1049,7 +860,7 @@ export default function SupplierDashboard() {
             </div>
           </div>
 
-          {/* Right: Search, Notifications, Sync & Add Product */}
+          {/* Right: Search, Vendor Switcher, Sync & Add Product */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Search Input */}
             <div className="relative hidden md:block">
@@ -1068,13 +879,13 @@ export default function SupplierDashboard() {
               )}
             </div>
 
-            {/* Supplier Notifications Popover */}
+            {/* Supplier Notifications Popover (Replaced vendor dropdown) */}
             <div className="relative" ref={notifsRef}>
               <button
                 onClick={() => setNotifsOpen(prev => !prev)}
                 className={`relative flex h-8 w-8 items-center justify-center rounded-xl border transition cursor-pointer shadow-2xs ${notifsOpen
-                  ? 'border-zinc-400 bg-zinc-100 text-zinc-900 ring-2 ring-zinc-900/5'
-                  : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100'
+                    ? 'border-zinc-400 bg-zinc-100 text-zinc-900 ring-2 ring-zinc-900/5'
+                    : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100'
                   }`}
                 title="Supplier Notifications"
                 aria-label="Toggle notifications"
@@ -1091,6 +902,7 @@ export default function SupplierDashboard() {
 
               {notifsOpen && (
                 <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-200/90 bg-white p-3.5 sm:p-4 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  {/* Popover Header */}
                   <div className="flex items-center justify-between border-b border-zinc-100 pb-3 mb-2.5">
                     <div className="flex items-center gap-2">
                       <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-zinc-900 text-white">
@@ -1125,33 +937,100 @@ export default function SupplierDashboard() {
                     </div>
                   </div>
 
-                  <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
-                    {notifications.map((n) => (
-                      <div
-                        key={n.id}
-                        onClick={() => handleNotificationClick(n)}
-                        className={`group relative flex items-start gap-3 rounded-xl p-2.5 text-xs transition cursor-pointer ${n.unread
-                          ? 'bg-zinc-50 border border-zinc-200/80 font-medium hover:bg-zinc-100/70'
-                          : 'hover:bg-zinc-50 text-zinc-600 border border-transparent'
-                          }`}
-                      >
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
-                          <ShoppingBag className="h-4 w-4" />
-                        </div>
-
-                        <div className="flex-1 min-w-0 pr-4">
-                          <div className="flex items-center justify-between gap-1">
-                            <span className={`text-xs truncate ${n.unread ? 'font-bold text-zinc-900' : 'font-semibold text-zinc-700'}`}>
-                              {n.title}
-                            </span>
-                            <span className="text-[9.5px] font-mono text-zinc-400 shrink-0">{n.time}</span>
-                          </div>
-                          <p className="mt-0.5 text-[11px] text-zinc-500 leading-snug line-clamp-2">
-                            {n.message}
-                          </p>
-                        </div>
+                  {/* Notification List */}
+                  {notifications.length === 0 ? (
+                    <div className="py-8 text-center text-zinc-400 space-y-2">
+                      <div className="h-10 w-10 mx-auto rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                       </div>
-                    ))}
+                      <p className="text-xs font-semibold text-zinc-700">All caught up!</p>
+                      <p className="text-[11px] text-zinc-400">No new alerts for your supplier account.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+                      {notifications.map((n) => {
+                        let IconComponent = Bell;
+                        let iconBg = 'bg-zinc-100 text-zinc-700';
+                        if (n.type === 'order') {
+                          IconComponent = ShoppingBag;
+                          iconBg = 'bg-blue-50 text-blue-600 border border-blue-100';
+                        } else if (n.type === 'inventory') {
+                          IconComponent = AlertTriangle;
+                          iconBg = 'bg-amber-50 text-amber-600 border border-amber-100';
+                        } else if (n.type === 'financial') {
+                          IconComponent = Wallet;
+                          iconBg = 'bg-emerald-50 text-emerald-600 border border-emerald-100';
+                        } else if (n.type === 'system') {
+                          IconComponent = ShieldCheck;
+                          iconBg = 'bg-purple-50 text-purple-600 border border-purple-100';
+                        }
+
+                        return (
+                          <div
+                            key={n.id}
+                            onClick={() => handleNotificationClick(n)}
+                            className={`group relative flex items-start gap-3 rounded-xl p-2.5 text-xs transition cursor-pointer ${n.unread
+                                ? 'bg-zinc-50 border border-zinc-200/80 font-medium hover:bg-zinc-100/70'
+                                : 'hover:bg-zinc-50 text-zinc-600 border border-transparent'
+                              }`}
+                          >
+                            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${iconBg}`}>
+                              <IconComponent className="h-4 w-4" />
+                            </div>
+
+                            <div className="flex-1 min-w-0 pr-4">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className={`text-xs truncate ${n.unread ? 'font-bold text-zinc-900' : 'font-semibold text-zinc-700'}`}>
+                                  {n.title}
+                                </span>
+                                <span className="text-[9.5px] font-mono text-zinc-400 shrink-0">{n.time}</span>
+                              </div>
+                              <p className="mt-0.5 text-[11px] text-zinc-500 leading-snug line-clamp-2">
+                                {n.message}
+                              </p>
+                              {n.targetSection && (
+                                <div className="mt-1.5 flex items-center gap-1 text-[10px] font-bold text-zinc-900 group-hover:translate-x-0.5 transition">
+                                  <span>View details</span>
+                                  <ArrowRight className="h-2.5 w-2.5" />
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Unread indicator dot */}
+                            {n.unread && (
+                              <span className="absolute top-3 right-2.5 h-2 w-2 rounded-full bg-blue-600 shrink-0" />
+                            )}
+
+                            {/* Dismiss button on hover */}
+                            <button
+                              onClick={(e) => deleteNotification(e, n.id)}
+                              className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded transition cursor-pointer"
+                              title="Dismiss"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Popover Footer */}
+                  <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between text-[10.5px] text-zinc-400 px-1">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Live Supplier Stream
+                    </span>
+                    <button
+                      onClick={() => {
+                        setActiveSection('dashboard');
+                        setActiveSubTab('overview');
+                        setNotifsOpen(false);
+                      }}
+                      className="font-medium text-zinc-600 hover:text-zinc-900 transition cursor-pointer"
+                    >
+                      Activity Log →
+                    </button>
                   </div>
                 </div>
               )}
@@ -1184,46 +1063,7 @@ export default function SupplierDashboard() {
         ========================================== */}
         <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full flex-1">
 
-          {/* Quick Header Banner for Current Vendor Context */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-2xs">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-sm shadow-xs">
-                {activeSupplierName.charAt(0)}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-sm font-bold text-zinc-900">{activeSupplierName}</h2>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
-                    ✓ {activeSupplierData.status || 'Active'}
-                  </span>
-                </div>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  Category: <span className="font-semibold text-zinc-700">{activeSupplierData.category}</span> &bull; Rating: <span className="font-semibold text-amber-600">★ {activeSupplierData.rating || '4.9'}</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Page navigation pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-              {navSections.map(sec => (
-                <button
-                  key={sec.id}
-                  onClick={() => {
-                    setActiveSection(sec.id);
-                    setActiveSubTab(sec.subItems[0].id);
-                  }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${activeSection === sec.id
-                    ? 'bg-zinc-900 text-white shadow-xs'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
-                    }`}
-                >
-                  {sec.title}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 4 Top KPI Stat Cards Bar */}
+          {/* KPI Stat Cards Bar */}
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {/* KPI 1: Active Catalog */}
             <div className="group rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs transition hover:shadow-xs hover:border-zinc-300">
@@ -1289,11 +1129,10 @@ export default function SupplierDashboard() {
             </div>
           </div>
 
-          {/* =========================================================================
-              PAGE 1: SUPPLIER DASHBOARD (Image 2)
-          ========================================================================= */}
+          {/* VIEW SECTION 1: DASHBOARD (Overview, Pending, Insights) */}
           {activeSection === 'dashboard' && (
             <div className="space-y-6">
+
               {/* Urgent Fulfillment Banner */}
               {pendingOrdersCount > 0 && (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200/80 bg-amber-50/70 p-5 shadow-2xs">
@@ -1312,8 +1151,8 @@ export default function SupplierDashboard() {
                   </div>
                   <button
                     onClick={() => {
-                      setActiveSection('orders');
-                      setActiveSubTab('all-orders');
+                      setActiveSection('fulfillment');
+                      setActiveSubTab('orders');
                     }}
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs shrink-0 cursor-pointer"
                   >
@@ -1325,6 +1164,7 @@ export default function SupplierDashboard() {
 
               {/* Dual Overview Cards Grid */}
               <div className="grid gap-6 lg:grid-cols-2">
+
                 {/* Recent Customer Orders */}
                 <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
                   <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
@@ -1334,8 +1174,8 @@ export default function SupplierDashboard() {
                     </div>
                     <button
                       onClick={() => {
-                        setActiveSection('orders');
-                        setActiveSubTab('all-orders');
+                        setActiveSection('fulfillment');
+                        setActiveSubTab('orders');
                       }}
                       className="inline-flex items-center gap-1 text-xs text-zinc-600 hover:text-zinc-900 font-semibold hover:underline cursor-pointer"
                     >
@@ -1438,21 +1278,21 @@ export default function SupplierDashboard() {
                     </div>
                   )}
                 </div>
+
               </div>
+
             </div>
           )}
 
-          {/* =========================================================================
-              PAGE 2: PRODUCTS (CATALOG & VARIANTS) (Image 2 & Image 3 Bullet 4)
-          ========================================================================= */}
-          {activeSection === 'products' && (
+          {/* VIEW SECTION 2: CATALOG (Products & Low Stock) */}
+          {activeSection === 'catalog' && (
             <div className="space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-base font-bold text-zinc-900">
-                    Product Catalog &amp; Variants ({supplierProducts.length})
+                    Product Catalog ({supplierProducts.length})
                   </h3>
-                  <p className="text-xs text-zinc-500">Manage catalog products, color/size variants, pricing, and 360° perspective galleries.</p>
+                  <p className="text-xs text-zinc-500">Products assigned to {activeSupplierName} displayed across Krishna Accessories store.</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
@@ -1512,8 +1352,8 @@ export default function SupplierDashboard() {
                     <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
                       <tr>
                         <th className="py-3 px-4">Product Details</th>
-                        <th className="py-3 px-4">Department &amp; Brand</th>
-                        <th className="py-3 px-4">Variants (Color/Size)</th>
+                        <th className="py-3 px-4">Department & Brand</th>
+                        <th className="py-3 px-4">SKU Code</th>
                         <th className="py-3 px-4">Price</th>
                         <th className="py-3 px-4">Inventory</th>
                         <th className="py-3 px-4 text-right">Actions</th>
@@ -1539,31 +1379,22 @@ export default function SupplierDashboard() {
                                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition text-zinc-400" />
                                 </Link>
                                 <div className="flex items-center gap-2 mt-0.5">
-                                  <span className="font-mono text-[10px] text-zinc-400">{p.sku}</span>
-                                  <span className="text-zinc-300">•</span>
                                   <span className="text-[10px] text-amber-600 font-semibold">★ {p.rating || 4.8}</span>
+                                  <span className="text-zinc-300">•</span>
+                                  <span className="text-[10px] text-zinc-400">{p.subcategory || 'Standard'}</span>
                                 </div>
                               </div>
                             </div>
                           </td>
                           <td className="py-3.5 px-4">
-                            <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-800">
-                              {p.category}
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-800">
+                                {p.category}
+                              </span>
+                            </div>
                             <p className="text-[11px] text-zinc-500 font-medium mt-1">{p.brand}</p>
                           </td>
-                          <td className="py-3.5 px-4">
-                            <div className="flex flex-wrap gap-1 max-w-xs">
-                              {(Array.isArray(p.colors) ? p.colors : [p.colors || 'Standard']).map((col, idx) => (
-                                <span key={idx} className="rounded-md bg-zinc-100 border border-zinc-200 px-1.5 py-0.5 text-[9.5px] font-semibold text-zinc-700">
-                                  {col}
-                                </span>
-                              ))}
-                            </div>
-                            <span className="text-[10px] text-zinc-400 mt-1 block">
-                              Sizes: {Array.isArray(p.sizes) ? p.sizes.join(', ') : (p.sizes || 'Standard')}
-                            </span>
-                          </td>
+                          <td className="py-3.5 px-4 font-mono text-zinc-700 text-xs">{p.sku}</td>
                           <td className="py-3.5 px-4">
                             <span className="font-bold text-zinc-900 font-mono text-xs">₹{Number(p.price || 0).toLocaleString('en-IN')}</span>
                             {p.oldPrice && (
@@ -1598,6 +1429,13 @@ export default function SupplierDashboard() {
                           </td>
                         </tr>
                       ))}
+                      {filteredProducts.length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="py-10 text-center text-xs text-zinc-400">
+                            No matching products found in catalog for current filters.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -1605,15 +1443,136 @@ export default function SupplierDashboard() {
             </div>
           )}
 
-          {/* =========================================================================
-              PAGE 3: INVENTORY (STOCK CONTROL & REPLENISHMENT) (Image 2)
-          ========================================================================= */}
+          {/* VIEW SECTION 3: FULFILLMENT (Orders Queue & Stages) */}
+          {activeSection === 'fulfillment' && (
+            <div className="space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-base font-bold text-zinc-900">Customer Order Fulfillment Queue</h3>
+                  <p className="text-xs text-zinc-500">Advance order dispatch stages from Processing to Shipped & Delivered. Status updates sync in real-time.</p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                    <input
+                      type="text"
+                      placeholder="Search Order, Customer, AWB..."
+                      value={orderSearch}
+                      onChange={(e) => setOrderSearch(e.target.value)}
+                      className="pl-8 pr-3 py-2 text-xs rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 outline-none focus:border-zinc-400 w-52 transition shadow-2xs"
+                    />
+                    {orderSearch && (
+                      <button onClick={() => setOrderSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700">
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  <select
+                    value={orderStatusFilter}
+                    onChange={(e) => setOrderStatusFilter(e.target.value)}
+                    className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-zinc-700 outline-none focus:border-zinc-400 cursor-pointer shadow-2xs"
+                  >
+                    <option value="All">All Stages</option>
+                    <option value="Processing">Processing & Packaging</option>
+                    <option value="Shipped">Shipped & In-Transit</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled / Returns</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Order Fulfillment Table */}
+              <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
+                      <tr>
+                        <th className="py-3 px-4">Order ID & Date</th>
+                        <th className="py-3 px-4">Customer & Destination</th>
+                        <th className="py-3 px-4">Assigned Line Items</th>
+                        <th className="py-3 px-4">Order Total</th>
+                        <th className="py-3 px-4">Fulfillment Status</th>
+                        <th className="py-3 px-4 text-right">Dispatch Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100">
+                      {filteredOrders.map(order => (
+                        <tr key={order.id} className="hover:bg-zinc-50/60 transition">
+                          <td className="py-3.5 px-4">
+                            <span className="font-mono text-xs font-bold text-zinc-900">{order.id}</span>
+                            <p className="text-[10px] text-zinc-400 mt-0.5">{order.date}</p>
+                            <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.2 text-[9px] font-medium text-zinc-600 mt-1">
+                              {order.paymentMethod || 'Prepaid'}
+                            </span>
+                          </td>
+
+                          <td className="py-3.5 px-4">
+                            <p className="font-bold text-zinc-900">{order.customer?.firstName} {order.customer?.lastName}</p>
+                            <p className="text-[11px] text-zinc-500 truncate max-w-xs">{order.customer?.city}, {order.customer?.state}</p>
+                            <p className="text-[10px] text-zinc-400 font-mono">Ph: {order.customer?.phone}</p>
+                          </td>
+
+                          <td className="py-3.5 px-4 space-y-1">
+                            {order.items?.map((it, idx) => (
+                              <div key={idx} className="text-xs text-zinc-700 flex items-center gap-1.5">
+                                <span className="h-1 w-1 rounded-full bg-zinc-400"></span>
+                                <span>{it.name}</span>
+                                <strong className="text-zinc-900 font-mono">×{it.quantity}</strong>
+                              </div>
+                            ))}
+                          </td>
+
+                          <td className="py-3.5 px-4">
+                            <span className="font-bold text-zinc-900 font-mono text-xs">₹{Number(order.total || 0).toLocaleString('en-IN')}</span>
+                          </td>
+
+                          <td className="py-3.5 px-4">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
+                              order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
+                                order.status === 'Cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' :
+                                  'bg-amber-50 text-amber-700 border border-amber-200/60'
+                              }`}>
+                              {order.status}
+                            </span>
+                            {order.trackingNumber && (
+                              <p className="text-[10px] font-mono text-zinc-400 mt-1">AWB: {order.trackingNumber}</p>
+                            )}
+                          </td>
+
+                          <td className="py-3.5 px-4 text-right">
+                            <button
+                              onClick={() => handleOpenStatusModal(order)}
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs cursor-pointer"
+                            >
+                              <Truck className="h-3 w-3" />
+                              <span>Update Logistics</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {filteredOrders.length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="py-10 text-center text-xs text-zinc-400">
+                            No orders currently match for {activeSupplierName}.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* VIEW SECTION 4: INVENTORY (Stock Control & Replenishment) */}
           {activeSection === 'inventory' && (
             <div className="space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900">Inventory Stock Control &amp; Valuation</h3>
-                  <p className="text-xs text-zinc-500">Adjust stock quantities, maintain replenishment thresholds, and monitor catalog inventory valuation.</p>
+                  <h3 className="text-base font-bold text-zinc-900">Inventory Stock Control & Valuation</h3>
+                  <p className="text-xs text-zinc-500">Quick adjust physical stock units and replenish catalog inventory on demand.</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium text-zinc-500">Total Valuation:</span>
@@ -1677,281 +1636,8 @@ export default function SupplierDashboard() {
             </div>
           )}
 
-          {/* =========================================================================
-              PAGE 4: ORDERS (FULFILLMENT & RETURNS) (Image 2 & Image 3 Bullet 8)
-          ========================================================================= */}
-          {activeSection === 'orders' && (
-            <div className="space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-base font-bold text-zinc-900">Customer Orders &amp; Fulfillment Queue</h3>
-                  <p className="text-xs text-zinc-500">Advance order dispatch stages, generate courier AWB numbers, and review customer return requests.</p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                    <input
-                      type="text"
-                      placeholder="Search Order, Customer, AWB..."
-                      value={orderSearch}
-                      onChange={(e) => setOrderSearch(e.target.value)}
-                      className="pl-8 pr-3 py-2 text-xs rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 outline-none focus:border-zinc-400 w-52 transition shadow-2xs"
-                    />
-                    {orderSearch && (
-                      <button onClick={() => setOrderSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700">
-                        <X className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-
-                  <select
-                    value={orderStatusFilter}
-                    onChange={(e) => setOrderStatusFilter(e.target.value)}
-                    className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-zinc-700 outline-none focus:border-zinc-400 cursor-pointer shadow-2xs"
-                  >
-                    <option value="All">All Stages</option>
-                    <option value="Processing">Processing &amp; Packaging</option>
-                    <option value="Shipped">Shipped &amp; In-Transit</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Returns">Returns &amp; Refunds</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Order Fulfillment Table */}
-              <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xs">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="border-b border-zinc-200/80 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
-                      <tr>
-                        <th className="py-3 px-4">Order ID &amp; Date</th>
-                        <th className="py-3 px-4">Customer &amp; Destination</th>
-                        <th className="py-3 px-4">Assigned Line Items</th>
-                        <th className="py-3 px-4">Order Total</th>
-                        <th className="py-3 px-4">Fulfillment Status</th>
-                        <th className="py-3 px-4 text-right">Dispatch Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-zinc-100">
-                      {filteredOrders.map(order => (
-                        <tr key={order.id} className="hover:bg-zinc-50/60 transition">
-                          <td className="py-3.5 px-4">
-                            <span className="font-mono text-xs font-bold text-zinc-900">{order.id}</span>
-                            <p className="text-[10px] text-zinc-400 mt-0.5">{order.date}</p>
-                            <span className="inline-flex items-center rounded-md bg-zinc-100 px-1.5 py-0.2 text-[9px] font-medium text-zinc-600 mt-1">
-                              {order.paymentMethod || 'Prepaid'}
-                            </span>
-                          </td>
-
-                          <td className="py-3.5 px-4">
-                            <p className="font-bold text-zinc-900">{order.customer?.firstName} {order.customer?.lastName}</p>
-                            <p className="text-[11px] text-zinc-500 truncate max-w-xs">{order.customer?.city}, {order.customer?.state}</p>
-                            <p className="text-[10px] text-zinc-400 font-mono">Ph: {order.customer?.phone}</p>
-                          </td>
-
-                          <td className="py-3.5 px-4 space-y-1">
-                            {order.items?.map((it, idx) => (
-                              <div key={idx} className="text-xs text-zinc-700 flex items-center gap-1.5">
-                                <span className="h-1 w-1 rounded-full bg-zinc-400"></span>
-                                <span>{it.name}</span>
-                                <strong className="text-zinc-900 font-mono">×{it.quantity}</strong>
-                              </div>
-                            ))}
-                          </td>
-
-                          <td className="py-3.5 px-4">
-                            <span className="font-bold text-zinc-900 font-mono text-xs">₹{Number(order.total || 0).toLocaleString('en-IN')}</span>
-                          </td>
-
-                          <td className="py-3.5 px-4">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${order.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' :
-                              order.status === 'Shipped' ? 'bg-blue-50 text-blue-700 border border-blue-200/60' :
-                                order.status === 'Return Requested' || order.status === 'Refunded' ? 'bg-purple-50 text-purple-700 border border-purple-200/60' :
-                                  order.status === 'Cancelled' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' :
-                                    'bg-amber-50 text-amber-700 border border-amber-200/60'
-                              }`}>
-                              {order.status}
-                            </span>
-                            {order.trackingNumber && (
-                              <p className="text-[10px] font-mono text-zinc-400 mt-1">AWB: {order.trackingNumber}</p>
-                            )}
-                          </td>
-
-                          <td className="py-3.5 px-4 text-right">
-                            <button
-                              onClick={() => handleOpenStatusModal(order)}
-                              className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-black transition shadow-2xs cursor-pointer"
-                            >
-                              <Truck className="h-3 w-3" />
-                              <span>Update Logistics</span>
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Dedicated Returns & Refunds Section (Image 3 Bullet 8) */}
-              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
-                <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
-                  <div className="flex items-center gap-2">
-                    <RotateCcw className="h-4 w-4 text-purple-600" />
-                    <div>
-                      <h4 className="text-sm font-bold text-zinc-900">Returns &amp; Refund Events Workflow</h4>
-                      <p className="text-xs text-zinc-400">Customer return requests, inspection condition notes, and refund settlement logs.</p>
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold">
-                    {supplierReturns.length} Return Records
-                  </span>
-                </div>
-
-                {supplierReturns.length > 0 ? (
-                  <div className="divide-y divide-zinc-100">
-                    {supplierReturns.map((ret, idx) => (
-                      <div key={idx} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-xs font-bold text-zinc-900">{ret.id}</span>
-                            <span className="text-zinc-300">•</span>
-                            <span className="text-xs font-semibold text-zinc-800">{ret.customer?.firstName} {ret.customer?.lastName}</span>
-                          </div>
-                          <p className="text-xs text-zinc-600">
-                            <strong>Reason:</strong> {ret.returnRequest?.reason || ret.cancellation?.reason || 'Product quality or size mismatch'}
-                          </p>
-                          <p className="text-[11px] text-zinc-400">
-                            Requested Refund Mode: {ret.returnRequest?.refundPreference || 'Original Gateway'} &bull; Date: {ret.date}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="font-mono font-bold text-xs text-zinc-900">₹{ret.total?.toLocaleString('en-IN')}</span>
-                          <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10.5px] font-semibold">
-                            {ret.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs text-zinc-400 py-4 text-center">No active return requests or customer refund claims.</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* =========================================================================
-              PAGE 5: REPORTS (DEDICATED SALES & ANALYTICS) (Image 2 & Image 4)
-          ========================================================================= */}
-          {activeSection === 'reports' && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-base font-bold text-zinc-900">Supplier Sales &amp; Performance Reports</h3>
-                  <p className="text-xs text-zinc-500">Comprehensive analytics, order fulfillment rate, product velocity, and downloadable audit reports.</p>
-                </div>
-
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center bg-zinc-100 p-1 rounded-xl">
-                    {['7D', '30D', '90D', 'All Time'].map(range => (
-                      <button
-                        key={range}
-                        onClick={() => setReportDateRange(range)}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${reportDateRange === range ? 'bg-white text-zinc-900 shadow-2xs' : 'text-zinc-600 hover:text-zinc-900'}`}
-                      >
-                        {range}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={handleExportReportCsv}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 hover:bg-black px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    <span>Export CSV</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Reports Summary KPI Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
-                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-zinc-500">Total Fulfilled Orders</span>
-                  <p className="text-2xl font-bold font-mono text-zinc-900 mt-2">{deliveredOrdersCount}</p>
-                  <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">100% On-Time Delivery SLA</span>
-                </div>
-
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
-                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-zinc-500">Gross Sales Volume</span>
-                  <p className="text-2xl font-bold font-mono text-zinc-900 mt-2">₹{totalRevenue.toLocaleString('en-IN')}</p>
-                  <span className="text-[11px] text-zinc-400 mt-1 block">From verified consignments</span>
-                </div>
-
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
-                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-zinc-500">Net Vendor Payout (95%)</span>
-                  <p className="text-2xl font-bold font-mono text-emerald-700 mt-2">₹{netEarnings.toLocaleString('en-IN')}</p>
-                  <span className="text-[11px] text-zinc-400 mt-1 block">5% Platform Commission deducted</span>
-                </div>
-
-                <div className="rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-2xs">
-                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-zinc-500">Return &amp; Refund Rate</span>
-                  <p className="text-2xl font-bold font-mono text-zinc-900 mt-2">
-                    {supplierOrders.length > 0 ? `${Math.round((supplierReturns.length / supplierOrders.length) * 100)}%` : '0%'}
-                  </p>
-                  <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">Under 2.5% Benchmark</span>
-                </div>
-              </div>
-
-              {/* Top Selling Products Leaderboard for Supplier */}
-              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-4">
-                <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
-                  <div>
-                    <h4 className="text-sm font-bold text-zinc-900">Top Performing Products Leaderboard</h4>
-                    <p className="text-xs text-zinc-400">Products generating highest volume for {activeSupplierName}</p>
-                  </div>
-                  <span className="text-xs font-semibold text-zinc-500">Ranked by Gross Revenue</span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="border-b border-zinc-100 bg-zinc-50/70 text-zinc-500 uppercase text-[10px] font-bold tracking-wider">
-                      <tr>
-                        <th className="py-2.5 px-3">Rank</th>
-                        <th className="py-2.5 px-3">Product Name</th>
-                        <th className="py-2.5 px-3">Category</th>
-                        <th className="py-2.5 px-3 text-right">Units Sold</th>
-                        <th className="py-2.5 px-3 text-right">Revenue Generated</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-zinc-100">
-                      {topProductsReport.slice(0, 5).map((tp, idx) => (
-                        <tr key={idx} className="hover:bg-zinc-50/60 transition">
-                          <td className="py-3 px-3 font-bold font-mono text-zinc-400">#{idx + 1}</td>
-                          <td className="py-3 px-3 font-semibold text-zinc-900">{tp.name}</td>
-                          <td className="py-3 px-3 text-zinc-600">{tp.category}</td>
-                          <td className="py-3 px-3 text-right font-mono font-bold text-zinc-900">{tp.units} units</td>
-                          <td className="py-3 px-3 text-right font-mono font-bold text-emerald-700">₹{tp.revenue.toLocaleString('en-IN')}</td>
-                        </tr>
-                      ))}
-                      {topProductsReport.length === 0 && (
-                        <tr>
-                          <td colSpan={5} className="py-8 text-center text-xs text-zinc-400">No completed sales records yet for active date range.</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* =========================================================================
-              PAGE 6: EARNINGS & FINANCIALS (Image 2)
-          ========================================================================= */}
-          {activeSection === 'earnings' && (
+          {/* VIEW SECTION 5: FINANCIALS (Payouts, Settlement, Bank) */}
+          {activeSection === 'financials' && (
             <div className="space-y-6">
               <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-6">
                 <div>
@@ -1965,7 +1651,7 @@ export default function SupplierDashboard() {
                   <div className="rounded-xl border border-zinc-100 bg-zinc-50/70 p-4">
                     <span className="text-xs text-zinc-500 font-medium">Gross Merchandise Sales</span>
                     <p className="text-2xl font-bold font-mono text-zinc-900 mt-1.5">₹{totalRevenue.toLocaleString('en-IN')}</p>
-                    <span className="text-[10px] text-zinc-400 mt-1 block">From fulfilled &amp; active orders</span>
+                    <span className="text-[10px] text-zinc-400 mt-1 block">From fulfilled & active orders</span>
                   </div>
                   <div className="rounded-xl border border-zinc-100 bg-zinc-50/70 p-4">
                     <span className="text-xs text-zinc-500 font-medium">Platform Service Fee (5%)</span>
@@ -1979,260 +1665,15 @@ export default function SupplierDashboard() {
                   </div>
                 </div>
 
-                {/* Settlement Ledger Table */}
-                <div className="space-y-3 pt-4 border-t border-zinc-100">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-700">Settlement Ledger &amp; Disbursement History</h4>
-                  <div className="overflow-x-auto rounded-xl border border-zinc-200/80">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase text-[9.5px] font-bold">
-                        <tr>
-                          <th className="py-2.5 px-3">Disbursement Date</th>
-                          <th className="py-2.5 px-3">Settlement Cycle</th>
-                          <th className="py-2.5 px-3">Gross Volume</th>
-                          <th className="py-2.5 px-3">Platform Fee (5%)</th>
-                          <th className="py-2.5 px-3">Net Transferred</th>
-                          <th className="py-2.5 px-3">UTR Reference</th>
-                          <th className="py-2.5 px-3 text-right">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-100">
-                        <tr className="hover:bg-zinc-50/50">
-                          <td className="py-3 px-3 font-semibold text-zinc-900">01 Sep 2026</td>
-                          <td className="py-3 px-3 text-zinc-600">Cycle W35 - 2026</td>
-                          <td className="py-3 px-3 font-mono">₹{totalRevenue.toLocaleString('en-IN')}</td>
-                          <td className="py-3 px-3 font-mono text-rose-600">−₹{platformFee.toLocaleString('en-IN')}</td>
-                          <td className="py-3 px-3 font-mono font-bold text-emerald-700">₹{netEarnings.toLocaleString('en-IN')}</td>
-                          <td className="py-3 px-3 font-mono text-zinc-500 text-[11px]">HDFC9201948271</td>
-                          <td className="py-3 px-3 text-right">
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
-                              ✓ Credited
-                            </span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
                 <div className="rounded-xl bg-zinc-50 border border-zinc-200/70 p-4 text-xs text-zinc-600 flex items-start gap-3">
                   <Info className="h-4 w-4 text-zinc-500 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <p className="font-semibold text-zinc-900">Settlement Cycle Policy</p>
+                    <p className="font-semibold text-zinc-900">Settlement Cycle Schedule</p>
                     <p className="text-zinc-500">
-                      Vendor earnings are calculated on all orders marked <strong>Delivered</strong> and disbursed weekly to your verified bank account via automated RTGS/NEFT clearing.
+                      Vendor earnings are calculated on all orders marked <strong>Delivered</strong> and disbursed every Tuesday to your verified bank account.
                     </p>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* =========================================================================
-              PAGE 7: SUPPLIER PROFILE & SETTINGS (Image 2 & Image 4)
-          ========================================================================= */}
-          {activeSection === 'profile' && (
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-2xs space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
-                  <div className="flex items-center gap-3.5">
-                    <div className="h-12 w-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center font-bold text-base shadow-xs">
-                      {activeSupplierName.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-base font-bold text-zinc-900">{profileForm.name || activeSupplierName}</h3>
-                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
-                          ✓ Verified Supplier
-                        </span>
-                      </div>
-                      <p className="text-xs text-zinc-500 mt-0.5">
-                        Joined: {activeSupplierData.joinedDate || '15 Jan 2026'} &bull; Primary Category: {profileForm.category}
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleSaveProfile}
-                    className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 hover:bg-black px-4 py-2 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
-                  >
-                    <Save className="h-3.5 w-3.5" />
-                    <span>Save Profile Changes</span>
-                  </button>
-                </div>
-
-                <form onSubmit={handleSaveProfile} className="space-y-6">
-                  {/* Section 1: Business Information */}
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-700 flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-zinc-600" />
-                      <span>Company &amp; Contact Details</span>
-                    </h4>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Company / Business Name *</label>
-                        <input
-                          type="text"
-                          required
-                          value={profileForm.name}
-                          onChange={e => setProfileForm({ ...profileForm, name: e.target.value })}
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Primary Category *</label>
-                        <select
-                          value={profileForm.category}
-                          onChange={e => setProfileForm({ ...profileForm, category: e.target.value })}
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition cursor-pointer"
-                        >
-                          {categories.map(c => (
-                            <option key={c} value={c}>{c}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Contact Person Name</label>
-                        <input
-                          type="text"
-                          value={profileForm.contactPerson}
-                          onChange={e => setProfileForm({ ...profileForm, contactPerson: e.target.value })}
-                          placeholder="e.g. Rajesh Vora"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Official Email Address *</label>
-                        <input
-                          type="email"
-                          required
-                          value={profileForm.email}
-                          onChange={e => setProfileForm({ ...profileForm, email: e.target.value })}
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Official Phone Number *</label>
-                        <input
-                          type="tel"
-                          required
-                          value={profileForm.phone}
-                          onChange={e => setProfileForm({ ...profileForm, phone: e.target.value })}
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Warehouse Dispatch Facility Address</label>
-                        <input
-                          type="text"
-                          value={profileForm.address}
-                          onChange={e => setProfileForm({ ...profileForm, address: e.target.value })}
-                          placeholder="Unit 402, Ring Road, Surat, Gujarat"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Section 2: Tax & Compliance */}
-                  <div className="space-y-3 pt-4 border-t border-zinc-100">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-700 flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4 text-zinc-600" />
-                      <span>Taxation &amp; GST Compliance (Image 1 &amp; Image 4)</span>
-                    </h4>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">GSTIN / Tax Identification</label>
-                        <input
-                          type="text"
-                          value={profileForm.gstin}
-                          onChange={e => setProfileForm({ ...profileForm, gstin: e.target.value })}
-                          placeholder="24AAACA1234F1Z8"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono uppercase text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">PAN Number</label>
-                        <input
-                          type="text"
-                          value={profileForm.panNumber}
-                          onChange={e => setProfileForm({ ...profileForm, panNumber: e.target.value })}
-                          placeholder="AAACA1234F"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono uppercase text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Section 3: Verified Bank Account */}
-                  <div className="space-y-3 pt-4 border-t border-zinc-100">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-700 flex items-center gap-2">
-                      <Landmark className="h-4 w-4 text-zinc-600" />
-                      <span>Verified Bank Account for Direct Payouts</span>
-                    </h4>
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Bank Name</label>
-                        <input
-                          type="text"
-                          value={profileForm.bankName}
-                          onChange={e => setProfileForm({ ...profileForm, bankName: e.target.value })}
-                          placeholder="HDFC Bank"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Account Holder Name</label>
-                        <input
-                          type="text"
-                          value={profileForm.accountName}
-                          onChange={e => setProfileForm({ ...profileForm, accountName: e.target.value })}
-                          placeholder="Apex Timepieces Ltd"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Bank Account Number</label>
-                        <input
-                          type="text"
-                          value={profileForm.accountNumber}
-                          onChange={e => setProfileForm({ ...profileForm, accountNumber: e.target.value })}
-                          placeholder="50200049281729"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">IFSC Code</label>
-                        <input
-                          type="text"
-                          value={profileForm.ifsc}
-                          onChange={e => setProfileForm({ ...profileForm, ifsc: e.target.value })}
-                          placeholder="HDFC0000123"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs font-mono uppercase text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <label className="text-xs font-semibold text-zinc-700 mb-1.5 block">Branch Location</label>
-                        <input
-                          type="text"
-                          value={profileForm.branch}
-                          onChange={e => setProfileForm({ ...profileForm, branch: e.target.value })}
-                          placeholder="Ring Road Branch, Surat"
-                          className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t border-zinc-100">
-                    <button
-                      type="submit"
-                      className="rounded-xl bg-zinc-900 px-6 py-2.5 text-xs font-semibold text-white hover:bg-black transition shadow-xs cursor-pointer"
-                    >
-                      Save Supplier Profile
-                    </button>
-                  </div>
-                </form>
               </div>
             </div>
           )}
@@ -2252,7 +1693,7 @@ export default function SupplierDashboard() {
       </div>
 
       {/* ==========================================
-          MODAL: ADD / EDIT PRODUCT (WITH VARIANTS)
+          MODAL: ADD / EDIT PRODUCT
       ========================================== */}
       {productModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
@@ -2260,9 +1701,9 @@ export default function SupplierDashboard() {
 
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4 mb-5">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Supplier Catalog &amp; Variants</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Supplier Catalog</span>
                 <h3 className="text-lg font-bold text-zinc-900">
-                  {editingProduct ? 'Edit Catalog Product & Variants' : 'Add New Product to Store'}
+                  {editingProduct ? 'Edit Catalog Product' : 'Add New Product to Store'}
                 </h3>
               </div>
               <button
@@ -2363,46 +1804,6 @@ export default function SupplierDashboard() {
                     placeholder="e.g. 2 Years"
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/60 px-3.5 py-2 text-xs text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition"
                   />
-                </div>
-              </div>
-
-              {/* Product Variants (Image 3 Bullet 4) */}
-              <div className="rounded-xl border border-zinc-200/90 bg-zinc-50/70 p-3.5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <label className="font-semibold text-zinc-900 block text-xs">
-                      Product Variants &amp; Options (Image 3 Bullet 4)
-                    </label>
-                    <p className="text-[11px] text-zinc-500">
-                      Specify available color shades and size selections separated by commas.
-                    </p>
-                  </div>
-                  <span className="text-[10px] font-semibold bg-zinc-200 text-zinc-700 px-2 py-0.5 rounded-full">
-                    Multi-Variant
-                  </span>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label className="text-[11px] font-semibold text-zinc-700 mb-1 block">Color Variants (comma-separated)</label>
-                    <input
-                      type="text"
-                      value={productForm.colors}
-                      onChange={e => setProductForm({ ...productForm, colors: e.target.value })}
-                      placeholder="e.g. Gold, Silver, Rose Gold, Midnight Black"
-                      className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-zinc-700 mb-1 block">Size Variants (comma-separated)</label>
-                    <input
-                      type="text"
-                      value={productForm.sizes}
-                      onChange={e => setProductForm({ ...productForm, sizes: e.target.value })}
-                      placeholder="e.g. Standard, 40mm, 42mm, 44mm"
-                      className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-900 outline-none focus:border-zinc-400 transition"
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -2574,7 +1975,7 @@ export default function SupplierDashboard() {
 
             <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5">
               <div>
-                <span className="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Fulfillment &amp; Logistics</span>
+                <span className="text-[10px] font-bold uppercase text-zinc-400 tracking-wider">Fulfillment & Logistics</span>
                 <h3 className="text-base font-bold text-zinc-900 font-mono">{selectedOrderToUpdate.id}</h3>
               </div>
               <button
@@ -2625,7 +2026,7 @@ export default function SupplierDashboard() {
                 onClick={() => handleUpdateOrderStatusSubmit('Processing')}
                 className="w-full flex items-center justify-between rounded-xl border border-amber-200/80 bg-amber-50/70 px-4 py-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition cursor-pointer"
               >
-                <span>1. Mark as Processing &amp; Packaging</span>
+                <span>1. Mark as Processing & Packaging</span>
                 <Clock className="h-3.5 w-3.5 text-amber-600" />
               </button>
 

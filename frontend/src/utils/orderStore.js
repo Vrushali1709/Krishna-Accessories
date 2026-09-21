@@ -20,17 +20,7 @@ const defaultSuppliers = [
     rating: 4.9,
     productsCount: 6,
     totalEarnings: 148500,
-    address: "Unit 402, Time Center, Ring Road, Surat, Gujarat",
-    contactPerson: "Rajesh Vora",
-    gstin: "24AAACA1234F1Z8",
-    panNumber: "AAACA1234F",
-    bankDetails: {
-      accountName: "Apex Timepieces Ltd",
-      accountNumber: "50200049281729",
-      bankName: "HDFC Bank",
-      ifsc: "HDFC0000123",
-      branch: "Ring Road Branch, Surat"
-    }
+    address: "Unit 402, Time Center, Ring Road, Surat, Gujarat"
   },
   {
     id: 2,
@@ -43,17 +33,7 @@ const defaultSuppliers = [
     rating: 4.8,
     productsCount: 8,
     totalEarnings: 284000,
-    address: "Tech Park, SG Highway, Ahmedabad, Gujarat",
-    contactPerson: "Kavita Shah",
-    gstin: "24AABCG5678M1Z2",
-    panNumber: "AABCG5678M",
-    bankDetails: {
-      accountName: "Global Gadgets Inc",
-      accountNumber: "91201004819283",
-      bankName: "Axis Bank",
-      ifsc: "UTIB0000456",
-      branch: "SG Highway Branch, Ahmedabad"
-    }
+    address: "Tech Park, SG Highway, Ahmedabad, Gujarat"
   },
   {
     id: 3,
@@ -66,17 +46,7 @@ const defaultSuppliers = [
     rating: 4.7,
     productsCount: 4,
     totalEarnings: 89400,
-    address: "Industrial Area Phase 2, Rajkot, Gujarat",
-    contactPerson: "Manish Solanki",
-    gstin: "24AACFU9012K1Z5",
-    panNumber: "AACFU9012K",
-    bankDetails: {
-      accountName: "Urban Footwear Co",
-      accountNumber: "001205009823",
-      bankName: "ICICI Bank",
-      ifsc: "ICIC0000789",
-      branch: "Aji GIDC, Rajkot"
-    }
+    address: "Industrial Area Phase 2, Rajkot, Gujarat"
   },
   {
     id: 4,
@@ -89,17 +59,7 @@ const defaultSuppliers = [
     rating: 4.5,
     productsCount: 3,
     totalEarnings: 0,
-    address: "Textile Market, Ring Road, Surat, Gujarat",
-    contactPerson: "Deepak Agarwal",
-    gstin: "24AAHCV3456N1Z9",
-    panNumber: "AAHCV3456N",
-    bankDetails: {
-      accountName: "Vogue Apparel India",
-      accountNumber: "2010034918234",
-      bankName: "State Bank of India",
-      ifsc: "SBIN0001245",
-      branch: "Textile Market Branch, Surat"
-    }
+    address: "Textile Market, Ring Road, Surat, Gujarat"
   },
   {
     id: 5,
@@ -112,17 +72,7 @@ const defaultSuppliers = [
     rating: 4.6,
     productsCount: 2,
     totalEarnings: 0,
-    address: "Infocity, Gandhinagar, Gujarat",
-    contactPerson: "Nilesh Parmar",
-    gstin: "24AABCO7890P1Z1",
-    panNumber: "AABCO7890P",
-    bankDetails: {
-      accountName: "Optima Tech Solutions",
-      accountNumber: "602391029384",
-      bankName: "Bank of Baroda",
-      ifsc: "BARB0INFOCI",
-      branch: "Infocity, Gandhinagar"
-    }
+    address: "Infocity, Gandhinagar, Gujarat"
   }
 ];
 
@@ -689,18 +639,6 @@ export function toggleSupplierStatus(id, newStatus) {
   suppliersMemory = suppliersMemory.map(s => s.id === Number(id) ? { ...s, status: newStatus } : s);
   window.dispatchEvent(new Event('suppliersUpdated'));
   suppliersApi.update(id, { status: newStatus }).catch(err => console.warn('[API] Failed to toggle supplier status:', err));
-  return suppliersMemory;
-}
-
-export function updateSupplierProfile(id, profileData) {
-  suppliersMemory = suppliersMemory.map(s => {
-    if (s.id === Number(id) || s.name?.toLowerCase() === profileData.name?.toLowerCase()) {
-      return { ...s, ...profileData };
-    }
-    return s;
-  });
-  window.dispatchEvent(new Event('suppliersUpdated'));
-  suppliersApi.updateProfile(id, profileData).catch(err => console.warn('[API] Failed to update supplier profile:', err));
   return suppliersMemory;
 }
 
