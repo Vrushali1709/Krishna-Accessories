@@ -5,6 +5,7 @@ import json
 import hashlib
 import secrets
 import hmac
+import sqlite3
 from typing import Any, List, Dict, Optional, Tuple, Union
 import psycopg2
 from dotenv import load_dotenv
@@ -19,6 +20,11 @@ PGUSER = os.getenv("PGUSER", "postgres")
 PGPASSWORD = os.getenv("PGPASSWORD", "vrushali")
 PGDATABASE = os.getenv("PGDATABASE", "krishna_db")
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+SQLITE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "krishna.db")
+
+# Active database mode indicator ('postgres' or 'sqlite')
+ACTIVE_DB_TYPE = "postgres"
 
 TABLE_CONFLICT_KEYS = {
     'products': ['id'],
@@ -203,7 +209,7 @@ class PgCursorWrapper:
         return [RowDict(r, desc) for r in rows]
 
     def fetchmany(self, size=None):
-        rows = self._cursor.fetchmany(size)
+        rows = self._cursor.fetchmany(size) if size else self._cursor.fetchmany()
         if not rows:
             return []
         desc = self._cursor.description
@@ -247,15 +253,93 @@ class PgConnectionWrapper:
     def close(self):
         self._conn.close()
 
+class SqliteCursorWrapper:
+    """Wrapper around sqlite3 cursor providing unified fetch and RowDict returns."""
+    def __init__(self, raw_cursor):
+        self._cursor = raw_cursor
+
+    def execute(self, query: str, params: Optional[Union[List, Tuple, Dict]] = None):
+        q = query.strip()
+        if params is not None:
+            if isinstance(params, list):
+                params = tuple(params)
+            self._cursor.execute(q, params)
+        else:
+            self._cursor.execute(q)
+        return self
+
+    def executemany(self, query: str, param_list: List[Union[List, Tuple]]):
+        self._cursor.executemany(query, param_list)
+        return self
+
+    def fetchone(self):
+        row = self._cursor.fetchone()
+        if row is None:
+            return None
+        return RowDict(row, self._cursor.description)
+
+    def fetchall(self):
+        rows = self._cursor.fetchall()
+        if not rows:
+            return []
+        desc = self._cursor.description
+        return [RowDict(r, desc) for r in rows]
+
+    def fetchmany(self, size=None):
+        rows = self._cursor.fetchmany(size) if size else self._cursor.fetchmany()
+        if not rows:
+            return []
+        desc = self._cursor.description
+        return [RowDict(r, desc) for r in rows]
+
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
+    @property
+    def description(self):
+        return self._cursor.description
+
+    def close(self):
+        self._cursor.close()
+
+    def __iter__(self):
+        desc = self._cursor.description
+        for r in self._cursor:
+            yield RowDict(r, desc)
+
+class SqliteConnectionWrapper:
+    """Wrapper around sqlite3 connection providing unified interface."""
+    def __init__(self, raw_conn):
+        self._conn = raw_conn
+
+    def cursor(self):
+        return SqliteCursorWrapper(self._conn.cursor())
+
+    def execute(self, query: str, params: Optional[Union[List, Tuple, Dict]] = None):
+        cur = self.cursor()
+        cur.execute(query, params)
+        return cur
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def close(self):
+        self._conn.close()
+
 def ensure_postgres_database_exists():
-    """Ensure the target database (krishna_db) exists in PostgreSQL."""
+    """Ensure the target database exists in PostgreSQL if possible."""
     try:
         conn = psycopg2.connect(
             host=PGHOST,
             port=PGPORT,
             user=PGUSER,
             password=PGPASSWORD,
-            dbname="postgres"
+            dbname="postgres",
+            connect_timeout=3
         )
         conn.autocommit = True
         cur = conn.cursor()
@@ -271,337 +355,413 @@ def ensure_postgres_database_exists():
 
 def get_raw_pg_connection():
     if DATABASE_URL:
-        return psycopg2.connect(DATABASE_URL)
+        return psycopg2.connect(DATABASE_URL, connect_timeout=4)
     return psycopg2.connect(
         host=PGHOST,
         port=PGPORT,
         user=PGUSER,
         password=PGPASSWORD,
-        dbname=PGDATABASE
+        dbname=PGDATABASE,
+        connect_timeout=4
     )
 
-def get_db_connection() -> PgConnectionWrapper:
-    """Returns an active, wrapped PostgreSQL database connection."""
-    raw = get_raw_pg_connection()
-    return PgConnectionWrapper(raw)
+def get_db_connection() -> Union[PgConnectionWrapper, SqliteConnectionWrapper]:
+    """
+    Returns an active database connection.
+    Attempts PostgreSQL first; gracefully falls back to SQLite (krishna.db)
+    if PostgreSQL is unavailable (e.g. during cloud deployment without external PG).
+    """
+    global ACTIVE_DB_TYPE
+    
+    # Check if running on cloud without explicit external PostgreSQL configured
+    is_cloud = os.getenv("RENDER") == "true" or os.getenv("VERCEL") is not None
+    if is_cloud and (not DATABASE_URL or "localhost" in DATABASE_URL or "127.0.0.1" in DATABASE_URL):
+        ACTIVE_DB_TYPE = "sqlite"
+        raw_sqlite = sqlite3.connect(SQLITE_PATH, check_same_thread=False)
+        return SqliteConnectionWrapper(raw_sqlite)
+
+    try:
+        raw_pg = get_raw_pg_connection()
+        ACTIVE_DB_TYPE = "postgres"
+        return PgConnectionWrapper(raw_pg)
+    except Exception as pg_err:
+        # Fallback seamlessly to SQLite so app never crashes
+        ACTIVE_DB_TYPE = "sqlite"
+        raw_sqlite = sqlite3.connect(SQLITE_PATH, check_same_thread=False)
+        return SqliteConnectionWrapper(raw_sqlite)
+
+def get_active_db_type() -> str:
+    """Returns 'postgres' or 'sqlite' describing the active database backend."""
+    return ACTIVE_DB_TYPE
+
+# ==============================================================================
+# DATABASE SCHEMAS (PostgreSQL & SQLite)
+# ==============================================================================
+
+PG_DDL_STATEMENTS = [
+    """
+    CREATE TABLE IF NOT EXISTS products (
+        id BIGSERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        brand TEXT,
+        category TEXT,
+        subcategory TEXT,
+        sku TEXT,
+        price DOUBLE PRECISION NOT NULL,
+        oldPrice DOUBLE PRECISION,
+        discount DOUBLE PRECISION,
+        stock INTEGER DEFAULT 0,
+        rating DOUBLE PRECISION DEFAULT 5.0,
+        reviews INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'Active',
+        supplier TEXT,
+        image TEXT,
+        images TEXT,
+        imageAngles TEXT,
+        description TEXT,
+        features TEXT,
+        specifications TEXT,
+        colors TEXT,
+        sizes TEXT,
+        variants TEXT,
+        colorImages TEXT,
+        variantPriceDeltas TEXT,
+        variationStock TEXT,
+        badge TEXT,
+        isNew INTEGER DEFAULT 0,
+        isTrending INTEGER DEFAULT 0,
+        isBestSeller INTEGER DEFAULT 0,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
+    """CREATE TABLE IF NOT EXISTS categories (id BIGSERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL)""",
+    """CREATE TABLE IF NOT EXISTS brands (id BIGSERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL, category TEXT)""",
+    """CREATE TABLE IF NOT EXISTS subcategories (id BIGSERIAL PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL, code TEXT, itemCount INTEGER DEFAULT 0)""",
+    """CREATE TABLE IF NOT EXISTS variants (id BIGSERIAL PRIMARY KEY, productName TEXT NOT NULL, sku TEXT, attributeType TEXT, value TEXT, priceModifier DOUBLE PRECISION DEFAULT 0, stock INTEGER DEFAULT 0, status TEXT DEFAULT 'In Stock')""",
+    """
+    CREATE TABLE IF NOT EXISTS orders (
+        id TEXT PRIMARY KEY,
+        date TEXT,
+        customer TEXT,
+        items TEXT,
+        total DOUBLE PRECISION NOT NULL,
+        subtotal DOUBLE PRECISION,
+        discount DOUBLE PRECISION DEFAULT 0,
+        shipping DOUBLE PRECISION DEFAULT 0,
+        paymentMethod TEXT,
+        paymentStatus TEXT DEFAULT 'Paid',
+        orderStatus TEXT DEFAULT 'Processing',
+        deliveryExpected TEXT,
+        shippingAddress TEXT,
+        timeline TEXT,
+        returnDetails TEXT,
+        returnStatus TEXT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS users (
+        id BIGSERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        role TEXT DEFAULT 'Customer',
+        status TEXT DEFAULT 'Active',
+        ordersCount INTEGER DEFAULT 0,
+        totalSpent DOUBLE PRECISION DEFAULT 0,
+        joinedDate TEXT,
+        addresses TEXT,
+        password TEXT
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS suppliers (
+        id BIGSERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        category TEXT,
+        status TEXT DEFAULT 'Pending Approval',
+        joinedDate TEXT,
+        rating DOUBLE PRECISION DEFAULT 5.0,
+        productsCount INTEGER DEFAULT 0,
+        totalEarnings DOUBLE PRECISION DEFAULT 0,
+        address TEXT
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS promotions (
+        id BIGSERIAL PRIMARY KEY,
+        code TEXT UNIQUE NOT NULL,
+        type TEXT DEFAULT 'Percentage',
+        value DOUBLE PRECISION NOT NULL,
+        minOrder DOUBLE PRECISION DEFAULT 0,
+        maxDiscount DOUBLE PRECISION,
+        validUntil TEXT,
+        status TEXT DEFAULT 'Active',
+        usageCount INTEGER DEFAULT 0,
+        applicableCategory TEXT DEFAULT 'All'
+    )
+    """,
+    """CREATE TABLE IF NOT EXISTS media_assets (id BIGSERIAL PRIMARY KEY, name TEXT NOT NULL, category TEXT, url TEXT NOT NULL, size TEXT, dimensions TEXT, uploadedDate TEXT)""",
+    """CREATE TABLE IF NOT EXISTS roles (id BIGSERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL, description TEXT, usersCount INTEGER DEFAULT 0, color TEXT DEFAULT 'indigo')""",
+    """CREATE TABLE IF NOT EXISTS permissions (key TEXT PRIMARY KEY, matrix TEXT)""",
+    """CREATE TABLE IF NOT EXISTS shipping_carriers (id BIGSERIAL PRIMARY KEY, name TEXT NOT NULL, code TEXT UNIQUE NOT NULL, serviceType TEXT, status TEXT DEFAULT 'Active', avgDays TEXT, ratePerKg DOUBLE PRECISION, apiConnected INTEGER DEFAULT 1)""",
+    """CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, data TEXT NOT NULL)""",
+    """CREATE TABLE IF NOT EXISTS notifications (id BIGSERIAL PRIMARY KEY, title TEXT NOT NULL, message TEXT, time TEXT, type TEXT DEFAULT 'info', read INTEGER DEFAULT 0)""",
+    """CREATE TABLE IF NOT EXISTS reviews (id BIGSERIAL PRIMARY KEY, productId BIGINT NOT NULL, userName TEXT NOT NULL, rating DOUBLE PRECISION NOT NULL, comment TEXT, date TEXT, verified INTEGER DEFAULT 1)""",
+    """
+    CREATE TABLE IF NOT EXISTS cart_items (
+        id BIGSERIAL PRIMARY KEY,
+        userId BIGINT NOT NULL,
+        productId BIGINT NOT NULL,
+        itemData TEXT NOT NULL,
+        quantity INTEGER NOT NULL DEFAULT 1,
+        CONSTRAINT unique_cart_item UNIQUE (userId, productId, itemData)
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS wishlist_items (
+        userId BIGINT NOT NULL,
+        productId BIGINT NOT NULL,
+        itemData TEXT NOT NULL,
+        PRIMARY KEY (userId, productId)
+    )
+    """,
+    """CREATE TABLE IF NOT EXISTS user_addresses (id BIGSERIAL PRIMARY KEY, userId BIGINT NOT NULL, address TEXT NOT NULL, isDefault INTEGER DEFAULT 0)""",
+    """
+    CREATE TABLE IF NOT EXISTS otp_codes (
+        id BIGSERIAL PRIMARY KEY,
+        email TEXT NOT NULL,
+        type TEXT NOT NULL,
+        code TEXT NOT NULL,
+        expiresAt BIGINT NOT NULL,
+        attempts INTEGER DEFAULT 0,
+        CONSTRAINT unique_otp_email_type UNIQUE (email, type)
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS email_logs (
+        id TEXT PRIMARY KEY,
+        recipient TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        type TEXT,
+        body TEXT,
+        otpCode TEXT,
+        status TEXT DEFAULT 'Delivered',
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """
+]
+
+SQLITE_DDL_STATEMENTS = [
+    """
+    CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        brand TEXT,
+        category TEXT,
+        subcategory TEXT,
+        sku TEXT,
+        price REAL NOT NULL,
+        oldPrice REAL,
+        discount REAL,
+        stock INTEGER DEFAULT 0,
+        rating REAL DEFAULT 5.0,
+        reviews INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'Active',
+        supplier TEXT,
+        image TEXT,
+        images TEXT,
+        imageAngles TEXT,
+        description TEXT,
+        features TEXT,
+        specifications TEXT,
+        colors TEXT,
+        sizes TEXT,
+        variants TEXT,
+        colorImages TEXT,
+        variantPriceDeltas TEXT,
+        variationStock TEXT,
+        badge TEXT,
+        isNew INTEGER DEFAULT 0,
+        isTrending INTEGER DEFAULT 0,
+        isBestSeller INTEGER DEFAULT 0,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
+    """CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE NOT NULL)""",
+    """CREATE TABLE IF NOT EXISTS brands (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE NOT NULL, category TEXT)""",
+    """CREATE TABLE IF NOT EXISTS subcategories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, category TEXT NOT NULL, code TEXT, itemCount INTEGER DEFAULT 0)""",
+    """CREATE TABLE IF NOT EXISTS variants (id INTEGER PRIMARY KEY AUTOINCREMENT, productName TEXT NOT NULL, sku TEXT, attributeType TEXT, value TEXT, priceModifier REAL DEFAULT 0, stock INTEGER DEFAULT 0, status TEXT DEFAULT 'In Stock')""",
+    """
+    CREATE TABLE IF NOT EXISTS orders (
+        id TEXT PRIMARY KEY,
+        date TEXT,
+        customer TEXT,
+        items TEXT,
+        total REAL NOT NULL,
+        subtotal REAL,
+        discount REAL DEFAULT 0,
+        shipping REAL DEFAULT 0,
+        paymentMethod TEXT,
+        paymentStatus TEXT DEFAULT 'Paid',
+        orderStatus TEXT DEFAULT 'Processing',
+        deliveryExpected TEXT,
+        shippingAddress TEXT,
+        timeline TEXT,
+        returnDetails TEXT,
+        returnStatus TEXT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        role TEXT DEFAULT 'Customer',
+        status TEXT DEFAULT 'Active',
+        ordersCount INTEGER DEFAULT 0,
+        totalSpent REAL DEFAULT 0,
+        joinedDate TEXT,
+        addresses TEXT,
+        password TEXT
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS suppliers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        category TEXT,
+        status TEXT DEFAULT 'Pending Approval',
+        joinedDate TEXT,
+        rating REAL DEFAULT 5.0,
+        productsCount INTEGER DEFAULT 0,
+        totalEarnings REAL DEFAULT 0,
+        address TEXT
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS promotions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT UNIQUE NOT NULL,
+        type TEXT DEFAULT 'Percentage',
+        value REAL NOT NULL,
+        minOrder REAL DEFAULT 0,
+        maxDiscount REAL,
+        validUntil TEXT,
+        status TEXT DEFAULT 'Active',
+        usageCount INTEGER DEFAULT 0,
+        applicableCategory TEXT DEFAULT 'All'
+    )
+    """,
+    """CREATE TABLE IF NOT EXISTS media_assets (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, category TEXT, url TEXT NOT NULL, size TEXT, dimensions TEXT, uploadedDate TEXT)""",
+    """CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE NOT NULL, description TEXT, usersCount INTEGER DEFAULT 0, color TEXT DEFAULT 'indigo')""",
+    """CREATE TABLE IF NOT EXISTS permissions (key TEXT PRIMARY KEY, matrix TEXT)""",
+    """CREATE TABLE IF NOT EXISTS shipping_carriers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, code TEXT UNIQUE NOT NULL, serviceType TEXT, status TEXT DEFAULT 'Active', avgDays TEXT, ratePerKg REAL, apiConnected INTEGER DEFAULT 1)""",
+    """CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, data TEXT NOT NULL)""",
+    """CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, message TEXT, time TEXT, type TEXT DEFAULT 'info', read INTEGER DEFAULT 0)""",
+    """CREATE TABLE IF NOT EXISTS reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, productId INTEGER NOT NULL, userName TEXT NOT NULL, rating REAL NOT NULL, comment TEXT, date TEXT, verified INTEGER DEFAULT 1)""",
+    """
+    CREATE TABLE IF NOT EXISTS cart_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId INTEGER NOT NULL,
+        productId INTEGER NOT NULL,
+        itemData TEXT NOT NULL,
+        quantity INTEGER NOT NULL DEFAULT 1,
+        CONSTRAINT unique_cart_item UNIQUE (userId, productId, itemData)
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS wishlist_items (
+        userId INTEGER NOT NULL,
+        productId INTEGER NOT NULL,
+        itemData TEXT NOT NULL,
+        PRIMARY KEY (userId, productId)
+    )
+    """,
+    """CREATE TABLE IF NOT EXISTS user_addresses (id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER NOT NULL, address TEXT NOT NULL, isDefault INTEGER DEFAULT 0)""",
+    """
+    CREATE TABLE IF NOT EXISTS otp_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT NOT NULL,
+        type TEXT NOT NULL,
+        code TEXT NOT NULL,
+        expiresAt INTEGER NOT NULL,
+        attempts INTEGER DEFAULT 0,
+        CONSTRAINT unique_otp_email_type UNIQUE (email, type)
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS email_logs (
+        id TEXT PRIMARY KEY,
+        recipient TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        type TEXT,
+        body TEXT,
+        otpCode TEXT,
+        status TEXT DEFAULT 'Delivered',
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """
+]
 
 def init_db():
-    """Initializes PostgreSQL schema with all required tables and constraints."""
-    ensure_postgres_database_exists()
+    """Initializes schema with all required tables and constraints on active DB."""
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    DDL_STATEMENTS = [
-        # 1. Products
-        """
-        CREATE TABLE IF NOT EXISTS products (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            brand TEXT,
-            category TEXT,
-            subcategory TEXT,
-            sku TEXT,
-            price DOUBLE PRECISION NOT NULL,
-            oldPrice DOUBLE PRECISION,
-            discount DOUBLE PRECISION,
-            stock INTEGER DEFAULT 0,
-            rating DOUBLE PRECISION DEFAULT 5.0,
-            reviews INTEGER DEFAULT 0,
-            status TEXT DEFAULT 'Active',
-            supplier TEXT,
-            image TEXT,
-            images TEXT,
-            imageAngles TEXT,
-            description TEXT,
-            features TEXT,
-            specifications TEXT,
-            colors TEXT,
-            sizes TEXT,
-            variants TEXT,
-            colorImages TEXT,
-            variantPriceDeltas TEXT,
-            variationStock TEXT,
-            badge TEXT,
-            isNew INTEGER DEFAULT 0,
-            isTrending INTEGER DEFAULT 0,
-            isBestSeller INTEGER DEFAULT 0,
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-        """,
-        # 2. Categories
-        """
-        CREATE TABLE IF NOT EXISTS categories (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT UNIQUE NOT NULL
-        )
-        """,
-        # 3. Brands
-        """
-        CREATE TABLE IF NOT EXISTS brands (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT UNIQUE NOT NULL,
-            category TEXT
-        )
-        """,
-        # 4. Subcategories
-        """
-        CREATE TABLE IF NOT EXISTS subcategories (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            category TEXT NOT NULL,
-            code TEXT,
-            itemCount INTEGER DEFAULT 0
-        )
-        """,
-        # 5. Variants
-        """
-        CREATE TABLE IF NOT EXISTS variants (
-            id BIGSERIAL PRIMARY KEY,
-            productName TEXT NOT NULL,
-            sku TEXT,
-            attributeType TEXT,
-            value TEXT,
-            priceModifier DOUBLE PRECISION DEFAULT 0,
-            stock INTEGER DEFAULT 0,
-            status TEXT DEFAULT 'In Stock'
-        )
-        """,
-        # 6. Orders
-        """
-        CREATE TABLE IF NOT EXISTS orders (
-            id TEXT PRIMARY KEY,
-            date TEXT,
-            customer TEXT,
-            items TEXT,
-            total DOUBLE PRECISION NOT NULL,
-            subtotal DOUBLE PRECISION,
-            discount DOUBLE PRECISION DEFAULT 0,
-            shipping DOUBLE PRECISION DEFAULT 0,
-            paymentMethod TEXT,
-            paymentStatus TEXT DEFAULT 'Paid',
-            orderStatus TEXT DEFAULT 'Processing',
-            deliveryExpected TEXT,
-            shippingAddress TEXT,
-            timeline TEXT,
-            returnDetails TEXT,
-            returnStatus TEXT,
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-        """,
-        # 7. Users
-        """
-        CREATE TABLE IF NOT EXISTS users (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            phone TEXT,
-            role TEXT DEFAULT 'Customer',
-            status TEXT DEFAULT 'Active',
-            ordersCount INTEGER DEFAULT 0,
-            totalSpent DOUBLE PRECISION DEFAULT 0,
-            joinedDate TEXT,
-            addresses TEXT,
-            password TEXT
-        )
-        """,
-        # 8. Suppliers
-        """
-        CREATE TABLE IF NOT EXISTS suppliers (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            phone TEXT,
-            category TEXT,
-            status TEXT DEFAULT 'Pending Approval',
-            joinedDate TEXT,
-            rating DOUBLE PRECISION DEFAULT 5.0,
-            productsCount INTEGER DEFAULT 0,
-            totalEarnings DOUBLE PRECISION DEFAULT 0,
-            address TEXT
-        )
-        """,
-        # 9. Promotions / Coupons
-        """
-        CREATE TABLE IF NOT EXISTS promotions (
-            id BIGSERIAL PRIMARY KEY,
-            code TEXT UNIQUE NOT NULL,
-            type TEXT DEFAULT 'Percentage',
-            value DOUBLE PRECISION NOT NULL,
-            minOrder DOUBLE PRECISION DEFAULT 0,
-            maxDiscount DOUBLE PRECISION,
-            validUntil TEXT,
-            status TEXT DEFAULT 'Active',
-            usageCount INTEGER DEFAULT 0,
-            applicableCategory TEXT DEFAULT 'All'
-        )
-        """,
-        # 10. Media Assets
-        """
-        CREATE TABLE IF NOT EXISTS media_assets (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            category TEXT,
-            url TEXT NOT NULL,
-            size TEXT,
-            dimensions TEXT,
-            uploadedDate TEXT
-        )
-        """,
-        # 11. Roles
-        """
-        CREATE TABLE IF NOT EXISTS roles (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT UNIQUE NOT NULL,
-            description TEXT,
-            usersCount INTEGER DEFAULT 0,
-            color TEXT DEFAULT 'indigo'
-        )
-        """,
-        # 12. Permissions Matrix
-        """
-        CREATE TABLE IF NOT EXISTS permissions (
-            key TEXT PRIMARY KEY,
-            matrix TEXT
-        )
-        """,
-        # 13. Shipping Carriers
-        """
-        CREATE TABLE IF NOT EXISTS shipping_carriers (
-            id BIGSERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            code TEXT UNIQUE NOT NULL,
-            serviceType TEXT,
-            status TEXT DEFAULT 'Active',
-            avgDays TEXT,
-            ratePerKg DOUBLE PRECISION,
-            apiConnected INTEGER DEFAULT 1
-        )
-        """,
-        # 14. System Configuration
-        """
-        CREATE TABLE IF NOT EXISTS system_config (
-            key TEXT PRIMARY KEY,
-            data TEXT NOT NULL
-        )
-        """,
-        # 15. Notifications
-        """
-        CREATE TABLE IF NOT EXISTS notifications (
-            id BIGSERIAL PRIMARY KEY,
-            title TEXT NOT NULL,
-            message TEXT,
-            time TEXT,
-            type TEXT DEFAULT 'info',
-            read INTEGER DEFAULT 0
-        )
-        """,
-        # 16. Reviews
-        """
-        CREATE TABLE IF NOT EXISTS reviews (
-            id BIGSERIAL PRIMARY KEY,
-            productId BIGINT NOT NULL,
-            userName TEXT NOT NULL,
-            rating DOUBLE PRECISION NOT NULL,
-            comment TEXT,
-            date TEXT,
-            verified INTEGER DEFAULT 1
-        )
-        """,
-        # 17. Cart Items
-        """
-        CREATE TABLE IF NOT EXISTS cart_items (
-            id BIGSERIAL PRIMARY KEY,
-            userId BIGINT NOT NULL,
-            productId BIGINT NOT NULL,
-            itemData TEXT NOT NULL,
-            quantity INTEGER NOT NULL DEFAULT 1,
-            CONSTRAINT unique_cart_item UNIQUE (userId, productId, itemData)
-        )
-        """,
-        # 18. Wishlist Items
-        """
-        CREATE TABLE IF NOT EXISTS wishlist_items (
-            userId BIGINT NOT NULL,
-            productId BIGINT NOT NULL,
-            itemData TEXT NOT NULL,
-            PRIMARY KEY (userId, productId)
-        )
-        """,
-        # 19. User Addresses
-        """
-        CREATE TABLE IF NOT EXISTS user_addresses (
-            id BIGSERIAL PRIMARY KEY,
-            userId BIGINT NOT NULL,
-            address TEXT NOT NULL,
-            isDefault INTEGER DEFAULT 0
-        )
-        """,
-        # 20. OTP Codes
-        """
-        CREATE TABLE IF NOT EXISTS otp_codes (
-            id BIGSERIAL PRIMARY KEY,
-            email TEXT NOT NULL,
-            type TEXT NOT NULL,
-            code TEXT NOT NULL,
-            expiresAt BIGINT NOT NULL,
-            attempts INTEGER DEFAULT 0,
-            CONSTRAINT unique_otp_email_type UNIQUE (email, type)
-        )
-        """,
-        # 21. Email Logs
-        """
-        CREATE TABLE IF NOT EXISTS email_logs (
-            id TEXT PRIMARY KEY,
-            recipient TEXT NOT NULL,
-            subject TEXT NOT NULL,
-            type TEXT,
-            body TEXT,
-            otpCode TEXT,
-            status TEXT DEFAULT 'Delivered',
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    ]
+    if ACTIVE_DB_TYPE == "postgres":
+        ensure_postgres_database_exists()
+        for stmt in PG_DDL_STATEMENTS:
+            cursor.execute(stmt)
 
-    for stmt in DDL_STATEMENTS:
-        cursor.execute(stmt)
+        alter_statements = [
+            "ALTER TABLE products ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE categories ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE brands ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE subcategories ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE variants ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE users ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE suppliers ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE promotions ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE media_assets ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE roles ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE shipping_carriers ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE notifications ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE reviews ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE reviews ALTER COLUMN productId TYPE BIGINT",
+            "ALTER TABLE cart_items ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE cart_items ALTER COLUMN userId TYPE BIGINT",
+            "ALTER TABLE cart_items ALTER COLUMN productId TYPE BIGINT",
+            "ALTER TABLE wishlist_items ALTER COLUMN userId TYPE BIGINT",
+            "ALTER TABLE wishlist_items ALTER COLUMN productId TYPE BIGINT",
+            "ALTER TABLE user_addresses ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE user_addresses ALTER COLUMN userId TYPE BIGINT",
+            "ALTER TABLE otp_codes ALTER COLUMN id TYPE BIGINT",
+        ]
+        for alt in alter_statements:
+            try:
+                cursor.execute(alt)
+            except Exception:
+                pass
+        conn.commit()
+        sync_sequences()
+    else:
+        for stmt in SQLITE_DDL_STATEMENTS:
+            cursor.execute(stmt)
+        conn.commit()
 
-    # Alter existing columns to BIGINT if they were created as INTEGER
-    alter_statements = [
-        "ALTER TABLE products ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE categories ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE brands ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE subcategories ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE variants ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE users ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE suppliers ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE promotions ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE media_assets ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE roles ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE shipping_carriers ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE notifications ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE reviews ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE reviews ALTER COLUMN productId TYPE BIGINT",
-        "ALTER TABLE cart_items ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE cart_items ALTER COLUMN userId TYPE BIGINT",
-        "ALTER TABLE cart_items ALTER COLUMN productId TYPE BIGINT",
-        "ALTER TABLE wishlist_items ALTER COLUMN userId TYPE BIGINT",
-        "ALTER TABLE wishlist_items ALTER COLUMN productId TYPE BIGINT",
-        "ALTER TABLE user_addresses ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE user_addresses ALTER COLUMN userId TYPE BIGINT",
-        "ALTER TABLE otp_codes ALTER COLUMN id TYPE BIGINT",
-    ]
-    for alt in alter_statements:
-        try:
-            cursor.execute(alt)
-        except Exception:
-            pass
-
-    conn.commit()
     conn.close()
 
 def sync_sequences():
     """Synchronizes PostgreSQL auto-increment sequences with existing max table IDs."""
+    if ACTIVE_DB_TYPE != "postgres":
+        return
     conn = get_db_connection()
     cursor = conn.cursor()
     SERIAL_TABLES = [
@@ -673,7 +833,5 @@ def row_to_dict(row: Any) -> dict:
     return d
 
 if __name__ == "__main__":
-    print(f"Testing PostgreSQL connection to {PGHOST}:{PGPORT}/{PGDATABASE} (User: {PGUSER})...")
     init_db()
-    sync_sequences()
-    print("PostgreSQL Database initialized successfully!")
+    print(f"Database initialized successfully using active engine: {ACTIVE_DB_TYPE.upper()}")

@@ -13,7 +13,7 @@ from fastapi import FastAPI, HTTPException, Query, Body, Header, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from database import init_db, get_db_connection, row_to_dict, dump_json_field, parse_json_field, hash_password, verify_password
+from database import init_db, get_db_connection, get_active_db_type, row_to_dict, dump_json_field, parse_json_field, hash_password, verify_password
 from seed_data import seed_database
 
 AUTH_SECRET = os.getenv("AUTH_SECRET", "krishna-accessories-dev-secret").encode("utf-8")
@@ -66,20 +66,23 @@ def on_startup():
 # -------------------------------------------------------------------
 @app.get("/api/health")
 def health_check():
+    db_type = get_active_db_type()
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT count(*) FROM products")
         product_count = cur.fetchone()[0]
         conn.close()
-        db_status = f"Connected to PostgreSQL (krishna_db, {product_count} products)"
+        db_label = "PostgreSQL (krishna_db)" if db_type == "postgres" else "SQLite (krishna.db)"
+        db_status = f"Connected to {db_label}, {product_count} products"
     except Exception as e:
-        db_status = f"PostgreSQL Error: {str(e)}"
+        db_label = "Unknown"
+        db_status = f"Database Error: {str(e)}"
 
     return {
         "status": "healthy",
         "service": "Krishna Accessories Python API",
-        "database": "PostgreSQL (krishna_db)",
+        "database": db_label,
         "databaseStatus": db_status,
         "timestamp": int(time.time())
     }
