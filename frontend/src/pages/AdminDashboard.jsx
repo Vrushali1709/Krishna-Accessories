@@ -1440,7 +1440,7 @@ export default function AdminDashboard() {
         {/* ==========================================
             3. MAIN BODY CONTENT (ALL SUB-VIEWS)
         ========================================== */}
-        <main className="p-4 sm:p-6 lg:p-8 2xl:px-12 space-y-6 w-full mx-auto">
+        <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
 
           {/* ==========================================
               MODULE 1: DASHBOARD

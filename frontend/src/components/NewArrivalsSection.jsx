@@ -189,7 +189,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
 
   return (
     <section className="bg-white py-14 sm:py-20 border-b border-neutral-200/70">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* =======================================================
             1. MINIMAL EDITORIAL SECTION HEADER

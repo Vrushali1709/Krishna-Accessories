@@ -6,7 +6,7 @@ import { ArrowRightIcon } from './Icons';
 
 export default function EditorialSpotlightSection() {
   return (
-    <section className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-8 sm:py-12">
+    <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
 
         {/* Card 1: Luxury Watches Editorial */}

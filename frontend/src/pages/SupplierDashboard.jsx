@@ -1061,7 +1061,7 @@ export default function SupplierDashboard() {
         {/* ==========================================
             3. MAIN WORKSPACE DASHBOARD CONTENT
         ========================================== */}
-        <main className="p-4 sm:p-6 lg:p-8 2xl:px-12 space-y-6 mx-auto w-full flex-1">
+        <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full flex-1">
 
           {/* KPI Stat Cards Bar */}
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

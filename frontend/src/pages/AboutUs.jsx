@@ -155,7 +155,7 @@ export default function AboutUs() {
           aria-hidden="true"
         />
 
-        <div className="relative mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-16 sm:py-20 lg:py-24">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
 
             {/* Left Content */}
@@ -260,7 +260,7 @@ export default function AboutUs() {
       {/* 2. ANIMATED STATS METRICS BAR                                             */}
       {/* ========================================================================= */}
       <section className="bg-[#FAF8F5] border-b border-neutral-200/80 py-10">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
 
             <Reveal delay={50} direction="up" className="text-center md:text-left">
@@ -327,7 +327,7 @@ export default function AboutUs() {
       {/* 3. REAL CATEGORIES WE CURATE (Interactive Category Strip)                 */}
       {/* ========================================================================= */}
       <section className="py-14 sm:py-16 bg-white border-b border-neutral-200/80">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <Reveal delay={0} direction="up">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -459,7 +459,7 @@ export default function AboutUs() {
       {/* 4. BRAND INTRO / STORY SECTION                                            */}
       {/* ========================================================================= */}
       <section id="our-story" className="py-16 sm:py-24 bg-[#FAFAFB] border-b border-neutral-200/80 scroll-mt-12">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
 
@@ -557,7 +557,7 @@ export default function AboutUs() {
       {/* 5. VALUES / BRAND PILLARS (Clean, Human, Minimal)                         */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 bg-white border-b border-neutral-200/80">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section Header */}
           <Reveal delay={0} direction="up">
@@ -679,7 +679,7 @@ export default function AboutUs() {
       {/* 6. QUALITY FEATURE SECTION (Charcoal Luxury, Clean & Trustworthy)          */}
       {/* ========================================================================= */}
       <section className="bg-[#111827] text-white py-16 sm:py-20 border-b border-neutral-800 relative overflow-hidden">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
 
             {/* Left Content */}
@@ -781,7 +781,7 @@ export default function AboutUs() {
       {/* 7. FLAGSHIP BOUTIQUE SECTION (Clean, Realistic, Mumbai Store)             */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 bg-[#FAFAFB] border-b border-neutral-200/80">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <Reveal delay={50} direction="up">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 rounded-2xl overflow-hidden border border-neutral-200/80 shadow-md bg-white">

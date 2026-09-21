@@ -215,7 +215,7 @@ export default function ProductDetails() {
 
       {/* Breadcrumb Navigation */}
       <div className="border-b border-gray-200/80 bg-white">
-        <div className="mx-auto w-full px-3 sm:px-6 lg:px-8 2xl:px-12 py-2.5 text-xs text-gray-500 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-2.5 text-xs text-gray-500 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap">
           <Link to="/" className="hover:text-black shrink-0 transition">Home</Link>
           <span className="text-gray-300 shrink-0">/</span>
           <Link to="/shop" className="hover:text-black shrink-0 transition">Shop</Link>
@@ -229,7 +229,7 @@ export default function ProductDetails() {
       </div>
 
       {/* Main Product Showcase */}
-      <main className="mx-auto w-full px-3 sm:px-6 lg:px-8 2xl:px-12 py-5 sm:py-10">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-5 sm:py-10">
 
         <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 items-start">
 

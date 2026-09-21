@@ -189,7 +189,7 @@ export default function NewArrivals() {
             aria-hidden="true"
           />
 
-          <div className="relative mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 lg:py-20">
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
               {/* Left Content */}
@@ -287,7 +287,7 @@ export default function NewArrivals() {
         {/* 2. CATALOG & FILTER SECTION (Category Pills, Search, Sort & Product Grid) */}
         {/* ========================================================================= */}
         <section className="py-10 sm:py-14 bg-[#FAFAFB]">
-          <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
             {/* Filter Header Bar */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-neutral-200/80 pb-6">

@@ -299,7 +299,7 @@ export default function Account() {
 
       {/* Header Profile Hero */}
       <section className="border-b border-stone-200/80 bg-white py-8 sm:py-10">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="flex h-13 w-13 items-center justify-center rounded-xs bg-[#121316] text-[#CBB080] font-serif font-bold text-2xl border border-[#CBB080]/30 shadow-xs">
@@ -348,7 +348,7 @@ export default function Account() {
       </section>
 
       {/* Main Account Tabs */}
-      <main className="mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 2xl:px-12">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
         {/* Tab Strip */}
         <div className="flex border-b border-stone-200 gap-6 mb-8 overflow-x-auto">

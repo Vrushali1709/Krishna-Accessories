@@ -57,7 +57,7 @@ export default function OrderTracking() {
 
       {/* Header Banner */}
       <section className="border-b border-gray-200 bg-white py-10 sm:py-12">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 text-center">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
             Logistics & Consignment Tracking
           </span>
@@ -111,7 +111,7 @@ export default function OrderTracking() {
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 2xl:px-12">
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
 
         {isSearching ? (
           <div className="rounded-3xl border border-gray-200 bg-white p-12 text-center shadow-sm flex flex-col items-center justify-center min-h-[300px]">

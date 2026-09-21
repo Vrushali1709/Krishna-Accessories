@@ -46,7 +46,7 @@ export default function ContactUs() {
 
       {/* Header */}
       <section className="bg-white border-b border-gray-200 py-10 sm:py-16">
-        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 text-center max-w-2xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center max-w-2xl">
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
             Client Relations & Concierge
           </span>
@@ -59,7 +59,7 @@ export default function ContactUs() {
         </div>
       </section>
 
-      <main className="mx-auto w-full px-4 py-8 sm:py-12 sm:px-6 lg:px-8 2xl:px-12">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-[1fr_380px]">
 
           {/* Contact Inquiry Form */}

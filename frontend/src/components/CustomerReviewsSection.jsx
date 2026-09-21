@@ -176,7 +176,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
 
   return (
     <section
-      className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12 pt-6 sm:pt-10 pb-10 sm:pb-14 select-none"
+      className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);

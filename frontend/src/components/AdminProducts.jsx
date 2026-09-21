@@ -116,7 +116,7 @@ export default function AdminProducts() {
     <div className="min-h-screen bg-[#F9F9F8] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white">
       <Navbar />
 
-      <main className="mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 2xl:px-12 space-y-6">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-200/80 pb-4 gap-3">
           <div>

@@ -56,7 +56,7 @@ const features = [
 export default function HomeDiscoveryStrip() {
   return (
     <section className="relative w-full pt-6 sm:pt-8 md:pt-10 pb-4 sm:pb-6">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* 4-Feature Interactive Grid with Generous Responsive Spacing */}
         <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:gap-5 lg:grid-cols-4 lg:gap-6">
