@@ -47,10 +47,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for Frontend (Vite runs on localhost:5173 / localhost:3000 / all origins for dev)
+# Enable CORS for Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://krishna-accessories.onrender.com",
+        "https://krishna-backend-3os6.onrender.com",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+    ],
+    allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
