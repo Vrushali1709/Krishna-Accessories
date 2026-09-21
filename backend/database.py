@@ -248,7 +248,12 @@ class PgConnectionWrapper:
         self._conn.close()
 
 def ensure_postgres_database_exists():
-    """Ensure the target database (krishna_db) exists in PostgreSQL."""
+    """Ensure the target database exists in PostgreSQL (for local development)."""
+    db_url = os.getenv("DATABASE_URL", DATABASE_URL)
+    if db_url:
+        # Managed cloud databases (Render, Supabase, Neon) already have their database allocated
+        return
+
     try:
         conn = psycopg2.connect(
             host=PGHOST,
@@ -270,15 +275,26 @@ def ensure_postgres_database_exists():
         pass
 
 def get_raw_pg_connection():
-    if DATABASE_URL:
-        return psycopg2.connect(DATABASE_URL)
-    return psycopg2.connect(
-        host=PGHOST,
-        port=PGPORT,
-        user=PGUSER,
-        password=PGPASSWORD,
-        dbname=PGDATABASE
-    )
+    db_url = os.getenv("DATABASE_URL", DATABASE_URL)
+    try:
+        if db_url:
+            return psycopg2.connect(db_url)
+        return psycopg2.connect(
+            host=PGHOST,
+            port=PGPORT,
+            user=PGUSER,
+            password=PGPASSWORD,
+            dbname=PGDATABASE
+        )
+    except psycopg2.OperationalError as e:
+        if "localhost" in str(e) or "127.0.0.1" in str(e) or "::1" in str(e):
+            print("\n" + "="*70)
+            print("[DATABASE CONNECTION ERROR]")
+            print("Failed to connect to PostgreSQL at localhost:5432.")
+            print("If deploying on cloud hosting (Render, Railway, etc.), you must configure")
+            print("the 'DATABASE_URL' environment variable in your dashboard with your cloud database URI.")
+            print("="*70 + "\n")
+        raise
 
 def get_db_connection() -> PgConnectionWrapper:
     """Returns an active, wrapped PostgreSQL database connection."""
