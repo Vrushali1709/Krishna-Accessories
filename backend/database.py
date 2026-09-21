@@ -100,7 +100,7 @@ class RowDict(dict):
         self._tuple = raw_tuple
         if description and raw_tuple:
             for i, col in enumerate(description):
-                col_name = col.name
+                col_name = col.name if hasattr(col, 'name') else (col[0] if isinstance(col, (tuple, list)) else str(col))
                 val = raw_tuple[i]
                 self[col_name] = val
                 camel = CAMEL_CASE_MAP.get(col_name.lower())
