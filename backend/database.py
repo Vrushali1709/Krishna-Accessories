@@ -2,16 +2,23 @@
 import os
 import re
 import json
+import sqlite3
 import hashlib
 import secrets
 import hmac
 from typing import Any, List, Dict, Optional, Tuple, Union
-import psycopg2
+try:
+    import psycopg2
+except ImportError:
+    psycopg2 = None
 from dotenv import load_dotenv
 
-# Load environment variables from backend/.env
+# Load environment variables from backend/.env without overriding existing environment
 ENV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-load_dotenv(ENV_PATH)
+load_dotenv(ENV_PATH, override=False)
+
+SQLITE_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "krishna.db")
+_active_driver = None
 
 PGHOST = os.getenv("PGHOST", "localhost")
 PGPORT = int(os.getenv("PGPORT", "5432"))
@@ -225,6 +232,86 @@ class PgCursorWrapper:
         for r in self._cursor:
             yield RowDict(r, desc)
 
+class SqliteCursorWrapper:
+    """Wrapper around sqlite3 cursor providing seamless PostgreSQL/SQLite compatibility."""
+    def __init__(self, raw_cursor):
+        self._cursor = raw_cursor
+
+    def execute(self, query: str, params: Optional[Union[List, Tuple, Dict]] = None):
+        q = query
+        if '%s' in q and not ('LIKE' in q.upper() and '%s%' in q):
+            q = re.sub(r'%s', '?', q)
+        if params is not None:
+            if isinstance(params, list):
+                params = tuple(params)
+            self._cursor.execute(q, params)
+        else:
+            self._cursor.execute(q)
+        return self
+
+    def executemany(self, query: str, param_list: List[Union[List, Tuple]]):
+        q = re.sub(r'%s', '?', query) if '%s' in query else query
+        self._cursor.executemany(q, param_list)
+        return self
+
+    def fetchone(self):
+        row = self._cursor.fetchone()
+        if row is None:
+            return None
+        return RowDict(tuple(row), self._cursor.description)
+
+    def fetchall(self):
+        rows = self._cursor.fetchall()
+        if not rows:
+            return []
+        desc = self._cursor.description
+        return [RowDict(tuple(r), desc) for r in rows]
+
+    def fetchmany(self, size=None):
+        rows = self._cursor.fetchmany(size) if size else self._cursor.fetchmany()
+        if not rows:
+            return []
+        desc = self._cursor.description
+        return [RowDict(tuple(r), desc) for r in rows]
+
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
+    @property
+    def description(self):
+        return self._cursor.description
+
+    def close(self):
+        self._cursor.close()
+
+    def __iter__(self):
+        desc = self._cursor.description
+        for r in self._cursor:
+            yield RowDict(tuple(r), desc)
+
+class SqliteConnectionWrapper:
+    """Wrapper around sqlite3 connection providing transparent execution and closing."""
+    def __init__(self, raw_conn):
+        self._conn = raw_conn
+
+    def cursor(self):
+        return SqliteCursorWrapper(self._conn.cursor())
+
+    def execute(self, query: str, params: Optional[Union[List, Tuple, Dict]] = None):
+        cur = self.cursor()
+        cur.execute(query, params)
+        return cur
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def close(self):
+        self._conn.close()
+
 class PgConnectionWrapper:
     """Wrapper around psycopg2 connection for transparent execution and closing."""
     def __init__(self, raw_conn):
@@ -247,8 +334,30 @@ class PgConnectionWrapper:
     def close(self):
         self._conn.close()
 
+def get_active_db_driver() -> str:
+    global _active_driver
+    if _active_driver:
+        return _active_driver
+
+    if psycopg2 is None:
+        _active_driver = 'sqlite'
+        return _active_driver
+
+    try:
+        raw = get_raw_pg_connection()
+        raw.close()
+        _active_driver = 'postgres'
+        print("[Database] Connected successfully to PostgreSQL.")
+        return _active_driver
+    except Exception as e:
+        print(f"[Database] PostgreSQL connection failed ({e}). Falling back smoothly to SQLite.")
+        _active_driver = 'sqlite'
+        return _active_driver
+
 def ensure_postgres_database_exists():
     """Ensure the target database (krishna_db) exists in PostgreSQL."""
+    if psycopg2 is None:
+        return
     try:
         conn = psycopg2.connect(
             host=PGHOST,
@@ -270,6 +379,8 @@ def ensure_postgres_database_exists():
         pass
 
 def get_raw_pg_connection():
+    if psycopg2 is None:
+        raise RuntimeError("psycopg2 is not installed")
     if DATABASE_URL:
         return psycopg2.connect(DATABASE_URL)
     return psycopg2.connect(
@@ -280,14 +391,24 @@ def get_raw_pg_connection():
         dbname=PGDATABASE
     )
 
-def get_db_connection() -> PgConnectionWrapper:
-    """Returns an active, wrapped PostgreSQL database connection."""
-    raw = get_raw_pg_connection()
-    return PgConnectionWrapper(raw)
+def get_db_connection() -> Union[PgConnectionWrapper, SqliteConnectionWrapper]:
+    """Returns an active, wrapped database connection (PostgreSQL or SQLite fallback)."""
+    driver = get_active_db_driver()
+    if driver == 'postgres':
+        try:
+            raw = get_raw_pg_connection()
+            return PgConnectionWrapper(raw)
+        except Exception:
+            pass
+    
+    conn = sqlite3.connect(SQLITE_DB_PATH, timeout=30.0, check_same_thread=False)
+    return SqliteConnectionWrapper(conn)
 
 def init_db():
-    """Initializes PostgreSQL schema with all required tables and constraints."""
-    ensure_postgres_database_exists()
+    """Initializes database schema with all required tables and constraints (PostgreSQL or SQLite)."""
+    driver = get_active_db_driver()
+    if driver == 'postgres':
+        ensure_postgres_database_exists()
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -568,48 +689,60 @@ def init_db():
     ]
 
     for stmt in DDL_STATEMENTS:
-        cursor.execute(stmt)
+        if driver == 'sqlite':
+            s = stmt
+            s = s.replace("BIGSERIAL PRIMARY KEY", "INTEGER PRIMARY KEY AUTOINCREMENT")
+            s = s.replace("DOUBLE PRECISION", "REAL")
+            s = s.replace("BIGINT", "INTEGER")
+            s = s.replace("BOOLEAN DEFAULT FALSE", "INTEGER DEFAULT 0")
+            s = s.replace("BOOLEAN DEFAULT TRUE", "INTEGER DEFAULT 1")
+            cursor.execute(s)
+        else:
+            cursor.execute(stmt)
 
-    # Alter existing columns to BIGINT if they were created as INTEGER
-    alter_statements = [
-        "ALTER TABLE products ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE categories ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE brands ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE subcategories ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE variants ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE users ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE suppliers ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE promotions ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE media_assets ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE roles ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE shipping_carriers ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE notifications ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE reviews ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE reviews ALTER COLUMN productId TYPE BIGINT",
-        "ALTER TABLE cart_items ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE cart_items ALTER COLUMN userId TYPE BIGINT",
-        "ALTER TABLE cart_items ALTER COLUMN productId TYPE BIGINT",
-        "ALTER TABLE wishlist_items ALTER COLUMN userId TYPE BIGINT",
-        "ALTER TABLE wishlist_items ALTER COLUMN productId TYPE BIGINT",
-        "ALTER TABLE user_addresses ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE user_addresses ALTER COLUMN userId TYPE BIGINT",
-        "ALTER TABLE otp_codes ALTER COLUMN id TYPE BIGINT",
-        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS gstin TEXT",
-        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS panNumber TEXT",
-        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS bankDetails TEXT",
-        "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS contactPerson TEXT",
-    ]
-    for alt in alter_statements:
-        try:
-            cursor.execute(alt)
-        except Exception:
-            pass
+    if driver == 'postgres':
+        # Alter existing columns to BIGINT if they were created as INTEGER
+        alter_statements = [
+            "ALTER TABLE products ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE categories ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE brands ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE subcategories ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE variants ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE users ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE suppliers ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE promotions ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE media_assets ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE roles ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE shipping_carriers ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE notifications ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE reviews ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE reviews ALTER COLUMN productId TYPE BIGINT",
+            "ALTER TABLE cart_items ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE cart_items ALTER COLUMN userId TYPE BIGINT",
+            "ALTER TABLE cart_items ALTER COLUMN productId TYPE BIGINT",
+            "ALTER TABLE wishlist_items ALTER COLUMN userId TYPE BIGINT",
+            "ALTER TABLE wishlist_items ALTER COLUMN productId TYPE BIGINT",
+            "ALTER TABLE user_addresses ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE user_addresses ALTER COLUMN userId TYPE BIGINT",
+            "ALTER TABLE otp_codes ALTER COLUMN id TYPE BIGINT",
+            "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS gstin TEXT",
+            "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS panNumber TEXT",
+            "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS bankDetails TEXT",
+            "ALTER TABLE suppliers ADD COLUMN IF NOT EXISTS contactPerson TEXT",
+        ]
+        for alt in alter_statements:
+            try:
+                cursor.execute(alt)
+            except Exception:
+                pass
 
     conn.commit()
     conn.close()
 
 def sync_sequences():
     """Synchronizes PostgreSQL auto-increment sequences with existing max table IDs."""
+    if get_active_db_driver() != 'postgres':
+        return
     conn = get_db_connection()
     cursor = conn.cursor()
     SERIAL_TABLES = [
