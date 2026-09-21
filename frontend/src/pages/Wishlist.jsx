@@ -1,12 +1,91 @@
 // src/pages/Wishlist.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { getWishlist, clearWishlist } from '../utils/productStore';
 import { addToCart } from '../utils/cart';
-import { HeartIcon, BagIcon, ArrowRightIcon } from '../components/Icons';
+import {
+  Heart,
+  ShoppingBag,
+  ArrowRight,
+  Sparkles,
+  Trash2,
+  ShieldCheck,
+  Award
+} from 'lucide-react';
+
+// =========================================================================
+// CUSTOM ANIMATION HOOK: Intersection Observer for on-scroll reveals
+// =========================================================================
+function useInView(options = { threshold: 0.1, triggerOnce: true }) {
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setInView(true);
+        if (options.triggerOnce) {
+          observer.unobserve(entry.target);
+        }
+      }
+    }, options);
+
+    const currentElem = ref.current;
+    if (currentElem) observer.observe(currentElem);
+
+    return () => {
+      if (currentElem) observer.unobserve(currentElem);
+    };
+  }, [options.threshold, options.triggerOnce]);
+
+  return [ref, inView];
+}
+
+function Reveal({
+  children,
+  delay = 0,
+  direction = 'up',
+  className = '',
+  threshold = 0.08
+}) {
+  const [ref, inView] = useInView({ threshold, triggerOnce: true });
+
+  const getTransform = () => {
+    if (inView) return 'translate3d(0, 0, 0) scale(1)';
+    switch (direction) {
+      case 'up':
+        return 'translate3d(0, 24px, 0)';
+      case 'down':
+        return 'translate3d(0, -24px, 0)';
+      case 'left':
+        return 'translate3d(24px, 0, 0)';
+      case 'right':
+        return 'translate3d(-24px, 0, 0)';
+      case 'zoom':
+        return 'scale(0.97)';
+      default:
+        return 'translate3d(0, 20px, 0)';
+    }
+  };
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: getTransform(),
+        transition: `opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        willChange: 'opacity, transform',
+      }}
+      className={className}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Wishlist() {
   const navigate = useNavigate();
@@ -26,7 +105,7 @@ export default function Wishlist() {
   const handleAddToCart = (product) => {
     addToCart(product, 1, '', '');
     setToastMessage(`✓ Added "${product.name}" to your bag`);
-    setTimeout(() => setToastMessage(''), 3000);
+    setTimeout(() => setToastMessage(''), 3500);
   };
 
   const handleBuyNow = (product) => {
@@ -37,87 +116,140 @@ export default function Wishlist() {
   const handleMoveAllToBag = () => {
     wishlist.forEach(p => addToCart(p, 1, '', ''));
     setToastMessage(`✓ Moved ${wishlist.length} item(s) to your bag`);
-    setTimeout(() => setToastMessage(''), 3000);
+    setTimeout(() => setToastMessage(''), 3500);
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB] text-gray-900">
+    <div className="min-h-screen bg-[#FAFAFB] text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white overflow-x-clip">
       <Navbar />
 
-      {/* Toast Alert */}
+      {/* Floating Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-xs font-bold text-gray-900 shadow-2xl">
-          <span className="text-base">🛍️</span>
-          <span>{toastMessage}</span>
-          <Link to="/cart" className="ml-2 rounded-full bg-[#111827] px-3 py-1 text-[11px] font-bold text-white hover:bg-black">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-neutral-200 bg-white/95 backdrop-blur-md px-4 py-3.5 text-xs font-semibold shadow-2xl animate-fade-in">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#F5F2EB] text-[#8C6734] border border-[#C5A880]/40 text-[11px] font-bold">
+            ✓
+          </span>
+          <span className="text-neutral-800">{toastMessage}</span>
+          <Link
+            to="/cart"
+            className="ml-2 rounded-md bg-neutral-950 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#C5A880] hover:text-white hover:bg-neutral-800 transition-colors"
+          >
             View Bag
           </Link>
         </div>
       )}
 
-      {/* Header Banner */}
-      <section className="border-b border-gray-200 bg-white py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Personal Curation
-            </span>
-            <h1 className="mt-1 text-2xl sm:text-4xl font-bold tracking-tight text-gray-950">
-              Saved Wishlist ({wishlist.length})
-            </h1>
-            <p className="mt-1.5 text-xs text-gray-500">
-              Your shortlisted luxury timepieces, footwear, leather goods, and tech editions.
-            </p>
-          </div>
+      {/* ========================================================================= */}
+      {/* 1. HERO BANNER (Luxury Editorial Header Matching About & New Arrivals)    */}
+      {/* ========================================================================= */}
+      <section className="relative bg-white border-b border-neutral-200/80 overflow-hidden">
+        {/* Subtle decorative background pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
+            backgroundSize: '24px 24px'
+          }}
+          aria-hidden="true"
+        />
 
-          {wishlist.length > 0 && (
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleMoveAllToBag}
-                className="rounded-full bg-[#111827] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-black shadow-sm transition"
-              >
-                Move All to Bag
-              </button>
-              <button
-                type="button"
-                onClick={clearWishlist}
-                className="rounded-full border border-gray-200 bg-[#F4F4F6] px-4 py-2 text-xs font-bold text-gray-600 hover:text-red-600 hover:bg-gray-200 transition"
-              >
-                Clear All
-              </button>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            
+            <div className="space-y-3">
+              {/* Eyebrow Badge with Pulse */}
+              <Reveal delay={0} direction="up">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F5F2EB] border border-[#C5A880]/50 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-[#8C6734] animate-ping" />
+                  <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#8C6734]">
+                    Personal Curation
+                  </span>
+                </div>
+              </Reveal>
+
+              {/* Editorial Serif Heading */}
+              <Reveal delay={100} direction="up">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-medium tracking-tight text-neutral-950 leading-[1.15]">
+                  Saved Wishlist <br />
+                  <span className="italic font-normal text-[#8C6734]">
+                    ({wishlist.length} {wishlist.length === 1 ? 'Curated Piece' : 'Curated Pieces'})
+                  </span>
+                </h1>
+              </Reveal>
+
+              <Reveal delay={180} direction="up">
+                <p className="text-xs sm:text-sm text-neutral-600 font-normal max-w-xl">
+                  Your shortlisted luxury timepieces, handcrafted leather goods, footwear, and consumer tech accessories.
+                </p>
+              </Reveal>
             </div>
-          )}
+
+            {/* Top Wishlist Actions */}
+            {wishlist.length > 0 && (
+              <Reveal delay={200} direction="left">
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleMoveAllToBag}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-[0.14em] hover:bg-[#8C6734] transition-colors duration-200 shadow-sm cursor-pointer"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#C5A880]" />
+                    <span>Move All to Bag</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={clearWishlist}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md border border-neutral-300 bg-white text-xs font-semibold uppercase tracking-wider text-neutral-700 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50/50 transition-colors duration-200 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Clear All</span>
+                  </button>
+                </div>
+              </Reveal>
+            )}
+
+          </div>
         </div>
       </section>
 
-      {/* Main Wishlist Grid */}
-      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      {/* ========================================================================= */}
+      {/* 2. WISHLIST PRODUCTS GRID OR EMPTY STATE                                  */}
+      {/* ========================================================================= */}
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:py-14 sm:px-6 lg:px-8">
         {wishlist.length === 0 ? (
-          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-rose-500 border border-rose-100">
-              <HeartIcon className="w-8 h-8" filled={false} />
+          /* Luxury Empty State */
+          <Reveal delay={50} direction="up">
+            <div className="mx-auto max-w-md rounded-2xl border border-neutral-200/80 bg-white py-16 px-6 text-center shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-[#F5F2EB] text-[#8C6734] flex items-center justify-center mx-auto mb-4 border border-[#C5A880]/40">
+                <Heart className="w-6 h-6" />
+              </div>
+              <h2 className="font-serif text-2xl font-medium text-neutral-950 mb-2">
+                Your Wishlist is Empty
+              </h2>
+              <p className="text-xs text-neutral-500 leading-relaxed mb-6 max-w-sm mx-auto">
+                Explore our curated boutique catalog of verified luxury watches, Italian leather goods, sneakers, and modern electronics and tap the heart icon on any product to save it.
+              </p>
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-neutral-950 text-white text-xs font-semibold uppercase tracking-[0.14em] hover:bg-[#8C6734] transition-colors duration-200 shadow-sm"
+              >
+                <span>Explore Full Catalog</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-            <h2 className="mt-4 text-xl font-bold text-gray-950">Your Wishlist is Empty</h2>
-            <p className="mt-1.5 max-w-sm text-xs text-gray-500 leading-relaxed">
-              Explore our boutique catalog of Swiss watches, designer leather briefcases, and flagship smartphones and tap the heart icon to save favorites.
-            </p>
-            <Link
-              to="/shop"
-              className="mt-6 rounded-full bg-[#111827] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-black shadow-sm"
-            >
-              Explore Collections &rarr;
-            </Link>
-          </div>
+          </Reveal>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {wishlist.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={handleAddToCart}
-                onBuyNow={handleBuyNow}
-              />
+          /* Products Grid */
+          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+            {wishlist.map((product, index) => (
+              <Reveal key={product.id} delay={Math.min(index * 40, 300)} direction="up">
+                <ProductCard
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
+                />
+              </Reveal>
             ))}
           </div>
         )}
