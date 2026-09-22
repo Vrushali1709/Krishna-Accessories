@@ -132,7 +132,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
 
   return (
     <section className="bg-white py-12 sm:py-16 border-t border-b border-neutral-200/80">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
 
         {/* =======================================================
             1. REFINED LUXURY SECTION HEADER

@@ -179,7 +179,7 @@ export default function ProductsByPriceSection({
 
   return (
     <section className="bg-[#FAF8F5] pt-10 sm:pt-14 pb-12 sm:pb-16 border-t border-b border-[#ECE6DB]/80">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
 
         {/* ============================================================
             1. REFINED LUXURY SECTION HEADER

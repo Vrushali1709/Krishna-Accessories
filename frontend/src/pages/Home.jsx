@@ -501,7 +501,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
+        <div className="relative z-20 mx-auto max-w-[1760px] w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-12 xl:px-14 2xl:px-16 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
           <div className="max-w-[620px] lg:my-auto lg:py-8" key={`hero-slide-${currentSlide}`}>
             <Reveal direction="down" delay={60}>
               <div className="mb-5 flex items-center gap-3">
@@ -665,7 +665,7 @@ export default function Home() {
       {/* =========================================================
           7. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
       ========================================================= */}
-      <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
+      <section className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 pt-8 sm:pt-10 pb-4 sm:pb-6">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
 

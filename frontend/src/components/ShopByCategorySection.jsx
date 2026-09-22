@@ -55,7 +55,7 @@ export default function ShopByCategorySection({
   const [showAllDrawer, setShowAllDrawer] = useState(false);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <section className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 py-10 sm:py-16">
       
       {/* ============================================================
           1. REFINED LUXURY SECTION HEADER

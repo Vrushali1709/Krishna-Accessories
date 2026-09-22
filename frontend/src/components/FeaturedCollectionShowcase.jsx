@@ -378,7 +378,7 @@ export default function FeaturedCollectionShowcase({ products = [], onToast }) {
           SECTION 1: FEATURED PRODUCTS (WARM IVORY / SAND CANVAS)
       ========================================================= */}
       <section className="bg-[#F5F2EC] py-10 sm:py-14 border-t border-b border-[#E8E2D6]/80 overflow-hidden relative">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
           <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
 
             {/* Left Hero Card */}
@@ -468,7 +468,7 @@ export default function FeaturedCollectionShowcase({ products = [], onToast }) {
         <div className="pointer-events-none absolute -top-32 right-1/4 h-96 w-96 rounded-full bg-[#C9A96E]/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-[#B88746]/5 blur-3xl" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 relative z-10">
           <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
 
             {/* Left Hero Card */}
@@ -554,7 +554,7 @@ export default function FeaturedCollectionShowcase({ products = [], onToast }) {
           SECTION 3: BEST SELLERS (WARM NEUTRAL / CREAM CANVAS)
       ========================================================= */}
       <section className="bg-[#FAF8F5] py-10 sm:py-14 border-t border-b border-[#ECE6DB]/80 overflow-hidden relative">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
           <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
 
             {/* Left Hero Card */}
@@ -640,7 +640,7 @@ export default function FeaturedCollectionShowcase({ products = [], onToast }) {
           BOTTOM TRUST BADGES STRIP (CLEAN LUXURY MINIMALIST)
       ========================================================= */}
       <div className="w-full bg-white py-6 sm:py-8 border-b border-neutral-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-neutral-200/80">
 
             {/* 1. Free Shipping */}
