@@ -178,27 +178,37 @@ export default function ProductsByPriceSection({
   const ActiveTierIcon = activeTier.icon;
 
   return (
-    <section className="bg-[#FAF8F5] pt-10 sm:pt-14 pb-12 sm:pb-16 border-t border-b border-[#ECE6DB]/80">
-      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
+    <section className="bg-[#FAF8F5] pt-12 sm:pt-16 pb-14 sm:pb-18 border-t border-b border-[#ECE6DB]/80 relative overflow-hidden">
+      {/* Subtle Background Pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
+          backgroundSize: '24px 24px'
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 relative z-10">
 
         {/* ============================================================
             1. REFINED LUXURY SECTION HEADER
         ============================================================ */}
         <Reveal direction="up" delay={40}>
           <div className="text-center mb-8 sm:mb-11">
-            <div className="flex items-center justify-center gap-2 mb-2 sm:mb-3">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-neutral-500 font-sans">
+            <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 px-3 py-1 rounded-full bg-[#EDE8DE] border border-[#C5A880]/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#8C6734] font-sans">
                 CURATED BUDGET TIERS
               </span>
-              <span className="w-7 h-[1.5px] bg-[#9A7B56]" />
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-serif leading-[1.1] text-neutral-900 tracking-tight">
-              Shop by <span className="text-[#9A7B56] font-normal">Budget</span>
+              Shop by <span className="text-[#9A7B56] font-normal italic lg:not-italic">Budget</span>
             </h2>
 
             <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-lg mx-auto font-sans leading-relaxed">
-              Discover curated luxury accessories, timepieces, and essentials tailored for your planned budget.
+              Discover curated luxury accessories, timepieces, and essentials tailored for your planned investment.
             </p>
           </div>
         </Reveal>
@@ -216,10 +226,10 @@ export default function ProductsByPriceSection({
               <Reveal key={tier.id} direction="up" delay={idx * 50} duration={600}>
                 <div
                   onClick={() => setActiveTierId(tier.id)}
-                  className={`group relative flex min-w-0 flex-col justify-between rounded-2xl p-3.5 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${
+                  className={`group relative flex min-w-0 flex-col justify-between rounded-2xl p-4 sm:p-5 border transition-all duration-300 cursor-pointer select-none ${
                     isActive
-                      ? `bg-white shadow-[0_12px_28px_rgba(0,0,0,0.07)] ${tier.activeBorder} -translate-y-1`
-                      : 'bg-white/80 border-neutral-200/80 hover:border-neutral-300 hover:bg-white hover:shadow-sm hover:-translate-y-0.5'
+                      ? `bg-white shadow-[0_16px_36px_rgba(0,0,0,0.08)] ${tier.activeBorder} -translate-y-1.5`
+                      : 'bg-white/80 border-neutral-200/80 hover:border-[#9A7B56]/50 hover:bg-white hover:shadow-md hover:-translate-y-1'
                   }`}
                 >
                   {/* Top: Badge & Count */}
@@ -235,8 +245,8 @@ export default function ProductsByPriceSection({
 
                     {/* Middle: Icon & Title */}
                     <div className="mt-3.5 flex items-center gap-2.5 sm:gap-3">
-                      <div className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl ${tier.iconBg} shrink-0 transition-transform duration-300 group-hover:scale-105`}>
-                        <TierIcon className="w-4 h-4" />
+                      <div className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl ${tier.iconBg} shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-2xs`}>
+                        <TierIcon className="w-4.5 h-4.5" />
                       </div>
                       <div>
                         <h3 className="truncate text-sm sm:text-base lg:text-lg font-bold tracking-tight text-neutral-950 leading-snug">
@@ -263,7 +273,7 @@ export default function ProductsByPriceSection({
                     <Link
                       to={`/shop?maxPrice=${tier.maxPrice}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex shrink-0 items-center gap-1 text-[9.5px] sm:text-[11px] font-semibold text-neutral-600 hover:text-black transition-colors rounded-full bg-[#F5F2EC] hover:bg-[#ECE6DB] px-2.5 py-1"
+                      className="inline-flex shrink-0 items-center gap-1 text-[9.5px] sm:text-[11px] font-semibold text-neutral-600 hover:text-black transition-all rounded-full bg-[#F5F2EC] hover:bg-[#ECE6DB] px-2.5 py-1 hover:scale-105"
                       title={`Open catalog under ₹${tier.maxPrice.toLocaleString('en-IN')}`}
                     >
                       <span>Shop All</span>
@@ -320,7 +330,7 @@ export default function ProductsByPriceSection({
                     delay={idx * 60}
                     duration={600}
                   >
-                    <div className="group flex flex-col justify-between rounded-2xl bg-white p-3 sm:p-3.5 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_32px_rgba(0,0,0,0.08)] hover:border-neutral-300 hover:-translate-y-1.5 h-full">
+                    <div className="group relative flex flex-col justify-between rounded-2xl bg-white p-3 sm:p-3.5 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.09)] hover:border-[#9A7B56]/50 hover:-translate-y-2 h-full">
                       {/* Image Canvas */}
                       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F2EFE9] mb-3.5">
                         <Link
@@ -331,9 +341,9 @@ export default function ProductsByPriceSection({
                             src={product.image || product.images?.[0]}
                             alt={product.name}
                             loading="lazy"
-                            className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+                            className={`h-full w-full object-cover object-center transition-transform duration-700 ease-out ${
                               product.images && product.images.length > 1
-                                ? 'group-hover:opacity-0 group-hover:scale-105'
+                                ? 'group-hover:opacity-0 group-hover:scale-108'
                                 : 'group-hover:scale-108'
                             }`}
                           />
@@ -342,7 +352,7 @@ export default function ProductsByPriceSection({
                               src={product.images[1]}
                               alt={`${product.name} alternate angle`}
                               loading="lazy"
-                              className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
+                              className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-108 pointer-events-none"
                             />
                           )}
                         </Link>
@@ -357,13 +367,29 @@ export default function ProductsByPriceSection({
                             type="button"
                             onClick={(e) => handleWishlistToggle(e, product)}
                             aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                            className={`pointer-events-auto flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow-xs transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer ${
+                            className={`pointer-events-auto flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow-xs transition-all duration-300 hover:scale-120 active:scale-90 cursor-pointer ${
                               isWish
                                 ? 'bg-rose-50 text-rose-600 border border-rose-200'
                                 : 'bg-white/90 text-neutral-600 hover:text-rose-600 border border-neutral-200/80 hover:bg-white'
                             }`}
                           >
-                            <HeartIcon className="w-3.5 h-3.5" filled={isWish} />
+                            <HeartIcon className="w-3.5 h-3.5 transition-transform" filled={isWish} />
+                          </button>
+                        </div>
+
+                        {/* Desktop Hover Quick Add Slide Up */}
+                        <div className="hidden sm:flex absolute inset-x-2.5 bottom-2.5 z-20 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
+                          <button
+                            type="button"
+                            onClick={(e) => handleQuickAdd(e, product)}
+                            className={`w-full py-2 px-3 rounded-lg text-xs font-semibold tracking-wide backdrop-blur-md shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 ${
+                              isAdded
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-neutral-950/90 text-white hover:bg-[#8C6734]'
+                            }`}
+                          >
+                            <BagIcon className="w-3.5 h-3.5 text-amber-300" />
+                            <span>{isAdded ? 'Added to Bag' : 'Quick Add'}</span>
                           </button>
                         </div>
                       </div>
@@ -414,28 +440,18 @@ export default function ProductsByPriceSection({
                           )}
                         </div>
 
-                        {/* Add to Cart Button */}
-                        <div className="mt-3">
+                        {/* Mobile Add to Cart Button */}
+                        <div className="mt-2.5 pt-2 border-t border-neutral-100 sm:hidden">
                           <button
                             type="button"
                             onClick={(e) => handleQuickAdd(e, product)}
-                            className={`w-full py-2 px-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
+                            className={`w-full py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
                               isAdded
                                 ? 'bg-emerald-600 text-white'
                                 : 'bg-[#111827] text-white hover:bg-black'
                             }`}
                           >
-                            {isAdded ? (
-                              <>
-                                <span className="font-bold text-xs">✓</span>
-                                <span>Added</span>
-                              </>
-                            ) : (
-                              <>
-                                <BagIcon className="w-3.5 h-3.5 text-amber-300" />
-                                <span>Add to Bag</span>
-                              </>
-                            )}
+                            {isAdded ? '✓ Added' : '+ Add to Bag'}
                           </button>
                         </div>
 
@@ -484,10 +500,10 @@ export default function ProductsByPriceSection({
 
             <Link
               to={`/shop?maxPrice=${activeTier.maxPrice}`}
-              className="inline-flex items-center gap-2 rounded-full bg-[#9A7B56] hover:bg-[#856543] px-6 py-2.5 text-xs font-semibold text-white transition-all duration-300 hover:shadow-lg active:scale-95 shrink-0 cursor-pointer relative z-10"
+              className="group inline-flex items-center gap-2 rounded-full bg-[#9A7B56] hover:bg-[#856543] px-6 py-2.5 text-xs font-semibold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 shrink-0 cursor-pointer relative z-10"
             >
               <span>Explore All {activeTier.label}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-white" />
+              <ArrowRight className="w-3.5 h-3.5 text-white transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
         </Reveal>

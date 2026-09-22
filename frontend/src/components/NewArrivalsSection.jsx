@@ -131,8 +131,18 @@ export default function NewArrivalsSection({ products = [], onToast }) {
   };
 
   return (
-    <section className="bg-white py-12 sm:py-16 border-t border-b border-neutral-200/80">
-      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
+    <section className="bg-white py-12 sm:py-18 border-t border-b border-neutral-200/80 relative overflow-hidden">
+      {/* Subtle Background Dot Pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
+          backgroundSize: '24px 24px'
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 relative z-10">
 
         {/* =======================================================
             1. REFINED LUXURY SECTION HEADER
@@ -140,16 +150,16 @@ export default function NewArrivalsSection({ products = [], onToast }) {
         <Reveal direction="up" delay={40}>
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
             <div>
-              <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-neutral-500 font-sans">
+              <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 px-3 py-1 rounded-full bg-[#F5F2EB] border border-[#C5A880]/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#8C6734] font-sans">
                   SEASON 2026 / NOVELTIES
                 </span>
-                <span className="w-7 h-[1.5px] bg-[#9A7B56]" />
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-serif leading-[1.1] text-neutral-900 tracking-tight">
-                New <span className="text-[#9A7B56] font-normal">Arrivals</span>
+                New <span className="text-[#9A7B56] font-normal italic lg:not-italic">Arrivals</span>
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-xl font-sans leading-relaxed">
+              <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-xl font-sans leading-relaxed font-normal">
                 Fresh seasonal releases, novelties, and smart devices straight to catalog.
               </p>
             </div>
@@ -165,7 +175,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                       key={tab.id}
                       type="button"
                       onClick={() => setSelectedTab(tab.id)}
-                      className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                      className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer hover:scale-105 active:scale-95 ${
                         isActive
                           ? 'bg-[#9A7B56] text-white shadow-xs'
                           : 'bg-[#F5F2EC] text-neutral-700 hover:text-black hover:bg-[#ECE6DB]'
@@ -184,9 +194,9 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                   onClick={() => scrollCarousel('left')}
                   disabled={!canScrollLeft}
                   aria-label="Previous items"
-                  className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200 ${
+                  className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
                     canScrollLeft
-                      ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer shadow-xs active:scale-95'
+                      ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer shadow-xs hover:scale-110 active:scale-95'
                       : 'border border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed'
                   }`}
                 >
@@ -198,9 +208,9 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                   onClick={() => scrollCarousel('right')}
                   disabled={!canScrollRight}
                   aria-label="Next items"
-                  className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200 ${
+                  className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
                     canScrollRight
-                      ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer shadow-xs active:scale-95'
+                      ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer shadow-xs hover:scale-110 active:scale-95'
                       : 'border border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed'
                   }`}
                 >
@@ -217,7 +227,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
         {filteredItems.length > 0 ? (
           <div
             ref={carouselRef}
-            className="flex gap-4 sm:gap-5 overflow-x-auto py-2 snap-x snap-mandatory scroll-smooth no-scrollbar select-none"
+            className="flex gap-4 sm:gap-5 overflow-x-auto py-3 snap-x snap-mandatory scroll-smooth no-scrollbar select-none"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {filteredItems.map((product) => {
@@ -232,7 +242,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
               return (
                 <div
                   key={product.id}
-                  className="group flex-shrink-0 w-[230px] sm:w-[255px] md:w-[270px] snap-start flex flex-col justify-between rounded-2xl bg-white p-3 sm:p-3.5 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_32px_rgba(0,0,0,0.08)] hover:border-neutral-300 hover:-translate-y-1.5"
+                  className="group relative flex-shrink-0 w-[230px] sm:w-[255px] md:w-[270px] snap-start flex flex-col justify-between rounded-2xl bg-white p-3 sm:p-3.5 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.09)] hover:border-[#9A7B56]/50 hover:-translate-y-2 select-none"
                 >
                   {/* Image Canvas */}
                   <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F2EFE9] mb-3.5">
@@ -244,9 +254,9 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                         src={product.image || product.images?.[0]}
                         alt={product.name}
                         loading="lazy"
-                        className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+                        className={`h-full w-full object-cover object-center transition-transform duration-700 ease-out ${
                           product.images && product.images.length > 1
-                            ? 'group-hover:opacity-0 group-hover:scale-105'
+                            ? 'group-hover:opacity-0 group-hover:scale-108'
                             : 'group-hover:scale-108'
                         }`}
                       />
@@ -255,7 +265,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                           src={product.images[1]}
                           alt={`${product.name} alternate view`}
                           loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-108 pointer-events-none"
                         />
                       )}
                     </Link>
@@ -270,13 +280,29 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                         type="button"
                         onClick={(e) => handleWishlistToggle(e, product)}
                         aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                        className={`pointer-events-auto flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow-xs transition-all duration-300 hover:scale-110 active:scale-90 cursor-pointer ${
+                        className={`pointer-events-auto flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow-xs transition-all duration-300 hover:scale-120 active:scale-90 cursor-pointer ${
                           isWish
-                            ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                            ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
                             : 'bg-white/90 text-neutral-600 hover:text-rose-600 border border-neutral-200/80 hover:bg-white'
                         }`}
                       >
-                        <HeartIcon className="w-3.5 h-3.5" filled={isWish} />
+                        <HeartIcon className="w-3.5 h-3.5 transition-transform" filled={isWish} />
+                      </button>
+                    </div>
+
+                    {/* Desktop Hover Quick Add Slide Up */}
+                    <div className="hidden sm:flex absolute inset-x-2.5 bottom-2.5 z-20 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
+                      <button
+                        type="button"
+                        onClick={(e) => handleQuickAdd(e, product)}
+                        className={`w-full py-2 px-3 rounded-lg text-xs font-semibold tracking-wide backdrop-blur-md shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 ${
+                          isAdded
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-neutral-950/90 text-white hover:bg-[#8C6734]'
+                        }`}
+                      >
+                        <BagIcon className="w-3.5 h-3.5 text-amber-300" />
+                        <span>{isAdded ? 'Added to Bag' : 'Quick Add'}</span>
                       </button>
                     </div>
                   </div>
@@ -327,28 +353,18 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                       )}
                     </div>
 
-                    {/* Add to Cart Button */}
-                    <div className="mt-3">
+                    {/* Mobile Add to Cart Button */}
+                    <div className="mt-2.5 pt-2 border-t border-neutral-100 sm:hidden">
                       <button
                         type="button"
                         onClick={(e) => handleQuickAdd(e, product)}
-                        className={`w-full py-2 px-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
+                        className={`w-full py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
                           isAdded
                             ? 'bg-emerald-600 text-white'
                             : 'bg-[#111827] text-white hover:bg-black'
                         }`}
                       >
-                        {isAdded ? (
-                          <>
-                            <span className="font-bold text-xs">✓</span>
-                            <span>Added</span>
-                          </>
-                        ) : (
-                          <>
-                            <BagIcon className="w-3.5 h-3.5 text-amber-300" />
-                            <span>Add to Bag</span>
-                          </>
-                        )}
+                        {isAdded ? '✓ Added' : '+ Add to Bag'}
                       </button>
                     </div>
 
