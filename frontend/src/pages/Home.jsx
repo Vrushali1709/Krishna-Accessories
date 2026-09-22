@@ -22,6 +22,7 @@ import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import ProductsByPriceSection from '../components/ProductsByPriceSection';
+import NewArrivalsSection from '../components/NewArrivalsSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
@@ -424,29 +425,6 @@ export default function Home() {
     };
   }, []);
 
-  // Top Picks For You (Best Sellers) - Sorted by rating and popularity
-  const bestSellers = useMemo(() => {
-    const sorted = [...products].sort((a, b) => {
-      const scoreB = (Number(b.rating) || 4.5) * 100 + (Number(b.reviews) || 10);
-      const scoreA = (Number(a.rating) || 4.5) * 100 + (Number(a.reviews) || 10);
-      return scoreB - scoreA;
-    });
-    return sorted.slice(0, 4);
-  }, [products]);
-
-  // Check Out What's New (New Arrivals) - Fresh novelties from catalog
-  const newArrivals = useMemo(() => {
-    const bestSellerIds = new Set(bestSellers.map((p) => p.id));
-    const sortedNew = [...products]
-      .filter((p) => !bestSellerIds.has(p.id))
-      .sort((a, b) => (b.id || 0) - (a.id || 0));
-
-    if (sortedNew.length >= 4) {
-      return sortedNew.slice(0, 4);
-    }
-    return [...products].slice(0, 4);
-  }, [products, bestSellers]);
-
   const getProductCountForCategory = (catName) => {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
   };
@@ -673,55 +651,16 @@ export default function Home() {
         products={products}
         onAddToCart={handleAddToCart}
         onBuyNow={handleBuyNow}
+        onToast={setToastMessage}
       />
 
       {/* =========================================================
-          7. CHECK OUT WHAT'S NEW — NEW ARRIVALS
+          7. NEW ARRIVALS (CURATED SEASONAL NOVELTIES CAROUSEL)
       ========================================================= */}
-      <section className="bg-[#FAFAFB] pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <Reveal direction="up" delay={50}>
-            <div className="text-center mb-7 sm:mb-9">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-                CHECK OUT WHAT&apos;S NEW
-              </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
-                  New Arrivals
-                </h2>
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Fresh seasonal releases, novelties, and smart devices straight to catalog.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* 4 Cards Grid */}
-          {newArrivals.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {newArrivals.map((product, idx) => (
-                <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                    showRating={true}
-                  />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No new arrivals found.</p>
-            </div>
-          )}
-
-        </div>
-      </section>
+      <NewArrivalsSection
+        products={products}
+        onToast={setToastMessage}
+      />
 
       {/* =========================================================
           7. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
