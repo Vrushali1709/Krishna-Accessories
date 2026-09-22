@@ -290,10 +290,11 @@ export default function NewArrivalsSection({ products = [], onToast }) {
                         src={product.image || product.images?.[0]}
                         alt={product.name}
                         loading="lazy"
-                        className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${product.images && product.images.length > 1
+                        className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${
+                          product.images && product.images.length > 1
                             ? 'group-hover:opacity-0 group-hover:scale-105'
                             : 'group-hover:scale-105'
-                          }`}
+                        }`}
                       />
                       {product.images && product.images.length > 1 && (
                         <img
@@ -421,26 +422,10 @@ export default function NewArrivalsSection({ products = [], onToast }) {
               View all novelties
             </Link>
           </div>
-
+          
         )}
 
       </div>
     </section>
-  );
-}
-        ) : (
-  <div className="text-center py-12 rounded-2xl bg-[#FAF8F5] border border-neutral-200/80">
-    <p className="text-xs font-semibold text-neutral-600">No novelties found in this category.</p>
-    <Link
-      to="/new-arrivals"
-      className="mt-2 inline-block text-xs font-bold text-[#9A7B56] hover:underline cursor-pointer"
-    >
-      View all novelties
-    </Link>
-  </div>
-)}
-
-      </div >
-    </section >
   );
 }

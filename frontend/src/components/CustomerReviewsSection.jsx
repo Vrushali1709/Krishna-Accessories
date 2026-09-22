@@ -308,8 +308,8 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
             className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
-              ? 'w-7 bg-gray-950'
-              : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+                ? 'w-7 bg-gray-950'
+                : 'w-1.5 bg-gray-300 hover:bg-gray-400'
               }`}
           />
         ))}
