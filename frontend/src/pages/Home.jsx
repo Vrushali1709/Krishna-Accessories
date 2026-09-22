@@ -659,60 +659,12 @@ export default function Home() {
       />
 
       {/* =========================================================
-          4. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
+          4. FEATURED PRODUCTS, TRENDING NOW & BEST SELLERS SHOWCASE
       ========================================================= */}
       <FeaturedTrendingSection
         products={products}
         onToast={setToastMessage}
       />
-
-      {/* =========================================================
-          5. TOP PICKS FOR YOU — BEST SELLERS
-      ========================================================= */}
-      <section className="bg-white pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <Reveal direction="up" delay={50}>
-            <div className="text-center mb-7 sm:mb-9">
-              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
-                TOP PICKS FOR YOU
-              </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
-                  Best Sellers
-                </h2>
-                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
-                Client favorites across timepieces, designer sunglasses, and premium audio.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* 4 Cards Grid */}
-          {bestSellers.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {bestSellers.map((product, idx) => (
-                <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    onBuyNow={handleBuyNow}
-                    showRating={true}
-                  />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
-              <p className="text-sm font-semibold text-gray-700">No products found.</p>
-            </div>
-          )}
-
-        </div>
-      </section>
 
       {/* =========================================================
           6. PRODUCTS BY PRICE (CURATED BUDGET TIERS)
