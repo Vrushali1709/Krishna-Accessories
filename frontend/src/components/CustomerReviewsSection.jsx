@@ -176,7 +176,7 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
 
   return (
     <section
-      className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 pt-6 sm:pt-10 pb-10 sm:pb-14 select-none"
+      className="mx-auto max-w-7xl px-4 pt-6 sm:pt-10 pb-10 sm:pb-14 lg:px-8 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => {
         setIsPaused(false);
@@ -308,8 +308,8 @@ export default function CustomerReviewsSection({ reviews = DEFAULT_REVIEWS }) {
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to review ${i + 1}`}
             className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === activeIndex
-                ? 'w-7 bg-gray-950'
-                : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+              ? 'w-7 bg-gray-950'
+              : 'w-1.5 bg-gray-300 hover:bg-gray-400'
               }`}
           />
         ))}

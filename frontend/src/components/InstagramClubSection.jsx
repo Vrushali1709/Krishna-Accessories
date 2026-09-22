@@ -17,7 +17,7 @@ export default function InstagramClubSection() {
 
   return (
     <section className="bg-white py-10 sm:py-14 border-t border-gray-200/80">
-      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* VIP Privé Club Newsletter Card */}
         <Reveal direction="zoom" delay={80} duration={750}>

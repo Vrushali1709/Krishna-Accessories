@@ -22,7 +22,6 @@ import { Reveal, AnimatedCounter } from '../components/useScrollReveal';
 import ShopByCategorySection from '../components/ShopByCategorySection';
 import FeaturedTrendingSection from '../components/FeaturedTrendingSection';
 import ProductsByPriceSection from '../components/ProductsByPriceSection';
-import NewArrivalsSection from '../components/NewArrivalsSection';
 import CustomerReviewsSection from '../components/CustomerReviewsSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import InstagramClubSection from '../components/InstagramClubSection';
@@ -425,6 +424,29 @@ export default function Home() {
     };
   }, []);
 
+  // Top Picks For You (Best Sellers) - Sorted by rating and popularity
+  const bestSellers = useMemo(() => {
+    const sorted = [...products].sort((a, b) => {
+      const scoreB = (Number(b.rating) || 4.5) * 100 + (Number(b.reviews) || 10);
+      const scoreA = (Number(a.rating) || 4.5) * 100 + (Number(a.reviews) || 10);
+      return scoreB - scoreA;
+    });
+    return sorted.slice(0, 4);
+  }, [products]);
+
+  // Check Out What's New (New Arrivals) - Fresh novelties from catalog
+  const newArrivals = useMemo(() => {
+    const bestSellerIds = new Set(bestSellers.map((p) => p.id));
+    const sortedNew = [...products]
+      .filter((p) => !bestSellerIds.has(p.id))
+      .sort((a, b) => (b.id || 0) - (a.id || 0));
+
+    if (sortedNew.length >= 4) {
+      return sortedNew.slice(0, 4);
+    }
+    return [...products].slice(0, 4);
+  }, [products, bestSellers]);
+
   const getProductCountForCategory = (catName) => {
     return products.filter((p) => p.category?.toLowerCase() === catName.toLowerCase()).length;
   };
@@ -501,7 +523,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-[1760px] w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-12 xl:px-14 2xl:px-16 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
+        <div className="relative z-20 mx-auto max-w-7xl w-full min-h-[580px] sm:min-h-[620px] lg:min-h-[700px] lg:h-full px-5 sm:px-8 lg:px-10 pt-16 sm:pt-20 lg:pt-0 pb-8 lg:pb-8 flex flex-col justify-between">
           <div className="max-w-[620px] lg:my-auto lg:py-8" key={`hero-slide-${currentSlide}`}>
             <Reveal direction="down" delay={60}>
               <div className="mb-5 flex items-center gap-3">
@@ -526,83 +548,42 @@ export default function Home() {
             </Reveal>
 
             <Reveal direction="up" delay={280}>
-              <div className="mt-7 flex flex-wrap items-center gap-3.5">
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
                   to="/shop?category=Watches"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#C9AB80] hover:text-black hover:shadow-[0_8px_30px_rgba(201,171,128,0.35)] active:scale-95 cursor-pointer group"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-black transition-all duration-300 hover:bg-[#E5D7C5] hover:shadow-[0_8px_25px_rgba(255,255,255,0.2)] active:scale-95"
                 >
                   <span>Shop Watches</span>
-                  <ArrowRightIcon className="w-4 h-4 text-black transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRightIcon className="w-4 h-4 text-black" />
                 </Link>
 
                 <Link
                   to="/shop"
-                  className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-[#C5A880] hover:bg-black/80 hover:text-[#C5A880] active:scale-95 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-black/40 backdrop-blur-md px-6 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase text-white transition-all duration-300 hover:border-neutral-400 hover:bg-black/70 active:scale-95"
                 >
                   <span>All Collections</span>
                 </Link>
               </div>
             </Reveal>
-
-            {/* Micro Trust Pills matching About Us Style */}
-            <Reveal direction="up" delay={340}>
-              <div className="mt-8 pt-5 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-neutral-300">
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#C5A880]/60 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-amber-400 font-bold">✓</span>
-                  <span className="font-medium text-neutral-200">Verified Sourcing</span>
-                </div>
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#C5A880]/60 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-amber-400 font-bold">✓</span>
-                  <span className="font-medium text-neutral-200">Brand Warranty</span>
-                </div>
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#C5A880]/60 hover:bg-white/10 transition-all duration-300">
-                  <span className="text-amber-400 font-bold">✓</span>
-                  <span className="font-medium text-neutral-200">Mumbai Boutique</span>
-                </div>
-              </div>
-            </Reveal>
           </div>
 
-          <Reveal direction="up" delay={400}>
+          <Reveal direction="up" delay={340}>
             <div className="flex items-center justify-between border-t border-neutral-800/80 pt-4">
               <div className="flex items-center gap-2">
-                {watchHeroSlides.map((slide, i) => (
+                {watchHeroSlides.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentSlide(i)}
-                    className={`h-2 transition-all duration-500 rounded-full cursor-pointer flex items-center ${
-                      i === currentSlide
-                        ? 'w-10 bg-gradient-to-r from-[#C5A880] to-[#E5D7C5] shadow-[0_0_12px_rgba(197,168,128,0.5)]'
-                        : 'w-2.5 bg-neutral-700 hover:bg-neutral-500'
-                    }`}
+                    className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${i === currentSlide ? 'w-8 bg-[#C5A880]' : 'w-2 bg-neutral-700 hover:bg-neutral-500'
+                      }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
                 ))}
               </div>
 
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] font-mono font-medium text-neutral-400 tracking-wider">
-                  0{currentSlide + 1} / 0{watchHeroSlides.length}
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentSlide((prev) => (prev === 0 ? watchHeroSlides.length - 1 : prev - 1))}
-                    aria-label="Previous Slide"
-                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all active:scale-90 cursor-pointer"
-                  >
-                    <ChevronLeftIcon className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentSlide((prev) => (prev + 1) % watchHeroSlides.length)}
-                    aria-label="Next Slide"
-                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all active:scale-90 cursor-pointer"
-                  >
-                    <ChevronRightIcon className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
+              <span className="text-[11px] font-mono font-medium text-neutral-400 tracking-wider">
+                0{currentSlide + 1} / 0{watchHeroSlides.length}
+              </span>
             </div>
           </Reveal>
         </div>
@@ -668,72 +649,6 @@ export default function Home() {
         </div>
       </Reveal>
 
-      {/* =========================================================
-          3. ANIMATED METRICS COUNTER BAR (MATCHING ABOUT US PAGE)
-      ========================================================= */}
-      <section className="bg-[#FAF8F5] border-b border-neutral-200/80 py-8 sm:py-10">
-        <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-
-            <Reveal delay={50} direction="up" className="text-center md:text-left">
-              <div className="space-y-1">
-                <p className="font-serif text-3xl sm:text-4xl font-semibold text-[#8C6734] tracking-tight">
-                  <AnimatedCounter end={100} suffix="%" />
-                </p>
-                <p className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-                  Quality Assurance
-                </p>
-                <p className="text-[11px] text-neutral-500 font-medium">
-                  Curated multi-brand catalog
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={120} direction="up" className="text-center md:text-left">
-              <div className="space-y-1">
-                <p className="font-serif text-3xl sm:text-4xl font-semibold text-[#8C6734] tracking-tight">
-                  <AnimatedCounter end={30} suffix="+" />
-                </p>
-                <p className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-                  Brand Partners
-                </p>
-                <p className="text-[11px] text-neutral-500 font-medium">
-                  Titan, Casio, Apple, Sony, Nike &amp; more
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={190} direction="up" className="text-center md:text-left">
-              <div className="space-y-1">
-                <p className="font-serif text-3xl sm:text-4xl font-semibold text-[#8C6734] tracking-tight">
-                  <AnimatedCounter end={10} suffix="k+" />
-                </p>
-                <p className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-                  Orders Fulfilled
-                </p>
-                <p className="text-[11px] text-neutral-500 font-medium">
-                  Insured express delivery nationwide
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={260} direction="up" className="text-center md:text-left">
-              <div className="space-y-1">
-                <p className="font-serif text-3xl sm:text-4xl font-semibold text-[#8C6734] tracking-tight">
-                  <AnimatedCounter end={7} suffix=" Days" />
-                </p>
-                <p className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-                  Easy Replacement
-                </p>
-                <p className="text-[11px] text-neutral-500 font-medium">
-                  Hassle-free client guarantee
-                </p>
-              </div>
-            </Reveal>
-
-          </div>
-        </div>
-      </section>
 
       {/* =========================================================
           4. SHOP BY CATEGORY (ALL CATEGORIES & CURATED CAROUSEL)
@@ -744,12 +659,60 @@ export default function Home() {
       />
 
       {/* =========================================================
-          4. FEATURED PRODUCTS, TRENDING NOW & BEST SELLERS SHOWCASE
+          4. FEATURED / TRENDING PRODUCTS SECTION (TABBED CATALOG)
       ========================================================= */}
       <FeaturedTrendingSection
         products={products}
         onToast={setToastMessage}
       />
+
+      {/* =========================================================
+          5. TOP PICKS FOR YOU — BEST SELLERS
+      ========================================================= */}
+      <section className="bg-white pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* Section Header */}
+          <Reveal direction="up" delay={50}>
+            <div className="text-center mb-7 sm:mb-9">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+                TOP PICKS FOR YOU
+              </p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
+                  Best Sellers
+                </h2>
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              </div>
+              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
+                Client favorites across timepieces, designer sunglasses, and premium audio.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* 4 Cards Grid */}
+          {bestSellers.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {bestSellers.map((product, idx) => (
+                <Reveal key={`bestseller-${product.id}`} direction="up" delay={idx * 80} duration={650}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
+                    showRating={true}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
+              <p className="text-sm font-semibold text-gray-700">No products found.</p>
+            </div>
+          )}
+
+        </div>
+      </section>
 
       {/* =========================================================
           6. PRODUCTS BY PRICE (CURATED BUDGET TIERS)
@@ -758,21 +721,60 @@ export default function Home() {
         products={products}
         onAddToCart={handleAddToCart}
         onBuyNow={handleBuyNow}
-        onToast={setToastMessage}
       />
 
       {/* =========================================================
-          7. NEW ARRIVALS (CURATED SEASONAL NOVELTIES CAROUSEL)
+          7. CHECK OUT WHAT'S NEW — NEW ARRIVALS
       ========================================================= */}
-      <NewArrivalsSection
-        products={products}
-        onToast={setToastMessage}
-      />
+      <section className="bg-[#FAFAFB] pt-8 sm:pt-12 pb-10 sm:pb-14 border-t border-gray-200/80">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* Section Header */}
+          <Reveal direction="up" delay={50}>
+            <div className="text-center mb-7 sm:mb-9">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">
+                CHECK OUT WHAT&apos;S NEW
+              </p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-2">
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-neutral-950">
+                  New Arrivals
+                </h2>
+                <span className="h-px w-10 sm:w-16 bg-neutral-300" />
+              </div>
+              <p className="mt-2 text-xs sm:text-sm text-neutral-500 max-w-md mx-auto">
+                Fresh seasonal releases, novelties, and smart devices straight to catalog.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* 4 Cards Grid */}
+          {newArrivals.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {newArrivals.map((product, idx) => (
+                <Reveal key={`newarrival-${product.id}`} direction="up" delay={idx * 80} duration={650}>
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
+                    showRating={true}
+                  />
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 rounded-2xl bg-gray-50 border border-gray-200/80">
+              <p className="text-sm font-semibold text-gray-700">No new arrivals found.</p>
+            </div>
+          )}
+
+        </div>
+      </section>
 
       {/* =========================================================
           7. OFFICIAL BRAND PARTNERS (LUXURY BRAND HOUSES SHOWCASE)
       ========================================================= */}
-      <section className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 pt-8 sm:pt-10 pb-4 sm:pb-6">
+      <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-10 pb-4 sm:pb-6 lg:px-8">
         <Reveal direction="up" delay={50}>
           <div className="text-center mb-8 sm:mb-10">
 
@@ -855,42 +857,6 @@ export default function Home() {
           13. INSTAGRAM LIFESTYLE COMMUNITY & VIP PRIVÉ CLUB
       ========================================================= */}
       <InstagramClubSection />
-
-      {/* =========================================================
-          14. FINAL EDITORIAL BRAND STATEMENT (MATCHING ABOUT US)
-      ========================================================= */}
-      <section className="py-16 sm:py-24 bg-white text-center border-t border-neutral-200/80">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 space-y-4">
-          <Reveal delay={0} direction="up">
-            <div className="w-8 h-0.5 bg-[#8C6734] mx-auto" />
-          </Reveal>
-
-          <Reveal delay={80} direction="up">
-            <h2 className="font-serif text-3xl sm:text-5xl text-neutral-950 font-medium tracking-tight leading-tight">
-              TIMELESS PIECES.<br />
-              <span className="italic font-normal text-neutral-500">LASTING IMPRESSIONS.</span>
-            </h2>
-          </Reveal>
-
-          <Reveal delay={160} direction="up">
-            <p className="text-xs sm:text-sm text-neutral-500 font-normal tracking-wide max-w-md mx-auto">
-              Curated with precision. Chosen with confidence. Sourced directly for discerning lifestyles.
-            </p>
-          </Reveal>
-
-          <Reveal delay={240} direction="up">
-            <div className="pt-3">
-              <Link
-                to="/shop"
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-neutral-950 hover:bg-[#8C6734] text-white text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 rounded-full shadow-md hover:shadow-2xl hover:-translate-y-1 group border border-neutral-800 active:scale-95 cursor-pointer"
-              >
-                <span className="text-[#C5A880] group-hover:text-white transition-colors duration-200">Explore Entire Catalog</span>
-                <ArrowRightIcon className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1.5 text-[#C5A880] group-hover:text-white" />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
 
       {/* =========================================================
           FOOTER

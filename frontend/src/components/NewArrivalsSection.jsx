@@ -4,14 +4,69 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { addToCart } from '../utils/cart';
 import { getCurrentUser } from '../utils/auth';
 import { isInWishlist, toggleWishlist } from '../utils/productStore';
-import { Reveal } from './useScrollReveal';
 import {
   HeartIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
-  BagIcon,
-  ArrowRightIcon
+  ChevronRightIcon
 } from './Icons';
+
+const COLOR_MAP = {
+  gold: '#D4AF37',
+  silver: '#C0C0C0',
+  black: '#171717',
+  'midnight black': '#0F172A',
+  'deep black': '#18181B',
+  'royal blue': '#1D4ED8',
+  blue: '#3B82F6',
+  navy: '#1E3A8A',
+  red: '#DC2626',
+  white: '#F8FAFC',
+  'pure white': '#FFFFFF',
+  green: '#15803D',
+  brown: '#78350F',
+  tan: '#D97706',
+  grey: '#6B7280',
+  gray: '#9CA3AF'
+};
+
+const CARD_STYLES = [
+  {
+    canvas: 'bg-[#F1EEE8] border-[#E5DED2]',
+    image: 'rounded-[24px] rounded-br-[52px]',
+    number: 'text-[#B9AA94]',
+    accent: 'bg-[#25231F]'
+  },
+  {
+    canvas: 'bg-[#E9F0F2] border-[#D5E2E5]',
+    image: 'rounded-[24px] rounded-bl-[52px]',
+    number: 'text-[#9AB3BA]',
+    accent: 'bg-[#16434D]'
+  },
+  {
+    canvas: 'bg-[#202124] border-[#34363A]',
+    image: 'rounded-[24px] rounded-tl-[52px]',
+    number: 'text-[#66686C]',
+    accent: 'bg-[#D4AF37]'
+  }
+];
+
+function getMinimalColorDots(product) {
+  if (Array.isArray(product.colors) && product.colors.length > 0) {
+    const dots = product.colors.slice(0, 3).map((c) => {
+      const lower = c.toLowerCase();
+      for (const [name, hex] of Object.entries(COLOR_MAP)) {
+        if (lower.includes(name)) return hex;
+      }
+      return '#737373';
+    });
+    const defaults = ['#171717', '#3B82F6', '#D4AF37'];
+    while (dots.length < 3) {
+      dots.push(defaults[dots.length]);
+    }
+    return dots;
+  }
+  return ['#171717', '#3B82F6', '#D4AF37'];
+}
 
 export default function NewArrivalsSection({ products = [], onToast }) {
   const navigate = useNavigate();
@@ -78,8 +133,8 @@ export default function NewArrivalsSection({ products = [], onToast }) {
   const scrollCarousel = (direction) => {
     if (!carouselRef.current) return;
     const container = carouselRef.current;
-    const cardWidth = container.firstElementChild?.clientWidth || 260;
-    const scrollAmount = (cardWidth + 16) * 2;
+    const cardWidth = container.firstElementChild?.clientWidth || 280;
+    const scrollAmount = (cardWidth + 24) * 2;
     container.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth'
@@ -89,9 +144,11 @@ export default function NewArrivalsSection({ products = [], onToast }) {
   // Auth requirement check
   const requireLogin = (action = 'continue') => {
     if (!getCurrentUser()) {
-      const message = action === 'wishlist'
-        ? 'Please sign in to save items to your wishlist.'
-        : 'Please sign in to continue.';
+      const message = action === 'bag'
+        ? 'Please sign in to add items to your shopping bag.'
+        : action === 'wishlist'
+          ? 'Please sign in to save items to your wishlist.'
+          : 'Please sign in to complete your purchase.';
 
       navigate('/login', {
         state: {
@@ -115,7 +172,7 @@ export default function NewArrivalsSection({ products = [], onToast }) {
 
     setTimeout(() => {
       setAddedMap((prev) => ({ ...prev, [product.id]: false }));
-    }, 1500);
+    }, 1400);
   };
 
   const handleWishlistToggle = (e, product) => {
@@ -131,261 +188,259 @@ export default function NewArrivalsSection({ products = [], onToast }) {
   };
 
   return (
-    <section className="bg-white py-12 sm:py-18 border-t border-b border-neutral-200/80 relative overflow-hidden">
-      {/* Subtle Background Dot Pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)',
-          backgroundSize: '24px 24px'
-        }}
-        aria-hidden="true"
-      />
-
-      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-14 relative z-10">
+    <section className="bg-white py-14 sm:py-20 border-b border-neutral-200/70">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* =======================================================
-            1. REFINED LUXURY SECTION HEADER
+            1. MINIMAL EDITORIAL SECTION HEADER
         ======================================================= */}
-        <Reveal direction="up" delay={40}>
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
-            <div>
-              <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 px-3 py-1 rounded-full bg-[#F5F2EB] border border-[#C5A880]/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6734] animate-ping" />
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#8C6734] font-sans">
-                  SEASON 2026 / NOVELTIES
-                </span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-serif leading-[1.1] text-neutral-900 tracking-tight">
-                New <span className="text-[#9A7B56] font-normal italic lg:not-italic">Arrivals</span>
-              </h2>
-              <p className="mt-2 text-xs sm:text-sm text-neutral-600 max-w-xl font-sans leading-relaxed font-normal">
-                Fresh seasonal releases, novelties, and smart devices straight to catalog.
-              </p>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-10">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-neutral-900" />
+              <span className="text-[10.5px] font-mono font-medium uppercase tracking-[0.25em] text-neutral-500">
+                SEASON 2026 / NOVELTIES
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-tight text-neutral-950 font-sans">
+              The <span className="font-semibold">New Arrivals</span>
+            </h2>
+          </div>
+
+          {/* Minimal Inline Category Text Tabs & Arrows */}
+          <div className="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto">
+            {/* Minimal Category Tabs */}
+            <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {tabs.map((tab) => {
+                const isActive = selectedTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setSelectedTab(tab.id)}
+                    className={`px-3 py-1.5 text-xs font-medium tracking-wide rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer ${isActive
+                      ? 'bg-neutral-900 text-white'
+                      : 'text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100'
+                      }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Category Filter Tabs & Carousel Navigation Buttons */}
-            <div className="flex items-center justify-between lg:justify-end gap-4 w-full lg:w-auto">
-              {/* Filter Tabs */}
-              <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
-                {tabs.map((tab) => {
-                  const isActive = selectedTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => setSelectedTab(tab.id)}
-                      className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer hover:scale-105 active:scale-95 ${
-                        isActive
-                          ? 'bg-[#9A7B56] text-white shadow-xs'
-                          : 'bg-[#F5F2EC] text-neutral-700 hover:text-black hover:bg-[#ECE6DB]'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Next & Previous Carousel Arrows */}
-              <div className="hidden sm:flex items-center gap-2 shrink-0 pl-3 border-l border-neutral-200">
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel('left')}
-                  disabled={!canScrollLeft}
-                  aria-label="Previous items"
-                  className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
-                    canScrollLeft
-                      ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer shadow-xs hover:scale-110 active:scale-95'
-                      : 'border border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed'
+            {/* Minimalist Carousel Arrows */}
+            <div className="hidden sm:flex items-center gap-1.5 shrink-0 pl-2 border-l border-neutral-200">
+              <button
+                type="button"
+                onClick={() => scrollCarousel('left')}
+                disabled={!canScrollLeft}
+                aria-label="Previous items"
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${canScrollLeft
+                  ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
+                  : 'border border-neutral-200 bg-neutral-50 text-neutral-300 cursor-not-allowed'
                   }`}
-                >
-                  <ChevronLeftIcon className="w-4 h-4" />
-                </button>
+              >
+                <ChevronLeftIcon className="w-3.5 h-3.5" />
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel('right')}
-                  disabled={!canScrollRight}
-                  aria-label="Next items"
-                  className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
-                    canScrollRight
-                      ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer shadow-xs hover:scale-110 active:scale-95'
-                      : 'border border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed'
+              <button
+                type="button"
+                onClick={() => scrollCarousel('right')}
+                disabled={!canScrollRight}
+                aria-label="Next items"
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${canScrollRight
+                  ? 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 cursor-pointer active:scale-95'
+                  : 'border border-neutral-200 bg-neutral-50 text-neutral-300 cursor-not-allowed'
                   }`}
-                >
-                  <ChevronRightIcon className="w-4 h-4" />
-                </button>
-              </div>
+              >
+                <ChevronRightIcon className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
-        </Reveal>
+        </div>
 
         {/* =======================================================
-            2. REFINED LUXURY CAROUSEL
+            2. ULTRA-MINIMAL CARDS CAROUSEL / GRID
         ======================================================= */}
         {filteredItems.length > 0 ? (
           <div
             ref={carouselRef}
-            className="flex gap-4 sm:gap-5 overflow-x-auto py-3 snap-x snap-mandatory scroll-smooth no-scrollbar select-none"
+            className="flex gap-5 sm:gap-6 overflow-x-auto pt-4 pb-6 sm:pt-5 sm:pb-7 snap-x snap-mandatory scroll-smooth no-scrollbar select-none"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {filteredItems.map((product) => {
+            {filteredItems.map((product, idx) => {
               const isAdded = Boolean(addedMap[product.id]);
               const isWish = Boolean(wishlistMap[product.id]);
-              const discount = product.discount || (
-                product.oldPrice && product.oldPrice > product.price
-                  ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-                  : 0
-              );
+              const colorDots = getMinimalColorDots(product);
+              const cardStyle = CARD_STYLES[idx % CARD_STYLES.length];
+              const isDarkCard = idx % CARD_STYLES.length === 2;
 
               return (
                 <div
                   key={product.id}
-                  className="group relative flex-shrink-0 w-[230px] sm:w-[255px] md:w-[270px] snap-start flex flex-col justify-between rounded-2xl bg-white p-3 sm:p-3.5 border border-neutral-200/80 shadow-[0_2px_10px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.09)] hover:border-[#9A7B56]/50 hover:-translate-y-2 select-none"
+                  className={`group flex-shrink-0 w-[240px] sm:w-[270px] md:w-[290px] lg:w-[305px] snap-start flex flex-col justify-between rounded-[28px] border p-2.5 sm:p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(15,23,42,0.12)] ${cardStyle.canvas}`}
                 >
-                  {/* Image Canvas */}
-                  <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F2EFE9] mb-3.5">
+                  <div className={`relative aspect-[3/3.8] w-full overflow-hidden ${cardStyle.image} bg-[#F2F3F5] mb-3`}>
                     <Link
                       to={`/product/${product.id}`}
-                      className="relative flex h-full w-full items-center justify-center overflow-hidden"
+                      className="relative block h-full w-full overflow-hidden"
                     >
                       <img
                         src={product.image || product.images?.[0]}
                         alt={product.name}
                         loading="lazy"
-                        className={`h-full w-full object-cover object-center transition-transform duration-700 ease-out ${
-                          product.images && product.images.length > 1
-                            ? 'group-hover:opacity-0 group-hover:scale-108'
-                            : 'group-hover:scale-108'
-                        }`}
+                        className={`h-full w-full object-cover object-center transition-all duration-500 ease-out ${product.images && product.images.length > 1
+                            ? 'group-hover:opacity-0 group-hover:scale-105'
+                            : 'group-hover:scale-105'
+                          }`}
                       />
                       {product.images && product.images.length > 1 && (
                         <img
                           src={product.images[1]}
-                          alt={`${product.name} alternate view`}
+                          alt={`${product.name} alternate angle`}
                           loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-108 pointer-events-none"
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105 pointer-events-none"
                         />
                       )}
                     </Link>
 
-                    {/* Top Badges & Actions */}
-                    <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-none">
-                      <span className="rounded-md bg-[#B6966C] px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-white shadow-xs">
-                        New Arrival
+                    <div className="absolute inset-x-3 top-3 flex items-start justify-between pointer-events-none">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/70 text-[11px] font-mono font-semibold backdrop-blur-md ${cardStyle.number}`}>
+                        {String(idx + 1).padStart(2, '0')}
+                      </div>
+                      <span className="rounded-full bg-white/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-neutral-700 backdrop-blur-md">
+                        Just in
                       </span>
-
-                      <button
-                        type="button"
-                        onClick={(e) => handleWishlistToggle(e, product)}
-                        aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
-                        className={`pointer-events-auto flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md shadow-xs transition-all duration-300 hover:scale-120 active:scale-90 cursor-pointer ${
-                          isWish
-                            ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-rose-100'
-                            : 'bg-white/90 text-neutral-600 hover:text-rose-600 border border-neutral-200/80 hover:bg-white'
-                        }`}
-                      >
-                        <HeartIcon className="w-3.5 h-3.5 transition-transform" filled={isWish} />
-                      </button>
                     </div>
 
-                    {/* Desktop Hover Quick Add Slide Up */}
-                    <div className="hidden sm:flex absolute inset-x-2.5 bottom-2.5 z-20 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
+                    {/* Minimal Top-Right Wishlist Pill */}
+                    <button
+                      type="button"
+                      onClick={(e) => handleWishlistToggle(e, product)}
+                      aria-label={isWish ? 'Remove from wishlist' : 'Add to wishlist'}
+                      className={`absolute top-[58px] right-3 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md shadow-2xs transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer ${isWish
+                        ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                        : 'bg-white/80 text-neutral-800 hover:text-rose-600 hover:bg-white border border-white/40'
+                        }`}
+                    >
+                      <HeartIcon className="w-3.5 h-3.5 transition-colors" filled={isWish} />
+                    </button>
+
+                    {/* Floating Frosted Quick Add Bar (Desktop Hover) */}
+                    <div className="hidden sm:flex absolute inset-x-3 bottom-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
                       <button
                         type="button"
                         onClick={(e) => handleQuickAdd(e, product)}
-                        className={`w-full py-2 px-3 rounded-lg text-xs font-semibold tracking-wide backdrop-blur-md shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 ${
-                          isAdded
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-neutral-950/90 text-white hover:bg-[#8C6734]'
-                        }`}
+                        className={`w-full py-2.5 px-4 rounded-full text-xs font-medium tracking-wide backdrop-blur-md shadow-lg transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-1.5 ${isAdded
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-neutral-950/90 text-white hover:bg-neutral-950'
+                          }`}
                       >
-                        <BagIcon className="w-3.5 h-3.5 text-amber-300" />
-                        <span>{isAdded ? 'Added to Bag' : 'Quick Add'}</span>
+                        <span>{isAdded ? '✓ Added to Bag' : '+ Quick Add'}</span>
+                        <span className="text-neutral-400 text-[11px] font-normal">•</span>
+                        <span className="text-[11px] font-semibold text-neutral-200">
+                          ₹{Number(product.price).toLocaleString('en-IN')}
+                        </span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Product Meta */}
-                  <div className="flex flex-1 flex-col justify-between">
+                  <div className={`px-1 flex flex-col justify-between flex-1 ${isDarkCard ? 'text-white' : ''}`}>
                     <div>
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className={`text-[10px] font-bold uppercase tracking-[0.2em] truncate ${isDarkCard ? 'text-white/50' : 'text-neutral-500'}`}>
+                          {product.brand || 'ESSENTIAL'}
+                        </span>
+
+                        <div className="flex items-center gap-1">
+                          {colorDots.map((hex, dIdx) => (
+                            <span
+                              key={dIdx}
+                              className="h-2 w-2 rounded-full border border-black/10 inline-block"
+                              style={{ backgroundColor: hex }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Product Title */}
                       <Link
                         to={`/product/${product.id}`}
-                        className="block font-bold text-neutral-900 text-[13.5px] sm:text-[14px] leading-snug line-clamp-1 transition-colors duration-200 hover:text-[#9A7B56]"
+                        className={`block text-[14.5px] font-semibold transition-colors line-clamp-1 leading-snug mb-1 ${isDarkCard ? 'text-white hover:text-amber-200' : 'text-neutral-950 hover:text-neutral-600'}`}
                         title={product.name}
                       >
                         {product.name}
                       </Link>
-
-                      <p className="text-[11px] sm:text-[11.5px] font-medium text-neutral-400 mt-0.5">
-                        {product.brand || 'Luxury Essential'}
-                      </p>
-
-                      {/* Star Rating */}
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <div className="flex text-amber-500 text-xs tracking-tight">
-                          ★ ★ ★ ★ ★
-                        </div>
-                        <span className="text-[11px] font-semibold text-neutral-500 tabular-nums">
-                          {product.rating ? Number(product.rating).toFixed(1) : '4.8'} ({product.reviews || 88})
-                        </span>
-                      </div>
                     </div>
 
-                    {/* Pricing Line */}
-                    <div className="flex items-center justify-between gap-1.5 mt-3 pt-2.5 border-t border-neutral-100">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-[14.5px] sm:text-[15px] font-extrabold text-neutral-950 tabular-nums">
-                          ₹ {Number(product.price).toLocaleString('en-IN')}
+                    {/* Price & Savings */}
+                    <div className={`flex items-end justify-between gap-2 mt-2 pt-2 border-t ${isDarkCard ? 'border-white/10' : 'border-black/10'}`}>
+                      <div className="flex items-baseline gap-2">
+                        <span className={`text-[15px] font-bold tabular-nums ${isDarkCard ? 'text-white' : 'text-neutral-950'}`}>
+                          ₹{Number(product.price).toLocaleString('en-IN')}
                         </span>
                         {product.oldPrice && product.oldPrice > product.price && (
-                          <span className="text-[11px] sm:text-[12px] text-neutral-400 line-through tabular-nums font-normal">
-                            ₹ {Number(product.oldPrice).toLocaleString('en-IN')}
+                          <span className={`text-xs line-through tabular-nums ${isDarkCard ? 'text-white/40' : 'text-neutral-400'}`}>
+                            ₹{Number(product.oldPrice).toLocaleString('en-IN')}
                           </span>
                         )}
                       </div>
 
-                      {discount > 0 && (
-                        <span className="rounded bg-[#FDF2E9] text-[#B76E28] border border-[#F0D5BE] px-1.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold tracking-tight">
-                          {discount}% OFF
-                        </span>
-                      )}
+                      <span className={`rounded-full px-2 py-1 text-[9px] font-semibold uppercase tracking-wide ${isDarkCard ? 'bg-white/10 text-white/60' : 'bg-black/5 text-neutral-500'}`}>
+                        {product.category}
+                      </span>
                     </div>
 
-                    {/* Mobile Add to Cart Button */}
+                    {/* Mobile Quick Add Button */}
                     <div className="mt-2.5 pt-2 border-t border-neutral-100 sm:hidden">
                       <button
                         type="button"
                         onClick={(e) => handleQuickAdd(e, product)}
-                        className={`w-full py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 active:scale-98 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
-                          isAdded
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-[#111827] text-white hover:bg-black'
-                        }`}
+                        className={`w-full py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 ${isAdded
+                          ? 'bg-emerald-600 text-white'
+                          : `${cardStyle.accent} text-white`
+                          }`}
                       >
-                        {isAdded ? '✓ Added' : '+ Add to Bag'}
+                        {isAdded ? '✓ Added to Bag' : '+ Quick Add to Bag'}
                       </button>
                     </div>
-
                   </div>
+
                 </div>
               );
             })}
           </div>
         ) : (
-          <div className="text-center py-12 rounded-2xl bg-[#FAF8F5] border border-neutral-200/80">
-            <p className="text-xs font-semibold text-neutral-600">No novelties found in this category.</p>
+          <div className="text-center py-12 rounded-2xl bg-neutral-50 border border-neutral-200/80">
+            <p className="text-xs font-medium text-neutral-600">No novelties found in this category.</p>
             <Link
               to="/new-arrivals"
-              className="mt-2 inline-block text-xs font-bold text-[#9A7B56] hover:underline cursor-pointer"
+              className="mt-2 inline-block text-xs font-semibold text-neutral-950 underline cursor-pointer"
             >
               View all novelties
             </Link>
           </div>
+
         )}
 
       </div>
     </section>
+  );
+}
+        ) : (
+  <div className="text-center py-12 rounded-2xl bg-[#FAF8F5] border border-neutral-200/80">
+    <p className="text-xs font-semibold text-neutral-600">No novelties found in this category.</p>
+    <Link
+      to="/new-arrivals"
+      className="mt-2 inline-block text-xs font-bold text-[#9A7B56] hover:underline cursor-pointer"
+    >
+      View all novelties
+    </Link>
+  </div>
+)}
+
+      </div >
+    </section >
   );
 }
